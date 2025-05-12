@@ -73,6 +73,51 @@ body {
   color: #202020;
 }
 
+/* === Dropdown con animación === */
+.nav-links .dropdown {
+  position: relative;
+}
+
+.nav-links .dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background-color: white;
+  padding: 8px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  list-style: none;
+  min-width: 180px;
+  z-index: 999;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+  display: block;
+  padding: 10px 16px;
+  color: #3c4043;
+  font-size: 15px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-links .dropdown-menu li a:hover {
+  background-color: rgba(60, 64, 67, 0.06);
+}
+
+/* Mostrar menú al hover con animación */
+.nav-links .dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+
 /* === Botones (desktop) === */
 .nav-actions {
   display: flex;

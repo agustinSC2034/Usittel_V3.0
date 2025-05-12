@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <link
+      rel="shortcut icon"
+      href="assets/icons/usittel-logo.png"
+      type="image/x-icon"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel</title>
+    <link rel="stylesheet" href="css/nav.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="navbar-container">
+          <!-- MOBILE: hamburguesa + logo -->
+          <div class="mobile-header-bar mobile-only">
+            <div class="hamburger" id="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <a href="index.html" class="logo">
+              <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
+            </a>
+          </div>
+
+          <!-- DESKTOP: logo + menú -->
+          <div class="nav-left desktop-only">
+            <a href="index.html" class="logo">
+              <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
+            </a>
+            <ul class="nav-links">
+              <li><a href="fibra.html">Nuestra red</a></li>
+              <li><a href="products.html">Productos</a></li>
+              <li><a href="empresas.html">Empresas</a></li>
+              <li><a href="contacto.html">Contáctanos</a></li>
+            </ul>
+          </div>
+
+          <!-- DESKTOP: botones -->
+          <div class="nav-actions desktop-only">
+            <a href="centro-ayuda.html" class="nav-button">Centro de ayuda</a>
+            <a href="autogestion.html" class="nav-button2 nav-button-green"
+              >Autogestión</a
+            >
+          </div>
+        </div>
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Menú lateral slide -->
+        <div class="mobile-menu-slide" id="mobileMenu">
+          <div class="mobile-menu-header">
+            <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
+            <button class="close-menu" id="closeMenu">&times;</button>
+          </div>
+          <hr />
+          <a href="fibra.html">Nuestra red</a>
+          <div class="submenu-container">
+            <button class="submenu-toggle" id="toggleProducts">
+              Productos ▾
+            </button>
+            <div class="submenu" id="productsSubmenu">
+              <a href="internet.html">Internet</a>
+              <a href="wifi-mesh.html">WiFi Mesh</a>
+              <a href="tv.html">TV</a>
+            </div>
+          </div>
+          <a href="empresas.html">Empresas</a>
+          <a href="contacto.html">Contáctanos</a>
+          <a href="centro-ayuda.html" class="nav-button">Centro de ayuda</a>
+          <a href="autogestion.html" class="nav-button2 nav-button-green"
+            >Autogestión</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Contenido principal de la home -->
+    </main>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

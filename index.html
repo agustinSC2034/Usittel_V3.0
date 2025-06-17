@@ -459,14 +459,20 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    .faq-answer {
-      transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, opacity 0.5s ease-in-out;
-      overflow: hidden;
-      max-height: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-      opacity: 0;
-    }
+   .faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+}
+
+.faq-question.open + .faq-answer {
+  max-height: 500px; /* suficiente para cualquier texto */
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  opacity: 1;
+}
+
 
     .whatsapp-float {
       position: fixed;
@@ -970,49 +976,29 @@
       if (internetTvBtn) internetTvBtn.addEventListener('click', () => displayPlans('internetTv'));
       if (container) displayPlans('internet');
 
-      // FAQ Accordion Logic (corregido)
-      const allFaqs = document.querySelectorAll('#faq-accordion');
-      allFaqs.forEach(faqContainer => {
-        const questions = faqContainer.querySelectorAll('.faq-question');
-        questions.forEach(question => {
-          question.addEventListener('click', () => {
-            const answer = question.nextElementSibling;
-            const icon = question.querySelector('.faq-icon');
-            const isExpanded = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+ // FAQ Accordion Logic (simplificado y confiable)
+const faqContainer = document.getElementById('faq-accordion');
+const questions = faqContainer.querySelectorAll('.faq-question');
 
-            // Cerrar otras respuestas
-            faqContainer.querySelectorAll('.faq-answer').forEach(ans => {
-              if (ans !== answer) {
-                ans.style.maxHeight = '0px';
-                ans.style.paddingTop = '0';
-                ans.style.paddingBottom = '0';
-                ans.style.opacity = '0';
-                ans.previousElementSibling.querySelector('.faq-icon').classList.remove('rotate-45');
-              }
-            });
+questions.forEach(question => {
+  question.addEventListener('click', () => {
+    const isOpen = question.classList.contains('open');
 
-            // Toggle actual
-            if (isExpanded) {
-              answer.style.maxHeight = '0px';
-              answer.style.paddingTop = '0';
-              answer.style.paddingBottom = '0';
-              answer.style.opacity = '0';
-              icon.classList.remove('rotate-45');
-            } else {
-              answer.style.maxHeight = 'none';
-              answer.style.paddingTop = '0.5rem';
-              answer.style.paddingBottom = '1.5rem';
-              answer.style.opacity = '1';
-              const fullHeight = answer.scrollHeight + "px";
-              answer.style.maxHeight = '0px';
-              setTimeout(() => {
-                answer.style.maxHeight = fullHeight;
-              }, 10);
-              icon.classList.add('rotate-45');
-            }
-          });
-        });
-      });
+    // Cerrar todos
+    questions.forEach(q => {
+      q.classList.remove('open');
+      const answer = q.nextElementSibling;
+      answer.style.maxHeight = '0px';
+    });
+
+    // Abrir el actual solo si estaba cerrado
+    if (!isOpen) {
+      question.classList.add('open');
+      const answer = question.nextElementSibling;
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    }
+  });
+});
 
 
       // Mesh Carousel Logic

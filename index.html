@@ -1,97 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <link
-      rel="shortcut icon"
-      href="assets/icons/usittel-logo.png"
-      type="image/x-icon"
-    />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Usittel | La fibra óptica de tu ciudad</title>
-    <link rel="stylesheet" href="css/nav.css" />
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body>
-    <header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usittel - Internet por Fibra Óptica en Tandil</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ================================== */
+        /* ===          NAV.CSS           === */
+        /* ================================== */
+        .navbar-section *, .navbar-section *::before, .navbar-section *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        .navbar-section { font-family: 'Poppins', 'Segoe UI', sans-serif; font-size: 16px; color: #3c4043; }
+        .navbar { background-color: white; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); position: sticky; top: 0; width: 100%; z-index: 999; }
+        .navbar-container { display: flex; justify-content: space-between; align-items: center; padding: 0 32px; height: 64px; width: 100%; max-width: 1500px; margin: 0 auto; }
+        .nav-left { display: flex; align-items: center; gap: 24px; }
+        .logo { display: flex; align-items: center; padding: 6px; border-radius: 6px; transition: background-color 0.2s ease; }
+        .logo:hover { background-color: rgba(60, 64, 67, 0.08); }
+        .logo img { height: 36px; }
+        .nav-links { display: flex; gap: 12px; list-style: none; }
+        .nav-links li a { text-decoration: none; color: #60666b; font-size: 16px; font-weight: 500; padding: 12px 16px; border-radius: 8px; transition: background-color 0.2s ease, color 0.2s ease; }
+        .nav-links li a:hover { background-color: rgba(60, 64, 67, 0.06); color: #202020; }
+        .nav-links .dropdown { position: relative; }
+        .nav-links .dropdown-menu { position: absolute; top: 110%; left: 0; background-color: white; padding: 8px 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; list-style: none; min-width: 180px; z-index: 999; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .nav-links .dropdown-menu li a { display: block; padding: 10px 16px; color: #3c4043; font-size: 15px; border-radius: 4px; }
+        .nav-links .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .nav-button, .nav-button2 { font-size: 15px; padding: 10px 20px; border-radius: 999px; font-weight: 500; text-decoration: none; transition: all 0.2s ease; border: 1px solid transparent; }
+        
+        /* Custom Green Button */
+        .nav-button-green { background-color: #30a172; color: white; }
+        .nav-button-green:hover { background-color: #188b48; color: white !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        .nav-button2 { background-color: #1a73e8; color: white; }
+        .nav-button2:hover { background-color: #175ca7; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
+        .hamburger span { width: 24px; height: 3px; background-color: #3c4043; border-radius: 2px; }
+        .mobile-menu-slide { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background-color: white; box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; padding: 24px; gap: 16px; transition: left 0.3s ease-in-out; z-index: 1001; }
+        .mobile-menu-slide.show { left: 0; }
+        .mobile-menu-slide a { text-decoration: none; color: #3c4043; font-size: 16px; padding: 10px 8px; border-radius: 6px; }
+        .mobile-menu-slide .nav-button, .mobile-menu-slide .nav-button2 { padding: 12px 18px; margin-top: 8px; text-align: center; display: block; }
+        .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; }
+        .mobile-menu-header img { height: 32px; }
+        .close-menu { background: none; border: none; font-size: 28px; color: #3c4043; cursor: pointer; padding: 0; line-height: 1; }
+        .mobile-menu-slide hr { border: none; border-top: 1px solid #ddd; margin-bottom: 16px; }
+        .submenu-container { display: flex; flex-direction: column; gap: 6px; }
+        .submenu-toggle { background: none; border: none; font-family: inherit; font-size: 16px; text-align: left; color: #3c4043; padding: 10px 8px; border-radius: 6px; cursor: pointer; font-weight: 400; }
+        .submenu { display: none; flex-direction: column; padding-left: 12px; margin-top: -4px; }
+        .submenu a { font-size: 15px; padding: 8px 12px; color: #3c4043; }
+        .submenu.show { display: flex; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, 0.3); z-index: 1000; }
+        .overlay.show { display: block; }
+        .desktop-only { display: flex; }
+        .mobile-only { display: none; }
+        .mobile-header-bar { display: none; align-items: center; justify-content: space-between; width: 100%; }
+        .navbar.sticky-shadow { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+        @media (max-width: 1024px) { .navbar-container{padding: 0 24px;} }
+        @media (max-width: 900px) { .mobile-only { display: flex !important; } .desktop-only { display: none; } .hamburger { display: flex; } .mobile-header-bar { display: flex; } }
+
+        /* ================================== */
+        /* ===        CUSTOM STYLES       === */
+        /* ================================== */
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .hero-section-wrapper { padding: 0 1rem; }
+        .hero-section-container { position: relative; overflow: hidden; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1;}
+        .hero-slide.active { opacity: 1; z-index: 2;}
+        .hero-content { position: relative; z-index: 3;}
+        .hero-dots { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 4; display: flex; gap: 0.75rem; }
+        .hero-dot { width: 12px; height: 12px; background-color: rgba(255, 255, 255, 0.5); border-radius: 9999px; cursor: pointer; transition: background-color 0.3s ease; }
+        .hero-dot.active { background-color: white; }
+
+        .cta-button { transition: all 0.3s ease; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .plan-toggle { display: inline-flex; background-color: #e9e9e9; border-radius: 999px; padding: 6px; }
+        .plan-toggle button { padding: 10px 24px; border: none; border-radius: 999px; font-size: 16px; font-weight: 500; cursor: pointer; background-color: transparent; color: #5f6368; transition: all 0.3s ease; }
+        .plan-toggle button.active { background-color: #1a73e8; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .faq-answer { transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; overflow: hidden; max-height: 0; padding-top: 0; padding-bottom: 0;}
+        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: #25d366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; transition: transform 0.2s ease; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+
+        .mesh-carousel-container { position: relative; }
+        .mesh-slide { display: none; }
+        .mesh-slide.active { display: block; }
+        .mesh-arrow { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; z-index: 10; }
+        .mesh-arrow-prev { left: 10px; }
+        .mesh-arrow-next { right: 10px; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
       <nav class="navbar">
         <div class="navbar-container">
-          <!-- MOBILE: hamburguesa + logo -->
-          <div class="mobile-header-bar mobile-only">
-            <div class="hamburger" id="hamburger">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <a href="index.html" class="logo">
-              <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
-            </a>
-          </div>
-
-          <!-- DESKTOP: logo + menú -->
-          <div class="nav-left desktop-only">
-            <a href="index.html" class="logo">
-              <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
-            </a>
-            <ul class="nav-links">
-              <li><a href="fibra.html">Nuestra red</a></li>
-              <li class="dropdown">
-                <a href="products.html">Productos ▾</a>
-                <ul class="dropdown-menu">
-                  <li><a href="internet.html">Internet</a></li>
-                  <li><a href="wifi-mesh.html">WiFi Mesh</a></li>
-                  <li><a href="tv.html">TV</a></li>
-                </ul>
-              </li>
-              
-              <li><a href="empresas.html">Empresas</a></li>
-              <li><a href="contacto.html">Contáctanos</a></li>
-            </ul>
-          </div>
-
-          <!-- DESKTOP: botones -->
-          <div class="nav-actions desktop-only">
-            <a href="centro-ayuda.html" class="nav-button">Centro de ayuda</a>
-            <a href="autogestion.html" class="nav-button2 nav-button-green"
-              >Autogestión</a
-            >
-          </div>
+          <div class="mobile-header-bar mobile-only"><div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><a href="#" class="logo"><img src="https://placehold.co/150x36/eee/333?text=USITTEL" alt="Usittel Logo" /></a></div>
+          <div class="nav-left desktop-only"><a href="#" class="logo"><img src="https://placehold.co/150x36/eee/333?text=USITTEL" alt="Usittel Logo" /></a><ul class="nav-links"><li><a href="#">Nuestra red</a></li><li class="dropdown"><a href="#">Productos ▾</a><ul class="dropdown-menu"><li><a href="#">Internet</a></li><li><a href="#">WiFi Mesh</a></li><li><a href="#">TV</a></li></ul></li><li><a href="#">Empresas</a></li><li><a href="#">Contáctanos</a></li></ul></div>
+          <div class="nav-actions desktop-only"><a href="#" class="nav-button nav-button-green">Centro de ayuda</a><a href="#" class="nav-button2">Autogestión</a></div>
         </div>
-        <!-- Overlay -->
         <div class="overlay" id="overlay"></div>
-
-        <!-- Menú lateral slide -->
         <div class="mobile-menu-slide" id="mobileMenu">
-          <div class="mobile-menu-header">
-            <img src="assets/img/usittel-logo_and_name.png" alt="Usittel" />
-            <button class="close-menu" id="closeMenu">&times;</button>
-          </div>
-          <hr />
-          <a href="fibra.html">Nuestra red</a>
-          <div class="submenu-container">
-            <button class="submenu-toggle" id="toggleProducts">
-              Productos ▾
-            </button>
-            <div class="submenu" id="productsSubmenu">
-              <a href="internet.html">Internet</a>
-              <a href="wifi-mesh.html">WiFi Mesh</a>
-              <a href="tv.html">TV</a>
-            </div>
-          </div>
-          <a href="empresas.html">Empresas</a>
-          <a href="contacto.html">Contáctanos</a>
-          <a href="centro-ayuda.html" class="nav-button">Centro de ayuda</a>
-          <a href="autogestion.html" class="nav-button2 nav-button-green"
-            >Autogestión</a
-          >
+          <div class="mobile-menu-header"><img src="https://placehold.co/150x36/eee/333?text=USITTEL" alt="Usittel Logo" /><button class="close-menu" id="closeMenu">&times;</button></div><hr/>
+          <a href="#">Nuestra red</a>
+          <div class="submenu-container"><button class="submenu-toggle" id="toggleProducts">Productos ▾</button><div class="submenu" id="productsSubmenu"><a href="#">Internet</a><a href="#">WiFi Mesh</a><a href="#">TV</a></div></div>
+          <a href="#">Empresas</a><a href="#">Contáctanos</a><a href="#" class="nav-button nav-button-green">Centro de ayuda</a><a href="#" class="nav-button2 text-white">Autogestión</a>
         </div>
       </nav>
     </header>
-
+    
     <main>
-      <!-- Contenido principal de la home -->
+
+        <!-- =========== Hero Section =========== -->
+        <div class="hero-section-wrapper bg-white pt-1">
+            <section class="hero-section-container rounded-3xl">
+                <div id="hero-slider" class="relative bg-gray-900 py-24 md:py-32 rounded-3xl">
+                    <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2072&auto=format&fit=crop');"></div>
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1488998527040-cf5330babdcd?q=80&w=2070&auto=format&fit=crop');"></div>
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop');"></div>
+                    <div class="hero-content container mx-auto text-center px-6 text-white">
+                        <img src="https://storage.googleapis.com/gemini-prod-us-west1-assets/1c1f1f1e7a5c8623b37a41416e917d23f72168532ac732e790a884218861d87e" alt="Usittel Logo" class="h-16 md:h-20 mx-auto mb-4">
+                        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">La fibra óptica más rápida de Tandil.</h1>
+                        <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <a href="#coverage" class="nav-button2 cta-button px-8 py-3">Verificar Cobertura</a>
+                            <a href="#contact" class="nav-button-green cta-button px-8 py-3">Contáctanos</a>
+                        </div>
+                    </div>
+                    <div id="hero-dots-container" class="hero-dots"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- =========== Services Section =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una conexión pensada para vos</h2><p class="text-lg text-gray-600 mt-2">Todo lo que necesitás para tu hogar en un solo lugar.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div class="bg-gray-100 p-8 rounded-xl text-center shadow-sm hover:shadow-lg transition-shadow duration-300"><div class="text-blue-600 mb-4"><i class="fas fa-rocket fa-3x"></i></div><h3 class="text-2xl font-bold mb-3">Internet Fibra Óptica</h3><p class="text-gray-600">Navegá a la velocidad de la luz con planes simétricos para trabajar, estudiar y disfrutar del mejor entretenimiento.</p></div><div class="bg-gray-100 p-8 rounded-xl text-center shadow-sm hover:shadow-lg transition-shadow duration-300"><div class="text-blue-600 mb-4"><i class="fas fa-tv fa-3x"></i></div><h3 class="text-2xl font-bold mb-3">Televisión con Sensa</h3><p class="text-gray-600">Accedé a más de 100 canales en vivo, series y películas on-demand. Llevá tu tele a donde vayas con la app Sensa.</p></div><div class="bg-gray-100 p-8 rounded-xl text-center shadow-sm hover:shadow-lg transition-shadow duration-300"><div class="text-blue-600 mb-4"><i class="fas fa-wifi fa-3x"></i></div><h3 class="text-2xl font-bold mb-3">WiFi Mesh</h3><p class="text-gray-600">Eliminá las zonas sin señal. Con nuestra tecnología WiFi Mesh, garantizamos cobertura total en cada rincón de tu casa.</p></div></div></div>
+        </section>
+
+        <!-- =========== Network Advantages Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"><div><span class="text-blue-600 font-semibold uppercase">Nuestra Red</span><h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">La infraestructura que potencia tu conexión.</h2><p class="text-lg text-gray-600 mb-6">Desplegamos una red de fibra óptica de última generación, diseñada para ofrecerte la máxima velocidad y estabilidad. Porque una gran conexión lo cambia todo, seguimos trabajando para expandir nuestra cobertura y llegar a más hogares en Tandil.</p><a href="#" class="font-semibold text-blue-600 hover:text-blue-800">Conocé más sobre nuestra tecnología →</a></div><div class="grid grid-cols-1 gap-6"><div class="bg-white p-6 rounded-lg flex items-start gap-4 shadow-sm"><i class="fas fa-wifi text-2xl text-blue-500 mt-1"></i><div><h4 class="font-bold text-lg">Internet sin límites</h4><p class="text-gray-600">Descargá archivos pesados, jugá online y hacé videollamadas en alta definición, todo al mismo tiempo.</p></div></div><div class="bg-white p-6 rounded-lg flex items-start gap-4 shadow-sm"><i class="fas fa-film text-2xl text-blue-500 mt-1"></i><div><h4 class="font-bold text-lg">Streaming 4K fluido</h4><p class="text-gray-600">Disfrutá de tus series y películas favoritas en la máxima calidad, sin buffering ni interrupciones molestas.</p></div></div><div class="bg-white p-6 rounded-lg flex items-start gap-4 shadow-sm"><i class="fas fa-house-signal text-2xl text-blue-500 mt-1"></i><div><h4 class="font-bold text-lg">Cobertura Total</h4><p class="text-gray-600">Nuestra fibra, combinada con la tecnología WiFi Mesh, asegura una señal potente en cada rincón de tu hogar.</p></div></div></div></div></div>
+        </section>
+        
+        <!-- =========== Plans Section =========== -->
+        <section id="plans" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Nuestros Planes</h2><p class="text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente y sin sorpresas.</p></div><div class="flex justify-center mb-12"><div class="plan-toggle"><button id="internet-only-btn" class="active">Solo Internet</button><button id="internet-tv-btn">Internet + TV</button></div></div><div id="plan-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"></div></div>
+        </section>
+
+        <!-- =========== WiFi Mesh Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6"><div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"><div><h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2><p class="text-lg text-gray-600 mt-4 mb-6">Con la tecnología de <span class="font-bold">USITTEL MESH</span> creamos una red unificada y potente que elimina las zonas sin señal para siempre. Cobertura total, sin interrupciones.</p><div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-2xl font-bold">Plan USITTEL MESH</h3><p class="text-4xl font-extrabold text-gray-900 my-4">$5.499 <span class="text-lg font-normal text-gray-500">/mes por equipo</span></p><ul class="space-y-2 text-gray-600 mb-6"><li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última generación.</li><li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4 equipos).</li><li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos dispositivos.</li></ul><a href="#" class="w-full text-center block bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Consultar por MESH</a></div></div><div class="w-full max-w-md mx-auto mesh-carousel-container"><div class="mesh-slide active"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+1" class="rounded-xl shadow-lg" alt="Equipo WiFi Mesh 1"></div><div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+2" class="rounded-xl shadow-lg" alt="Equipo WiFi Mesh 2"></div><div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+3" class="rounded-xl shadow-lg" alt="Equipo WiFi Mesh 3"></div><div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+4" class="rounded-xl shadow-lg" alt="Equipo WiFi Mesh 4"></div><button class="mesh-arrow mesh-arrow-prev" id="mesh-prev-btn">❮</button><button class="mesh-arrow mesh-arrow-next" id="mesh-next-btn">❯</button></div></div></div>
+        </section>
+
+        <!-- =========== Coverage & Contact Section =========== -->
+        <section id="coverage" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6"><div class="text-center"><div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div><h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2><p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya está disponible en tu domicilio e iniciá el cambio.</p><div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input type="text" placeholder="Ingresá tu dirección, ej: San Martín 550" class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button></div></div><div id="contact" class="mt-20 bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12"><div><h3 class="text-2xl font-bold mb-4">Envianos tu consulta</h3><form action="#" method="POST" class="space-y-4"><div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div><div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div></div><div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div><div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div><div class="bg-gray-200 border border-gray-300 rounded-md p-4 h-20 flex items-center justify-center"><span class="text-gray-500 text-sm">Espacio para reCAPTCHA</span></div><button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar Mensaje</button></form></div><div><h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3><div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div><div class="mt-4 text-gray-600"><p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín 550, Tandil</p><p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p><p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p></div></div></div></div>
+        </section>
+
+        <!-- =========== Next Gen & FAQ Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Internet de última generación creado para vos</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto"><div class="bg-white p-8 rounded-lg shadow-sm"><h3 class="font-bold text-xl text-blue-600 mb-2">Descargas y subidas de igual importancia</h3><p class="text-gray-600">Las cargas rápidas significan videollamadas fluidas, gaming sin lag y envío de archivos grandes en segundos. La velocidad simétrica lo cambia todo.</p></div><div class="bg-white p-8 rounded-lg shadow-sm"><h3 class="font-bold text-xl text-green-600 mb-2">Un servicio de atención al cliente que te respalda</h3><p class="text-gray-600">Nuestro equipo de soporte local está listo para ayudarte. Respuestas rápidas y soluciones efectivas, sin vueltas.</p></div><div class="bg-white p-8 rounded-lg shadow-sm"><h3 class="font-bold text-xl text-red-600 mb-2">Tu red, todo en un solo lugar</h3><p class="text-gray-600">Desde nuestra área de clientes podés gestionar tu cuenta, revisar tus facturas, y contactarnos de forma simple y rápida.</p></div><div class="bg-white p-8 rounded-lg shadow-sm"><h3 class="font-bold text-xl text-orange-500 mb-2">Una conexión con la que podés contar</h3><p class="text-gray-600">Construimos nuestra red de fibra para que sea robusta y confiable, incluso en los momentos de mayor demanda. Tu conexión, siempre estable.</p></div></div>
+                
+                <div class="mt-20 bg-white p-8 lg:p-12 rounded-xl shadow-lg max-w-4xl mx-auto">
+                    <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2></div>
+                    <div id="faq-accordion" class="space-y-4">
+                        <div class="bg-gray-100 rounded-lg"><button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg"><span>¿Qué significa que la velocidad sea "simétrica"?</span><span class="faq-icon text-blue-500 font-bold text-2xl transform transition-transform">+</span></button><div class="faq-answer px-6 text-gray-600"><p>Significa que tenés la misma velocidad de subida que de bajada. Esto es ideal para videollamadas, subir contenido a redes sociales, jugar online y trabajar con archivos en la nube, ya que la conexión es igual de rápida en ambas direcciones.</p></div></div>
+                        <div class="bg-gray-100 rounded-lg"><button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg"><span>¿Cómo es el proceso de instalación?</span><span class="faq-icon text-blue-500 font-bold text-2xl transform transition-transform">+</span></button><div class="faq-answer px-6 text-gray-600"><p>Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico especializado coordinará una visita para realizar la instalación del cable de fibra óptica y dejar el módem configurado y funcionando.</p></div></div>
+                        <div class="bg-gray-100 rounded-lg"><button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg"><span>¿Puedo usar mi propio router?</span><span class="faq-icon text-blue-500 font-bold text-2xl transform transition-transform">+</span></button><div class="faq-answer px-6 text-gray-600"><p>Sí, podés conectar tu propio router a nuestro módem (ONT). Sin embargo, para garantizar la mejor experiencia y cobertura, recomendamos nuestros equipos y la solución WiFi Mesh.</p></div></div>
+                        <div class="bg-gray-100 rounded-lg"><button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg"><span>¿Qué hago si tengo problemas con el servicio?</span><span class="faq-icon text-blue-500 font-bold text-2xl transform transition-transform">+</span></button><div class="faq-answer px-6 text-gray-600"><p>Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o a través de nuestra área de autogestión. Nuestro equipo de soporte técnico local te ayudará a resolver cualquier inconveniente.</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <script src="js/main.js"></script>
-  </body>
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6"><div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8"><div><h4 class="font-bold mb-4 uppercase">Usittel</h4><ul><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li></ul></div><div><h4 class="font-bold mb-4 uppercase">Servicios</h4><ul><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li></ul></div><div><h4 class="font-bold mb-4 uppercase">Soporte</h4><ul><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li></ul></div><div><h4 class="font-bold mb-4 uppercase">Legal</h4><ul><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li><li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li></ul></div><div><h4 class="font-bold mb-4 uppercase">Asociado a</h4><img src="https://placehold.co/150x40/fafafa/333?text=Logo+Usina+Tandil" alt="Logo Usina de Tandil" class="bg-white p-2 rounded-md"/></div></div><div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center"><p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2024 Usittel S.A. Todos los derechos reservados.</p><div class="flex space-x-4"><a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a><a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a><a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a></div></div></div>
+    </footer>
+
+    <a href="https://wa.me/TUNUMERO" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Logic
+            const hamburger = document.getElementById('hamburger'), mobileMenu = document.getElementById('mobileMenu'), overlay = document.getElementById('overlay'), closeMenu = document.getElementById('closeMenu'), toggleProducts = document.getElementById('toggleProducts'), productsSubmenu = document.getElementById('productsSubmenu');
+            function toggleMenu() { mobileMenu.classList.toggle('show'); overlay.classList.toggle('show'); }
+            if(hamburger) hamburger.addEventListener('click', toggleMenu);
+            if(overlay) overlay.addEventListener('click', toggleMenu);
+            if(closeMenu) closeMenu.addEventListener('click', toggleMenu);
+            if(toggleProducts) { toggleProducts.addEventListener('click', (e) => { e.preventDefault(); productsSubmenu.style.display = productsSubmenu.style.display === 'flex' ? 'none' : 'flex'; }); }
+            
+            // Sticky Navbar Shadow
+            window.addEventListener('scroll', () => { const navbar = document.querySelector('.navbar'); if (window.scrollY > 10) { navbar.classList.add('sticky-shadow'); } else { navbar.classList.remove('sticky-shadow'); }});
+
+            // Hero Carousel Logic
+            const slides = document.querySelectorAll('.hero-slide');
+            const dotsContainer = document.getElementById('hero-dots-container');
+            let currentSlide = 0;
+            let slideInterval;
+            function createDots() { if(!dotsContainer) return; dotsContainer.innerHTML = ''; slides.forEach((_, i) => { const dot = document.createElement('button'); dot.classList.add('hero-dot'); if (i === 0) dot.classList.add('active'); dot.addEventListener('click', () => { goToSlide(i); resetInterval(); }); dotsContainer.appendChild(dot); }); }
+            function goToSlide(n) { slides[currentSlide].classList.remove('active'); dotsContainer.children[currentSlide].classList.remove('active'); currentSlide = (n + slides.length) % slides.length; slides[currentSlide].classList.add('active'); dotsContainer.children[currentSlide].classList.add('active'); }
+            function nextSlide() { goToSlide(currentSlide + 1); }
+            function resetInterval() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
+            if (slides.length > 1) { createDots(); slideInterval = setInterval(nextSlide, 5000); }
+
+            // Plans Section Logic
+            const plansData = {
+                internet: [ { name: "Fibra 300", speed: "300 Mbps", symmetric: true, price: "10000", features: ["Instalación 100% bonificada", "Ideal para Home Office", "Streaming en 4K/UHD", "Hasta 5 dispositivos"], popular: false }, { name: "Fibra 500", speed: "500 Mbps", symmetric: true, price: "14000", features: ["Instalación 100% bonificada", "Perfecto para familias", "Gaming online sin lag", "Múltiples streams en 4K"], popular: true }, { name: "Fibra 1000", speed: "1000 Mbps", symmetric: true, price: "18000", features: ["Instalación 100% bonificada", "Máxima velocidad disponible", "Para usuarios exigentes", "La mejor experiencia online"], popular: false }, ],
+                internetTv: [ { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "15000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false }, { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "19000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true }, { name: "Fibra 1000 + TV", speed: "1000 Mbps", symmetric: true, price: "23000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false }, ]
+            };
+            const container = document.getElementById('plan-cards-container'), internetBtn = document.getElementById('internet-only-btn'), internetTvBtn = document.getElementById('internet-tv-btn');
+            function createPlanCard(plan) { return `<div class="border rounded-xl p-6 flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative' : 'border-gray-200 bg-gray-100'}"><h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3><p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p><div class="my-4"><span class="text-4xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div><ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul><a href="#" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Contratar ahora</a>${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}</div>`; }
+            function displayPlans(type) { if(!container) return; container.innerHTML = ''; plansData[type].forEach(plan => { container.innerHTML += createPlanCard(plan); }); if (type === 'internet') { internetBtn.classList.add('active'); internetTvBtn.classList.remove('active'); } else { internetBtn.classList.remove('active'); internetTvBtn.classList.add('active'); } }
+            if (internetBtn) internetBtn.addEventListener('click', () => displayPlans('internet'));
+            if (internetTvBtn) internetTvBtn.addEventListener('click', () => displayPlans('internetTv'));
+            if(container) displayPlans('internet');
+
+            // FAQ Accordion Logic
+            const faqAccordion = document.getElementById('faq-accordion');
+            if (faqAccordion) {
+                const questions = faqAccordion.querySelectorAll('.faq-question');
+                questions.forEach(question => {
+                    question.addEventListener('click', () => {
+                        const answer = question.nextElementSibling;
+                        const icon = question.querySelector('.faq-icon');
+                        const isExpanded = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+                        
+                        faqAccordion.querySelectorAll('.faq-answer').forEach(ans => {
+                            if (ans !== answer) {
+                                ans.style.maxHeight = '0px'; ans.style.paddingTop = '0'; ans.style.paddingBottom = '0';
+                                ans.previousElementSibling.querySelector('.faq-icon').classList.remove('rotate-45');
+                            }
+                        });
+
+                        if (isExpanded) {
+                            answer.style.maxHeight = '0px'; answer.style.paddingTop = '0'; answer.style.paddingBottom = '0';
+                            icon.classList.remove('rotate-45');
+                        } else {
+                            answer.style.paddingTop = '0.5rem'; answer.style.paddingBottom = '1.5rem';
+                            answer.style.maxHeight = answer.scrollHeight + 'px';
+                            icon.classList.add('rotate-45');
+                        }
+                    });
+                });
+            }
+
+            // Mesh Carousel Logic
+            const meshSlides = document.querySelectorAll('.mesh-slide');
+            const meshPrevBtn = document.getElementById('mesh-prev-btn');
+            const meshNextBtn = document.getElementById('mesh-next-btn');
+            let currentMeshSlide = 0;
+            function showMeshSlide(n) {
+                meshSlides.forEach(slide => slide.classList.remove('active'));
+                currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
+                meshSlides[currentMeshSlide].classList.add('active');
+            }
+            if (meshSlides.length > 0) {
+                meshPrevBtn.addEventListener('click', () => showMeshSlide(currentMeshSlide - 1));
+                meshNextBtn.addEventListener('click', () => showMeshSlide(currentMeshSlide + 1));
+            }
+        });
+    </script>
+</body>
 </html>

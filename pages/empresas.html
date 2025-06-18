@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel Empresas - Internet de Alta Velocidad para Negocios</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===          NAV.CSS           === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 24px;
+    height: 3px;
+    background-color: #3c4043;
+    border-radius: 2px;
+}
+
+.mobile-menu-slide {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    transition: left 0.3s ease-in-out;
+    z-index: 1001;
+}
+
+.mobile-menu-slide.show {
+    left: 0;
+}
+
+.mobile-menu-slide a {
+    text-decoration: none;
+    color: #3c4043;
+    font-size: 16px;
+    padding: 10px 8px;
+    border-radius: 6px;
+}
+
+.mobile-menu-slide .nav-button-green,
+.mobile-menu-slide .nav-button2 {
+    padding: 12px 18px;
+    margin-top: 8px;
+    text-align: center;
+    display: block;
+}
+
+.mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-menu-header img {
+    height: 32px;
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #3c4043;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.mobile-menu-slide hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin-bottom: 16px;
+}
+
+.submenu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.submenu-toggle {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    text-align: left;
+    color: #3c4043;
+    padding: 10px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 12px;
+    margin-top: -4px;
+}
+
+.submenu a {
+    font-size: 15px;
+    padding: 8px 12px;
+    color: #3c4043;
+}
+
+.submenu.show {
+    display: flex;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.overlay.show {
+    display: block;
+}
+
+.desktop-only {
+    display: flex;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.mobile-header-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .navbar-container {
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 900px) {
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .mobile-header-bar {
+        display: flex;
+    }
+}
+
+/* ================================== */
+/* ===        CUSTOM STYLES       === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-empresas {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2232&auto=format&fit=crop')
+            no-repeat center center;
+    background-size: cover;
+}
+
+.cta-button {
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    transition: transform 0.2s ease;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+}
+
+/* === NEW INTERACTIVE SECTION: HUB & SPOKE === */
+.hub-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1/1;
+    margin: auto;
+    position: relative;
+}
+.hub-core {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    background: #1a73e8;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    animation: pulse 2s infinite ease-in-out;
+    box-shadow: 0 0 20px rgba(26, 115, 232, 0.8);
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7); }
+    50% { transform: scale(1); box-shadow: 0 0 0 20px rgba(26, 115, 232, 0); }
+}
+.hub-node {
+    background: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+.hub-node:hover, .hub-node.active {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: #1a73e8;
+}
+.hub-node-1 { grid-column: 1 / 2; grid-row: 1 / 2; }
+.hub-node-2 { grid-column: 2 / 3; grid-row: 1 / 2; }
+.hub-node-3 { grid-column: 3 / 4; grid-row: 1 / 2; }
+.hub-node-4 { grid-column: 1 / 2; grid-row: 3 / 4; }
+.hub-node-5 { grid-column: 2 / 3; grid-row: 3 / 4; }
+.hub-node-6 { grid-column: 3 / 4; grid-row: 3 / 4; }
+
+
+/* === FAQ STYLES (REVISED & ROBUST) === */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+.faq-icon {
+    transition: transform 0.3s ease-in-out;
+}
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="mobile-header-bar mobile-only">
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png" alt="Usittel Logo" /></a>
+                </div>
+                <div class="nav-left desktop-only">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="active">Empresas</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions desktop-only">
+                    <a href="#" class="nav-button-green">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+            <div class="overlay" id="overlay"></div>
+            <div class="mobile-menu-slide" id="mobileMenu">
+                <div class="mobile-menu-header">
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+                    <button class="close-menu" id="closeMenu">&times;</button>
+                </div>
+                <hr />
+                <a href="#">Nuestra red</a>
+                <div class="submenu-container">
+                    <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
+                    <div class="submenu" id="productsSubmenu">
+                        <a href="#">Internet</a>
+                        <a href="#">WiFi Mesh</a>
+                        <a href="#">TV</a>
+                    </div>
+                </div>
+                <a href="#">Empresas</a>
+                <a href="#">Contáctanos</a>
+                <a href="#" class="nav-button-green">Centro de ayuda</a>
+                <a href="#" class="nav-button2">Autogestión</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section Empresas =========== -->
+        <section class="hero-empresas text-white py-24 md:py-40">
+            <div class="container mx-auto text-center px-6">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La conexión que tu empresa necesita para crecer.</h1>
+                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Soluciones de internet por fibra óptica diseñadas para la máxima productividad, estabilidad y con el soporte que tu negocio merece.</p>
+                <a href="#business-plans" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver Planes para Empresas</a>
+            </div>
+        </section>
+
+        <!-- =========== Business Benefits Section =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-tachometer-alt fa-3x"></i></div>
+                        <h3 class="text-xl font-bold mb-2">Velocidad Simétrica</h3>
+                        <p class="text-gray-600">Misma velocidad de subida y bajada para videoconferencias fluidas y transferencia de archivos pesados sin demoras.</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-shield-alt fa-3x"></i></div>
+                        <h3 class="text-xl font-bold mb-2">IP Pública Estática</h3>
+                        <p class="text-gray-600">Ideal para montar servidores, sistemas de vigilancia, VPNs y otros servicios críticos para tu operación.</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-headset fa-3x"></i></div>
+                        <h3 class="text-xl font-bold mb-2">Soporte Prioritario</h3>
+                        <p class="text-gray-600">Atención técnica especializada y con tiempos de respuesta preferenciales para resolver cualquier eventualidad.</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-file-contract fa-3x"></i></div>
+                        <h3 class="text-xl font-bold mb-2">SLA 99.5%</h3>
+                        <p class="text-gray-600">Nuestro Acuerdo de Nivel de Servicio te garantiza la máxima disponibilidad y confiabilidad para tu negocio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== NEW Interactive Hub Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una Conexión, Infinitas Posibilidades</h2>
+                <p class="text-lg text-gray-600 mt-2 mb-12 max-w-3xl mx-auto">Nuestra red de fibra óptica es el núcleo que impulsa cada aspecto de tu empresa. Pasá el mouse sobre cada servicio para ver cómo lo potenciamos.</p>
+                <div class="hub-container" id="hub-container">
+                    <!-- Central Hub -->
+                    <div class="hub-core">
+                        <i class="fa-solid fa-bolt fa-2x mb-2"></i>
+                        <span class="text-sm">USITTEL<br>FIBRA</span>
+                    </div>
+                    <!-- Nodes will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========== Business Plans Section =========== -->
+        <section id="business-plans" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes a la medida de tu negocio</h2>
+                    <p class="text-lg text-gray-600 mt-2">Enfocate en crecer, nosotros nos encargamos de tu conexión.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Plan 1 -->
+                    <div class="bg-gray-100 border rounded-xl p-8 flex flex-col">
+                        <h3 class="text-2xl font-bold text-gray-800">Negocios Esenciales</h3>
+                        <p class="text-gray-500 mb-4">Para pequeños negocios y startups</p>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">300</span><span class="text-gray-500"> Mbps Simétricos</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Soporte técnico preferencial.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal para equipos de hasta 10 personas.</span></li>
+                        </ul>
+                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Solicitar Plan</a>
+                    </div>
+                    <!-- Plan 2 (Popular) -->
+                    <div class="bg-white border-2 border-blue-500 rounded-xl p-8 flex flex-col relative">
+                        <span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>
+                        <h3 class="text-2xl font-bold text-gray-800">Negocios Pro</h3>
+                        <p class="text-gray-500 mb-4">Para empresas en crecimiento</p>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">500</span><span class="text-gray-500"> Mbps Simétricos</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Soporte técnico prioritario.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>IP Pública Estática incluída.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto para operaciones críticas.</span></li>
+                        </ul>
+                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Solicitar Plan</a>
+                    </div>
+                    <!-- Plan 3 -->
+                    <div class="bg-gray-100 border rounded-xl p-8 flex flex-col">
+                        <h3 class="text-2xl font-bold text-gray-800">Negocios Plus</h3>
+                        <p class="text-gray-500 mb-4">Máxima performance y estabilidad</p>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">1000</span><span class="text-gray-500"> Mbps Simétricos</span></div>
+                        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
+                             <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Soporte técnico prioritario.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>IP Pública Estática incluída.</span></li>
+                             <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal para grandes volúmenes de datos.</span></li>
+                        </ul>
+                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Solicitar Plan</a>
+                    </div>
+                </div>
+                <div class="text-center mt-12 bg-white p-8 rounded-lg shadow-sm max-w-4xl mx-auto">
+                     <h3 class="text-2xl font-bold text-gray-900">¿Necesitás una solución a medida?</h3>
+                     <p class="text-lg text-gray-600 mt-2 mb-4">Contamos con enlaces dedicados y proyectos especiales para empresas con requerimientos específicos. Contactá a nuestro equipo comercial.</p>
+                     <a href="#contact" class="nav-button-green cta-button px-8 py-3">Contactar a Ventas</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== Dedicated Support Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Soporte Dedicado para tu Negocio</h2>
+                    <p class="text-lg text-gray-600 mt-2">Tu tranquilidad es nuestra prioridad. Por eso, te ofrecemos un servicio de soporte a la altura de tu empresa.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="text-center p-6 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-user-tie text-blue-500 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Atención Prioritaria</h3>
+                        <p class="text-gray-600">Nuestros clientes corporativos tienen prioridad en la línea de soporte para minimizar cualquier tiempo de inactividad.</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-tools text-blue-500 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Técnicos Especializados</h3>
+                        <p class="text-gray-600">Contamos con un equipo de expertos dedicados a resolver las necesidades específicas del sector empresarial.</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-chart-line text-blue-500 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Monitoreo Proactivo</h3>
+                        <p class="text-gray-600">Supervisamos tu conexión de forma constante para anticiparnos a posibles problemas y garantizar la estabilidad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== FAQ Section =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes para Empresas</h2></div>
+                <div id="faq-accordion" class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="faq-item bg-gray-100 rounded-lg">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Qué ventajas me da una IP Pública Estática?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600"><p>Una IP estática es fundamental para alojar servidores web o de correo, establecer conexiones VPN seguras para teletrabajo, y acceder a sistemas de cámaras de seguridad de forma remota y confiable.</p></div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 2 -->
+                    <div class="faq-item bg-gray-100 rounded-lg">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Qué es el SLA y por qué es importante?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                           <div class="px-6 pb-4 text-gray-600"><p>El Acuerdo de Nivel de Servicio (SLA) es nuestro compromiso contractual sobre la disponibilidad del servicio. Un SLA del 99.5% te asegura que tu conexión estará activa y funcionando la mayor parte del tiempo, minimizando el impacto de posibles interrupciones en tu operación.</p></div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 3 -->
+                    <div class="faq-item bg-gray-100 rounded-lg">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Ofrecen soluciones de conectividad para eventos o enlaces temporales?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600"><p>Sí, ofrecemos soluciones flexibles y a medida para cubrir las necesidades de conectividad de eventos, transmisiones en vivo, y proyectos temporales. Contactá a nuestro equipo comercial para más detalles.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== Coverage & Contact Section =========== -->
+        <section id="coverage" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura para Empresas</h2>
+                    <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Tu empresa está en nuestra zona de cobertura?</h2>
+                    <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá la disponibilidad de nuestro servicio de fibra óptica en la dirección de tu negocio.</p>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input type="text" placeholder="Ingresá la dirección de tu empresa" class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button></div>
+                </div>
+                <div id="contact" class="mt-20 bg-white p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Contactá a nuestro equipo comercial</h3>
+                        <form action="#" method="POST" class="space-y-4">
+                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            </div>
+                            <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
+                            <div class="bg-gray-200 border border-gray-300 rounded-md p-4 h-20 flex items-center justify-center"><span class="text-gray-500 text-sm">Espacio para reCAPTCHA</span></div>
+                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar Mensaje</button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                        <div class="mt-4 text-gray-600">
+                            <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín 550, Tandil</p>
+                            <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p>
+                            <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/TUNUMERO" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Mobile Menu Logic
+        const hamburger = document.getElementById("hamburger"),
+            mobileMenu = document.getElementById("mobileMenu"),
+            overlay = document.getElementById("overlay"),
+            closeMenu = document.getElementById("closeMenu"),
+            toggleProducts = document.getElementById("toggleProducts"),
+            productsSubmenu = document.getElementById("productsSubmenu");
+        
+        function toggleMenu() {
+            mobileMenu.classList.toggle("show");
+            overlay.classList.toggle("show");
+        }
+
+        if (hamburger) hamburger.addEventListener("click", toggleMenu);
+        if (overlay) overlay.addEventListener("click", toggleMenu);
+        if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
+        if (toggleProducts) {
+            toggleProducts.addEventListener("click", (e) => {
+                e.preventDefault();
+                productsSubmenu.style.display =
+                    productsSubmenu.style.display === "flex" ? "none" : "flex";
+            });
+        }
+
+        // Hub & Spoke Interactive Section
+        const hubContainer = document.getElementById('hub-container');
+        if (hubContainer) {
+            const services = [
+                { id: 1, icon: 'fa-video', title: 'Videollamadas Fluidas' },
+                { id: 2, icon: 'fa-cloud-upload-alt', title: 'Nube Ultra Rápida' },
+                { id: 3, icon: 'fa-server', title: 'Gestión de Servidores' },
+                { id: 4, icon: 'fa-shield-alt', title: 'Seguridad Confiable' },
+                { id: 5, icon: 'fa-headset', title: 'Comunicaciones Claras' },
+                { id: 6, icon: 'fa-cash-register', title: 'Punto de Venta Online' }
+            ];
+
+            services.forEach(service => {
+                const node = document.createElement('div');
+                node.className = `hub-node hub-node-${service.id}`;
+                node.innerHTML = `
+                    <i class="fas ${service.icon} text-3xl text-blue-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-700">${service.title}</h4>
+                `;
+                hubContainer.appendChild(node);
+            });
+        }
+        
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach((item) => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            question.addEventListener('click', () => {
+                const isOpen = item.classList.contains('open');
+
+                // Close all other items first
+                faqItems.forEach(i => {
+                    if (i !== item) {
+                        i.classList.remove('open');
+                        i.querySelector('.faq-answer').style.maxHeight = null;
+                    }
+                });
+
+                // Toggle the clicked item
+                if (isOpen) {
+                    item.classList.remove('open');
+                    answer.style.maxHeight = null;
+                } else {
+                    item.classList.add('open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
+
+    });
+    </script>
+</body>
+</html>

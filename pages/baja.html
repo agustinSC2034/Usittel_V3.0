@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - Baja del Servicio</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===         NAV.CSS            === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ================================== */
+/* ===       CUSTOM STYLES        === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.cancellation-form-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out;
+}
+.cancellation-form-container.open {
+    max-height: 1000px; /* Adjust as needed */
+    padding-top: 2rem;
+}
+
+.cta-button {
+    transition: all 0.3s ease;
+}
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Empresas</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-button-green">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section =========== -->
+        <section class="bg-white py-20 md:py-28">
+            <div class="container mx-auto text-center px-6">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Solicitud de Baja y Arrepentimiento</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Desde aquí puede gestionar la baja de sus servicios o el arrepentimiento de una compra.</p>
+            </div>
+        </section>
+
+        <!-- =========== Retention & Cancellation Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-6 max-w-4xl">
+                
+                <!-- Retention Block -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg mb-12">
+                     <div class="flex items-start gap-4">
+                        <i class="fas fa-info-circle text-blue-600 text-3xl"></i>
+                        <div>
+                             <h2 class="text-2xl font-bold text-gray-900">Antes de continuar, ¡hablemos!</h2>
+                             <p class="text-gray-700 mt-2">A veces, los problemas tienen una solución más simple de lo que parece. Si estás teniendo inconvenientes técnicos, de facturación o sentís que tu plan no se ajusta a tus necesidades, nuestro equipo puede ayudarte.</p>
+                             <div class="mt-6">
+                                <a href="https://wa.me/5492494060345" target="_blank" class="cta-button inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
+                                    <i class="fab fa-whatsapp mr-2"></i> Hablar con un representante
+                                </a>
+                             </div>
+                        </div>
+                     </div>
+                </div>
+
+                <!-- Cancellation Options -->
+                <div>
+                     <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Gestionar mi servicio</h2>
+                     <div class="bg-white p-8 rounded-lg shadow-md">
+                        <p class="text-center text-gray-600 mb-8">Si ya tomaste una decisión, podés iniciar tu gestión desde aquí. Seleccioná la opción que corresponda.</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Arrepentimiento -->
+                             <button id="arrepentimiento-btn" class="text-left bg-gray-100 p-6 rounded-lg hover:bg-gray-200 transition-colors w-full">
+                                <h3 class="text-xl font-bold text-gray-800">Botón de Arrepentimiento</h3>
+                                <p class="text-gray-600 mt-1">Si contrataste un servicio en los últimos 10 días y querés cancelarlo.</p>
+                             </button>
+                             <!-- Baja -->
+                              <button id="baja-btn" class="text-left bg-gray-100 p-6 rounded-lg hover:bg-gray-200 transition-colors w-full">
+                                <h3 class="text-xl font-bold text-gray-800">Solicitud de Baja</h3>
+                                <p class="text-gray-600 mt-1">Para clientes existentes que desean dar de baja uno o más servicios.</p>
+                             </button>
+                        </div>
+                        
+                        <!-- Cancellation Form Container -->
+                        <div id="cancellation-form-container" class="cancellation-form-container">
+                            <div id="cancellation-form-content" class="bg-white border-t-2 border-gray-200 pt-8">
+                                <!-- Form content will be injected here by JS -->
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
+                <!-- Other Contact Methods -->
+                <div class="text-center mt-16">
+                    <h3 class="text-xl font-bold text-gray-800">Otros Canales de Contacto</h3>
+                    <p class="text-gray-600 mt-2">También podés realizar tu gestión comunicándote a nuestro <br> <strong>0800 199 4545</strong> o acercándote a nuestra oficina en <strong>Nigro 575, Tandil.</strong></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const arrepentimientoBtn = document.getElementById('arrepentimiento-btn');
+    const bajaBtn = document.getElementById('baja-btn');
+    const formContainer = document.getElementById('cancellation-form-container');
+    const formContent = document.getElementById('cancellation-form-content');
+
+    const formHTML = `
+        <h3 class="text-xl font-bold text-gray-900 mb-4" id="form-title"></h2>
+        <form action="#" method="POST" class="space-y-4">
+            <div>
+                <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre y Apellido del Titular</label>
+                <input type="text" name="fullName" id="fullName" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="docNumber" class="block text-sm font-medium text-gray-700">Nº de Documento del Titular</label>
+                <input type="text" name="docNumber" id="docNumber" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="contractNumber" class="block text-sm font-medium text-gray-700">Nº de Cliente o Contrato</label>
+                <input type="text" name="contractNumber" id="contractNumber" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+             <div>
+                <label for="reason" class="block text-sm font-medium text-gray-700">Motivo de la solicitud</label>
+                <textarea name="reason" id="reason" rows="4" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 cta-button">Confirmar Solicitud</button>
+        </form>
+    `;
+
+    function showForm(type) {
+        formContent.innerHTML = formHTML;
+        const formTitle = document.getElementById('form-title');
+        
+        if (type === 'arrepentimiento') {
+            formTitle.textContent = 'Formulario de Arrepentimiento de Compra';
+        } else {
+            formTitle.textContent = 'Formulario de Solicitud de Baja';
+        }
+
+        formContainer.classList.add('open');
+        formContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    arrepentimientoBtn.addEventListener('click', () => showForm('arrepentimiento'));
+    bajaBtn.addEventListener('click', () => showForm('baja'));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - Términos y Condiciones</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===         NAV.CSS            === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ================================== */
+/* ===       CUSTOM STYLES        === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Styles for legal text page */
+.legal-content h2 {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    color: #1f2937; /* gray-800 */
+    margin-top: 2.5rem; /* 40px */
+    margin-bottom: 1rem; /* 16px */
+    padding-bottom: 0.5rem; /* 8px */
+    border-bottom: 2px solid #e5e7eb; /* gray-200 */
+}
+.legal-content h2:first-of-type {
+    margin-top: 0;
+}
+.legal-content p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #4b5563; /* gray-600 */
+}
+.legal-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    color: #4b5563;
+}
+.legal-content li {
+    margin-bottom: 0.5rem;
+}
+.legal-content a {
+    color: #2563eb; /* blue-600 */
+    text-decoration: underline;
+}
+.legal-content a:hover {
+    color: #1d4ed8; /* blue-700 */
+}
+.legal-content strong {
+    color: #111827; /* gray-900 */
+}
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Empresas</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-button-green">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section =========== -->
+        <section class="bg-white py-16 md:py-20">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Términos y Condiciones del Uso del Sitio Web</h1>
+                <p class="text-sm text-gray-500 mt-2">Última actualización: 22 de Junio de 2025</p>
+            </div>
+        </section>
+
+        <br><br>
+
+        <!-- =========== Legal Content Section =========== -->
+        <section class="pb-16 md:pb-24">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="bg-white p-8 md:p-12 rounded-lg shadow-md legal-content">
+                    <h2>Objeto</h2>
+                    <p>Los términos y condiciones que a continuación se detallan regulan el acceso y el uso del sitio www.usittel.com.ar (en adelante, el <strong>“Sitio”</strong>) titularidad de Grupo ITTEL S.R.L. (en adelante, <strong>“USITTEL”</strong>) CUIT 30-71184313-9, con domicilio en la calle Manuel Ugarte 1667 de la Ciudad de Buenos Aires. La utilización del Sitio supone la total aceptación del usuario (en adelante, <strong>“Usuario”</strong>) a dichos términos.</p>
+                    
+                    <h2>Propiedad Intelectual e Industrial</h2>
+                    <p>El Sitio contiene material que incluye textos, fotografías, imágenes y sonidos, los cuales están protegidos por derecho de autor y/u otros derechos de propiedad intelectual. Todos los derechos de autor y de propiedad intelectual, o son propiedad de USITTEL, o se ha obtenido la licencia de uso del propietario de esos derechos para que el material pueda ser usado como parte de este Sitio. El Sitio contiene marcas registradas que pertenecen a USITTEL o se ha obtenido la licencia del propietario para que esas marcas registradas puedan utilizarse en el Sitio.</p>
+
+                    <h2>Utilización del Sitio</h2>
+                    <p>El Sitio facilitará al Usuario toda información relacionada a los productos y servicios que brinda USITTEL. El Sitio está compuesto por diferentes páginas y los presentes Términos y Condiciones rigen el uso del Sitio y de la totalidad de las diferentes páginas que el mismo contiene. No obstante, el acceso y la utilización de ciertos contenidos y/o servicios pueden encontrarse sometido a determinadas condiciones específicas.</p>
+
+                    <h2>Cambios del Sitio</h2>
+                    <p>USITTEL podrá cambiar el formato y contenido de este Sitio en cualquier momento y sin la obligación de comunicar o exponer las razones de su decisión y sin que ello genere derecho a indemnización o resarcimiento alguno a favor del Usuario. Se recomienda que consulte periódicamente los presentes Términos y Condiciones de uso del Sitio ya que estos pueden ser modificados. Asimismo, USITTEL puede suspender la operación del Sitio para realizar trabajos de mantenimiento, con el propósito de actualizar la información o por cualquier otra razón. USITTEL se reserva el derecho de clausura del Sitio en cualquier momento y sin aviso.</p>
+
+                    <h2>Responsabilidad</h2>
+                    <p>El Usuario conoce y acepta que el Sitio no otorga ninguna garantía de cualquier naturaleza, ya sea expresa o implícita, sobre los datos, contenidos, información y servicios que se incorporan y ofrecen desde el mismo. Exceptuando los casos que la Ley imponga expresamente lo contrario, y exclusivamente con la medida y extensión en que lo imponga, USITTEL no garantiza ni asume responsabilidad alguna respecto a los posibles daños y perjuicios causados por el uso y utilización de la información, datos y servicios del Sitio, como tampoco por la información y/o servicios prestados o suministrados por terceros diferentes de USITTEL. Toda responsabilidad será del tercero ya sea proveedor o colaborador.</p>
+
+                    <h2>Obligaciones del Usuario</h2>
+                    <p>El Usuario deberá respetar en todo momento los términos y condiciones establecidos en las presentes condiciones generales de uso del Sitio; asumiendo que utilizará el Sitio de forma diligente y que asumirá cualquier responsabilidad que pudiera derivarse del incumplimiento de las normas. El Usuario no podrá utilizar el Sitio para transmitir, almacenar, divulgar promover o distribuir datos o contenidos que sean portadores de virus o cualquier otro código informático, archivos o programas diseñados para interrumpir, destruir o perjudicar el funcionamiento de cualquier programa o equipo informático o de telecomunicaciones. USITTEL prohíbe la copia, duplicación, distribución, alteración, falsificación, comercialización o cualquier otra actividad que pudiera ser realizada con los contenidos de su Sitio por parte del Usuario. Será responsabilidad del Usuario el acceso a otras páginas a través de este Sitio, USITTEL no es responsable de la información suministrada esas páginas, siendo esta responsabilidad única y excluyente de las empresas y/u organismos que la provean. El Usuario es el único responsable de la introducción de datos personales propios o de terceros – nombre y apellido, domicilio, teléfono, mail, etc.- en los mensajes de correo electrónico de la página de Contacto del Sitio. USITTEL no se hará responsable, en ningún caso, por la veracidad de dichos datos.</p>
+
+                    <h2>Consecuencia por violación a los términos y condiciones del Sitio</h2>
+                    <p>USITTEL podrá realizar las acciones legales que sean necesarias para remediar cualquier violación a los presentes Términos y Condiciones, incluso el de restringir el acceso a este Sitio a determinados usuarios.</p>
+
+                    <h2>Autogestión</h2>
+                    <p>El usuario podrá utilizar el Sitio sin necesidad de registrarse, solo la página de autogestión dentro del Sitio tendrá acceso restringido, siendo necesario contar con usuario y contraseña. En dicha sección dentro del Sitio para los Clientes, USITTEL asignará un número de usuario y contraseña para que el Cliente pueda configurar los servicios incluidos y adicionales que brinda USITTEL, controlar los consumos y factura on-line. El cliente será responsable en todo momento del usuario y contraseña otorgados para ingresar a la sección de autogestión. Los mismos son intransferibles y el cliente será responsable por el uso que haga de ellos. El Cliente será responsable por las operaciones que realice en su cuenta de autogestión. Asimismo, el Cliente se compromete a notificar a USITTEL en forma inmediata, cualquier uso no autorizado de su cuenta, así como el ingreso por terceros no autorizados a la misma.</p>
+
+                    <h2>Legislación aplicable, jurisdicción competente y notificaciones</h2>
+                    <p>Las presentes condiciones se rigen y se interpretan de acuerdo con las Leyes de Argentina. Ante cualquier diferencia, desacuerdo o conflicto derivado de la interpretación, validez, alcance y/o aplicación de los presentes Términos y Condiciones generales, los Usuarios se comunicarán con USITTEL de manera fehaciente, haciéndole llegar su reclamo, para que las partes traten de arribar a un acuerdo. En caso de que no sea posible arribar a una solución, y para garantizar a los consumidores el pleno acceso a la justicia, los usuarios podrán elegir y someter su reclamo a una de las siguientes opciones e instancias, excluyentes entre sí:</p>
+                    <ul>
+                        <li>Sistema nacional de arbitraje de consumo del ministerio de economía y producción de la nación. Los procedimientos ante este sistema son gratuitos, y no es necesario contar con patrocinio letrado. Asimismo, se garantiza el equilibrio entre las partes y la transparencia del proceso, y los laudos emitidos por dicho tribunal tienen autoridad de cosa juzgada y son irrecurribles (para saber más sobre este sistema ingresar en <a href="http://www.mecon.gov.ar/snac" target="_blank" rel="noopener noreferrer">http://www.mecon.gov.ar/snac</a>).</li>
+                        <li>Dirección general de defensa y protección del consumidor del gobierno de la ciudad de buenos aires (para saber más sobre este sistema ingresar en <a href="http://www.buenosaires.gov.ar" target="_blank" rel="noopener noreferrer">http://www.buenosaires.gov.ar</a>).</li>
+                        <li>Tribunales ordinarios de la Ciudad Autónoma de Buenos Aires con competencia en la materia.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

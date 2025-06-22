@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - Centro de Ayuda</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===         NAV.CSS            === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ================================== */
+/* ===       CUSTOM STYLES        === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.hero-help-center {
+    background: linear-gradient(rgba(23, 79, 143, 0.8), rgba(23, 79, 143, 0.8)), url('https://images.unsplash.com/photo-1453928582365-b6ad33cb124b?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.search-bar input {
+    padding-left: 3rem;
+}
+
+.search-bar .fa-search {
+    position: absolute;
+    top: 50%;
+    left: 1.25rem;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.faq-section {
+    display: none;
+}
+
+.faq-section.active {
+    display: block;
+}
+
+.faq-tab {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 4px solid transparent;
+}
+
+.faq-tab.active {
+    color: #1a73e8;
+    border-color: #1a73e8;
+}
+
+.faq-tab:hover:not(.active) {
+    background-color: #f3f4f6;
+}
+
+.faq-item {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    padding: 0 1.5rem;
+}
+
+.faq-item.open .faq-answer {
+    padding: 0 1.5rem 1.5rem;
+}
+
+.faq-icon {
+    transition: transform 0.3s ease-in-out;
+}
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.resource-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.resource-button:hover {
+    border-color: #1a73e8;
+    color: #1a73e8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.resource-button i {
+    color: #3b82f6;
+}
+
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Empresas</a></li>
+                        <li><a href="contact.html">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-button-green active">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section Help Center =========== -->
+        <section class="hero-help-center text-white py-20 md:py-28">
+            <div class="container mx-auto text-center px-6">
+                <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">¿En qué podemos ayudarte?</h1>
+                <div class="search-bar max-w-2xl mx-auto mt-8">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscá por palabra clave (ej: 'factura', 'sin señal')" class="w-full px-5 py-4 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== FAQs Section =========== -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 mb-12">
+                    <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Tabs">
+                        <button data-tab="tv" class="faq-tab active whitespace-nowrap py-4 px-1 text-center font-bold text-lg">
+                           <i class="fas fa-tv mr-2"></i> Televisión
+                        </button>
+                        <button data-tab="internet" class="faq-tab whitespace-nowrap py-4 px-1 text-center font-bold text-lg">
+                           <i class="fas fa-wifi mr-2"></i> Internet y WiFi
+                        </button>
+                        <button data-tab="admin" class="faq-tab whitespace-nowrap py-4 px-1 text-center font-bold text-lg">
+                           <i class="fas fa-file-invoice-dollar mr-2"></i> Administrativas
+                        </button>
+                    </nav>
+                </div>
+                
+                <!-- TV FAQs -->
+                <div id="tv-faqs" class="faq-section active">
+                    <div class="mb-12">
+                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Recursos y Guías para TV</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <a href="#" class="resource-button"><i class="fas fa-book"></i> Manual de Usuario</a>
+                            <a href="#" class="resource-button"><i class="fas fa-mobile-alt"></i> Cómo Instalar la App</a>
+                            <a href="#" class="resource-button"><i class="fas fa-play-circle"></i> Ver TV en la PC</a>
+                            <a href="#" class="resource-button"><i class="fas fa-th-list"></i> Grilla de Canales</a>
+                            <a href="#" class="resource-button"><i class="fas fa-cog"></i> Administrar mi Cuenta</a>
+                            <a href="#" class="resource-button"><i class="fas fa-question-circle"></i> Alcance del Servicio</a>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>No tengo señal en algunos canales, ¿qué hago?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>Primero, verificá si el inconveniente ocurre en un solo televisor o en todos. Si es en uno solo, reiniciá el decodificador desconectándolo de la corriente por 30 segundos. Si el problema persiste en todos los equipos, contactá a nuestro soporte técnico por WhatsApp.</p></div></div>
+                        </div>
+                         <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>¿Cómo veo la tele en mi celular o tablet?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>Descargá la app "Sensa" desde la tienda de aplicaciones de tu dispositivo (Google Play Store o Apple App Store). Ingresá con tu usuario y contraseña de cliente de Usittel y ¡listo! Ya podés disfrutar de todo el contenido.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Internet & WiFi FAQs -->
+                <div id="internet-faqs" class="faq-section">
+                    <div class="mb-12">
+                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Recursos y Guías para Internet</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <a href="#" class="resource-button"><i class="fas fa-user-cog"></i> Autogestión Servicio</a>
+                            <a href="#" class="resource-button"><i class="fab fa-whatsapp"></i> Autogestión por WhatsApp</a>
+                            <a href="#" class="resource-button"><i class="fas fa-book-open"></i> Instructivo WiFi Mesh</a>
+                        </div>
+                    </div>
+                    <!-- REPLACED SECTION -->
+                     <div class="mb-12">
+                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Alcance del Servicio</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <a href="#" class="resource-button"><i class="fas fa-user"></i> Internet Residencial</a>
+                            <a href="#" class="resource-button"><i class="fas fa-store-alt"></i> Internet Comercio</a>
+                            <a href="#" class="resource-button"><i class="fas fa-building"></i> Internet Empresas</a>
+                            <a href="#" class="resource-button"><i class="fas fa-server"></i> Internet Dedicado</a>
+                            <a href="#" class="resource-button col-span-1 sm:col-span-2 lg:col-span-3 justify-center"><i class="fas fa-file-signature"></i> Acuerdo de Nivel de Servicio (SLA)</a>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>No tengo internet, ¿qué pasos sigo?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>1. Reiniciá el módem de fibra óptica (ONT) y tu router WiFi, desconectándolos de la corriente por un minuto.<br>2. Verificá que todos los cables estén bien conectados.<br>3. Comprobá si el problema ocurre en un solo dispositivo o en todos. Si es en uno, reiniciá ese dispositivo.<br>4. Si el problema continúa, contactanos por WhatsApp para que un técnico te asista.</p></div></div>
+                        </div>
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>Mi conexión está lenta, ¿cómo puedo mejorarla?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>Realizá un test de velocidad conectado por cable directamente al módem para verificar la velocidad real que llega a tu hogar. Si usás WiFi, intentá acercarte al router. Recordá que muchos dispositivos conectados al mismo tiempo pueden afectar la velocidad. Si tenés una casa grande o con muchas paredes, considerá nuestra solución WiFi Mesh para una cobertura total.</p></div></div>
+                        </div>
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>¿Cuál es la diferencia entre 2.4 GHz y 5 GHz en mi WiFi?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>La red <b>2.4 GHz</b> tiene mayor alcance pero menor velocidad, ideal para dispositivos lejos del router. La red <b>5 GHz</b> ofrece mayor velocidad pero tiene menor alcance, perfecta para streaming en 4K y gaming cerca del router. Nuestros equipos modernos gestionan esto automáticamente para darte siempre la mejor conexión.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Administrative FAQs -->
+                <div id="admin-faqs" class="faq-section">
+                     <div class="space-y-4">
+                        <div class="faq-item rounded-lg open">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>¿Cuáles son los medios de pago disponibles?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer" style="max-height: fit-content;"><div class="text-gray-600 prose p-4">
+                                <p>Como medios de pago disponibles para abonar su factura ud. dispone de:</p>
+                                <ul class="list-disc pl-5 mt-2 space-y-2">
+                                    <li><b>Pago en Línea:</b> accediendo a <a href="https://www.clientes.usittel.com.ar/" target="_blank" class="text-blue-600 hover:underline">Autogestión</a> con tu número de contrato y documento.</li>
+                                    <li><b>Rapipago, Pago Fácil:</b> a partir del código de barras presente en la factura. Puede utilizar también Pago Fácil Online con su número de cliente.</li>
+                                    <li><b>Pago mis Cuentas, Red Link:</b> a través del Código Electrónico de pago presente en la factura.</li>
+                                    <li><b>Mercado Pago o billeteras virtuales:</b> escaneando el código QR en la Factura.</li>
+                                    <li><b>Transferencias bancarias</b> al siguiente alias: <span class="font-semibold">USITTELOK</span> (CBU: 2470005610000000889770)</li>
+                                </ul>
+                            </div></div>
+                        </div>
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>¿Cómo puedo ver y descargar mi factura?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>Podés ver y descargar tu factura fácilmente desde nuestro portal de Autogestión. También podés solicitarla a través de nuestro WhatsApp automatizado.</p></div></div>
+                        </div>
+                        <div class="faq-item rounded-lg">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
+                                <span>Necesito mudarme, ¿puedo trasladar el servicio?</span>
+                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                            </button>
+                            <div class="faq-answer"><div class="text-gray-600 prose p-4"><p>¡Claro! Comunicate con nuestro sector administrativo para verificar la factibilidad de servicio en tu nuevo domicilio y coordinar el traslado. Es importante que nos avises con al menos 15 días de anticipación.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // --- FAQ Accordion & Tabs Logic ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach((item) => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            // No cerramos los otros para que se puedan abrir varios a la vez si el usuario quiere
+            if (isOpen) {
+                item.classList.remove('open');
+                item.querySelector('.faq-answer').style.maxHeight = null;
+            } else {
+                item.classList.add('open');
+                const answer = item.querySelector('.faq-answer');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
+
+    const tabs = document.querySelectorAll('.faq-tab');
+    const sections = document.querySelectorAll('.faq-section');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            sections.forEach(section => {
+                if (section.id === target + '-faqs') {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        });
+    });
+});
+</script>
+
+</body>
+</html>

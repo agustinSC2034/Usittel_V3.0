@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - Sobre Nosotros</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===         NAV.CSS            === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ================================== */
+/* ===       CUSTOM STYLES        === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.cta-button {
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.interactive-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
+    background-color: white;
+}
+
+.interactive-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: #22c55e; /* green-500 */
+}
+
+.partner-logo {
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.partner-logo:hover {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Empresas</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-button-green">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section =========== -->
+        <section class="bg-white py-20 md:py-28">
+            <div class="container mx-auto text-center px-6">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Nacimos en Tandil, para Tandil.</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Somos el resultado de la unión de dos fuerzas con un objetivo común: brindarte la mejor conexión y el servicio que te merecés.</p>
+            </div>
+        </section>
+
+        <!-- =========== Our Story Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Nuestra Historia: Una Alianza Estratégica</h2>
+                        <p class="text-gray-600 mb-4">Usittel nace de la visión compartida entre <strong>La Usina de Tandil</strong> y <strong>Grupo Ittel</strong>. Por un lado, la trayectoria y el profundo conocimiento local de La Usina, una institución emblemática de nuestra ciudad. Por el otro, la experiencia y la capacidad técnica de Grupo Ittel, especialista en telecomunicaciones y tecnología.</p>
+                        <p class="text-gray-600">Esta colaboración estratégica nos permite combinar lo mejor de ambos mundos: la infraestructura robusta y la confianza de una empresa local, con la innovación y el expertise de un líder en conectividad. Juntos, creamos una empresa de telecomunicaciones de vanguardia, pensada por y para la gente de la región.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8 items-center">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="partner-logo max-h-24 mx-auto">
+                        <img src="https://placehold.co/200x100/cccccc/333333?text=Logo+Grupo+Ittel" alt="Logo Grupo Ittel" class="partner-logo max-h-24 mx-auto">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== Mission & Vision Section =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900">Nuestra Misión</h2>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Ser el proveedor de servicios de Internet y Televisión líder de la zona, adaptándonos a tus necesidades y creciendo junto a vos.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 mt-12 text-center">
+                    <div class="interactive-card p-8 rounded-xl">
+                        <i class="fas fa-rocket text-4xl text-blue-500 mb-4"></i>
+                        <h3 class="text-xl font-bold">Tecnología de Punta</h3>
+                        <p class="text-gray-600 mt-2">Invertimos en la última tecnología de fibra óptica para garantizarte una conexión ultra rápida y estable.</p>
+                    </div>
+                     <div class="interactive-card p-8 rounded-xl">
+                        <i class="fas fa-users text-4xl text-blue-500 mb-4"></i>
+                        <h3 class="text-xl font-bold">Atención Local y Personalizada</h3>
+                        <p class="text-gray-600 mt-2">Conocemos a nuestros vecinos. Te ofrecemos un trato cercano y soluciones rápidas, sin vueltas.</p>
+                    </div>
+                     <div class="interactive-card p-8 rounded-xl">
+                        <i class="fas fa-handshake text-4xl text-blue-500 mb-4"></i>
+                        <h3 class="text-xl font-bold">Compromiso con la Comunidad</h3>
+                        <p class="text-gray-600 mt-2">Somos de acá. Nuestro éxito es el crecimiento de nuestra ciudad y nuestra gente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- =========== Team Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Un Equipo Local, Para Vos</h2>
+                        <p class="text-gray-600 mb-4">Nuestro equipo está formado por profesionales de Tandil, comprometidos con brindarte el mejor servicio. Cuando nos contactás, hablás con alguien que conoce la ciudad y entiende tus necesidades.</p>
+                        <p class="text-gray-600">Desde nuestros técnicos instaladores hasta el personal de atención al cliente en nuestras oficinas de Nigro 575, trabajamos cada día para que tengas la mejor experiencia de conectividad.</p>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <img src="https://www.eldiariodetandil.com/news/1000/600/95522-lunghi-y-civale-inauguraron-las-oficinas-de-usittel.jpg" alt="Equipo de Usittel en las oficinas de Tandil" class="rounded-lg shadow-xl w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

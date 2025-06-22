@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - TV en vivo y Streaming</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+/* ================================== */
+/* ===         NAV.CSS            === */
+/* ================================== */
+.navbar-section *,
+.navbar-section *::before,
+.navbar-section *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header.navbar-section {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+.navbar-section {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #3c4043;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.logo:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.logo img {
+    height: 36px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #60666b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(60, 64, 67, 0.06);
+    color: #202020;
+}
+
+.nav-links li a.active {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.nav-links .dropdown {
+    position: relative;
+}
+
+.nav-links .dropdown > a.active-parent {
+    background-color: rgba(26, 115, 232, 0.08);
+    color: #1a73e8;
+}
+
+.nav-links .dropdown-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    padding: 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: #3c4043;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.nav-links .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-button,
+.nav-button2,
+.nav-button-green {
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-button-green {
+    background-color: #30a172;
+    color: white !important;
+}
+
+.nav-button-green:hover {
+    background-color: #188b48;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button2 {
+    background-color: #1a73e8;
+    color: white !important;
+}
+
+.nav-button2:hover {
+    background-color: #175ca7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* ================================== */
+/* ===       CUSTOM STYLES        === */
+/* ================================== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-tv {
+    background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+        url('https://images.unsplash.com/photo-1593784991345-Afwixb9w?q=80&w=2070&auto=format&fit=crop')
+            no-repeat center center;
+    background-size: cover;
+}
+
+.cta-button {
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.interactive-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
+    background-color: white;
+}
+
+.interactive-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: #22c55e; /* green-500 */
+}
+
+/* === FAQ STYLES === */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+.faq-icon {
+    transition: transform 0.3s ease-in-out;
+}
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+/* === NEW: WATCH ANYWHERE SECTION V3 === */
+.device-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+.device-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+.device-card-image {
+    aspect-ratio: 16/9;
+    background-color: #1f2937;
+    background-size: cover;
+    background-position: center;
+}
+.device-card-content {
+    padding: 1.5rem;
+}
+.device-gallery-container:hover .device-card {
+    opacity: 0.6;
+    transform: scale(0.95);
+}
+.device-gallery-container .device-card:hover {
+    opacity: 1;
+    transform: scale(1);
+    border-color: #22c55e;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+}
+
+</style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- =========== Header / Navigation =========== -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="#">Nuestra red</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="active-parent">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Internet</a></li>
+                                <li><a href="#">WiFi Mesh</a></li>
+                                <li><a href="#" class="active">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Empresas</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="#" class="nav-button-green">Centro de ayuda</a>
+                    <a href="#" class="nav-button2">Autogestión</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- =========== Hero Section TV =========== -->
+        <section class="hero-tv text-white py-24 md:py-40">
+            <div class="container mx-auto text-center px-6">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La tele que va con vos.</h1>
+                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Disfrutá de más de 100 canales en vivo, miles de series y películas on-demand, y todo el fútbol en un solo lugar. Llevá tu tele a donde vayas.</p>
+                <a href="#tv-plans" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver Planes y Adicionales</a>
+            </div>
+        </section>
+
+        <!-- =========== TV Plans Section =========== -->
+        <section id="tv-plans" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Nuestro Plan de TV</h2>
+                    <p class="text-lg text-gray-600 mt-2">Todo el entretenimiento que querés, a un precio increíble.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-6xl mx-auto items-center">
+                    <!-- Main Plan -->
+                    <div class="lg:col-span-3 bg-white rounded-xl p-8 flex flex-col items-center text-center gap-6 interactive-card">
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full">PLAN PRINCIPAL</span>
+                        <h3 class="text-3xl font-bold text-gray-800">Sensa TV Full</h3>
+                        <ul class="space-y-2 text-gray-600 mb-2">
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>+100 canales en vivo, 25 en HD.</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Acceso a miles de series y películas On-Demand.</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Funciones de grabar, pausar y retroceder.</li>
+                        </ul>
+                        <div class="my-2"><span class="text-5xl font-extrabold text-gray-900">$14.999</span><span class="text-gray-500">/mes</span></div>
+                        <a href="#contact" class="w-full md:w-auto text-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button mt-2">Contratar</a>
+                    </div>
+                    <!-- Add-ons -->
+                     <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-2xl font-bold text-gray-800 text-center lg:text-left">Agregá Packs Premium</h3>
+                        <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
+                             <img src="https://placehold.co/64x64/000000/FFFFFF?text=FP" alt="Pack Futbol Logo" class="rounded-md"/>
+                             <div>
+                                 <h4 class="font-bold text-gray-800">Pack Fútbol</h4>
+                                 <p class="text-gray-600 text-sm">Viví todos los partidos de la liga argentina.</p>
+                                 <p class="font-bold text-sm text-green-600 mt-1">$15.599 /mes</p>
+                             </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
+                             <img src="https://placehold.co/64x64/942dd9/FFFFFF?text=HBO" alt="HBO Pack Logo" class="rounded-md"/>
+                             <div>
+                                 <h4 class="font-bold text-gray-800">Pack HBO</h4>
+                                 <p class="text-gray-600 text-sm">Canales premium y acceso a la app <span class="font-semibold">MAX</span>.</p>
+                                 <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
+                             </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
+                             <img src="https://placehold.co/64x64/f26522/FFFFFF?text=U%2B" alt="Universal+ Logo" class="rounded-md"/>
+                             <div>
+                                 <h4 class="font-bold text-gray-800">Universal+</h4>
+                                 <p class="text-gray-600 text-sm">Canales premium y acceso a la app de streaming.</p>
+                                 <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
+                             </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== NEW Watch Anywhere Section V3 =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Tu TV, a tu manera, donde quieras.</h2>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Con Sensa, el entretenimiento te sigue. Empezá a ver una película en la tele del living y seguila en la tablet desde tu cama.</p>
+                </div>
+                <div class="device-gallery-container">
+                    <div class="device-gallery">
+                        <div class="device-card">
+                            <div class="device-card-image" style="background-image: url('https://placehold.co/800x450/1f2937/9ca3af?text=Tu+App+en+la+TV')"></div>
+                            <div class="device-card-content">
+                                <h4 class="font-bold text-xl">En tu Smart TV</h4>
+                                <p class="text-gray-600">Disfrutá en pantalla grande, con la mejor calidad de imagen y sonido.</p>
+                            </div>
+                        </div>
+                        <div class="device-card">
+                            <div class="device-card-image" style="background-image: url('https://placehold.co/800x450/1f2937/9ca3af?text=Tu+App+en+la+Tablet')"></div>
+                             <div class="device-card-content">
+                                <h4 class="font-bold text-xl">En tu Tablet</h4>
+                                <p class="text-gray-600">Llevá tus series y películas a cualquier habitación, a la cocina o al patio.</p>
+                            </div>
+                        </div>
+                         <div class="device-card">
+                            <div class="device-card-image" style="background-image: url('https://placehold.co/800x450/1f2937/9ca3af?text=Tu+App+en+el+Celular')"></div>
+                            <div class="device-card-content">
+                                <h4 class="font-bold text-xl">En tu Celular</h4>
+                                <p class="text-gray-600">El entretenimiento que te acompaña fuera de casa, donde sea que vayas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- =========== Multi-device & Compatibility Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una cuenta, 6 pantallas.</h2>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Disfrutá de tu contenido en hasta 6 dispositivos en simultáneo, para que cada miembro de la familia vea lo que quiera.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="p-8 bg-white rounded-lg interactive-card">
+                        <div class="flex items-center gap-4 text-2xl font-bold text-blue-600 mb-4">
+                            <i class="fas fa-tv"></i>
+                            <h3>Pantallas Grandes</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Hasta 3 dispositivos en simultáneo.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-tv"></i>Smart TV</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fab fa-google"></i>Chromecast</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-box"></i>Roku</span>
+                        </div>
+                    </div>
+                     <div class="p-8 bg-white rounded-lg interactive-card">
+                        <div class="flex items-center gap-4 text-2xl font-bold text-green-600 mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h3>Dispositivos Móviles</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Hasta 3 dispositivos en simultáneo.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-laptop"></i>Computadora</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-tablet-alt"></i>Tablet</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-mobile-alt"></i>Celular</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compatibility Sub-section -->
+                <div class="mt-20 text-center max-w-3xl mx-auto">
+                    <h3 class="text-2xl font-bold text-gray-900">Verificá si tu TV es compatible</h3>
+                    <p class="text-gray-600 mt-2 mb-6">La app es compatible con dispositivos Android TV, Samsung TV, Apple TV, Roku, PC, y Chromecast. Hacé clic en el logo de tu dispositivo para ver la guía y verificar si es compatible.</p>
+                    <div class="flex justify-center flex-wrap gap-4">
+                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                            <i class="fab fa-android text-4xl text-green-500"></i>
+                            <span class="mt-2 font-semibold">Android TV</span>
+                        </a>
+                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                             <i class="fab fa-amazon text-4xl text-yellow-500"></i>
+                             <span class="mt-2 font-semibold">Fire TV</span>
+                        </a>
+                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                             <i class="fab fa-apple text-4xl text-gray-700"></i>
+                             <span class="mt-2 font-semibold">Apple TV</span>
+                        </a>
+                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                             <i class="fas fa-mobile-alt text-4xl text-blue-500"></i>
+                             <span class="mt-2 font-semibold">Móviles</span>
+                        </a>
+                    </div>
+                     <p class="mt-8 text-gray-600">Podés verificar si tu TV es compatible con la app Sensa buscándola dentro de los <a href="#" class="text-blue-600 font-semibold hover:underline">dispositivos homologados</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== App Features & Video Section =========== -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">Control total sobre lo que ves.</h2>
+                        <p class="text-lg text-gray-600 mt-2 mb-8">Con la app Sensa, tenés el poder de manejar la TV a tu antojo. No te pierdas nunca más tus programas favoritos.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-4">
+                                <i class="fas fa-record-vinyl text-blue-500 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Grabá y mirá cuando quieras</h4>
+                                    <p class="text-gray-600">¿No llegás a ver el partido? Grabalo con un solo clic y disfrutalo más tarde, sin apuros.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <i class="fas fa-pause-circle text-blue-500 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Pausá y retrocedé en vivo</h4>
+                                    <p class="text-gray-600">Atendé una llamada o andá a buscar algo para tomar. Poné pausa y seguí viendo como si nada.</p>
+                                </div>
+                            </li>
+                             <li class="flex items-start gap-4">
+                                <i class="fas fa-undo text-blue-500 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Reiniciá programas ya empezados</h4>
+                                    <p class="text-gray-600">¿Enganchaste una película a la mitad? Reiniciala y mirala completa desde el principio.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Video Placeholder -->
+                    <div class="bg-gray-800 rounded-xl shadow-lg aspect-video flex items-center justify-center text-white flex-col p-8 interactive-card">
+                        <i class="far fa-play-circle text-6xl mb-4"></i>
+                        <h3 class="font-bold">Mirá la app en acción</h3>
+                        <p class="text-gray-300 text-center">Espacio para tu video.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== FAQ Section =========== -->
+        <section class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2></div>
+                <div id="faq-accordion" class="space-y-4">
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Necesito un decodificador para cada tele?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600"><p>No necesariamente. Si tenés un Smart TV compatible, podés descargar la app Sensa directamente. Para televisores más antiguos o para una mejor experiencia, te ofrecemos un decodificador en comodato.</p></div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Puedo contratar solo el Pack Fútbol?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                           <div class="px-6 pb-4 text-gray-600"><p>Los packs premium, como el Pack Fútbol o HBO, son adicionales a nuestro Plan Sensa TV Full. Es necesario tener el plan base para poder sumarlos y disfrutar de todo el contenido.</p></div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Qué velocidad de internet necesito?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600"><p>Para una experiencia óptima, especialmente si vas a ver contenido en HD y en varios dispositivos, recomendamos tener uno de nuestros planes de Fibra Óptica. El servicio de TV funciona mejor con una conexión estable y de alta velocidad.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // --- FAQ Accordion Logic ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach((item) => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        if (question) {
+            question.addEventListener('click', () => {
+                const isOpen = item.classList.contains('open');
+                
+                faqItems.forEach(i => {
+                    if (i !== item) {
+                        i.classList.remove('open');
+                        const ans = i.querySelector('.faq-answer');
+                        if (ans) {
+                           ans.style.maxHeight = null;
+                        }
+                    }
+                });
+
+                if (isOpen) {
+                    item.classList.remove('open');
+                    answer.style.maxHeight = null;
+                } else {
+                    item.classList.add('open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

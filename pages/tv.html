@@ -199,9 +199,10 @@ body {
 
 .hero-tv {
     background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-        url('https://images.unsplash.com/photo-1593784991345-Afwixb9w?q=80&w=2070&auto=format&fit=crop')
-            no-repeat center center;
-    background-size: cover;
+        url('/assets/img/tv/background_image_tv.png') no-repeat center top;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-color: #000; /* fallback */
 }
 
 .cta-button {
@@ -265,90 +266,28 @@ h1, h2, h3 {
     transform: rotate(45deg);
 }
 
-/* === NEW: ARC FEATURES SECTION === */
-.arc-features-container {
-    position: relative;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    aspect-ratio: 2.2/1; /* Adjusted aspect ratio */
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-}
-.arc {
-    position: absolute;
-    left: 50%;
-    bottom: -50%;
-    transform: translateX(-50%);
-    border: 2px dashed #d1d5db; /* gray-300 */
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 50%;
-}
-.arc-1 { width: 100%; height: 100%; }
-.arc-2 { width: 75%; height: 75%; }
-.arc-3 { width: 50%; height: 50%; }
-
-.feature-point {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 150px;
-    transform: translateX(-50%);
+/* === NEW: Features Section V2 === */
+.feature-item {
     transition: transform 0.3s ease;
 }
-.feature-point:hover {
-    transform: translateX(-50%) translateY(-10px);
+.feature-item:hover {
+    transform: translateY(-10px);
 }
-.feature-icon {
+.feature-item .feature-icon {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3b82f6; /* blue-500 */
     color: white;
     font-size: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-    margin-bottom: 0.75rem;
 }
-.feature-text {
+.feature-item .feature-text {
     font-size: 0.9rem;
     font-weight: 500;
     color: #374151; /* gray-700 */
-}
-/* Positioning features along arcs - Adjusted bottom values */
-.feature-point-1 { bottom: calc(98% - 2px); left: 50%; } /* Pausá */
-.feature-point-2 { bottom: calc(88% - 2px); left: 75%; } /* Encontrá */
-.feature-point-3 { bottom: calc(70% - 2px); left: 95%; } /* Buscá */
-.feature-point-4 { bottom: calc(88% - 2px); left: 25%; } /* Reiniciá */
-.feature-point-5 { bottom: calc(70% - 2px); left: 5%; } /* Supervisá */
-.feature-point-6 { bottom: 50%; left: 50%; } /* Contenido Adaptado - Hidden on desktop */
-
-@media (max-width: 768px) {
-    .arc-features-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        aspect-ratio: auto;
-        height: auto;
-    }
-    .arc { display: none; }
-    .feature-point {
-        position: static;
-        width: auto;
-        transform: none;
-        background-color: white;
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid #e5e7eb;
-    }
-     .feature-point:hover { transform: translateY(-5px); }
 }
 
 </style>
@@ -386,7 +325,7 @@ h1, h2, h3 {
 
     <main>
         <!-- =========== Hero Section TV =========== -->
-        <section class="hero-tv text-white py-24 md:py-40">
+        <section class="hero-tv text-white min-h-[calc(100vh-64px)] flex items-center py-24 md:py-40">
             <div class="container mx-auto text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La tele que va con vos.</h1>
                 <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Disfrutá de más de 100 canales en vivo, miles de series y películas on-demand, y todo el fútbol en un solo lugar. Llevá tu tele a donde vayas.</p>
@@ -448,7 +387,7 @@ h1, h2, h3 {
         </section>
 
         
-        <!-- =========== App Features & Video Section (REORDERED) =========== -->
+        <!-- App Features & Video Section (REORDERED) -->
         <section class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -479,59 +418,54 @@ h1, h2, h3 {
                     </li>
                 </ul>
                 <div class="mt-8">
-                    <a href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=sharing" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white font-semibold rounded-full shadow hover:bg-blue-700 transition">
-                    <i class="fas fa-list-alt"></i>
-                    Consultá la grilla de canales que tenemos para vos
+                    <a href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=drive_link" target="_blank" rel="noopener" class="inline-block bg-blue-100 text-blue-700 font-medium px-5 py-3 rounded-lg hover:bg-blue-200 transition">
+                    Consultá todos los canales disponibles en la <span class="underline">grilla oficial de la app</span>
+                    <i class="fas fa-external-link-alt ml-2 text-sm"></i>
                     </a>
                 </div>
                 </div>
                 <!-- Video Placeholder -->
-                <div class="bg-gray-800 rounded-xl shadow-lg aspect-video flex items-center justify-center text-white flex-col p-8 interactive-card">
-                <i class="far fa-play-circle text-6xl mb-4"></i>
-                <h3 class="font-bold">Mirá la app en acción</h3>
-                <p class="text-gray-300 text-center">Espacio para tu video.</p>
+                <div class="bg-gray-800 rounded-xl shadow-lg aspect-video flex items-center justify-center text-white flex-col p-0 interactive-card overflow-hidden">
+                    <video loop autoplay muted playsinline poster="https://placehold.co/800x450/222/fff?text=Vista+previa+Sensa+TV" class="w-full h-full object-cover">
+                        <source src="../assets/video/sensa_tv.mp4" type="video/mp4">
+                        Tu navegador no soporta la reproducción de video.
+                    </video>
                 </div>
             </div>
             </div>
         </section>
 
-
-        <!-- =========== NEW Arc Features Section (Reduced Height) =========== -->
-        <section class="py-12 md:py-16 bg-gray-50 overflow-hidden">
+        <!-- REPLACED: Features Section V2 -->
+        <section class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Todo lo que podés hacer</h2>
                     <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">Funciones pensadas para que disfrutes al máximo.</p>
                 </div>
-                <div class="arc-features-container" style="aspect-ratio:2/1;max-width:700px;">
-                    <!-- Arcs for desktop view -->
-                    <div class="arc arc-1 hidden md:block"></div>
-                    <div class="arc arc-2 hidden md:block"></div>
-                    <div class="arc arc-3 hidden md:block"></div>
-                    <!-- Feature Points -->
-                    <div class="feature-point feature-point-1">
-                        <div class="feature-icon" style="background-color: #ef4444;"><i class="fas fa-pause"></i></div>
-                        <p class="feature-text">Pausá lo que estás viendo y continuá cuando quieras</p>
+                <div class="max-w-3xl mx-auto">
+                    <div class="flex flex-wrap justify-center gap-8 md:gap-12">
+                        <div class="feature-item text-center w-40">
+                            <div class="feature-icon mx-auto" style="background-color: #ef4444;"><i class="fas fa-pause"></i></div>
+                            <p class="feature-text mt-3">Pausá lo que estás viendo y continuá cuando quieras</p>
+                        </div>
+                        <div class="feature-item text-center w-40">
+                            <div class="feature-icon mx-auto" style="background-color: #f97316;"><i class="fas fa-search"></i></div>
+                            <p class="feature-text mt-3">Encontrá tus películas, series o canales favoritos</p>
+                        </div>
+                        <div class="feature-item text-center w-40">
+                            <div class="feature-icon mx-auto" style="background-color: #eab308;"><i class="fas fa-tv"></i></div>
+                            <p class="feature-text mt-3">Buscá en la grilla para ver lo que ya pasó</p>
+                        </div>
                     </div>
-                    <div class="feature-point feature-point-2">
-                        <div class="feature-icon" style="background-color: #f97316;"><i class="fas fa-search"></i></div>
-                        <p class="feature-text">Encontrá tus películas, series o canales favoritos</p>
-                    </div>
-                    <div class="feature-point feature-point-3">
-                        <div class="feature-icon" style="background-color: #eab308;"><i class="fas fa-tv"></i></div>
-                        <p class="feature-text">Buscá en la grilla para ver lo que ya pasó</p>
-                    </div>
-                    <div class="feature-point feature-point-4">
-                        <div class="feature-icon" style="background-color: #84cc16;"><i class="fas fa-undo"></i></div>
-                        <p class="feature-text">Reiniciá el programa para no perderte nada</p>
-                    </div>
-                    <div class="feature-point feature-point-5">
-                        <div class="feature-icon" style="background-color: #22c55e;"><i class="fas fa-child"></i></div>
-                        <p class="feature-text">Supervisá el acceso de los niños</p>
-                    </div>
-                    <div class="feature-point feature-point-6 md:hidden">
-                        <div class="feature-icon" style="background-color: #14b8a6;"><i class="fas fa-cogs"></i></div>
-                        <p class="feature-text">Contenido adaptado a tu conexión y dispositivo</p>
+                    <div class="flex flex-wrap justify-center gap-8 md:gap-12 mt-8 md:mt-12">
+                        <div class="feature-item text-center w-40">
+                            <div class="feature-icon mx-auto" style="background-color: #84cc16;"><i class="fas fa-undo"></i></div>
+                            <p class="feature-text mt-3">Reiniciá el programa para no perderte nada</p>
+                        </div>
+                        <div class="feature-item text-center w-40">
+                            <div class="feature-icon mx-auto" style="background-color: #22c55e;"><i class="fas fa-child"></i></div>
+                            <p class="feature-text mt-3">Supervisá el acceso de los niños</p>
+                        </div>
                     </div>
                 </div>
             </div>

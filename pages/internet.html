@@ -19,289 +19,293 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-<style>
-/* ================================== */
-/* ===         NAV.CSS            === */
-/* ================================== */
-.navbar-section *,
-.navbar-section *::before,
-.navbar-section *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <style>
+        /* ================================== */
+        /* ===         NAV.CSS            === */
+        /* ================================== */
+        .navbar-section *,
+        .navbar-section *::before,
+        .navbar-section *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-header.navbar-section {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background-color: white;
-}
+        header.navbar-section {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+        }
 
-.navbar-section {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    font-size: 16px;
-    color: #3c4043;
-}
+        .navbar-section {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #3c4043;
+        }
 
-.navbar {
-    background-color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
 
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    height: 64px;
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-}
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            height: 64px;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
 
-.logo:hover {
-    background-color: rgba(60, 64, 67, 0.08);
-}
+        .logo:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+        }
 
-.logo img {
-    height: 36px;
-}
+        .logo img {
+            height: 36px;
+        }
 
-.nav-links {
-    display: flex;
-    gap: 12px;
-    list-style: none;
-}
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+        }
 
-.nav-links li a {
-    text-decoration: none;
-    color: #60666b;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 12px 16px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
+        .nav-links li a {
+            text-decoration: none;
+            color: #60666b;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
 
-.nav-links li a:hover {
-    background-color: rgba(60, 64, 67, 0.06);
-    color: #202020;
-}
+        .nav-links li a:hover {
+            background-color: rgba(60, 64, 67, 0.06);
+            color: #202020;
+        }
 
-.nav-links li a.active {
-    color: #1a73e8;
-    font-weight: 600;
-}
+        .nav-links li a.active {
+            color: #1a73e8;
+            font-weight: 600;
+        }
 
-.nav-links .dropdown {
-    position: relative;
-}
+        .nav-links .dropdown {
+            position: relative;
+        }
 
-.nav-links .dropdown > a.active-parent {
-    background-color: rgba(26, 115, 232, 0.08);
-    color: #1a73e8;
-}
+        .nav-links .dropdown>a.active-parent {
+            background-color: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
 
-.nav-links .dropdown-menu {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    background-color: white;
-    padding: 8px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    list-style: none;
-    min-width: 180px;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
+        .nav-links .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: white;
+            padding: 8px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            list-style: none;
+            min-width: 180px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
 
-.nav-links .dropdown-menu li a {
-    display: block;
-    padding: 10px 16px;
-    color: #3c4043;
-    font-size: 15px;
-    border-radius: 4px;
-}
+        .nav-links .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #3c4043;
+            font-size: 15px;
+            border-radius: 4px;
+        }
 
-.nav-links .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+        .nav-links .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.nav-button,
-.nav-button2,
-.nav-button-green {
-    font-size: 15px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
+        .nav-button,
+        .nav-button2,
+        .nav-button-green {
+            font-size: 15px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
 
-.nav-button-green {
-    background-color: #30a172;
-    color: white !important;
-}
+        .nav-button-green {
+            background-color: #30a172;
+            color: white !important;
+        }
 
-.nav-button-green:hover {
-    background-color: #188b48;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .nav-button-green:hover {
+            background-color: #188b48;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.nav-button2 {
-    background-color: #1a73e8;
-    color: white !important;
-}
+        .nav-button2 {
+            background-color: #1a73e8;
+            color: white !important;
+        }
 
-.nav-button2:hover {
-    background-color: #175ca7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .nav-button2:hover {
+            background-color: #175ca7;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-/* ================================== */
-/* ===       CUSTOM STYLES        === */
-/* ================================== */
-html {
-    scroll-behavior: smooth;
-}
+        /* ================================== */
+        /* ===       CUSTOM STYLES        === */
+        /* ================================== */
+        html {
+            scroll-behavior: smooth;
+        }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
 
-.hero-internet {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url('https://images.unsplash.com/photo-1586934447387-1cfd120a135f?q=80&w=2070&auto=format&fit=crop')
-            no-repeat center center;
-    background-size: cover;
-}
+        .hero-internet {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://images.unsplash.com/photo-1586934447387-1cfd120a135f?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+        }
 
-.cta-button {
-    transition: all 0.3s ease;
-}
+        .cta-button {
+            transition: all 0.3s ease;
+        }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif;
-}
+        h1,
+        h2,
+        h3 {
+            font-family: 'Poppins', sans-serif;
+        }
 
-.whatsapp-float {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #25d366;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    transition: transform 0.2s ease;
-}
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.2s ease;
+        }
 
-.whatsapp-float:hover {
-    transform: scale(1.1);
-}
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
 
-.interactive-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    border: 2px solid transparent;
-    background-color: white;
-}
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
+            background-color: white;
+        }
 
-.interactive-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border-color: #22c55e; /* green-500 */
-}
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: #22c55e;
+            /* green-500 */
+        }
 
-/* === SPEEDTEST SECTION STYLES === */
-.speedtest-section {
-    background: #111827;
-}
+        /* === SPEEDTEST SECTION STYLES === */
+        .speedtest-section {
+            background: #111827;
+        }
 
-.gauge-container {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: conic-gradient(#1a73e8 0deg, #3c4043 0deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.5s ease;
-}
+        .gauge-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(#1a73e8 0deg, #3c4043 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.5s ease;
+        }
 
-.gauge-inner {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: #111827;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+        .gauge-inner {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #111827;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-#start-speedtest-btn {
-    transition: all 0.2s ease;
-}
+        #start-speedtest-btn {
+            transition: all 0.2s ease;
+        }
 
-#start-speedtest-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+        #start-speedtest-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-/* === FAQ STYLES === */
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-}
-.faq-icon {
-    transition: transform 0.3s ease-in-out;
-}
-.faq-item.open .faq-icon {
-    transform: rotate(45deg);
-}
-</style>
+        /* === FAQ STYLES === */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+    </style>
 </head>
 
 <body class="text-gray-800">
@@ -311,7 +315,9 @@ h1, h2, h3 {
         <nav class="navbar">
             <div class="navbar-container">
                 <div class="nav-left">
-                    <a href="index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <a href="index.html" class="logo"><img
+                            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+                            alt="Usittel Logo" /></a>
                     <ul class="nav-links">
                         <li><a href="#">Nuestra red</a></li>
                         <li class="dropdown">
@@ -336,11 +342,16 @@ h1, h2, h3 {
 
     <main>
         <!-- =========== Hero Section Internet =========== -->
-        <section class="hero-internet text-white py-24 md:py-40">
+        <section class="hero-internet text-white min-h-[calc(100vh-64px)] flex items-center justify-center"
+            style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/img/internet/modemusittel.jpg') no-repeat center center; background-size: cover;">
             <div class="container mx-auto text-center px-6">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">El internet que tu hogar merece.</h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Viví la experiencia de la ultra velocidad. Disfrutá de streaming en 4K, gaming sin lag y la máxima potencia para todos tus dispositivos, todo al mismo tiempo.</p>
-                <a href="#internet-plans" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver Planes</a>
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">El internet que tu hogar merece.</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Viví la experiencia de la ultra
+                velocidad. Disfrutá de streaming en 4K, gaming sin lag y la máxima potencia para todos tus
+                dispositivos, todo al mismo tiempo.</p>
+            <a href="#internet-plans"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver
+                Planes</a>
             </div>
         </section>
 
@@ -349,44 +360,69 @@ h1, h2, h3 {
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes de Fibra Óptica para tu Hogar</h2>
-                    <p class="text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Sin sorpresas, con la mejor estabilidad.</p>
+                    <p class="text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Sin sorpresas, con la
+                        mejor estabilidad.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <!-- Plan 1 -->
                     <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
                         <h3 class="text-2xl font-bold text-gray-800">Plan Fibra 100</h3>
                         <p class="text-gray-500 mb-4">Ideal para navegar y redes sociales</p>
-                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">100</span><span class="text-gray-500"> Mbps</span></div>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">100</span><span
+                                class="text-gray-500"> Mbps</span></div>
                         <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto para streaming en HD y música.</span></li>
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Conexión estable para 2-4 dispositivos.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto
+                                    para streaming en HD y música.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Conexión
+                                    estable para 2-4 dispositivos.</span></li>
                         </ul>
-                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
+                        <a href="#contact"
+                            class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
                     </div>
                     <!-- Plan 2 (Popular) -->
                     <div class="rounded-xl p-8 flex flex-col relative interactive-card border-blue-500 border-2">
-                        <span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>
+                        <span
+                            class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS
+                            ELEGIDO</span>
                         <h3 class="text-2xl font-bold text-gray-800">Plan Fibra 300</h3>
                         <p class="text-gray-500 mb-4">Familias conectadas y gaming</p>
-                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">300</span><span class="text-gray-500"> Mbps</span></div>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">300</span><span
+                                class="text-gray-500"> Mbps</span></div>
                         <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Streaming en 4K sin interrupciones.</span></li>
-                             <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Baja latencia para juegos online.</span></li>
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal para múltiples dispositivos a la vez.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Streaming en
+                                    4K sin interrupciones.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Baja
+                                    latencia para juegos online.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal para
+                                    múltiples dispositivos a la vez.</span></li>
                         </ul>
-                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
+                        <a href="#contact"
+                            class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
                     </div>
                     <!-- Plan 3 -->
                     <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
                         <h3 class="text-2xl font-bold text-gray-800">Plan Fibra 500</h3>
                         <p class="text-gray-500 mb-4">Máxima velocidad y teletrabajo</p>
-                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">500</span><span class="text-gray-500"> Mbps</span></div>
+                        <div class="my-4"><span class="text-4xl font-extrabold text-gray-900">500</span><span
+                                class="text-gray-500"> Mbps</span></div>
                         <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>La mejor experiencia para teletrabajar.</span></li>
-                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Descargas y subidas de archivos pesados en segundos.</span></li>
-                             <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Potencia de sobra para hogares inteligentes.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>La mejor
+                                    experiencia para teletrabajar.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Descargas y
+                                    subidas de archivos pesados en segundos.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Potencia de
+                                    sobra para hogares inteligentes.</span></li>
                         </ul>
-                        <a href="#contact" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
+                        <a href="#contact"
+                            class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button">Contratar</a>
                     </div>
                 </div>
             </div>
@@ -396,24 +432,30 @@ h1, h2, h3 {
         <section class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Por qué nuestra Fibra Óptica es superior?</h2>
-                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">La fibra óptica lleva la información a través de pulsos de luz, ofreciendo una conexión más rápida, estable y segura que las tecnologías tradicionales.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Por qué nuestra Fibra Óptica es superior?
+                    </h2>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">La fibra óptica lleva la información a
+                        través de pulsos de luz, ofreciendo una conexión más rápida, estable y segura que las
+                        tecnologías tradicionales.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
                         <i class="fas fa-bolt-lightning text-blue-500 text-4xl mb-4"></i>
                         <h3 class="text-xl font-bold mb-2">Velocidad de la Luz</h3>
-                        <p class="text-gray-600">Descargá películas en segundos y navegá sin esperas. La fibra óptica ofrece las velocidades más altas del mercado.</p>
+                        <p class="text-gray-600">Descargá películas en segundos y navegá sin esperas. La fibra óptica
+                            ofrece las velocidades más altas del mercado.</p>
                     </div>
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
                         <i class="fas fa-shield-alt text-blue-500 text-4xl mb-4"></i>
                         <h3 class="text-xl font-bold mb-2">Estabilidad a Toda Prueba</h3>
-                        <p class="text-gray-600">Olvidate de las caídas e interferencias. Nuestra red te da una conexión sólida, sin importar el clima o cuántos vecinos estén conectados.</p>
+                        <p class="text-gray-600">Olvidate de las caídas e interferencias. Nuestra red te da una conexión
+                            sólida, sin importar el clima o cuántos vecinos estén conectados.</p>
                     </div>
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
-                         <i class="fas fa-gamepad text-blue-500 text-4xl mb-4"></i>
+                        <i class="fas fa-gamepad text-blue-500 text-4xl mb-4"></i>
                         <h3 class="text-xl font-bold mb-2">Latencia Ultra Baja</h3>
-                        <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming competitivo, videollamadas fluidas y una navegación sin demoras.</p>
+                        <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming competitivo, videollamadas
+                            fluidas y una navegación sin demoras.</p>
                     </div>
                 </div>
             </div>
@@ -422,8 +464,8 @@ h1, h2, h3 {
         <!-- =========== Speedtest Section =========== -->
         <section id="speedtest" class="py-16 md:py-24 speedtest-section text-white">
             <div class="container mx-auto px-6 text-center">
-                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Speedtest Usittel</h2>
-                 <p class="text-lg text-gray-300 mb-12">Medí la velocidad de tu conexión con nuestra herramienta.</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Speedtest Usittel</h2>
+                <p class="text-lg text-gray-300 mb-12">Medí la velocidad de tu conexión con nuestra herramienta.</p>
 
                 <div class="flex flex-col items-center">
                     <div id="gauge" class="gauge-container mb-8">
@@ -432,7 +474,8 @@ h1, h2, h3 {
                             <div class="text-xl text-gray-400">Mbps</div>
                         </div>
                     </div>
-                    <button id="start-speedtest-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full cta-button text-lg">
+                    <button id="start-speedtest-btn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full cta-button text-lg">
                         Iniciar Prueba
                     </button>
                     <div class="flex justify-around w-full max-w-md mt-8 text-gray-400">
@@ -448,40 +491,57 @@ h1, h2, h3 {
                 </div>
             </div>
         </section>
-        
+
         <!-- =========== NEW: FAQ Section =========== -->
         <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2></div>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
+                </div>
                 <div id="faq-accordion" class="space-y-4">
                     <!-- FAQ Item 1 -->
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿La instalación tiene costo?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600"><p>La instalación está bonificada con la contratación de cualquiera de nuestros planes de fibra óptica. Nuestro equipo técnico se encargará de todo para dejar el servicio funcionando en tu hogar sin costos adicionales.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>La instalación está bonificada con la contratación de cualquiera de nuestros planes
+                                    de fibra óptica. Nuestro equipo técnico se encargará de todo para dejar el servicio
+                                    funcionando en tu hogar sin costos adicionales.</p>
+                            </div>
                         </div>
                     </div>
                     <!-- FAQ Item 2 -->
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿Qué hago si tengo un problema con el servicio?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                           <div class="px-6 pb-4 text-gray-600"><p>Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o a través de nuestro portal de autogestión. Contamos con soporte técnico los 7 días de la semana para ayudarte a resolver cualquier inconveniente.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o
+                                    a través de nuestro portal de autogestión. Contamos con soporte técnico los 7 días
+                                    de la semana para ayudarte a resolver cualquier inconveniente.</p>
+                            </div>
                         </div>
                     </div>
                     <!-- FAQ Item 3 -->
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿Necesito comprar un modem o router especial?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600"><p>No es necesario. Te proveemos en comodato un modem Wi-Fi de última generación optimizado para nuestra red de fibra óptica. Esto garantiza que puedas aprovechar al máximo la velocidad contratada en todos tus dispositivos.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>No es necesario. Te proveemos en comodato un modem Wi-Fi de última generación
+                                    optimizado para nuestra red de fibra óptica. Esto garantiza que puedas aprovechar al
+                                    máximo la velocidad contratada en todos tus dispositivos.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -493,32 +553,61 @@ h1, h2, h3 {
             <div class="container mx-auto px-6">
                 <div class="text-center">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Nuestra Zona de Cobertura</h2>
-                    <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                    <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar"
+                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe></div>
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
-                    <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Ingresá tu dirección y verificá la disponibilidad de nuestro servicio de fibra óptica en tu hogar.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input type="text" placeholder="Ingresá tu calle y altura" class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button></div>
+                    <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Ingresá tu dirección y verificá la
+                        disponibilidad de nuestro servicio de fibra óptica en tu hogar.</p>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input
+                            type="text" placeholder="Ingresá tu calle y altura"
+                            class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button
+                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
+                    </div>
                 </div>
-                <div id="contact" class="mt-20 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card">
+                <div id="contact"
+                    class="mt-20 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card">
                     <div>
                         <h3 class="text-2xl font-bold mb-4">¿Querés contratar o tenés una consulta?</h3>
-                        <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la brevedad.</p>
+                        <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la
+                            brevedad.</p>
                         <form action="#" method="POST" class="space-y-4">
-                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name"
+                                    id="name" placeholder="Nombre y Apellido"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
-                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
-                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar Mensaje</button>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email"
+                                        id="email" placeholder="Email"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone"
+                                        id="phone" placeholder="Teléfono"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message"
+                                    id="message" rows="4" placeholder="Escribí tu mensaje..."
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
+                                Mensaje</button>
                         </form>
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
-                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar"
+                                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe></div>
                         <div class="mt-4 text-gray-600">
-                            <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín 550, Tandil</p>
+                            <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín
+                                550, Tandil</p>
                             <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p>
-                            <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
+                            <p class="flex items-center gap-2 mt-2"><i
+                                    class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
                         </div>
                     </div>
                 </div>
@@ -536,13 +625,15 @@ h1, h2, h3 {
                     <ul>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a>
+                        </li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4 uppercase">Servicios</h4>
                     <ul>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+                        </li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
                     </ul>
@@ -550,7 +641,8 @@ h1, h2, h3 {
                 <div>
                     <h4 class="font-bold mb-4 uppercase">Soporte</h4>
                     <ul>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a>
+                        </li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
                     </ul>
@@ -558,13 +650,16 @@ h1, h2, h3 {
                 <div>
                     <h4 class="font-bold mb-4 uppercase">Legal</h4>
                     <ul>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a>
+                        </li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+                        </li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4"></h4>
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
+                        alt="Logo Usina de Tandil" class="rounded-md" />
                 </div>
             </div>
             <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
@@ -583,80 +678,81 @@ h1, h2, h3 {
     </a>
 
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        
-        // --- Speedtest Simulation ---
-        const startBtn = document.getElementById('start-speedtest-btn');
-        const speedValueEl = document.getElementById('speed-value');
-        const gaugeEl = document.getElementById('gauge');
-        const pingValueEl = document.getElementById('ping-value');
-        const uploadValueEl = document.getElementById('upload-value');
+        document.addEventListener("DOMContentLoaded", () => {
 
-        if (startBtn) {
-            startBtn.addEventListener('click', () => {
-                startBtn.disabled = true;
-                startBtn.textContent = 'Midiendo...';
-                
-                // Reset values
-                speedValueEl.textContent = '0.00';
-                pingValueEl.textContent = '-';
-                uploadValueEl.textContent = '-';
-                gaugeEl.style.background = 'conic-gradient(#1a73e8 0deg, #3c4043 0deg)';
+            // --- Speedtest Simulation ---
+            const startBtn = document.getElementById('start-speedtest-btn');
+            const speedValueEl = document.getElementById('speed-value');
+            const gaugeEl = document.getElementById('gauge');
+            const pingValueEl = document.getElementById('ping-value');
+            const uploadValueEl = document.getElementById('upload-value');
 
-                let currentSpeed = 0;
-                const targetSpeed = 280 + Math.random() * 20; // Simulate a speed around 280-300
-                
-                // Simulate download speed
-                const downloadInterval = setInterval(() => {
-                    currentSpeed += (targetSpeed - currentSpeed) * 0.1;
-                    speedValueEl.textContent = currentSpeed.toFixed(2);
-                    
-                    const gaugeAngle = (currentSpeed / 500) * 360; // Max speed of 500 for gauge
-                    gaugeEl.style.background = `conic-gradient(#1a73e8 ${gaugeAngle}deg, #3c4043 ${gaugeAngle}deg)`;
+            if (startBtn) {
+                startBtn.addEventListener('click', () => {
+                    startBtn.disabled = true;
+                    startBtn.textContent = 'Midiendo...';
 
-                    if (Math.abs(targetSpeed - currentSpeed) < 0.1) {
-                        clearInterval(downloadInterval);
-                        speedValueEl.textContent = targetSpeed.toFixed(2);
-                        
-                        setTimeout(() => {
-                            pingValueEl.textContent = Math.round(8 + Math.random() * 5);
-                        }, 200);
+                    // Reset values
+                    speedValueEl.textContent = '0.00';
+                    pingValueEl.textContent = '-';
+                    uploadValueEl.textContent = '-';
+                    gaugeEl.style.background = 'conic-gradient(#1a73e8 0deg, #3c4043 0deg)';
 
-                         setTimeout(() => {
-                            uploadValueEl.textContent = (targetSpeed * (0.9 + Math.random() * 0.1)).toFixed(2); // Simulate symmetric speed
-                            startBtn.disabled = false;
-                            startBtn.textContent = 'Iniciar de nuevo';
-                        }, 500);
-                    }
-                }, 50);
-            });
-        }
+                    let currentSpeed = 0;
+                    const targetSpeed = 280 + Math.random() * 20; // Simulate a speed around 280-300
 
-        // --- FAQ Accordion Logic ---
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach((item) => {
-            const question = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
+                    // Simulate download speed
+                    const downloadInterval = setInterval(() => {
+                        currentSpeed += (targetSpeed - currentSpeed) * 0.1;
+                        speedValueEl.textContent = currentSpeed.toFixed(2);
 
-            question.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                faqItems.forEach(i => {
-                    if (i !== item) {
-                        i.classList.remove('open');
-                        i.querySelector('.faq-answer').style.maxHeight = null;
+                        const gaugeAngle = (currentSpeed / 500) * 360; // Max speed of 500 for gauge
+                        gaugeEl.style.background = `conic-gradient(#1a73e8 ${gaugeAngle}deg, #3c4043 ${gaugeAngle}deg)`;
+
+                        if (Math.abs(targetSpeed - currentSpeed) < 0.1) {
+                            clearInterval(downloadInterval);
+                            speedValueEl.textContent = targetSpeed.toFixed(2);
+
+                            setTimeout(() => {
+                                pingValueEl.textContent = Math.round(8 + Math.random() * 5);
+                            }, 200);
+
+                            setTimeout(() => {
+                                uploadValueEl.textContent = (targetSpeed * (0.9 + Math.random() * 0.1)).toFixed(2); // Simulate symmetric speed
+                                startBtn.disabled = false;
+                                startBtn.textContent = 'Iniciar de nuevo';
+                            }, 500);
+                        }
+                    }, 50);
+                });
+            }
+
+            // --- FAQ Accordion Logic ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+
+                question.addEventListener('click', () => {
+                    const isOpen = item.classList.contains('open');
+                    faqItems.forEach(i => {
+                        if (i !== item) {
+                            i.classList.remove('open');
+                            i.querySelector('.faq-answer').style.maxHeight = null;
+                        }
+                    });
+
+                    if (isOpen) {
+                        item.classList.remove('open');
+                        answer.style.maxHeight = null;
+                    } else {
+                        item.classList.add('open');
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
                     }
                 });
-
-                if (isOpen) {
-                    item.classList.remove('open');
-                    answer.style.maxHeight = null;
-                } else {
-                    item.classList.add('open');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                }
             });
         });
-    });
     </script>
 </body>
+
 </html>

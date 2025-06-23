@@ -572,24 +572,23 @@
   </header>
 
   <main>
-
     <!-- =========== Hero Section (NUEVO CON ANIMACIÓN) =========== -->
     <div class="bg-white pt-1">
-        <div id="hero-container" class="rounded-3xl mx-4 overflow-hidden">
-            <div id="hero-canvas-container" class="flex items-center justify-center" style="min-height: calc(90vh - 64px);">
-                <canvas id="hero-canvas"></canvas>
-                <div class="hero-content container mx-auto text-center px-6 text-white">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo"
-                      class="h-16 md:h-20 mx-auto mb-4 bg-transparent">
-                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">La fibra óptica más rápida de Tandil.</h1>
-                    <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                      <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
-                      <a href="#contact" class="nav-button-green cta-button px-8 py-3 text-white"><b>Contáctanos</b></a>
-                    </div>
-                </div>
+      <div id="hero-container" class="overflow-hidden w-full min-h-[70vh] md:min-h-[80vh] flex flex-col">
+        <div id="hero-canvas-container" class="flex items-center justify-center flex-1 relative" style="min-height:0;">
+          <canvas id="hero-canvas"></canvas>
+          <div class="hero-content container mx-auto text-center px-6 text-white">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo"
+              class="h-14 md:h-16 mx-auto mb-4 bg-transparent">
+            <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4">La fibra óptica más rápida de Tandil.</h1>
+            <p class="text-base md:text-lg text-gray-200 max-w-2xl mx-auto mb-8">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+              <a href="#contact" class="nav-button-green cta-button px-8 py-3 text-white"><b>Contáctanos</b></a>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
 
@@ -623,59 +622,58 @@
       </div>
     </section>
 
-    <!-- =========== Plans Section (ORDEN 2) =========== -->
-    <section id="plans" class="py-16 md:py-24 bg-gray-100">
-      <div class="container mx-auto px-6">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Nuestros Planes</h2>
-          <p class="text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente y sin
-            sorpresas.</p>
+    <section id="plans" class="py-12 md:py-20 bg-gray-100 text-[0.9rem] md:text-[0.95rem]">
+      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
+      <div class="text-center mb-10 md:mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Nuestros Planes</h2>
+        <p class="text-base md:text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente y sin
+        sorpresas.</p>
+      </div>
+      <div class="flex justify-center mb-8 md:mb-10">
+        <div class="plan-toggle scale-90">
+        <button id="internet-only-btn" class="active">Solo Internet</button>
+        <button id="internet-tv-btn">Internet + TV</button>
+        <button id="tv-only-btn">Solo TV</button>
         </div>
-        <div class="flex justify-center mb-12">
-          <div class="plan-toggle">
-            <button id="internet-only-btn" class="active">Solo Internet</button>
-            <button id="internet-tv-btn">Internet + TV</button>
-            <button id="tv-only-btn">Solo TV</button>
+      </div>
+      
+      <!-- Contenedor para la vista por defecto (Internet y Combos) -->
+      <div id="default-plans-view">
+        <div id="plan-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto">
+        </div>
+        <div id="premium-packs-container-default" class="hidden">
+           <div class="text-center my-10 pt-6 border-t border-gray-300">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-900">Potenciá tu plan con Packs Premium</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 max-w-4xl mx-auto">
+            <!-- Card Pack Fútbol -->
+            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+              <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol" class="h-10 md:h-12 mb-3">
+              <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
+              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$13.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
+            </div>
+            <!-- Card HBO Max -->
+            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+              <img src="https://placehold.co/120x60/8a2be2/ffffff?text=HBO+MAX" alt="Logo HBO MAX" class="h-10 md:h-12 mb-3">
+              <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés acceso a la app de MAX.</p>
+              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
+            </div>
+            <!-- Card Universal+ -->
+            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+              <img src="https://placehold.co/120x60/ff4500/ffffff?text=Universal%2B" alt="Logo Universal+" class="h-10 md:h-12 mb-3">
+              <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app de streaming Universal+.</p>
+              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
+            </div>
+          </div>
+          <!-- Leyenda Aclaratoria -->
+          <div class="text-center mt-6">
+            <p class="text-xs md:text-sm text-gray-500 max-w-2xl mx-auto"><i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.</p>
           </div>
         </div>
-        
-        <!-- Contenedor para la vista por defecto (Internet y Combos) -->
-        <div id="default-plans-view">
-            <div id="plan-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            </div>
-            <div id="premium-packs-container-default" class="hidden">
-                 <div class="text-center my-12 pt-8 border-t border-gray-300">
-                    <h3 class="text-2xl md:text-3xl font-bold text-gray-900">Potenciá tu plan con Packs Premium</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    <!-- Card Pack Fútbol -->
-                    <div class="bg-white rounded-xl p-6 text-center flex flex-col items-center hover-glow-card">
-                        <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol" class="h-12 mb-4">
-                        <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
-                        <p class="text-2xl font-bold text-gray-900 my-3">$13.999<span class="text-base font-normal text-gray-500">/mes</span></p>
-                        <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button">¡Lo quiero!</a>
-                    </div>
-                    <!-- Card HBO Max -->
-                    <div class="bg-white rounded-xl p-6 text-center flex flex-col items-center hover-glow-card">
-                        <img src="https://placehold.co/120x60/8a2be2/ffffff?text=HBO+MAX" alt="Logo HBO MAX" class="h-12 mb-4">
-                        <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés acceso a la app de MAX.</p>
-                        <p class="text-2xl font-bold text-gray-900 my-3">$5.999<span class="text-base font-normal text-gray-500">/mes</span></p>
-                        <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button">¡Lo quiero!</a>
-                    </div>
-                    <!-- Card Universal+ -->
-                    <div class="bg-white rounded-xl p-6 text-center flex flex-col items-center hover-glow-card">
-                        <img src="https://placehold.co/120x60/ff4500/ffffff?text=Universal%2B" alt="Logo Universal+" class="h-12 mb-4">
-                        <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app de streaming Universal+.</p>
-                        <p class="text-2xl font-bold text-gray-900 my-3">$5.999<span class="text-base font-normal text-gray-500">/mes</span></p>
-                        <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button">¡Lo quiero!</a>
-                    </div>
-                </div>
-                <!-- Leyenda Aclaratoria -->
-                <div class="text-center mt-8">
-                    <p class="text-sm text-gray-500 max-w-2xl mx-auto"><i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.</p>
-                </div>
-            </div>
-        </div>
+      </div>
 
         <!-- Contenedor para la vista especial "Solo TV" (ACTUALIZADO) -->
         <div id="solo-tv-view" class="hidden max-w-7xl mx-auto">
@@ -728,52 +726,51 @@
         <div id="plan-info-button-container" class="text-center mt-10"></div>
       </div>
     </section>
-
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
-    <section class="py-16 md:py-24 bg-white" id="mesh">
-      <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
-            <p class="text-lg text-gray-600 mt-4 mb-6">Con la tecnología de <span class="font-bold">USITTEL MESH</span>
-              creamos una red unificada y potente que elimina las zonas sin señal para siempre. Cobertura total, sin
-              interrupciones.</p>
-            <div class="bg-gray-50 p-6 rounded-lg hover-glow-card">
-              <h3 class="text-2xl font-bold">Plan USITTEL MESH</h3>
-              <p class="text-4xl font-extrabold text-gray-900 my-4">$5.499 <span
-                  class="text-lg font-normal text-gray-500">/mes por equipo</span></p>
-              <ul class="space-y-2 text-gray-600 mb-6">
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
-                  tecnología MESH de última generación.</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
-                  adapta a tu hogar (hasta 4 equipos).</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
-                  ideal para casas con muchos dispositivos.</li>
-              </ul><a href="#"
-                class="w-full text-center block bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Consultar
-                por MESH</a>
-            </div>
-          </div>
-          <div class="w-full max-w-md mx-auto">
-            <div class="mesh-carousel-container rounded-xl shadow-lg">
-              <div class="mesh-slide active"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+1"
-                  class="rounded-xl w-full" alt="Equipo WiFi Mesh 1"></div>
-              <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+2"
-                  class="rounded-xl w-full" alt="Equipo WiFi Mesh 2"></div>
-              <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+3"
-                  class="rounded-xl w-full" alt="Equipo WiFi Mesh 3"></div>
-              <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+4"
-                  class="rounded-xl w-full" alt="Equipo WiFi Mesh 4"></div>
-            </div>
-            <div class="mesh-dots-container" id="mesh-dots-container"></div>
-          </div>
+    <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
+      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
+        <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL MESH</span>
+          creamos una red unificada y potente que elimina las zonas sin señal para siempre. Cobertura total, sin
+          interrupciones.</p>
+        <div class="bg-gray-50 p-5 rounded-lg hover-glow-card">
+          <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
+          <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
+            class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
+          <ul class="space-y-2 text-gray-600 mb-5">
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
+            tecnología MESH de última generación.</li>
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
+            adapta a tu hogar (hasta 4 equipos).</li>
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
+            ideal para casas con muchos dispositivos.</li>
+          </ul><a href="#"
+          class="w-full text-center block bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">Consultar
+          por MESH</a>
         </div>
-        <!-- Enlace agregado debajo de la sección Mesh -->
-        <div class="text-center mt-12">
-            <a href="#network"
-              class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí
-              cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
+        <div class="w-full max-w-sm md:max-w-md mx-auto">
+        <div class="mesh-carousel-container rounded-xl shadow-lg">
+          <div class="mesh-slide active"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+1"
+            class="rounded-xl w-full" alt="Equipo WiFi Mesh 1"></div>
+          <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+2"
+            class="rounded-xl w-full" alt="Equipo WiFi Mesh 2"></div>
+          <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+3"
+            class="rounded-xl w-full" alt="Equipo WiFi Mesh 3"></div>
+          <div class="mesh-slide"><img src="https://placehold.co/600x400/ffffff/cccccc?text=Equipo+Mesh+4"
+            class="rounded-xl w-full" alt="Equipo WiFi Mesh 4"></div>
+        </div>
+        <div class="mesh-dots-container" id="mesh-dots-container"></div>
+        </div>
+      </div>
+      <!-- Enlace agregado debajo de la sección Mesh -->
+      <div class="text-center mt-10">
+        <a href="#network"
+          class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
+          cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
+      </div>
       </div>
     </section>
 

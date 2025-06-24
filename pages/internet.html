@@ -428,6 +428,62 @@
             </div>
         </section>
 
+          <!-- =========== Coverage Section =========== -->
+        <section id="coverage" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Nuestra Zona de Cobertura</h2>
+                <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar"
+                    width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
+                <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Ingresá tu dirección y verificá la
+                disponibilidad de nuestro servicio de fibra óptica en tu hogar.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
+                <input
+                    type="text" placeholder="Ingresá tu calle y altura"
+                    class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button
+                    class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
+                </div>
+            </div>
+            </div>
+        </section>
+
+           <!-- =========== Speedtest Section (10% smaller) =========== -->
+        <section id="speedtest" class="py-14 md:py-20 speedtest-section text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">Speedtest Usittel</h2>
+                <p class="text-base text-gray-300 mb-10">Medí la velocidad de tu conexión con nuestra herramienta.</p>
+
+                <div class="flex flex-col items-center">
+                    <div id="gauge" class="gauge-container mb-6" style="width:270px;height:270px;">
+                        <div class="gauge-inner" style="width:225px;height:225px;">
+                            <div id="speed-value" class="text-5xl font-bold">0.00</div>
+                            <div class="text-lg text-gray-400">Mbps</div>
+                        </div>
+                    </div>
+                    <button id="start-speedtest-btn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-9 rounded-full cta-button text-base">
+                        Iniciar Prueba
+                    </button>
+                    <div class="flex justify-around w-full max-w-[360px] mt-6 text-gray-400">
+                        <div class="text-center">
+                            <div class="text-xl font-bold" id="ping-value">-</div>
+                            <div class="text-sm">Ping (ms)</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold" id="upload-value">-</div>
+                            <div class="text-sm">Subida (Mbps)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- =========== Why Fiber Section =========== -->
         <section class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
@@ -456,37 +512,6 @@
                         <h3 class="text-xl font-bold mb-2">Latencia Ultra Baja</h3>
                         <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming competitivo, videollamadas
                             fluidas y una navegación sin demoras.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- =========== Speedtest Section =========== -->
-        <section id="speedtest" class="py-16 md:py-24 speedtest-section text-white">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Speedtest Usittel</h2>
-                <p class="text-lg text-gray-300 mb-12">Medí la velocidad de tu conexión con nuestra herramienta.</p>
-
-                <div class="flex flex-col items-center">
-                    <div id="gauge" class="gauge-container mb-8">
-                        <div class="gauge-inner">
-                            <div id="speed-value" class="text-6xl font-bold">0.00</div>
-                            <div class="text-xl text-gray-400">Mbps</div>
-                        </div>
-                    </div>
-                    <button id="start-speedtest-btn"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full cta-button text-lg">
-                        Iniciar Prueba
-                    </button>
-                    <div class="flex justify-around w-full max-w-md mt-8 text-gray-400">
-                        <div class="text-center">
-                            <div class="text-2xl font-bold" id="ping-value">-</div>
-                            <div>Ping (ms)</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold" id="upload-value">-</div>
-                            <div>Subida (Mbps)</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -548,69 +573,63 @@
             </div>
         </section>
 
-        <!-- =========== NEW: Coverage & Contact Section =========== -->
-        <section id="coverage-contact" class="py-16 md:py-24 bg-white">
+        <!-- =========== Contact Section =========== -->
+        <section id="contact" class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Nuestra Zona de Cobertura</h2>
-                    <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar"
-                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
-                    <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Ingresá tu dirección y verificá la
-                        disponibilidad de nuestro servicio de fibra óptica en tu hogar.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input
-                            type="text" placeholder="Ingresá tu calle y altura"
-                            class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button
-                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
-                    </div>
-                </div>
-                <div id="contact"
-                    class="mt-20 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card">
+            <div class="mt-0 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card" style="background-color: white;">
+                <div>
+                <h3 class="text-2xl font-bold mb-4">¿Querés contratar o tenés una consulta?</h3>
+                <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la
+                    brevedad.</p>
+                <form action="#" method="POST" class="space-y-4">
                     <div>
-                        <h3 class="text-2xl font-bold mb-4">¿Querés contratar o tenés una consulta?</h3>
-                        <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la
-                            brevedad.</p>
-                        <form action="#" method="POST" class="space-y-4">
-                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name"
-                                    id="name" placeholder="Nombre y Apellido"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email"
-                                        id="email" placeholder="Email"
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone"
-                                        id="phone" placeholder="Teléfono"
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                            </div>
-                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message"
-                                    id="message" rows="4" placeholder="Escribí tu mensaje..."
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                            </div>
-                            <button type="submit"
-                                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
-                                Mensaje</button>
-                        </form>
+                    <label for="name" class="sr-only">Nombre</label>
+                    <input type="text" name="name"
+                        id="name" placeholder="Nombre y Apellido"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="email" class="sr-only">Email</label>
+                        <input type="email" name="email"
+                        id="email" placeholder="Email"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
-                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar"
-                                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                        <div class="mt-4 text-gray-600">
-                            <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín
-                                550, Tandil</p>
-                            <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p>
-                            <p class="flex items-center gap-2 mt-2"><i
-                                    class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
-                        </div>
+                        <label for="phone" class="sr-only">Teléfono</label>
+                        <input type="tel" name="phone"
+                        id="phone" placeholder="Teléfono"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+                    </div>
+                    <div>
+                    <label for="message" class="sr-only">Mensaje</label>
+                    <textarea name="message"
+                        id="message" rows="4" placeholder="Escribí tu mensaje..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <button type="submit"
+                    class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
+                    Mensaje</button>
+                </form>
                 </div>
+                <div>
+                <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
+                <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                    <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar"
+                    width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="mt-4 text-gray-600">
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín
+                    550, Tandil</p>
+                    <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p>
+                    <p class="flex items-center gap-2 mt-2"><i
+                        class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
+                </div>
+                </div>
+            </div>
             </div>
         </section>
 

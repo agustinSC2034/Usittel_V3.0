@@ -616,6 +616,170 @@
             }
         }
     </style>
+    <style>
+        /* ========== Mobile Menu + Responsive Styles ========== */
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background-color: #3c4043;
+            border-radius: 2px;
+        }
+
+        .mobile-header-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .mobile-menu-slide {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 16px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1001;
+        }
+
+        .mobile-menu-slide.show {
+            left: 0;
+        }
+
+        .mobile-menu-slide a {
+            text-decoration: none;
+            color: #3c4043;
+            font-size: 16px;
+            padding: 10px 8px;
+            border-radius: 6px;
+        }
+
+        .mobile-menu-slide .nav-button-green,
+        .mobile-menu-slide .nav-button2 {
+            padding: 12px 18px;
+            margin-top: 8px;
+            text-align: center;
+            display: block;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-menu-header img {
+            height: 32px;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #3c4043;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .mobile-menu-slide hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin-bottom: 16px;
+        }
+
+        .submenu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .submenu-toggle {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            text-align: left;
+            color: #3c4043;
+            padding: 10px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submenu {
+            display: none;
+            flex-direction: column;
+            padding-left: 12px;
+            margin-top: -4px;
+        }
+
+        .submenu a {
+            font-size: 15px;
+            padding: 8px 12px;
+            color: #3c4043;
+        }
+
+        .submenu.show {
+            display: flex;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .desktop-only {
+            display: flex;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        /* Breakpoint para mobile */
+        @media (max-width: 900px) {
+            .mobile-only {
+                display: flex !important;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-header-bar {
+                display: flex;
+            }
+        }
+    </style>
 </head>
 
 <body class="text-gray-800">
@@ -624,56 +788,64 @@
     <header class="navbar-section">
         <nav class="navbar">
             <div class="navbar-container">
+                <!-- Encabezado mobile -->
                 <div class="mobile-header-bar mobile-only">
-                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><a
-                        href="/index.html" class="logo"><img
-                            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
-                            alt="Usittel Logo" /></a>
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+                    <a href="../index.html" class="logo">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                            alt="Usittel Logo" />
+                    </a>
                 </div>
+
+                <!-- Encabezado desktop -->
                 <div class="nav-left desktop-only">
-                    <a href="/index.html" class="logo"><img
-                            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-                            alt="Usittel Logo" /></a>
+                    <a href="../index.html" class="logo">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+                            alt="Usittel Logo" />
+                    </a>
                     <ul class="nav-links">
-                        <li><a href="#">Nuestra red</a></li>
+                        <li><a href="../index.html">Home</a></li>
                         <li class="dropdown">
                             <a href="#">Productos ▾</a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Internet</a></li>
-                                <li><a href="#">WiFi Mesh</a></li>
-                                <li><a href="#">TV</a></li>
+                                <li><a href="./internet.html">Internet</a></li>
+                                <li><a href="./mesh.html">WiFi Mesh</a></li>
+                                <li><a href="./tv.html">TV</a></li>
                             </ul>
                         </li>
-                        <li><a href="#" class="active">Empresas</a></li>
-                        <li><a href="#">Contáctanos</a></li>
+                        <li><a href="./empresas.html" class="active">Empresas</a></li>
+                        <li><a href="./contacto.html">Contáctanos</a></li>
                     </ul>
                 </div>
+
                 <div class="nav-actions desktop-only">
-                    <a href="#" class="nav-button-green">Centro de ayuda</a>
-                    <a href="#" class="nav-button2">Autogestión</a>
+                    <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
                 </div>
             </div>
+
+            <!-- Overlay y menú mobile -->
             <div class="overlay" id="overlay"></div>
             <div class="mobile-menu-slide" id="mobileMenu">
                 <div class="mobile-menu-header">
                     <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
                         alt="Usittel Logo" />
-                    <button class="close-menu" id="closeMenu">×</button>
+                    <button class="close-menu" id="closeMenu">&times;</button>
                 </div>
                 <hr />
-                <a href="#">Nuestra red</a>
+                <a href="../index.html">Home</a>
                 <div class="submenu-container">
                     <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
                     <div class="submenu" id="productsSubmenu">
-                        <a href="#">Internet</a>
-                        <a href="#">WiFi Mesh</a>
-                        <a href="#">TV</a>
+                        <a href="./internet.html">Internet</a>
+                        <a href="./mesh.html">WiFi Mesh</a>
+                        <a href="./tv.html">TV</a>
                     </div>
                 </div>
-                <a href="#">Empresas</a>
-                <a href="#">Contáctanos</a>
-                <a href="#" class="nav-button-green">Centro de ayuda</a>
-                <a href="#" class="nav-button2">Autogestión</a>
+                <a href="./empresas.html" class="active">Empresas</a>
+                <a href="./contacto.html">Contáctanos</a>
+                <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+                <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
             </div>
         </nav>
     </header>
@@ -784,44 +956,50 @@
 
             <!-- Content -->
             <div class="container relative mx-auto px-4 text-center z-10">
-            <h2 class="text-2xl md:text-3xl font-bold">Una Conexión, Infinitas Posibilidades</h2>
-            <p class="text-base text-gray-300 mt-2 mb-10 max-w-2xl mx-auto">Nuestra red de fibra óptica es el núcleo
-                que impulsa cada aspecto de tu empresa. Explora cómo potenciamos tus servicios.</p>
+                <h2 class="text-2xl md:text-3xl font-bold">Una Conexión, Infinitas Posibilidades</h2>
+                <p class="text-base text-gray-300 mt-2 mb-10 max-w-2xl mx-auto">Nuestra red de fibra óptica es el núcleo
+                    que impulsa cada aspecto de tu empresa. Explora cómo potenciamos tus servicios.</p>
 
-            <div class="possibilities-wrapper" style="max-width:480px;height:480px;">
-                <!-- Central Nucleus -->
-                <div class="nucleus" style="width:144px;height:144px;">
-                <div class="nucleus-core" style="width:100%;height:100%;"></div>
-                <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
-                    alt="Logo de Usittel Fibra" class="nucleus-logo" style="width:96px;">
-                </div>
+                <div class="possibilities-wrapper" style="max-width:480px;height:480px;">
+                    <!-- Central Nucleus -->
+                    <div class="nucleus" style="width:144px;height:144px;">
+                        <div class="nucleus-core" style="width:100%;height:100%;"></div>
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                            alt="Logo de Usittel Fibra" class="nucleus-logo" style="width:96px;">
+                    </div>
 
-                <!-- Service Nodes -->
-                <div class="service-node node-1" style="transform:translate(0,-200px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-video"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Videollamadas Fluidas</div>
+                    <!-- Service Nodes -->
+                    <div class="service-node node-1" style="transform:translate(0,-200px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-video"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Videollamadas Fluidas</div>
+                    </div>
+                    <div class="service-node node-2" style="transform:translate(173px,-100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Nube Ultra Rápida</div>
+                    </div>
+                    <div class="service-node node-3" style="transform:translate(173px,100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-server"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Gestión de Servidores</div>
+                    </div>
+                    <div class="service-node node-4" style="transform:translate(0,200px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-shield-alt"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Seguridad Confiable</div>
+                    </div>
+                    <div class="service-node node-5" style="transform:translate(-173px,100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-headset"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Comunicaciones Claras</div>
+                    </div>
+                    <div class="service-node node-6" style="transform:translate(-173px,-100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-cash-register"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Punto de Venta Online</div>
+                    </div>
                 </div>
-                <div class="service-node node-2" style="transform:translate(173px,-100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-cloud-upload-alt"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Nube Ultra Rápida</div>
-                </div>
-                <div class="service-node node-3" style="transform:translate(173px,100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-server"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Gestión de Servidores</div>
-                </div>
-                <div class="service-node node-4" style="transform:translate(0,200px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-shield-alt"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Seguridad Confiable</div>
-                </div>
-                <div class="service-node node-5" style="transform:translate(-173px,100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-headset"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Comunicaciones Claras</div>
-                </div>
-                <div class="service-node node-6" style="transform:translate(-173px,-100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i class="fas fa-cash-register"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Punto de Venta Online</div>
-                </div>
-            </div>
             </div>
         </section>
 
@@ -997,7 +1175,8 @@
                             </div>
                             <div
                                 class="bg-gray-200 border border-gray-300 rounded-md p-4 h-20 flex items-center justify-center">
-                                <span class="text-gray-500 text-sm">Espacio para reCAPTCHA</span></div>
+                                <span class="text-gray-500 text-sm">Espacio para reCAPTCHA</span>
+                            </div>
                             <button type="submit"
                                 class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
                                 Mensaje</button>
@@ -1023,56 +1202,71 @@
 
     </main>
 
-<footer class="bg-gray-800 text-white pt-16 pb-8">
-  <div class="container mx-auto px-6">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Usittel</h4>
-        <ul>
-          <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
-          <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a></li>
-          <li class="mb-2"><a href="./alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Servicios</h4>
-        <ul>
-          <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-          <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-          <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
-        <ul>
-          <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-          <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
-          <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Legal</h4>
-        <ul>
-          <li class="mb-2"><a href="./terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-          <li class="mb-2"><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-          <li class="mb-2"><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4"></h4>
-        <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
-      </div>
-    </div>
-    <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-      <div class="flex space-x-4">
-        <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-        <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-        <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-      </div>
-    </div>
-  </div>
-</footer>
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre
+                                nosotros</a></li>
+                        <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a>
+                        </li>
+                        <li class="mb-2"><a href="./alcances_de_servicios.html"
+                                class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra
+                                Óptica</a></li>
+                        <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro
+                                de ayuda</a></li>
+                        <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/"
+                                class="text-gray-300 hover:text-white">Autogestión</a></li>
+                        <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de
+                                servicio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./terminos_y_condiciones.html"
+                                class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a
+                                href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                        <li class="mb-2"><a
+                                href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+                            class="fab fa-instagram fa-lg"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 
     <a href="https://wa.me/5492494060345" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
@@ -1157,6 +1351,32 @@
                 });
             }
 
+        });
+    </script>
+
+     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const hamburger = document.getElementById("hamburger"),
+                mobileMenu = document.getElementById("mobileMenu"),
+                overlay = document.getElementById("overlay"),
+                closeMenu = document.getElementById("closeMenu"),
+                toggleProducts = document.getElementById("toggleProducts"),
+                productsSubmenu = document.getElementById("productsSubmenu");
+
+            function toggleMenu() {
+                mobileMenu.classList.toggle("show");
+                overlay.classList.toggle("show");
+            }
+
+            if (hamburger) hamburger.addEventListener("click", toggleMenu);
+            if (overlay) overlay.addEventListener("click", toggleMenu);
+            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
+            if (toggleProducts) {
+                toggleProducts.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
+                });
+            }
         });
     </script>
 </body>

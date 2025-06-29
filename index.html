@@ -1,7 +1,7 @@
- <!DOCTYPE html>
- <html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 
- <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Usittel - Internet por Fibra Óptica en Tandil</title>
@@ -18,7 +18,7 @@
 
   <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
   <!-- Tailwind CSS Aspect Ratio Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
 
@@ -370,21 +370,23 @@
 
     #hero-container {
       position: relative;
-      background-color: #0c0c1d; /* Fallback color */
+      background-color: #0c0c1d;
+      /* Fallback color */
     }
 
     #hero-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
 
     .hero-content {
       position: relative;
-      z-index: 2; /* Ensure content is above canvas */
+      z-index: 2;
+      /* Ensure content is above canvas */
     }
 
     .cta-button {
@@ -435,19 +437,19 @@
       padding-left: 1rem;
       padding-right: 1rem;
     }
-    
-    .faq-question.open + .faq-answer {
-        padding-top: 0.5rem;
-        padding-bottom: 1.5rem;
-        opacity: 1;
+
+    .faq-question.open+.faq-answer {
+      padding-top: 0.5rem;
+      padding-bottom: 1.5rem;
+      opacity: 1;
     }
 
     .faq-icon {
-        transition: transform 0.3s ease-in-out;
+      transition: transform 0.3s ease-in-out;
     }
-    
+
     .faq-question.open .faq-icon {
-        transform: rotate(45deg);
+      transform: rotate(45deg);
     }
 
     .whatsapp-float {
@@ -504,26 +506,26 @@
     .mesh-dot.active {
       background-color: #1a73e8;
     }
-    
+
     /* ================================== */
     /* ===      NUEVO EFECTO HOVER    === */
     /* ================================== */
     .hover-glow-card {
-        position: relative;
-        border: 2px solid transparent;
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      border: 2px solid transparent;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .hover-glow-card:hover {
-        transform: translateY(-5px);
-        border-color: #30a172; /* Verde de Usittel */
-        box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
+      transform: translateY(-5px);
+      border-color: #30a172;
+      /* Verde de Usittel */
+      box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
     }
-
   </style>
- </head>
+</head>
 
- <body class="text-gray-800">
+<body class="text-gray-800">
 
   <!-- =========== Header / Navigation =========== -->
   <header class="navbar-section">
@@ -531,10 +533,12 @@
       <div class="navbar-container">
         <div class="mobile-header-bar mobile-only">
           <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><a href="#"
-            class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png" alt="Usittel Logo" /></a>
+            class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+              alt="Usittel Logo" /></a>
         </div>
         <div class="nav-left desktop-only"><a href="#" class="logo"><img
-              src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+              src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+              alt="Usittel Logo" /></a>
           <ul class="nav-links">
             <li><a href="#network">Home</a></li>
             <li class="dropdown"><a href="#plans">Productos ▾</a>
@@ -555,7 +559,8 @@
       </div>
       <div class="overlay" id="overlay"></div>
       <div class="mobile-menu-slide" id="mobileMenu">
-        <div class="mobile-menu-header"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+        <div class="mobile-menu-header"><img
+            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
             alt="Usittel Logo" /><button class="close-menu" id="closeMenu">&times;</button></div>
         <hr />
         <a href="#network">Home</a>
@@ -574,19 +579,21 @@
   <main>
     <div class="bg-white pt-1">
       <div id="hero-container" class="overflow-hidden w-full min-h-[70vh] md:min-h-[80vh] flex flex-col">
-      <div id="hero-canvas-container" class="flex items-center justify-center flex-1 relative" style="min-height:0;">
-        <canvas id="hero-canvas"></canvas>
-        <div class="hero-content container mx-auto text-center px-6 text-white">
-        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo"
-          class="h-16 md:h-20 mx-auto mb-5 bg-transparent">
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
-        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-          <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+        <div id="hero-canvas-container" class="flex items-center justify-center flex-1 relative" style="min-height:0;">
+          <canvas id="hero-canvas"></canvas>
+          <div class="hero-content container mx-auto text-center px-6 text-white">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+              alt="Usittel Logo" class="h-16 md:h-20 mx-auto mb-5 bg-transparent">
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para
+              streaming, gaming y trabajo sin interrupciones.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
+              <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+            </div>
+          </div>
         </div>
-        </div>
-      </div>
       </div>
     </div>
 
@@ -623,102 +630,130 @@
 
     <section id="plans" class="py-12 md:py-20 bg-gray-100 text-[0.9rem] md:text-[0.95rem]">
       <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
-      <div class="text-center mb-10 md:mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Nuestros Planes</h2>
-        <p class="text-base md:text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente y sin
-        sorpresas.</p>
-      </div>
-      <div class="flex justify-center mb-8 md:mb-10">
-        <div class="plan-toggle scale-90">
-        <button id="internet-only-btn" class="active">Solo Internet</button>
-        <button id="internet-tv-btn">Internet + TV</button>
-        <button id="tv-only-btn">Solo TV</button>
+        <div class="text-center mb-10 md:mb-10">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Nuestros Planes</h2>
+          <p class="text-base md:text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente
+            y sin
+            sorpresas.</p>
         </div>
-      </div>
-      
-      <!-- Contenedor para la vista por defecto (Internet y Combos) -->
-      <div id="default-plans-view">
-        <div id="plan-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto">
-        </div>
-        <div id="premium-packs-container-default" class="hidden">
-           <div class="text-center my-10 pt-6 border-t border-gray-300">
-            <h3 class="text-xl md:text-2xl font-bold text-gray-900">Potenciá tu plan con Packs Premium</h3>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 max-w-4xl mx-auto">
-            <!-- Card Pack Fútbol -->
-            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-              <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol" class="h-10 md:h-12 mb-3">
-              <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
-              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$13.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
-            </div>
-            <!-- Card HBO Max -->
-            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-              <img src="https://placehold.co/120x60/8a2be2/ffffff?text=HBO+MAX" alt="Logo HBO MAX" class="h-10 md:h-12 mb-3">
-              <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés acceso a la app de MAX.</p>
-              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
-            </div>
-            <!-- Card Universal+ -->
-            <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-              <img src="https://placehold.co/120x60/ff4500/ffffff?text=Universal%2B" alt="Logo Universal+" class="h-10 md:h-12 mb-3">
-              <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app de streaming Universal+.</p>
-              <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-              <a href="#" class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo quiero!</a>
-            </div>
-          </div>
-          <!-- Leyenda Aclaratoria -->
-          <div class="text-center mt-6">
-            <p class="text-xs md:text-sm text-gray-500 max-w-2xl mx-auto"><i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.</p>
+        <div class="flex justify-center mb-8 md:mb-10">
+          <div class="plan-toggle scale-90">
+            <button id="internet-only-btn" class="active">Solo Internet</button>
+            <button id="internet-tv-btn">Internet + TV</button>
+            <button id="tv-only-btn">Solo TV</button>
           </div>
         </div>
-      </div>
+
+        <!-- Contenedor para la vista por defecto (Internet y Combos) -->
+        <div id="default-plans-view">
+          <div id="plan-cards-container"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto">
+          </div>
+          <div id="premium-packs-container-default" class="hidden">
+            <div class="text-center my-10 pt-6 border-t border-gray-300">
+              <h3 class="text-xl md:text-2xl font-bold text-gray-900">Potenciá tu plan con Packs Premium</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 max-w-4xl mx-auto">
+              <!-- Card Pack Fútbol -->
+              <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+                <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol"
+                  class="h-10 md:h-12 mb-3">
+                <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$13.999<span
+                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                <a href="#"
+                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
+                  quiero!</a>
+              </div>
+              <!-- Card HBO Max -->
+              <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+                <img src="https://placehold.co/120x60/8a2be2/ffffff?text=HBO+MAX" alt="Logo HBO MAX"
+                  class="h-10 md:h-12 mb-3">
+                <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés
+                  acceso a la app de MAX.</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
+                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                <a href="#"
+                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
+                  quiero!</a>
+              </div>
+              <!-- Card Universal+ -->
+              <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
+                <img src="https://placehold.co/120x60/ff4500/ffffff?text=Universal%2B" alt="Logo Universal+"
+                  class="h-10 md:h-12 mb-3">
+                <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app
+                  de streaming Universal+.</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
+                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                <a href="#"
+                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
+                  quiero!</a>
+              </div>
+            </div>
+            <!-- Leyenda Aclaratoria -->
+            <div class="text-center mt-6">
+              <p class="text-xs md:text-sm text-gray-500 max-w-2xl mx-auto"><i
+                  class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium
+                requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <!-- Contenedor para la vista especial "Solo TV" (ACTUALIZADO) -->
         <div id="solo-tv-view" class="hidden max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
-                <!-- Columna Izquierda: Plan TV -->
-                <div id="solo-tv-card-container" class="lg:col-span-3">
-                    <!-- La tarjeta del plan de TV se inyectará aquí -->
-                </div>
-                <!-- Columna Derecha: Packs Premium -->
-                <div class="lg:col-span-2">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-left">Agregá Packs Premium</h3>
-                    <div class="space-y-4">
-                         <!-- Card Pack Fútbol -->
-                        <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                            <img src="https://placehold.co/80x80/1a237e/ffffff?text=FP" alt="Logo Pack Fútbol" class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
-                            <div class="text-left">
-                                <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
-                                <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
-                                <p class="text-lg font-bold text-green-600 mt-1">$13.999<span class="text-sm font-normal text-gray-500">/mes</span></p>
-                            </div>
-                        </div>
-                        <!-- Card HBO Max -->
-                        <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                             <img src="https://placehold.co/80x80/8a2be2/ffffff?text=HBO" alt="Logo HBO" class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
-                             <div class="text-left">
-                                <h4 class="font-bold text-gray-900">Pack HBO</h4>
-                                <p class="text-sm text-gray-600">Canales premium y acceso a la app MAX.</p>
-                                <p class="text-lg font-bold text-green-600 mt-1">$5.999<span class="text-sm font-normal text-gray-500">/mes</span></p>
-                            </div>
-                        </div>
-                        <!-- Card Universal+ -->
-                        <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                            <img src="https://placehold.co/80x80/ff4500/ffffff?text=U%2B" alt="Logo Universal+" class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
-                            <div class="text-left">
-                                <h4 class="font-bold text-gray-900">Universal+</h4>
-                                <p class="text-sm text-gray-600">Canales premium y acceso a la app de streaming.</p>
-                                <p class="text-lg font-bold text-green-600 mt-1">$5.999<span class="text-sm font-normal text-gray-500">/mes</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+            <!-- Columna Izquierda: Plan TV -->
+            <div id="solo-tv-card-container" class="lg:col-span-3">
+              <!-- La tarjeta del plan de TV se inyectará aquí -->
             </div>
-             <!-- Leyenda Aclaratoria -->
-            <div class="text-center mt-12 pt-8 border-t border-gray-200">
-                <p class="text-sm text-gray-500 max-w-2xl mx-auto"><i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.</p>
+            <!-- Columna Derecha: Packs Premium -->
+            <div class="lg:col-span-2">
+              <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-left">Agregá Packs Premium</h3>
+              <div class="space-y-4">
+                <!-- Card Pack Fútbol -->
+                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
+                  <img src="https://placehold.co/80x80/1a237e/ffffff?text=FP" alt="Logo Pack Fútbol"
+                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                  <div class="text-left">
+                    <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
+                    <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
+                    <p class="text-lg font-bold text-green-600 mt-1">$13.999<span
+                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                  </div>
+                </div>
+                <!-- Card HBO Max -->
+                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
+                  <img src="https://placehold.co/80x80/8a2be2/ffffff?text=HBO" alt="Logo HBO"
+                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                  <div class="text-left">
+                    <h4 class="font-bold text-gray-900">Pack HBO</h4>
+                    <p class="text-sm text-gray-600">Canales premium y acceso a la app MAX.</p>
+                    <p class="text-lg font-bold text-green-600 mt-1">$5.999<span
+                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                  </div>
+                </div>
+                <!-- Card Universal+ -->
+                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
+                  <img src="https://placehold.co/80x80/ff4500/ffffff?text=U%2B" alt="Logo Universal+"
+                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                  <div class="text-left">
+                    <h4 class="font-bold text-gray-900">Universal+</h4>
+                    <p class="text-sm text-gray-600">Canales premium y acceso a la app de streaming.</p>
+                    <p class="text-lg font-bold text-green-600 mt-1">$5.999<span
+                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+          <!-- Leyenda Aclaratoria -->
+          <div class="text-center mt-12 pt-8 border-t border-gray-200">
+            <p class="text-sm text-gray-500 max-w-2xl mx-auto"><i
+                class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium
+              requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.
+            </p>
+          </div>
         </div>
 
         <!-- Contenedor para los botones de más información -->
@@ -728,114 +763,117 @@
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
     <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
       <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        <div>
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
-        <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL MESH</span>
-          <div class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg" style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
-            <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
-            <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
-              class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
-            <ul class="space-y-2 text-gray-600 mb-5">
-              <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
-                tecnología MESH de última generación.</li>
-              <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
-                adapta a tu hogar (hasta 4 equipos).</li>
-              <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
-                ideal para casas con muchos dispositivos.</li>
-            </ul>
-            <a href="#"
-              class="w-full text-center block bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">Consultar
-              por MESH</a>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
+            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
+                MESH</span>
+            <div
+              class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
+              style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
+              <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
+              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
+                  class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
+              <ul class="space-y-2 text-gray-600 mb-5">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
+                  tecnología MESH de última generación.</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
+                  adapta a tu hogar (hasta 4 equipos).</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
+                  ideal para casas con muchos dispositivos.</li>
+              </ul>
+              <a href="#"
+                class="w-full text-center block bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">Consultar
+                por MESH</a>
+            </div>
+          </div>
+          <div class="w-full max-w-sm md:max-w-md mx-auto">
+            <div class="mesh-carousel-container rounded-large">
+              <div class="mesh-slide active"><img src="/assets/img/mesh/mesh1.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 1"></div>
+              <div class="mesh-slide"><img src="/assets/img/mesh/mesh2.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 2"></div>
+              <div class="mesh-slide"><img src="/assets/img/mesh/mesh3.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 3"></div>
+              <div class="mesh-slide"><img src="/assets/img/mesh/mesh4.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 4"></div>
+            </div>
+            <div class="mesh-dots-container" id="mesh-dots-container"></div>
           </div>
         </div>
-        <div class="w-full max-w-sm md:max-w-md mx-auto">
-        <div class="mesh-carousel-container rounded-large">
-          <div class="mesh-slide active"><img src="/assets/img/mesh/mesh1.png"
-            class="rounded-xl w-full" alt="Equipo WiFi Mesh 1"></div>
-          <div class="mesh-slide"><img src="/assets/img/mesh/mesh2.png"
-            class="rounded-xl w-full" alt="Equipo WiFi Mesh 2"></div>
-          <div class="mesh-slide"><img src="/assets/img/mesh/mesh3.png"
-            class="rounded-xl w-full" alt="Equipo WiFi Mesh 3"></div>
-          <div class="mesh-slide"><img src="/assets/img/mesh/mesh4.png"
-            class="rounded-xl w-full" alt="Equipo WiFi Mesh 4"></div>
+        <!-- Enlace agregado debajo de la sección Mesh -->
+        <div class="text-center mt-10">
+          <a href="#network"
+            class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
+            cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
-        <div class="mesh-dots-container" id="mesh-dots-container"></div>
-        </div>
-      </div>
-      <!-- Enlace agregado debajo de la sección Mesh -->
-      <div class="text-center mt-10">
-        <a href="#network"
-          class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
-          cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
-      </div>
       </div>
     </section>
 
     <!-- =========== Network & Coverage Section (ORDEN 4 - UNIFICADA) =========== -->
     <section id="network" class="py-16 md:py-24 bg-gray-100">
-        <div class="container mx-auto px-6">
-            <!-- Parte de "Nuestra Red" -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <span class="text-blue-600 font-semibold uppercase">Nuestra Red</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">La infraestructura que potencia tu
-                      conexión.</h2>
-                    <p class="text-lg text-gray-600 mb-6">Desplegamos una red de fibra óptica de última generación, diseñada
-                      para ofrecerte la máxima velocidad y estabilidad. Porque una gran conexión lo cambia todo, seguimos
-                      trabajando para expandir nuestra cobertura y llegar a más hogares en Tandil.</p>
-                    <a href="#" class="font-semibold text-blue-600 hover:text-blue-800">Conocé más sobre nuestra tecnología
-                      →</a>
-                </div>
-                <div class="grid grid-cols-1 gap-6">
-                    <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                        <i class="fas fa-wifi text-2xl text-blue-500 mt-1"></i>
-                        <div>
-                            <h4 class="font-bold text-lg">Internet sin límites</h4>
-                            <p class="text-gray-600">Descargá archivos pesados, jugá online y hacé videollamadas en alta definición,
-                              todo al mismo tiempo.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                        <i class="fas fa-film text-2xl text-blue-500 mt-1"></i>
-                        <div>
-                            <h4 class="font-bold text-lg">Streaming 4K fluido</h4>
-                            <p class="text-gray-600">Disfrutá de tus series y películas favoritas en la máxima calidad, sin
-                              buffering ni interrupciones molestas.</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                        <i class="fas fa-house-signal text-2xl text-blue-500 mt-1"></i>
-                        <div>
-                            <h4 class="font-bold text-lg">Cobertura Total</h4>
-                            <p class="text-gray-600">Nuestra fibra, combinada con la tecnología WiFi Mesh, asegura una señal potente
-                              en cada rincón de tu hogar.</p>
-                        </div>
-                    </div>
-                </div>
+      <div class="container mx-auto px-6">
+        <!-- Parte de "Nuestra Red" -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <span class="text-blue-600 font-semibold uppercase">Nuestra Red</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">La infraestructura que potencia tu
+              conexión.</h2>
+            <p class="text-lg text-gray-600 mb-6">Desplegamos una red de fibra óptica de última generación, diseñada
+              para ofrecerte la máxima velocidad y estabilidad. Porque una gran conexión lo cambia todo, seguimos
+              trabajando para expandir nuestra cobertura y llegar a más hogares en Tandil.</p>
+            <a href="#" class="font-semibold text-blue-600 hover:text-blue-800">Conocé más sobre nuestra tecnología
+              →</a>
+          </div>
+          <div class="grid grid-cols-1 gap-6">
+            <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
+              <i class="fas fa-wifi text-2xl text-blue-500 mt-1"></i>
+              <div>
+                <h4 class="font-bold text-lg">Internet sin límites</h4>
+                <p class="text-gray-600">Descargá archivos pesados, jugá online y hacé videollamadas en alta definición,
+                  todo al mismo tiempo.</p>
+              </div>
             </div>
-
-            <!-- Parte de "Zona de Cobertura" integrada armoniosamente -->
-            <div id="coverage" class="mt-20 md:mt-24 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura actual</h2>
-                 <!-- Div del mapa corregido: sin borde y con esquinas redondeadas -->
-                <div class="rounded-2xl overflow-hidden shadow-xl mb-12 max-w-5xl mx-auto">
-                    <iframe
-                      src="https://www.google.com/maps/d/u/3/embed?mid=1FMLCCOIV2gZocoCOxwsKogDrerarGwY&ehbc=2E312F&noprof=1"
-                      width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
-                      referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
-                <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya está
-                  disponible en tu domicilio e iniciá el cambio.</p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
-                    <input type="text" placeholder="Ingresá tu dirección, ej: San Martín 550"
-                      class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button
-                      class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
-                </div>
+            <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
+              <i class="fas fa-film text-2xl text-blue-500 mt-1"></i>
+              <div>
+                <h4 class="font-bold text-lg">Streaming 4K fluido</h4>
+                <p class="text-gray-600">Disfrutá de tus series y películas favoritas en la máxima calidad, sin
+                  buffering ni interrupciones molestas.</p>
+              </div>
             </div>
+            <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
+              <i class="fas fa-house-signal text-2xl text-blue-500 mt-1"></i>
+              <div>
+                <h4 class="font-bold text-lg">Cobertura Total</h4>
+                <p class="text-gray-600">Nuestra fibra, combinada con la tecnología WiFi Mesh, asegura una señal potente
+                  en cada rincón de tu hogar.</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Parte de "Zona de Cobertura" integrada armoniosamente -->
+        <div id="coverage" class="mt-20 md:mt-24 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura actual</h2>
+          <div class="rounded-2xl overflow-hidden shadow-xl mb-12 max-w-5xl mx-auto">
+            <iframe
+              src="https://www.google.com/maps/d/u/3/embed?mid=1FMLCCOIV2gZocoCOxwsKogDrerarGwY&ehbc=2E312F&noprof=1"
+              width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
+          <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya está
+            disponible en tu domicilio e iniciá el cambio.</p>
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
+            <input type="text" id="address-input" placeholder="Ingresá tu dirección, ej: San Martín 550"
+              class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="coverage-button"
+              class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
+          </div>
+          <div id="coverage-result" class="mt-6 max-w-xl mx-auto"></div>
+        </div>
+      </div>
     </section>
 
     <!-- =========== FAQ Section (ORDEN 6 - CORREGIDA) =========== -->
@@ -846,57 +884,57 @@
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
           </div>
           <div id="faq-accordion" class="divide-y divide-gray-200">
-              <!-- Pregunta 1 -->
-              <div class="py-2">
-                <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                    <span>¿Qué significa que la velocidad sea "simétrica"?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
-                </button>
-                <div class="faq-answer">
-                  <p class="pt-2">Significa que tenés la misma velocidad de subida que de bajada. Esto es ideal para
-                    videollamadas,
-                    subir contenido a redes sociales, jugar online y trabajar con archivos en la nube, ya que la conexión
-                    es igual de rápida en ambas direcciones.</p>
-                </div>
+            <!-- Pregunta 1 -->
+            <div class="py-2">
+              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
+                <span>¿Qué significa que la velocidad sea "simétrica"?</span>
+                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="pt-2">Significa que tenés la misma velocidad de subida que de bajada. Esto es ideal para
+                  videollamadas,
+                  subir contenido a redes sociales, jugar online y trabajar con archivos en la nube, ya que la conexión
+                  es igual de rápida en ambas direcciones.</p>
               </div>
-              <!-- Pregunta 2 -->
-              <div class="py-2">
-                  <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                    <span>¿Cómo es el proceso de instalación?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
-                  </button>
-                <div class="faq-answer">
-                  <p class="pt-2">Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un
-                    técnico
-                    especializado coordinará una visita para realizar la instalación del cable de fibra óptica y dejar el
-                    módem configurado y funcionando.</p>
-                </div>
+            </div>
+            <!-- Pregunta 2 -->
+            <div class="py-2">
+              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
+                <span>¿Cómo es el proceso de instalación?</span>
+                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="pt-2">Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un
+                  técnico
+                  especializado coordinará una visita para realizar la instalación del cable de fibra óptica y dejar el
+                  módem configurado y funcionando.</p>
               </div>
-              <!-- Pregunta 3 -->
-              <div class="py-2">
-                  <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                    <span>¿Puedo usar mi propio router?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
-                  </button>
-                <div class="faq-answer">
-                  <p class="pt-2">Sí, podés conectar tu propio router a nuestro módem (ONT). Sin embargo, para garantizar
-                    la mejor
-                    experiencia y cobertura, recomendamos nuestros equipos y la solución WiFi Mesh.</p>
-                </div>
+            </div>
+            <!-- Pregunta 3 -->
+            <div class="py-2">
+              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
+                <span>¿Puedo usar mi propio router?</span>
+                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="pt-2">Sí, podés conectar tu propio router a nuestro módem (ONT). Sin embargo, para garantizar
+                  la mejor
+                  experiencia y cobertura, recomendamos nuestros equipos y la solución WiFi Mesh.</p>
               </div>
-              <!-- Pregunta 4 -->
-              <div class="py-2">
-                  <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                    <span>¿Qué hago si tengo problemas con el servicio?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
-                  </button>
-                <div class="faq-answer">
-                  <p class="pt-2">Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o a
-                    través de
-                    nuestra área de autogestión. Nuestro equipo de soporte técnico local te ayudará a resolver cualquier
-                    inconveniente.</p>
-                </div>
+            </div>
+            <!-- Pregunta 4 -->
+            <div class="py-2">
+              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
+                <span>¿Qué hago si tengo problemas con el servicio?</span>
+                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="pt-2">Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o a
+                  través de
+                  nuestra área de autogestión. Nuestro equipo de soporte técnico local te ayudará a resolver cualquier
+                  inconveniente.</p>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1004,16 +1042,19 @@
           </ul>
         </div>
         <div>
-          <h4 class="font-bold mb-4"></h4><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
+          <h4 class="font-bold mb-4"></h4><img
+            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
             alt="Logo Usina de Tandil" class="rounded-md" />
         </div>
       </div>
       <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
         <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-        <div class="flex space-x-4"><a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i
-              class="fab fa-facebook-f fa-lg"></i></a><a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
-              class="fab fa-instagram fa-lg"></i></a><a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i
-              class="fab fa-whatsapp fa-lg"></i></a></div>
+        <div class="flex space-x-4"><a href="https://www.facebook.com/people/Usittel/100093569816699/#"
+            class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a><a
+            href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+              class="fab fa-instagram fa-lg"></i></a><a
+            href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a></div>
       </div>
     </div>
   </footer>
@@ -1032,70 +1073,70 @@
       if (closeMenu) closeMenu.addEventListener('click', toggleMenu);
       if (toggleProducts) { toggleProducts.addEventListener('click', (e) => { e.preventDefault(); productsSubmenu.style.display = productsSubmenu.style.display === 'flex' ? 'none' : 'flex'; }); }
 
-       // Hero Animation: Fiber Optic Lines (Updated)
-        const container = document.getElementById('hero-canvas-container');
-        if (container) {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 1, 1000);
-            camera.position.z = 200;
-            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), antialias: true, alpha: true });
-            renderer.setClearColor(0x0c0c1d, 1);
-            renderer.setSize(container.offsetWidth, container.offsetHeight);
+      // Hero Animation: Fiber Optic Lines (Updated)
+      const container = document.getElementById('hero-canvas-container');
+      if (container) {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 1, 1000);
+        camera.position.z = 200;
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), antialias: true, alpha: true });
+        renderer.setClearColor(0x0c0c1d, 1);
+        renderer.setSize(container.offsetWidth, container.offsetHeight);
 
-            const lines = [];
-            const lineCount = 200;
-            const lineColors = [new THREE.Color(0x1a73e8), new THREE.Color(0x30a172)];
+        const lines = [];
+        const lineCount = 200;
+        const lineColors = [new THREE.Color(0x1a73e8), new THREE.Color(0x30a172)];
 
-            for (let i = 0; i < lineCount; i++) {
-                const geometry = new THREE.BufferGeometry();
-                const points = [];
-                const length = Math.random() * 20 + 5;
-                const point1 = new THREE.Vector3(0, 0, 0);
-                const point2 = new THREE.Vector3(0, 0, -length);
-                points.push(point1, point2);
-                geometry.setFromPoints(points);
+        for (let i = 0; i < lineCount; i++) {
+          const geometry = new THREE.BufferGeometry();
+          const points = [];
+          const length = Math.random() * 20 + 5;
+          const point1 = new THREE.Vector3(0, 0, 0);
+          const point2 = new THREE.Vector3(0, 0, -length);
+          points.push(point1, point2);
+          geometry.setFromPoints(points);
 
-                const material = new THREE.LineBasicMaterial({ 
-                    color: lineColors[Math.floor(Math.random() * lineColors.length)],
-                    linewidth: Math.random() * 1.5 + 0.5,
-                });
-                
-                const line = new THREE.Line(geometry, material);
-                
-                line.position.set(
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 400
-                );
-                
-                line.speed = Math.random() * 1 + 0.5; // Increased speed
-                
-                lines.push(line);
-                scene.add(line);
-            }
+          const material = new THREE.LineBasicMaterial({
+            color: lineColors[Math.floor(Math.random() * lineColors.length)],
+            linewidth: Math.random() * 1.5 + 0.5,
+          });
 
-            function animate() {
-                requestAnimationFrame(animate);
-                lines.forEach(line => {
-                    line.position.z += line.speed;
-                    if (line.position.z > camera.position.z) {
-                        line.position.z = -200;
-                        line.position.x = (Math.random() - 0.5) * 150;
-                        line.position.y = (Math.random() - 0.5) * 150;
-                    }
-                });
-                renderer.render(scene, camera);
-            }
+          const line = new THREE.Line(geometry, material);
 
-            function onWindowResize() {
-                camera.aspect = container.offsetWidth / container.offsetHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-            }
+          line.position.set(
+            (Math.random() - 0.5) * 150,
+            (Math.random() - 0.5) * 150,
+            (Math.random() - 0.5) * 400
+          );
 
-            window.addEventListener('resize', onWindowResize, false);
-            animate();
+          line.speed = Math.random() * 1 + 0.5; // Increased speed
+
+          lines.push(line);
+          scene.add(line);
         }
+
+        function animate() {
+          requestAnimationFrame(animate);
+          lines.forEach(line => {
+            line.position.z += line.speed;
+            if (line.position.z > camera.position.z) {
+              line.position.z = -200;
+              line.position.x = (Math.random() - 0.5) * 150;
+              line.position.y = (Math.random() - 0.5) * 150;
+            }
+          });
+          renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+          camera.aspect = container.offsetWidth / container.offsetHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.offsetWidth, container.offsetHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize, false);
+        animate();
+      }
 
       // Plans Section Logic
       const plansData = {
@@ -1117,7 +1158,7 @@
           }
         ]
       };
-      
+
       const defaultPlansView = document.getElementById('default-plans-view');
       const soloTvView = document.getElementById('solo-tv-view');
       const planCardsContainer = document.getElementById('plan-cards-container');
@@ -1129,13 +1170,13 @@
       const tvOnlyBtn = document.getElementById('tv-only-btn');
 
       function createPlanCard(plan, type) {
-          const isSoloTvPlan = type === 'soloTv';
-          const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-6';
-          const speedLine = plan.speed.includes('Mbps')
-              ? `<p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
-              : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
+        const isSoloTvPlan = type === 'soloTv';
+        const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-6';
+        const speedLine = plan.speed.includes('Mbps')
+          ? `<p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
+          : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
 
-          return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
+        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
                       <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
                       ${speedLine}
                       <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
@@ -1151,71 +1192,71 @@
         internetTvBtn.classList.remove('active');
         tvOnlyBtn.classList.remove('active');
 
-        if(type === 'soloTv') {
-            defaultPlansView.classList.add('hidden');
-            soloTvView.classList.remove('hidden');
-            soloTvCardContainer.innerHTML = createPlanCard(plansData.soloTv[0], 'soloTv');
-            tvOnlyBtn.classList.add('active');
+        if (type === 'soloTv') {
+          defaultPlansView.classList.add('hidden');
+          soloTvView.classList.remove('hidden');
+          soloTvCardContainer.innerHTML = createPlanCard(plansData.soloTv[0], 'soloTv');
+          tvOnlyBtn.classList.add('active');
         } else {
-            soloTvView.classList.add('hidden');
-            defaultPlansView.classList.remove('hidden');
-            
-            planCardsContainer.innerHTML = '';
-            plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
+          soloTvView.classList.add('hidden');
+          defaultPlansView.classList.remove('hidden');
 
-            if (type === 'internet') {
-                internetBtn.classList.add('active');
-                premiumPacksDefault.classList.add('hidden');
-            } else if (type === 'internetTv') {
-                internetTvBtn.classList.add('active');
-                premiumPacksDefault.classList.remove('hidden');
-            }
+          planCardsContainer.innerHTML = '';
+          plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
+
+          if (type === 'internet') {
+            internetBtn.classList.add('active');
+            premiumPacksDefault.classList.add('hidden');
+          } else if (type === 'internetTv') {
+            internetTvBtn.classList.add('active');
+            premiumPacksDefault.classList.remove('hidden');
+          }
         }
 
         const buttonContainer = document.getElementById('plan-info-button-container');
-        if(buttonContainer){
-            let btnHTML = '';
-            if (type === 'internet') {
-                btnHTML = `<a href="#network" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
-            } else if (type === 'internetTv' || type === 'soloTv') {
-                btnHTML = `<a href="#tv-section" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
-            }
-            buttonContainer.innerHTML = btnHTML;
+        if (buttonContainer) {
+          let btnHTML = '';
+          if (type === 'internet') {
+            btnHTML = `<a href="#network" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+          } else if (type === 'internetTv' || type === 'soloTv') {
+            btnHTML = `<a href="#tv-section" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+          }
+          buttonContainer.innerHTML = btnHTML;
         }
       }
 
       internetBtn.addEventListener('click', () => displayPlans('internet'));
       internetTvBtn.addEventListener('click', () => displayPlans('internetTv'));
       tvOnlyBtn.addEventListener('click', () => displayPlans('soloTv'));
-      
+
       // Initial display
       displayPlans('internet');
 
       // FAQ Accordion Logic
       const faqContainer = document.getElementById('faq-accordion');
       if (faqContainer) {
-          const questions = faqContainer.querySelectorAll('.faq-question');
-          questions.forEach(question => {
-              question.addEventListener('click', () => {
-                  const answer = question.nextElementSibling;
-                  const isOpen = question.classList.contains('open');
-                  
-                  questions.forEach(q => {
-                      if (q !== question) {
-                          q.classList.remove('open');
-                          q.nextElementSibling.style.maxHeight = null;
-                      }
-                  });
+        const questions = faqContainer.querySelectorAll('.faq-question');
+        questions.forEach(question => {
+          question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const isOpen = question.classList.contains('open');
 
-                  if (isOpen) {
-                      question.classList.remove('open');
-                      answer.style.maxHeight = null;
-                  } else {
-                      question.classList.add('open');
-                      answer.style.maxHeight = answer.scrollHeight + 'px';
-                  }
-              });
+            questions.forEach(q => {
+              if (q !== question) {
+                q.classList.remove('open');
+                q.nextElementSibling.style.maxHeight = null;
+              }
+            });
+
+            if (isOpen) {
+              question.classList.remove('open');
+              answer.style.maxHeight = null;
+            } else {
+              question.classList.add('open');
+              answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
           });
+        });
       }
 
       // Mesh Carousel Logic
@@ -1243,6 +1284,405 @@
       }
       if (meshSlides.length > 1) { createMeshDots(); }
     });
+  </script>
+  <script>
+  // ===============================================
+// ===     LOGICA DE COBERTURA (ACTUALIZADO)   ===
+// ===============================================
+const coverageButton = document.getElementById('coverage-button');
+const addressInput = document.getElementById('address-input');
+const coverageResultContainer = document.getElementById('coverage-result');
+
+if (coverageButton) {
+    coverageButton.addEventListener('click', checkCoverage);
+}
+
+// Permitir buscar presionando Enter en el input
+if (addressInput) {
+    addressInput.addEventListener('keyup', function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            coverageButton.click();
+        }
+    });
+}
+
+
+function checkCoverage() {
+    const address = addressInput.value.trim();
+    addressInput.style.border = "1px solid #d1d5db"; // Reset border color
+    coverageResultContainer.innerHTML = ''; // Limpiar resultados anteriores
+
+    if (address === "") {
+        addressInput.style.border = "1px solid red";
+        displayMessage('Por favor, ingresá una dirección.', 'warning');
+        coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    // CAMBIO IMPORTANTE: La expresión regular ahora no exige que la dirección termine en el número.
+    // Esto permite que el usuario escriba cosas como "dpto b", "tandil", etc., después del número.
+    const match = address.match(/^(.*?)\s+(\d+)/);
+
+    if (!match) {
+        displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: San Martín 550).', 'error');
+        coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    const streetName = match[1];
+    const streetNumber = parseInt(match[2], 10);
+
+    const zonasDeCobertura = [
+        // ... (el array de zonas de cobertura sigue aquí, es el mismo de antes)
+        { calle: "paz", desde: 1, hasta: 1599 },
+        { calle: "general paz", desde: 1, hasta: 1599 },
+        { calle: "gral paz", desde: 1, hasta: 1599 },
+        { calle: "gral. paz", desde: 1, hasta: 1599 },
+        { calle: "4 de abril", desde: 1, hasta: 1600 },
+        { calle: "4 abril", desde: 1, hasta: 1600 },
+        { calle: "cuatro de abril", desde: 1, hasta: 1600 },
+        { calle: "santamarina", desde: 1, hasta: 900 },
+        { calle: "av Santamarina", desde: 1, hasta: 900 },
+        { calle: "av Santa marina", desde: 1, hasta: 900 },
+        { calle: "av. Santamarina", desde: 1, hasta: 900 },
+        { calle: "av. Santa marina", desde: 1, hasta: 900 },
+        { calle: "avenida Santa marina", desde: 1, hasta: 900 },
+        { calle: "avenida Santamarina", desde: 1, hasta: 900 },
+        { calle: "alsina", desde: 1, hasta: 1600 },
+        { calle: "alcina", desde: 1, hasta: 1600 },
+        { calle: "gral roca", desde: 1, hasta: 1600 },
+        { calle: "gral. roca", desde: 1, hasta: 1600 },
+        { calle: "general roca", desde: 1, hasta: 1600 },
+        { calle: "roca", desde: 1, hasta: 1600 },
+        { calle: "11 de septiembre", desde: 1, hasta: 1600 },
+        { calle: "11 de setiembre", desde: 1, hasta: 1600 },
+        { calle: "once de setiembre", desde: 1, hasta: 1600 },
+        { calle: "once de septiembre", desde: 1, hasta: 1600 },
+        { calle: "montiel", desde: 1, hasta: 1600 },
+        { calle: "moreno", desde: 1, hasta: 1600 },
+        { calle: "saavedra", desde: 1, hasta: 1600 },
+        { calle: "savedra", desde: 1, hasta: 1600 },
+        { calle: "saaveedra", desde: 1, hasta: 1600 },
+        { calle: "saaveedra", desde: 1, hasta: 1600 },
+        { calle: "buzon", desde: 1, hasta: 1100 },
+        { calle: "av buzon", desde: 1, hasta: 1100 },
+        { calle: "av buzón", desde: 1, hasta: 1100 },
+        { calle: "avenida buzon", desde: 1, hasta: 1100 },
+        { calle: "avenida marconi", desde: 1000, hasta: 1800 },
+        { calle: "av marconi", desde: 1000, hasta: 1800 },
+        { calle: "marconi", desde: 1000, hasta: 1800 },
+        { calle: "avenida españa", desde: 900, hasta: 1000 },
+        { calle: "av españa", desde: 900, hasta: 1000 },
+        { calle: "av. españa", desde: 900, hasta: 1000 },
+        { calle: "españa", desde: 900, hasta: 1000 },
+        { calle: "sarmiento", desde: 900, hasta: 1800 },
+        { calle: "mitre", desde: 900, hasta: 1800 },
+        { calle: "sanmartin", desde: 900, hasta: 1800 },
+        { calle: "san martin", desde: 900, hasta: 1800 },
+        { calle: "san martín", desde: 900, hasta: 1800 },
+        { calle: "pinto", desde: 900, hasta: 1800 },
+        { calle: "belgrano", desde: 900, hasta: 1800 },
+        { calle: "gral. belgrano", desde: 900, hasta: 1800 },
+        { calle: "gral belgrano", desde: 900, hasta: 1800 },
+        { calle: "general belgrano", desde: 900, hasta: 1800 },
+        { calle: "maipu", desde: 900, hasta: 1800 },
+        { calle: "maipú", desde: 900, hasta: 1800 },
+        { calle: "veinticinco de mayo", desde: 900, hasta: 1800 },
+        { calle: "25demayo", desde: 900, hasta: 1800 },
+        { calle: "25 de mayo", desde: 900, hasta: 1800 },
+        { calle: "constitucion", desde: 900, hasta: 1800 },
+        { calle: "constitución", desde: 900, hasta: 1800 },
+        { calle: "avellaneda", desde: 900, hasta: 1800 },
+        { calle: "avenida avellaneda", desde: 900, hasta: 1800 },
+        { calle: "av avellaneda", desde: 900, hasta: 1800 },
+        { calle: "av. avellaneda", desde: 900, hasta: 1800 },
+        { calle: "1 de mayo", desde: 1000, hasta: 1499 },
+        { calle: "uno de mayo", desde: 1000, hasta: 1499 },
+        { calle: "primero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "1ero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pasaje primero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pasaje 1 de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pasaje uno de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pasaje 1ero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "psje 1ero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pje 1ero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pje. 1ero de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pasaje uno de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pje 1 de mayo", desde: 1000, hasta: 1499 },
+        { calle: "psaje 1 de mayo", desde: 1000, hasta: 1499 },
+        { calle: "pje uno de mayo", desde: 1000, hasta: 1499 },
+        { calle: "psaje uno de mayo", desde: 1000, hasta: 1499 },
+        { calle: "roser", desde: 1500, hasta: 1599 },
+        { calle: "rosser", desde: 1500, hasta: 1599 },
+        { calle: "cruz roja argentina", desde: 0, hasta: 1700 },
+        { calle: "cruz roja", desde: 0, hasta: 1700 },
+        { calle: "cruz roja arg.", desde: 0, hasta: 1700 },
+        { calle: "cruz roja arg", desde: 0, hasta: 1700 },
+        { calle: "pasaje cruz roja argentina", desde: 0, hasta: 1700 },
+        { calle: "pje cruz roja argentina", desde: 0, hasta: 1700 },
+        { calle: "pje. cruz roja argentina", desde: 0, hasta: 1700 },
+        { calle: "cruz roja argentina casa", desde: 0, hasta: 1700 },
+        { calle: "cruz roja casa", desde: 0, hasta: 1700 },
+        { calle: "cruz roja arg. casa", desde: 0, hasta: 1700 },
+        { calle: "cruz roja arg casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje cruz roja argentina casa", desde: 0, hasta: 1700 },
+        { calle: "pje cruz roja argentina casa", desde: 0, hasta: 1700 },
+        { calle: "pje. duggan martignoni casa", desde: 0, hasta: 1700 },
+        { calle: "duggan martignoni", desde: 0, hasta: 1700 },
+        { calle: "dugan martinoni", desde: 0, hasta: 1700 },
+        { calle: "dugan martignoni", desde: 0, hasta: 1700 },
+        { calle: "pje. duggan martignoni ", desde: 0, hasta: 1700 },
+        { calle: "duggan martignoni casa", desde: 0, hasta: 1700 },
+        { calle: "dugan martinoni casa", desde: 0, hasta: 1700 },
+        { calle: "dugan martignoni casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje agote casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje agote", desde: 0, hasta: 1700 },
+        { calle: "pje. agote casa", desde: 0, hasta: 1700 },
+        { calle: "pje. agote", desde: 0, hasta: 1700 },
+        { calle: "pasaje luis agote casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje luis agote", desde: 0, hasta: 1700 },
+        { calle: "pje. luis agote casa", desde: 0, hasta: 1700 },
+        { calle: "pje. luis agote", desde: 0, hasta: 1700 },
+        { calle: "pje. r. gutierrez casa", desde: 0, hasta: 1700 },
+        { calle: "r. gutierrez", desde: 0, hasta: 1700 },
+        { calle: "r gutierrez", desde: 0, hasta: 1700 },
+        { calle: "r. gutierrez casa", desde: 0, hasta: 1700 },
+        { calle: "pje. r. gutierrez", desde: 0, hasta: 1700 },
+        { calle: "r. gutierrez casa", desde: 0, hasta: 1700 },
+        { calle: "r gutierrez casa", desde: 0, hasta: 1700 },
+        { calle: "pje. r gutierrez casa", desde: 0, hasta: 1700 },
+        { calle: "pje. mariano castex casa", desde: 0, hasta: 1700 },
+        { calle: "pje. mariano castex ", desde: 0, hasta: 1700 },
+        { calle: "mariano castex", desde: 0, hasta: 1700 },
+        { calle: "mariano castex casa", desde: 0, hasta: 1700 },
+        { calle: "pje mariano castex", desde: 0, hasta: 1700 },
+        { calle: "pje mariano castex casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje mariano castex casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje mariano castex ", desde: 0, hasta: 1700 },
+        { calle: "pje. baldomero moreno casa", desde: 0, hasta: 1700 },
+        { calle: "pje. baldomero moreno", desde: 0, hasta: 1700 },
+        { calle: "baldomero moreno", desde: 0, hasta: 1700 },
+        { calle: "baldomero moreno casa", desde: 0, hasta: 1700 },
+        { calle: "pje baldomero moreno", desde: 0, hasta: 1700 },
+        { calle: "pje baldomero moreno casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje baldomero moreno casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje baldomero moreno ", desde: 0, hasta: 1700 },
+        { calle: "pje. crucero gral belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pje. crucero gral belgrano", desde: 0, hasta: 1700 },
+        { calle: "crucero gral belgrano", desde: 0, hasta: 1700 },
+        { calle: "crucero gral belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pje crucero gral belgrano", desde: 0, hasta: 1700 },
+        { calle: "pje crucero gral belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje crucero gral belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje crucero gral belgrano ", desde: 0, hasta: 1700 },
+        { calle: "pje. crucero general belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pje. crucero general belgrano", desde: 0, hasta: 1700 },
+        { calle: "crucero general belgrano", desde: 0, hasta: 1700 },
+        { calle: "crucero general belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pje crucero general belgrano", desde: 0, hasta: 1700 },
+        { calle: "pje crucero general belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje crucero general belgrano casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje crucero general belgrano ", desde: 0, hasta: 1700 },
+        { calle: "pje. combate de obligado casa", desde: 0, hasta: 1700 },
+        { calle: "pje. combate de obligado", desde: 0, hasta: 1700 },
+        { calle: "combate de obligado", desde: 0, hasta: 1700 },
+        { calle: "combate de obligado casa", desde: 0, hasta: 1700 },
+        { calle: "pje combate de obligado", desde: 0, hasta: 1700 },
+        { calle: "pje combate de obligado casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje combate de obligado casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje combate de obligado", desde: 0, hasta: 1700 },
+        { calle: "pje. combate de obligado casa", desde: 0, hasta: 1700 },
+        { calle: "pje. Combatientes de malvinas", desde: 0, hasta: 1700 },
+        { calle: " Combatientes de malvinas ", desde: 0, hasta: 1700 },
+        { calle: " Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+        { calle: "pje Combatientes de malvinas ", desde: 0, hasta: 1700 },
+        { calle: "pje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje Combatientes de malvinas ", desde: 0, hasta: 1700 },
+        { calle: "pje. S. Austral", desde: 0, hasta: 1700 },
+        { calle: " S. Austral ", desde: 0, hasta: 1700 },
+        { calle: " S. Austral casa", desde: 0, hasta: 1700 },
+        { calle: "pje Soberanía Austral ", desde: 0, hasta: 1700 },
+        { calle: "pje Soberanía Austral casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje Soberanía Austral casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje Soberanía Austral ", desde: 0, hasta: 1700 },
+        { calle: "pje. puerto argentino casa", desde: 0, hasta: 1700 },
+        { calle: "pje. puerto argentino", desde: 0, hasta: 1700 },
+        { calle: "puerto argentino", desde: 0, hasta: 1700 },
+        { calle: "puerto argentino casa", desde: 0, hasta: 1700 },
+        { calle: "pje puerto argentino", desde: 0, hasta: 1700 },
+        { calle: "pje puerto argentino casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje puerto argentino casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje puerto argentino", desde: 0, hasta: 1700 },
+        { calle: "pje. jose vernet casa", desde: 0, hasta: 1700 },
+        { calle: "pje. jose vernet", desde: 0, hasta: 1700 },
+        { calle: "jose vernet", desde: 0, hasta: 1700 },
+        { calle: "jose vernet casa", desde: 0, hasta: 1700 },
+        { calle: "pje jose vernet", desde: 0, hasta: 1700 },
+        { calle: "pje jose vernet casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje jose vernet casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje jose vernet", desde: 0, hasta: 1700 },
+        { calle: "pje. c. posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "pje. c. posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "c. posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "c. posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "pje c. posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "pje c. posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje c. posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "pasaje c. posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "pje. c. posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "pje. posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+        { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+        { calle: "av. machado", desde: 900, hasta: 1800 },
+        { calle: "avenida machado", desde: 900, hasta: 1800 },
+        { calle: "machado", desde: 900, hasta: 1800 },
+        { calle: "arana", desde: 900, hasta: 1800 },
+        { calle: "uriburu", desde: 900, hasta: 1800 },
+        { calle: "pellegrini", desde: 900, hasta: 1800 },
+        { calle: "montevideo", desde: 900, hasta: 1800 },
+        { calle: "las heras", desde: 900, hasta: 1800 },
+        { calle: "garibaldi", desde: 900, hasta: 1800 },
+        { calle: "av balbin", desde: 900, hasta: 1700 },
+        { calle: "balbin", desde: 900, hasta: 1700 },
+        { calle: "avenida balbin", desde: 900, hasta: 1700 },
+        { calle: "avenida colón", desde: 900, hasta: 1600 },
+        { calle: "av colón", desde: 900, hasta: 1600 },
+        { calle: "colón", desde: 900, hasta: 1600 },
+        { calle: "avenida colon", desde: 900, hasta: 1600 },
+        { calle: "av colon", desde: 900, hasta: 1600 },
+        { calle: "colon", desde: 900, hasta: 1600 },
+        { calle: "av espora", desde: 800, hasta: 1400 },
+        { calle: "espora", desde: 800, hasta: 1400 },
+        { calle: "avenida espora", desde: 800, hasta: 1400 },
+        { calle: "guatemala", desde: 900, hasta: 1500 },
+        { calle: "mejico", desde: 1000, hasta: 1400 },
+        { calle: "mexico", desde: 1000, hasta: 1400 },
+        { calle: "gomez", desde: 1200, hasta: 1400 },
+        { calle: "colectora sur", desde: 1000, hasta: 1800 },
+        { calle: "colectora sur j.c pugliese", desde: 1000, hasta: 1800 },
+        { calle: "colectora j.c pugliese", desde: 1000, hasta: 1800 },
+        { calle: "colectora pugliese", desde: 1000, hasta: 1800 },
+        { calle: "pugliese", desde: 1000, hasta: 1800 },
+        { calle: "piedrabuena", desde: 1000, hasta: 1800 },
+        { calle: "piñero", desde: 1200, hasta: 1600 },
+        { calle: "piñiero", desde: 1200, hasta: 1600 },
+        { calle: "piñeiro", desde: 1200, hasta: 1600 },
+        { calle: "primera junta", desde: 1000, hasta: 1800 },
+        { calle: "franklin", desde: 1000, hasta: 1700 },
+        { calle: "colombia", desde: 1000, hasta: 1400 },
+        { calle: "newton", desde: 900, hasta: 1400 },
+        { calle: "edison", desde: 900, hasta: 1200 },
+        { calle: "cuba", desde: 900, hasta: 1400 },
+        { calle: "haiti", desde: 900, hasta: 1400 },
+        { calle: "jurado", desde: 1200, hasta: 1400 },
+        { calle: "rauch", desde: 1000, hasta: 1400 },
+        { calle: "peyrel", desde: 1200, hasta: 1400 },
+        { calle: "honduras", desde: 1300, hasta: 1400 },
+        { calle: "pioxii", desde: 1300, hasta: 1400 },
+        { calle: "pioXII", desde: 1300, hasta: 1400 },
+        { calle: "guemes", desde: 1200, hasta: 1400 },
+        { calle: "güemes", desde: 1200, hasta: 1400 },
+        { calle: "pasaje guernica", desde: 1600, hasta: 1800 },
+        { calle: "pje guernica", desde: 1600, hasta: 1800 },
+        { calle: "pje guernica", desde: 1600, hasta: 1800 },
+        { calle: "pasaje orbe", desde: 0, hasta: 1800 },
+        { calle: "pje orbe", desde: 0, hasta: 1800 },
+        { calle: "orbe", desde: 0, hasta: 1800 },
+        { calle: "pasaje c. disney", desde: 0, hasta: 1800 },
+        { calle: "pje c. disney", desde: 0, hasta: 1800 },
+        { calle: "c. disney", desde: 0, hasta: 1800 },
+        { calle: "Pasaje interno barrio san francisco", desde: 1100, hasta: 1500 },
+        { calle: "pje interno barrio san francisco", desde: 1100, hasta: 1500 },
+        { calle: "Pasaje interno bo san francisco", desde: 1100, hasta: 1500 },
+        { calle: "liniers", desde: 1000, hasta: 1700 },
+        { calle: "pje castelli", desde: 1100, hasta: 1800 },
+        { calle: "Pasaje castelli", desde: 1100, hasta: 1800 },
+        { calle: "Castelli", desde: 1100, hasta: 1800 }
+    ];
+    
+    const normalizedStreet = normalizeString(streetName);
+    let isInCoverage = false;
+
+    for (const zona of zonasDeCobertura) {
+        const normalizedZonaCalle = normalizeString(zona.calle);
+        if (normalizedStreet.includes(normalizedZonaCalle) && streetNumber >= zona.desde && streetNumber <= zona.hasta) {
+            isInCoverage = true;
+            break;
+        }
+    }
+
+    if (isInCoverage) {
+        const successMessage = `
+            <h3 class="text-2xl font-bold text-green-600">¡Buenas Noticias! Estás en Zona Usittel</h3>
+            <p class="mt-3 text-gray-600">
+                Contactate por WhatsApp haciendo click aquí: 
+                <a href="https://wa.me/5492494060345"
+                   target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp"></i> Chatear Ahora
+                </a>
+            </p>
+            <p class="mt-2 text-gray-600">
+                O si preferís, 
+                <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tu consulta</a> y te contactaremos.
+            </p>`;
+        displayMessage(successMessage, 'success');
+    } else {
+        const failureMessage = `
+            <h3 class="text-2xl font-bold text-yellow-600">Aún no llegamos a tu domicilio</h3>
+            <p class="mt-3 text-gray-600">
+                Por el momento no contamos con cobertura en la dirección indicada. ¡Pero no te preocupes! Seguimos ampliando nuestra red.
+            </p>
+            <p class="mt-2 text-gray-600">
+                Por favor, 
+                <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tus datos de contacto</a> para que podamos avisarte en cuanto lleguemos a tu zona.
+            </p>`;
+        displayMessage(failureMessage, 'warning');
+    }
+    
+    coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function normalizeString(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[.,]/g, '') // Quita puntos y comas
+        .trim();
+}
+
+function displayMessage(message, type) {
+    let iconHTML = '';
+    let colorClasses = '';
+
+    switch (type) {
+        case 'success':
+            iconHTML = '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
+            colorClasses = 'bg-green-50 border-green-200';
+            break;
+        case 'warning':
+            iconHTML = '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
+            colorClasses = 'bg-yellow-50 border-yellow-200';
+            break;
+        case 'error':
+            iconHTML = '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
+            colorClasses = 'bg-red-50 border-red-200';
+            break;
+    }
+
+    coverageResultContainer.innerHTML = `
+        <div class="p-6 rounded-lg border ${colorClasses} transition-opacity duration-500 ease-in-out opacity-100">
+            ${iconHTML}
+            <div>${message}</div>
+        </div>
+    `;
+}
   </script>
 </body>
 

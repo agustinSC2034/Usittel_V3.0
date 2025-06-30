@@ -19,19 +19,19 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Tailwind CSS Aspect Ratio Plugin -->
-  <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
+ <!-- Tailwind CSS Aspect Ratio Plugin -->
+ <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
 
-  <!-- Three.js Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+ <!-- Three.js Library -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Leaflet CSS (NUEVO) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+ <!-- Leaflet CSS (NUEVO) -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-  <!-- Leaflet JS (NUEVO) -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+ <!-- Leaflet JS (NUEVO) -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
         /* ================================== */
@@ -269,42 +269,6 @@
             /* green-500 */
         }
 
-        /* === SPEEDTEST SECTION STYLES === */
-        .speedtest-section {
-            background: #111827;
-        }
-
-        .gauge-container {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: conic-gradient(#1a73e8 0deg, #3c4043 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.5s ease;
-        }
-
-        .gauge-inner {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: #111827;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #start-speedtest-btn {
-            transition: all 0.2s ease;
-        }
-
-        #start-speedtest-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         /* === FAQ STYLES === */
         .faq-answer {
             max-height: 0;
@@ -318,6 +282,33 @@
 
         .faq-item.open .faq-icon {
             transform: rotate(45deg);
+        }
+
+        /* === NEW STARLINK-INSPIRED SECTION === */
+        .starlink-section {
+            position: relative;
+            background-color: #0a0f1f;
+            overflow: hidden;
+        }
+        #globe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        .activity-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .activity-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
         }
     </style>
     <style>
@@ -484,12 +475,12 @@
             }
              }
 
-              /* ESTILOS PARA EL MAPA (NUEVO) */
+             /* ESTILOS PARA EL MAPA (NUEVO) */
     #coverage-map {
       height: 500px;
       width: 100%;
     }
-       
+        
     </style>
 </head>
 
@@ -674,6 +665,35 @@
         </div>
         </section>
 
+        <section class="starlink-section py-16 md:py-24 text-white">
+            <div id="globe-container"></div>
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Diseñado para todo lo que hacés online.</h2>
+                <p class="text-lg text-gray-300 mt-2 max-w-3xl mx-auto mb-12">Desde home office y clases virtuales hasta gaming y maratones de series, nuestra fibra óptica te da la velocidad y estabilidad que necesitás.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="activity-card p-6 rounded-lg text-center">
+                        <i class="fas fa-video text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-bold">Streaming en 4K</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Mirá tus series y películas favoritas sin interrupciones ni buffering.</p>
+                    </div>
+                    <div class="activity-card p-6 rounded-lg text-center">
+                        <i class="fas fa-gamepad text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-bold">Gaming sin Lag</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Disfrutá de una baja latencia para una experiencia de juego competitiva y fluida.</p>
+                    </div>
+                    <div class="activity-card p-6 rounded-lg text-center">
+                        <i class="fas fa-users text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-bold">Videollamadas</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Conectate con video y audio de alta calidad, sin congelamientos.</p>
+                    </div>
+                    <div class="activity-card p-6 rounded-lg text-center">
+                        <i class="fas fa-laptop-house text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-bold">Home Office</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Subí y descargá archivos pesados en segundos y trabajá en la nube sin demoras.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- =========== Speedtest Section (10% smaller) =========== 
         <section id="speedtest" class="py-14 md:py-20 speedtest-section text-white">
             <div class="container mx-auto px-4 text-center">
@@ -732,7 +752,7 @@
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
                         <i class="fas fa-gamepad text-blue-500 text-4xl mb-4"></i>
                         <h3 class="text-xl font-bold mb-2">Latencia Ultra Baja</h3>
-                        <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming competitivo, videollamadas
+                        <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming, videollamadas
                             fluidas y una navegación sin demoras.</p>
                     </div>
                 </div>

@@ -19,279 +19,289 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-<style>
-/* ================================== */
-/* ===         NAV.CSS            === */
-/* ================================== */
-.navbar-section *,
-.navbar-section *::before,
-.navbar-section *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <style>
+        /* ================================== */
+        /* ===         NAV.CSS            === */
+        /* ================================== */
+        .navbar-section *,
+        .navbar-section *::before,
+        .navbar-section *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-header.navbar-section {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background-color: white;
-}
+        header.navbar-section {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+        }
 
-.navbar-section {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    font-size: 16px;
-    color: #3c4043;
-}
+        .navbar-section {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #3c4043;
+        }
 
-.navbar {
-    background-color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
 
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    height: 64px;
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-}
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            height: 64px;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
 
-.logo:hover {
-    background-color: rgba(60, 64, 67, 0.08);
-}
+        .logo:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+        }
 
-.logo img {
-    height: 36px;
-}
+        .logo img {
+            height: 36px;
+        }
 
-.nav-links {
-    display: flex;
-    gap: 12px;
-    list-style: none;
-}
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+        }
 
-.nav-links li a {
-    text-decoration: none;
-    color: #60666b;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 12px 16px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
+        .nav-links li a {
+            text-decoration: none;
+            color: #60666b;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
 
-.nav-links li a:hover {
-    background-color: rgba(60, 64, 67, 0.06);
-    color: #202020;
-}
+        .nav-links li a:hover {
+            background-color: rgba(60, 64, 67, 0.06);
+            color: #202020;
+        }
 
-.nav-links li a.active {
-    color: #1a73e8;
-    font-weight: 600;
-}
+        .nav-links li a.active {
+            color: #1a73e8;
+            font-weight: 600;
+        }
 
-.nav-links .dropdown {
-    position: relative;
-}
+        .nav-links .dropdown {
+            position: relative;
+        }
 
-.nav-links .dropdown > a.active-parent {
-    background-color: rgba(26, 115, 232, 0.08);
-    color: #1a73e8;
-}
+        .nav-links .dropdown>a.active-parent {
+            background-color: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
 
-.nav-links .dropdown-menu {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    background-color: white;
-    padding: 8px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    list-style: none;
-    min-width: 180px;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
+        .nav-links .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: white;
+            padding: 8px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            list-style: none;
+            min-width: 180px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
 
-.nav-links .dropdown-menu li a {
-    display: block;
-    padding: 10px 16px;
-    color: #3c4043;
-    font-size: 15px;
-    border-radius: 4px;
-}
+        .nav-links .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #3c4043;
+            font-size: 15px;
+            border-radius: 4px;
+        }
 
-.nav-links .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+        .nav-links .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.nav-button,
-.nav-button2,
-.nav-button-green {
-    font-size: 15px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
+        .nav-button,
+        .nav-button2,
+        .nav-button-green {
+            font-size: 15px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
 
-.nav-button-green {
-    background-color: #30a172;
-    color: white !important;
-}
+        .nav-button-green {
+            background-color: #30a172;
+            color: white !important;
+        }
 
-.nav-button-green:hover {
-    background-color: #188b48;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .nav-button-green:hover {
+            background-color: #188b48;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.nav-button2 {
-    background-color: #1a73e8;
-    color: white !important;
-}
+        .nav-button2 {
+            background-color: #1a73e8;
+            color: white !important;
+        }
 
-.nav-button2:hover {
-    background-color: #175ca7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-/* ================================== */
-/* ===       CUSTOM STYLES        === */
-/* ================================== */
-html {
-    scroll-behavior: smooth;
-}
+        .nav-button2:hover {
+            background-color: #175ca7;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
-}
+        /* ================================== */
+        /* ===       CUSTOM STYLES        === */
+        /* ================================== */
+        html {
+            scroll-behavior: smooth;
+        }
 
-.hero-tv {
-    background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-        url('/assets/img/tv/background_image_tv.png') no-repeat center top;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-color: #000; /* fallback */
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
 
-.cta-button {
-    transition: all 0.3s ease;
-}
+        .hero-tv {
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+                url('/assets/img/tv/background_image_tv.png') no-repeat center top;
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            background-color: #000;
+            /* fallback */
+        }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+        .cta-button {
+            transition: all 0.3s ease;
+        }
 
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif;
-}
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-.interactive-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    border: 2px solid transparent;
-    background-color: white;
-}
+        h1,
+        h2,
+        h3 {
+            font-family: 'Poppins', sans-serif;
+        }
 
-.interactive-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border-color: #22c55e; /* green-500 */
-}
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
+            background-color: white;
+        }
 
-.whatsapp-float {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #25d366;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    transition: transform 0.2s ease;
-}
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: #22c55e;
+            /* green-500 */
+        }
 
-.whatsapp-float:hover {
-    transform: scale(1.1);
-}
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.2s ease;
+        }
 
-/* === FAQ STYLES === */
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-}
-.faq-icon {
-    transition: transform 0.3s ease-in-out;
-}
-.faq-item.open .faq-icon {
-    transform: rotate(45deg);
-}
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
 
-/* === NEW: Features Section V2 === */
-.feature-item {
-    transition: transform 0.3s ease;
-}
-.feature-item:hover {
-    transform: translateY(-10px);
-}
-.feature-item .feature-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-}
-.feature-item .feature-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #374151; /* gray-700 */
-}
+        /* === FAQ STYLES === */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
 
-</style>
-   <style>
+        .faq-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* === NEW: Features Section V2 === */
+        .feature-item {
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-item .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item .feature-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+            /* gray-700 */
+        }
+    </style>
+    <style>
         /* ========== Mobile Menu + Responsive Styles ========== */
 
         .hamburger {
@@ -463,64 +473,66 @@ h1, h2, h3 {
     <header class="navbar-section">
         <nav class="navbar">
             <div class="navbar-container">
-            <!-- Encabezado mobile -->
-            <div class="mobile-header-bar mobile-only">
-            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-            <a href="/index.html" class="logo">
-            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
-            alt="Usittel Logo" />
-            </a>
-            </div>
+                <!-- Encabezado mobile -->
+                <div class="mobile-header-bar mobile-only">
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+                    <a href="/index.html" class="logo">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                            alt="Usittel Logo" />
+                    </a>
+                </div>
 
-            <!-- Encabezado desktop -->
-            <div class="nav-left desktop-only">
-            <a href="/index.html" class="logo">
-            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-            alt="Usittel Logo" />
-            </a>
-            <ul class="nav-links">
-            <li><a href="/index.html">Home</a></li>
-            <li class="dropdown">
-            <a href="#" class="active-parent">Productos ▾</a>
-            <ul class="dropdown-menu">
-            <li><a href="/pages/internet.html">Internet</a></li>
-            <li><a href="/pages/mesh.html">WiFi Mesh</a></li>
-            <li><a href="/pages/tv.html" class="active">TV</a></li>
-            </ul>
-            </li>
-            <li><a href="/pages/empresas.html">Empresas</a></li>
-            <li><a href="/pages/contacto.html">Contáctanos</a></li>
-            </ul>
-            </div>
+                <!-- Encabezado desktop -->
+                <div class="nav-left desktop-only">
+                    <a href="/index.html" class="logo">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+                            alt="Usittel Logo" />
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="/index.html">Home</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="active-parent">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/pages/internet.html">Internet</a></li>
+                                <li><a href="/pages/mesh.html">WiFi Mesh</a></li>
+                                <li><a href="/pages/tv.html" class="active">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/pages/empresas.html">Empresas</a></li>
+                        <li><a href="/pages/contacto.html">Contáctanos</a></li>
+                    </ul>
+                </div>
 
-            <div class="nav-actions desktop-only">
-            <a href="/pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-            </div>
+                <div class="nav-actions desktop-only">
+                    <a href="/pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank"
+                        rel="noopener">Autogestión</a>
+                </div>
             </div>
 
             <!-- Overlay y menú mobile -->
             <div class="overlay" id="overlay"></div>
             <div class="mobile-menu-slide" id="mobileMenu">
-            <div class="mobile-menu-header">
-            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-            alt="Usittel Logo" />
-            <button class="close-menu" id="closeMenu">&times;</button>
-            </div>
-            <hr />
-            <a href="/index.html">Home</a>
-            <div class="submenu-container">
-            <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
-            <div class="submenu" id="productsSubmenu">
-            <a href="/pages/internet.html">Internet</a>
-            <a href="/pages/mesh.html">WiFi Mesh</a>
-            <a href="/pages/tv.html" class="active">TV</a>
-            </div>
-            </div>
-            <a href="/pages/empresas.html">Empresas</a>
-            <a href="/pages/contacto.html">Contáctanos</a>
-            <a href="/pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+                <div class="mobile-menu-header">
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+                        alt="Usittel Logo" />
+                    <button class="close-menu" id="closeMenu">&times;</button>
+                </div>
+                <hr />
+                <a href="/index.html">Home</a>
+                <div class="submenu-container">
+                    <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
+                    <div class="submenu" id="productsSubmenu">
+                        <a href="/pages/internet.html">Internet</a>
+                        <a href="/pages/mesh.html">WiFi Mesh</a>
+                        <a href="/pages/tv.html" class="active">TV</a>
+                    </div>
+                </div>
+                <a href="/pages/empresas.html">Empresas</a>
+                <a href="/pages/contacto.html">Contáctanos</a>
+                <a href="/pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+                <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank"
+                    rel="noopener">Autogestión</a>
             </div>
         </nav>
     </header>
@@ -530,8 +542,12 @@ h1, h2, h3 {
         <section class="hero-tv text-white min-h-[calc(100vh-64px)] flex items-center py-24 md:py-40">
             <div class="container mx-auto text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La tele que va con vos.</h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Disfrutá de más de 100 canales en vivo, miles de series y películas on-demand, y todo el fútbol en un solo lugar. Llevá tu tele a donde vayas.</p>
-                <a href="#tv-plans" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver Planes y Adicionales</a>
+                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Disfrutá de más de 100 canales en
+                    vivo, miles de series y películas on-demand, y todo el fútbol en un solo lugar. Llevá tu tele a
+                    donde vayas.</p>
+                <a href="#tv-plans"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver
+                    Planes y Adicionales</a>
             </div>
         </section>
 
@@ -544,96 +560,119 @@ h1, h2, h3 {
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-6xl mx-auto items-center">
                     <!-- Main Plan -->
-                    <div class="lg:col-span-3 bg-white rounded-xl p-8 flex flex-col items-center text-center gap-6 interactive-card">
-                        <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full">PLAN PRINCIPAL</span>
+                    <div
+                        class="lg:col-span-3 bg-white rounded-xl p-8 flex flex-col items-center text-center gap-6 interactive-card">
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full">PLAN
+                            PRINCIPAL</span>
                         <h3 class="text-3xl font-bold text-gray-800">Sensa TV Full</h3>
                         <ul class="space-y-2 text-gray-600 mb-2">
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>+100 canales en vivo, 25 en HD.</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Acceso a miles de series y películas On-Demand.</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Funciones de grabar, pausar y retroceder.</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>+100
+                                canales en vivo, 25 en HD.</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Acceso
+                                a miles de series y películas On-Demand.</li>
+                            <li class="flex items-center gap-2"><i
+                                    class="fas fa-check-circle text-green-500"></i>Funciones de grabar, pausar y
+                                retroceder.</li>
                         </ul>
-                        <div class="my-2"><span class="text-5xl font-extrabold text-gray-900">$14.999</span><span class="text-gray-500">/mes</span></div>
-                        <a href="#contact" class="w-full md:w-auto text-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button mt-2">Contratar</a>
+                        <div class="my-2"><span class="text-5xl font-extrabold text-gray-900">$13.999</span><span
+                                class="text-gray-500">/mes</span></div>
+                        <a href="#contact"
+                            class="w-full md:w-auto text-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button mt-2">Contratar</a>
                     </div>
                     <!-- Add-ons -->
-                     <div class="lg:col-span-2 space-y-6">
+                    <div class="lg:col-span-2 space-y-6">
                         <h3 class="text-2xl font-bold text-gray-800 text-center lg:text-left">Agregá Packs Premium</h3>
                         <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
-                             <img src="https://placehold.co/64x64/000000/FFFFFF?text=FP" alt="Pack Futbol Logo" class="rounded-md"/>
-                             <div>
-                                 <h4 class="font-bold text-gray-800">Pack Fútbol</h4>
-                                 <p class="text-gray-600 text-sm">Viví todos los partidos de la liga argentina.</p>
-                                 <p class="font-bold text-sm text-green-600 mt-1">$15.599 /mes</p>
-                             </div>
+                            <img src="https://placehold.co/64x64/000000/FFFFFF?text=FP" alt="Pack Futbol Logo"
+                                class="rounded-md max-w-[64px] max-h-[64px] w-auto h-auto" />
+                            <div>
+                                <h4 class="font-bold text-gray-800">Pack Fútbol</h4>
+                                <p class="text-gray-600 text-sm">Viví todos los partidos de la liga argentina.</p>
+                                <p class="font-bold text-sm text-green-600 mt-1">$15.599 /mes</p>
+                            </div>
                         </div>
                         <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
-                             <img src="https://placehold.co/64x64/942dd9/FFFFFF?text=HBO" alt="HBO Pack Logo" class="rounded-md"/>
-                             <div>
-                                 <h4 class="font-bold text-gray-800">Pack HBO</h4>
-                                 <p class="text-gray-600 text-sm">Canales premium y acceso a la app <span class="font-semibold">MAX</span>.</p>
-                                 <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
-                             </div>
+                            <img src="/assets/img/logos/max-logo-black.png" alt="HBO Pack Logo"
+                                class="rounded-md max-w-[64px] max-h-[64px] w-auto h-auto" />
+                            <div>
+                                <h4 class="font-bold text-gray-800">Pack HBO</h4>
+                                <p class="text-gray-600 text-sm">Canales premium y acceso a la app <span
+                                        class="font-semibold">MAX</span>.</p>
+                                <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
+                            </div>
                         </div>
                         <div class="bg-white rounded-xl p-6 flex items-center gap-4 interactive-card">
-                             <img src="https://placehold.co/64x64/f26522/FFFFFF?text=U%2B" alt="Universal+ Logo" class="rounded-md"/>
-                             <div>
-                                 <h4 class="font-bold text-gray-800">Universal+</h4>
-                                 <p class="text-gray-600 text-sm">Canales premium y acceso a la app de streaming.</p>
-                                 <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
-                             </div>
+                            <img src="/assets/img/logos/Universal-Logo-removebg-preview.png" alt="Universal+ Logo"
+                                class="rounded-md max-w-[64px] max-h-[64px] w-auto h-auto" />
+                            <div>
+                                <h4 class="font-bold text-gray-800">Universal+</h4>
+                                <p class="text-gray-600 text-sm">Canales premium y acceso a la app de streaming.</p>
+                                <p class="font-bold text-sm text-green-600 mt-1">$5.999 /mes</p>
+                            </div>
                         </div>
-                     </div>
+                    </div>
                 </div>
-                <p class="text-center text-xs text-gray-500 mt-8">Los packs premium deben contratarse junto con el abono básico de USITTEL TV.</p>
+                <p class="text-center text-xs text-gray-500 mt-8">Los packs premium deben contratarse junto con el abono
+                    básico de USITTEL TV.</p>
             </div>
         </section>
 
-        
+
         <!-- App Features & Video Section (REORDERED) -->
         <section class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                <h2 class="text-3xl font-bold text-gray-900">Una experiencia de TV diseñada para vos.</h2>
-                <p class="text-lg text-gray-600 mt-2 mb-8">Con la app Sensa, tenés el poder de manejar la TV a tu antojo. No te pierdas nunca más tus programas favoritos.</p>
-                <ul class="space-y-4">
-                    <li class="flex items-start gap-4">
-                    <i class="fas fa-record-vinyl text-blue-500 text-xl mt-1 flex-shrink-0"></i>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
                     <div>
-                        <h4 class="font-semibold text-gray-800">Grabá y mirá cuando quieras</h4>
-                        <p class="text-gray-600">¿No llegás a ver el partido? Grabalo con un solo clic y disfrutalo más tarde, sin apuros.</p>
+                        <h2 class="text-3xl font-bold text-gray-900">Una experiencia de TV diseñada para vos.</h2>
+                        <p class="text-lg text-gray-600 mt-2 mb-8">Con la app Sensa, tenés el poder de manejar la TV a
+                            tu antojo. No te pierdas nunca más tus programas favoritos.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-4">
+                                <i class="fas fa-record-vinyl text-blue-500 text-xl mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Grabá y mirá cuando quieras</h4>
+                                    <p class="text-gray-600">¿No llegás a ver el partido? Grabalo con un solo clic y
+                                        disfrutalo más tarde, sin apuros.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <i class="fas fa-pause-circle text-blue-500 text-xl mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Pausá y retrocedé en vivo</h4>
+                                    <p class="text-gray-600">Atendé una llamada o andá a buscar algo para tomar. Poné
+                                        pausa y seguí viendo como si nada.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <i class="fas fa-undo text-blue-500 text-xl mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Reiniciá programas ya empezados</h4>
+                                    <p class="text-gray-600">¿Enganchaste una película a la mitad? Reiniciala y mirala
+                                        completa desde el principio.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="mt-8">
+                            <a href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=drive_link"
+                                target="_blank" rel="noopener"
+                                class="inline-block bg-blue-100 text-blue-700 font-medium px-5 py-3 rounded-lg hover:bg-blue-200 transition">
+                                Consultá todos los canales disponibles en la <span class="underline">grilla oficial de
+                                    la app</span>
+                                <i class="fas fa-external-link-alt ml-2 text-sm"></i>
+                            </a>
+                        </div>
                     </div>
-                    </li>
-                    <li class="flex items-start gap-4">
-                    <i class="fas fa-pause-circle text-blue-500 text-xl mt-1 flex-shrink-0"></i>
-                    <div>
-                        <h4 class="font-semibold text-gray-800">Pausá y retrocedé en vivo</h4>
-                        <p class="text-gray-600">Atendé una llamada o andá a buscar algo para tomar. Poné pausa y seguí viendo como si nada.</p>
+                    <!-- Video Placeholder -->
+                    <div
+                        class="bg-gray-800 rounded-xl shadow-lg aspect-video flex items-center justify-center text-white flex-col p-0 interactive-card overflow-hidden">
+                        <video loop autoplay muted playsinline
+                            poster="https://placehold.co/800x450/222/fff?text=Vista+previa+Sensa+TV"
+                            class="w-full h-full object-cover">
+                            <source src="../assets/video/sensa_tv.mp4" type="video/mp4">
+                            Tu navegador no soporta la reproducción de video.
+                        </video>
                     </div>
-                    </li>
-                     <li class="flex items-start gap-4">
-                    <i class="fas fa-undo text-blue-500 text-xl mt-1 flex-shrink-0"></i>
-                    <div>
-                        <h4 class="font-semibold text-gray-800">Reiniciá programas ya empezados</h4>
-                        <p class="text-gray-600">¿Enganchaste una película a la mitad? Reiniciala y mirala completa desde el principio.</p>
-                    </div>
-                    </li>
-                </ul>
-                <div class="mt-8">
-                    <a href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=drive_link" target="_blank" rel="noopener" class="inline-block bg-blue-100 text-blue-700 font-medium px-5 py-3 rounded-lg hover:bg-blue-200 transition">
-                    Consultá todos los canales disponibles en la <span class="underline">grilla oficial de la app</span>
-                    <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                    </a>
                 </div>
-                </div>
-                <!-- Video Placeholder -->
-                <div class="bg-gray-800 rounded-xl shadow-lg aspect-video flex items-center justify-center text-white flex-col p-0 interactive-card overflow-hidden">
-                    <video loop autoplay muted playsinline poster="https://placehold.co/800x450/222/fff?text=Vista+previa+Sensa+TV" class="w-full h-full object-cover">
-                        <source src="../assets/video/sensa_tv.mp4" type="video/mp4">
-                        Tu navegador no soporta la reproducción de video.
-                    </video>
-                </div>
-            </div>
             </div>
         </section>
 
@@ -642,43 +681,50 @@ h1, h2, h3 {
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Todo lo que podés hacer</h2>
-                    <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">Funciones pensadas para que disfrutes al máximo.</p>
+                    <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">Funciones pensadas para que disfrutes al
+                        máximo.</p>
                 </div>
                 <div class="max-w-3xl mx-auto">
                     <div class="flex flex-wrap justify-center gap-8 md:gap-12">
                         <div class="feature-item text-center w-40">
-                            <div class="feature-icon mx-auto" style="background-color: #ef4444;"><i class="fas fa-pause"></i></div>
+                            <div class="feature-icon mx-auto" style="background-color: #ef4444;"><i
+                                    class="fas fa-pause"></i></div>
                             <p class="feature-text mt-3">Pausá lo que estás viendo y continuá cuando quieras</p>
                         </div>
                         <div class="feature-item text-center w-40">
-                            <div class="feature-icon mx-auto" style="background-color: #f97316;"><i class="fas fa-search"></i></div>
+                            <div class="feature-icon mx-auto" style="background-color: #f97316;"><i
+                                    class="fas fa-search"></i></div>
                             <p class="feature-text mt-3">Encontrá tus películas, series o canales favoritos</p>
                         </div>
                         <div class="feature-item text-center w-40">
-                            <div class="feature-icon mx-auto" style="background-color: #eab308;"><i class="fas fa-tv"></i></div>
+                            <div class="feature-icon mx-auto" style="background-color: #eab308;"><i
+                                    class="fas fa-tv"></i></div>
                             <p class="feature-text mt-3">Buscá en la grilla para ver lo que ya pasó</p>
                         </div>
                     </div>
                     <div class="flex flex-wrap justify-center gap-8 md:gap-12 mt-8 md:mt-12">
                         <div class="feature-item text-center w-40">
-                            <div class="feature-icon mx-auto" style="background-color: #84cc16;"><i class="fas fa-undo"></i></div>
+                            <div class="feature-icon mx-auto" style="background-color: #84cc16;"><i
+                                    class="fas fa-undo"></i></div>
                             <p class="feature-text mt-3">Reiniciá el programa para no perderte nada</p>
                         </div>
                         <div class="feature-item text-center w-40">
-                            <div class="feature-icon mx-auto" style="background-color: #22c55e;"><i class="fas fa-child"></i></div>
+                            <div class="feature-icon mx-auto" style="background-color: #22c55e;"><i
+                                    class="fas fa-child"></i></div>
                             <p class="feature-text mt-3">Supervisá el acceso de los niños</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <!-- =========== Multi-device & Compatibility Section =========== -->
         <section class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
-                 <div class="text-center mb-12">
+                <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una cuenta, 6 pantallas.</h2>
-                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Disfrutá de tu contenido en hasta 6 dispositivos en simultáneo, para que cada miembro de la familia vea lo que quiera.</p>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Disfrutá de tu contenido en hasta 6
+                        dispositivos en simultáneo, para que cada miembro de la familia vea lo que quiera.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <div class="p-8 bg-gray-50 rounded-lg interactive-card">
@@ -688,48 +734,63 @@ h1, h2, h3 {
                         </div>
                         <p class="text-gray-600 mb-4">Hasta 3 dispositivos en simultáneo.</p>
                         <div class="flex flex-wrap gap-4">
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-tv"></i>Smart TV</span>
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fab fa-google"></i>Chromecast</span>
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-box"></i>Roku</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fas fa-tv"></i>Smart TV</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fab fa-google"></i>Chromecast</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fas fa-box"></i>Roku</span>
                         </div>
                     </div>
-                     <div class="p-8 bg-gray-50 rounded-lg interactive-card">
+                    <div class="p-8 bg-gray-50 rounded-lg interactive-card">
                         <div class="flex items-center gap-4 text-2xl font-bold text-green-600 mb-4">
                             <i class="fas fa-mobile-alt"></i>
                             <h3>Dispositivos Móviles</h3>
                         </div>
                         <p class="text-gray-600 mb-4">Hasta 3 dispositivos en simultáneo.</p>
                         <div class="flex flex-wrap gap-4">
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-laptop"></i>Computadora</span>
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-tablet-alt"></i>Tablet</span>
-                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i class="fas fa-mobile-alt"></i>Celular</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fas fa-laptop"></i>Computadora</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fas fa-tablet-alt"></i>Tablet</span>
+                            <span class="flex items-center gap-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-full"><i
+                                    class="fas fa-mobile-alt"></i>Celular</span>
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-gray-600 mt-8">Administrá todos tus equipos fácilmente desde la sección <a href="#" class="font-semibold text-blue-600 hover:underline">Mi Cuenta</a>.</p>
+                <p class="text-center text-gray-600 mt-8">Administrá todos tus equipos fácilmente desde la sección <a
+                        href="#" class="font-semibold text-blue-600 hover:underline">Mi Cuenta</a>.</p>
                 <!-- Compatibility Sub-section -->
                 <div class="mt-20 text-center max-w-3xl mx-auto">
                     <h3 class="text-2xl font-bold text-gray-900">Verificá si tu TV es compatible</h3>
-                    <p class="text-gray-600 mt-2 mb-6">La app es compatible con dispositivos Android TV, Samsung TV, Apple TV, Roku, PC, y Chromecast. Hacé clic en el logo de tu dispositivo para ver la guía y verificar si es compatible.</p>
+                    <p class="text-gray-600 mt-2 mb-6">La app es compatible con dispositivos Android TV, Samsung TV,
+                        Apple TV, Roku, PC, y Chromecast. Hacé clic en el logo de tu dispositivo para ver la guía y
+                        verificar si es compatible.</p>
                     <div class="flex justify-center flex-wrap gap-4">
-                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                        <a href="#"
+                            class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
                             <i class="fab fa-android text-4xl text-green-500"></i>
                             <span class="mt-2 font-semibold">Android TV</span>
                         </a>
-                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
-                             <i class="fab fa-amazon text-4xl text-yellow-500"></i>
-                             <span class="mt-2 font-semibold">Fire TV</span>
+                        <a href="#"
+                            class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                            <i class="fab fa-amazon text-4xl text-yellow-500"></i>
+                            <span class="mt-2 font-semibold">Fire TV</span>
                         </a>
-                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
-                             <i class="fab fa-apple text-4xl text-gray-700"></i>
-                             <span class="mt-2 font-semibold">Apple TV</span>
+                        <a href="#"
+                            class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                            <i class="fab fa-apple text-4xl text-gray-700"></i>
+                            <span class="mt-2 font-semibold">Apple TV</span>
                         </a>
-                        <a href="#" class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
-                             <i class="fas fa-mobile-alt text-4xl text-blue-500"></i>
-                             <span class="mt-2 font-semibold">Móviles</span>
+                        <a href="#"
+                            class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
+                            <i class="fas fa-mobile-alt text-4xl text-blue-500"></i>
+                            <span class="mt-2 font-semibold">Móviles</span>
                         </a>
                     </div>
-                     <p class="mt-8 text-gray-600">Podés verificar si tu TV es compatible con la app Sensa buscándola dentro de los <a href="#" class="text-blue-600 font-semibold hover:underline">dispositivos homologados</a>.</p>
+                    <p class="mt-8 text-gray-600">Podés verificar si tu TV es compatible con la app Sensa buscándola
+                        dentro de los <a href="#" class="text-blue-600 font-semibold hover:underline">dispositivos
+                            homologados</a>.</p>
                 </div>
             </div>
         </section>
@@ -737,33 +798,50 @@ h1, h2, h3 {
         <!-- =========== FAQ Section =========== -->
         <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2></div>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2>
+                </div>
                 <div id="faq-accordion" class="space-y-4">
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿Necesito un decodificador para cada tele?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600"><p>No necesariamente. Si tenés un Smart TV compatible, podés descargar la app Sensa directamente. Para televisores más antiguos o para una mejor experiencia, te ofrecemos un decodificador en comodato.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>No necesariamente. Si tenés un Smart TV compatible, podés descargar la app Sensa
+                                    directamente. Para televisores más antiguos o para una mejor experiencia, te
+                                    ofrecemos un decodificador en comodato.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿Puedo contratar solo el Pack Fútbol?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                           <div class="px-6 pb-4 text-gray-600"><p>Los packs premium, como el Pack Fútbol o HBO, son adicionales a nuestro Plan Sensa TV Full. Es necesario tener el plan base para poder sumarlos y disfrutar de todo el contenido.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Los packs premium, como el Pack Fútbol o HBO, son adicionales a nuestro Plan Sensa TV
+                                    Full. Es necesario tener el plan base para poder sumarlos y disfrutar de todo el
+                                    contenido.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
                             <span>¿Qué velocidad de internet necesito?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600"><p>Para una experiencia óptima, especialmente si vas a ver contenido en HD y en varios dispositivos, recomendamos tener uno de nuestros planes de Fibra Óptica. El servicio de TV funciona mejor con una conexión estable y de alta velocidad.</p></div>
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Para una experiencia óptima, especialmente si vas a ver contenido en HD y en varios
+                                    dispositivos, recomendamos tener uno de nuestros planes de Fibra Óptica. El servicio
+                                    de TV funciona mejor con una conexión estable y de alta velocidad.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -774,96 +852,111 @@ h1, h2, h3 {
 
     <!-- =========== Footer =========== -->
     <footer class="bg-gray-800 text-white pt-16 pb-8">
-  <div class="container mx-auto px-6">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Usittel</h4>
-        <ul>
-          <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
-          <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a></li>
-          <li class="mb-2"><a href="./alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Servicios</h4>
-        <ul>
-          <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-          <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-          <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
-        <ul>
-          <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-          <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
-          <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Legal</h4>
-        <ul>
-          <li class="mb-2"><a href="./terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-          <li class="mb-2"><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-          <li class="mb-2"><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4"></h4>
-        <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
-      </div>
-    </div>
-    <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-      <div class="flex space-x-4">
-        <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-        <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-        <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-      </div>
-    </div>
-  </div>
-</footer>
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre
+                                nosotros</a></li>
+                        <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a>
+                        </li>
+                        <li class="mb-2"><a href="./alcances_de_servicios.html"
+                                class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra
+                                Óptica</a></li>
+                        <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro
+                                de ayuda</a></li>
+                        <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/"
+                                class="text-gray-300 hover:text-white">Autogestión</a></li>
+                        <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de
+                                servicio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./terminos_y_condiciones.html"
+                                class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a
+                                href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                        <li class="mb-2"><a
+                                href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+                            class="fab fa-instagram fa-lg"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 
     <a href="https://wa.me/5492494060345" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    // --- FAQ Accordion Logic ---
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach((item) => {
-        const question = item.querySelector('.faq-question');
-        const answer = item.querySelector('.faq-answer');
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- FAQ Accordion Logic ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
 
-        if (question) {
-            question.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                
-                faqItems.forEach(i => {
-                    if (i !== item) {
-                        i.classList.remove('open');
-                        const ans = i.querySelector('.faq-answer');
-                        if (ans) {
-                           ans.style.maxHeight = null;
+                if (question) {
+                    question.addEventListener('click', () => {
+                        const isOpen = item.classList.contains('open');
+
+                        faqItems.forEach(i => {
+                            if (i !== item) {
+                                i.classList.remove('open');
+                                const ans = i.querySelector('.faq-answer');
+                                if (ans) {
+                                    ans.style.maxHeight = null;
+                                }
+                            }
+                        });
+
+                        if (isOpen) {
+                            item.classList.remove('open');
+                            answer.style.maxHeight = null;
+                        } else {
+                            item.classList.add('open');
+                            answer.style.maxHeight = answer.scrollHeight + 'px';
                         }
-                    }
-                });
-
-                if (isOpen) {
-                    item.classList.remove('open');
-                    answer.style.maxHeight = null;
-                } else {
-                    item.classList.add('open');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    });
                 }
             });
-        }
-    });
-});
-</script>
-  <script>
+        });
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const hamburger = document.getElementById("hamburger"),
                 mobileMenu = document.getElementById("mobileMenu"),
@@ -891,4 +984,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 </body>
+
 </html>

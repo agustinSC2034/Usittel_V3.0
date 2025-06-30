@@ -25,9 +25,18 @@
   <!-- Three.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+  <!-- Leaflet CSS (NUEVO) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Leaflet JS (NUEVO) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="script.js">
+
   <style>
     /* ================================== */
-    /* ===        NAV.CSS             === */
+    /* ===         NAV.CSS            === */
     /* ================================== */
     .navbar-section *,
     .navbar-section *::before,
@@ -288,12 +297,6 @@
       margin-top: -4px;
     }
 
-    .submenu a {
-      font-size: 15px;
-      padding: 8px 12px;
-      color: #3c4043;
-    }
-
     .submenu.show {
       display: flex;
     }
@@ -357,7 +360,7 @@
     }
 
     /* ================================== */
-    /* ===      CUSTOM STYLES         === */
+    /* ===       CUSTOM STYLES        === */
     /* ================================== */
     html {
       scroll-behavior: smooth;
@@ -508,7 +511,7 @@
     }
 
     /* ================================== */
-    /* ===      NUEVO EFECTO HOVER    === */
+    /* ===     NUEVO EFECTO HOVER     === */
     /* ================================== */
     .hover-glow-card {
       position: relative;
@@ -521,6 +524,12 @@
       border-color: #30a172;
       /* Verde de Usittel */
       box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
+    }
+
+    /* ESTILOS PARA EL MAPA (NUEVO) */
+    #coverage-map {
+      height: 500px;
+      width: 100%;
     }
   </style>
 </head>
@@ -659,7 +668,7 @@
                 <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol"
                   class="h-10 md:h-12 mb-3">
                 <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
-                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$13.999<span
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$15.599<span
                     class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
                 <a href="#"
                   class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
@@ -667,8 +676,7 @@
               </div>
               <!-- Card HBO Max -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-                <img src="https://placehold.co/120x60/8a2be2/ffffff?text=HBO+MAX" alt="Logo HBO MAX"
-                  class="h-10 md:h-12 mb-3">
+                <img src="assets/img/logos/max-logo-black.png" alt="Logo HBO MAX" class="h-10 md:h-12 mb-3">
                 <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés
                   acceso a la app de MAX.</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
@@ -679,7 +687,7 @@
               </div>
               <!-- Card Universal+ -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-                <img src="https://placehold.co/120x60/ff4500/ffffff?text=Universal%2B" alt="Logo Universal+"
+                <img src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
                   class="h-10 md:h-12 mb-3">
                 <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app
                   de streaming Universal+.</p>
@@ -712,9 +720,9 @@
               <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-left">Agregá Packs Premium</h3>
               <div class="space-y-4">
                 <!-- Card Pack Fútbol -->
-                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                  <img src="https://placehold.co/80x80/1a237e/ffffff?text=FP" alt="Logo Pack Fútbol"
-                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
+                  <img src="https://placehold.co/90x90/1a237e/ffffff?text=FP" alt="Logo Pack Fútbol"
+                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
                     <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
@@ -723,9 +731,9 @@
                   </div>
                 </div>
                 <!-- Card HBO Max -->
-                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                  <img src="https://placehold.co/80x80/8a2be2/ffffff?text=HBO" alt="Logo HBO"
-                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
+                  <img src="assets/img/logos/max-logo-black.png" alt="Logo HBO"
+                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack HBO</h4>
                     <p class="text-sm text-gray-600">Canales premium y acceso a la app MAX.</p>
@@ -734,9 +742,9 @@
                   </div>
                 </div>
                 <!-- Card Universal+ -->
-                <div class="bg-white rounded-xl p-4 flex items-center gap-4 hover-glow-card">
-                  <img src="https://placehold.co/80x80/ff4500/ffffff?text=U%2B" alt="Logo Universal+"
-                    class="h-16 w-16 rounded-lg object-cover flex-shrink-0">
+                <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
+                  <img src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
+                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Universal+</h4>
                     <p class="text-sm text-gray-600">Canales premium y acceso a la app de streaming.</p>
@@ -810,7 +818,7 @@
       </div>
     </section>
 
-    <!-- =========== Network & Coverage Section (ORDEN 4 - UNIFICADA) =========== -->
+    <!-- =========== Network & Coverage Section (ORDEN 4 - UNIFICADA Y MODIFICADA) =========== -->
     <section id="network" class="py-16 md:py-24 bg-gray-100">
       <div class="container mx-auto px-6">
         <!-- Parte de "Nuestra Red" -->
@@ -853,14 +861,12 @@
           </div>
         </div>
 
-        <!-- Parte de "Zona de Cobertura" integrada armoniosamente -->
+        <!-- Parte de "Zona de Cobertura" integrada armoniosamente (MODIFICADO) -->
         <div id="coverage" class="mt-20 md:mt-24 text-center">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura actual</h2>
           <div class="rounded-2xl overflow-hidden shadow-xl mb-12 max-w-5xl mx-auto">
-            <iframe
-              src="https://www.google.com/maps/d/u/3/embed?mid=1FMLCCOIV2gZocoCOxwsKogDrerarGwY&ehbc=2E312F&noprof=1"
-              width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <!-- Contenedor del nuevo mapa interactivo -->
+            <div id="coverage-map"></div>
           </div>
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
           <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya está
@@ -980,14 +986,14 @@
             <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
             <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3172.484252157584!2d-59.1384796248981!3d-37.33110290520448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911fe473674681%3A0x8522718359413a91!2sUsina%20de%20Tandil!5e0!3m2!1ses-419!2sar!4v1718821034509!5m2!1ses-419!2sar"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
                 width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="mt-4 text-gray-600 space-y-3">
-              <p class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-blue-500"></i>Av. San Martín
-                550, Tandil</p>
-              <p class="flex items-center gap-3"><i class="fa-solid fa-phone text-blue-500"></i>(0249) 44x-xxxx</p>
+              <p class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-blue-500"></i>Nigro 575,
+                Tandil, Buenos aires.</p>
+              <p class="flex items-center gap-3"><i class="fa-solid fa-phone text-blue-500"></i>0800-199-4545</p>
               <p class="flex items-center gap-3"><i
                   class="fa-solid fa-envelope text-blue-500"></i>contacto@usittel.com.ar</p>
             </div>
@@ -1140,14 +1146,14 @@
 
       // Plans Section Logic
       const plansData = {
-        internet: [{ name: "Fibra 300", speed: "300 Mbps", symmetric: true, price: "10000", features: ["Instalación 100% bonificada", "Ideal para Home Office", "Streaming en 4K/UHD", "Hasta 5 dispositivos"], popular: false }, { name: "Fibra 500", speed: "500 Mbps", symmetric: true, price: "14000", features: ["Instalación 100% bonificada", "Perfecto para familias", "Gaming online sin lag", "Múltiples streams en 4K"], popular: true }, { name: "Fibra 1000", speed: "1000 Mbps", symmetric: true, price: "18000", features: ["Instalación 100% bonificada", "Máxima velocidad disponible", "Para usuarios exigentes", "La mejor experiencia online"], popular: false },],
-        internetTv: [{ name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "15000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false }, { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "19000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true }, { name: "Fibra 1000 + TV", speed: "1000 Mbps", symmetric: true, price: "23000", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },],
+        internet: [{ name: "Fibra 100", speed: "100 Mbps", symmetric: true, price: "17242", features: ["Instalación 100% bonificada", "Ideal para Home Office", "Streaming en 4K/UHD"], popular: false }, { name: "Fibra 300", speed: "300 Mbps", symmetric: true, price: "18899", features: ["Instalación 100% bonificada", "Perfecto para familias", "Gaming online sin lag", "Múltiples streams en 4K"], popular: true }, { name: "Fibra 500", speed: "500 Mbps", symmetric: true, price: "20999", features: ["Instalación 100% bonificada", "Máxima velocidad disponible", "Para usuarios exigentes", "La mejor experiencia online"], popular: false },],
+        internetTv: [{ name: "Fibra 100 + TV", speed: "100 Mbps", symmetric: true, price: "31241", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false }, { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "32898", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true }, { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "34998", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },],
         soloTv: [
           {
             name: "Sensa TV Básico",
             speed: "Televisión Digital",
             symmetric: false,
-            price: "8000",
+            price: "13999",
             features: [
               "Más de 100 canales en vivo",
               "Series y películas On-Demand",
@@ -1177,13 +1183,13 @@
           : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
 
         return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
-                      <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
-                      ${speedLine}
-                      <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
-                      <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul>
-                      <a href="#" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Contratar ahora</a>
-                      ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
-                  </div>`;
+                          <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
+                          ${speedLine}
+                          <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
+                          <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul>
+                          <a href="#" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Contratar ahora</a>
+                          ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
+                      </div>`;
       }
 
 
@@ -1283,58 +1289,91 @@
         meshDotsContainer.children[currentMeshSlide].classList.add('active');
       }
       if (meshSlides.length > 1) { createMeshDots(); }
+
+      // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (NUEVO Y ACTUALIZADO) ---
+      const map = L.map('coverage-map').setView([-37.321, -59.135], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      // Coordenadas actualizadas para reflejar los nuevos límites
+      const coverageAreaCoords = [
+        [-37.30468, -59.1238],
+        [-37.3069, -59.12637],
+        [-37.30767, -59.12591],
+        [-37.3128, -59.1394],
+        [-37.33198, -59.12802],
+        [-37.32687, -59.11452],
+        [-37.31597, -59.12094],
+        [-37.31185, -59.1145],
+        [-37.31117, -59.11508],
+        [-37.30675, -59.12081],
+        [-37.30661, -59.12126],
+
+      ];
+
+      const polygon = L.polygon(coverageAreaCoords, {
+        color: '#2563EB',      // Color del borde (azul oscuro)
+        weight: 3,             // Grosor del borde
+        fillColor: '#3B82F6',  // Color de relleno (azul)
+        fillOpacity: 0.45      // Opacidad del relleno
+      }).addTo(map);
+
+      // El mapa se ajusta automáticamente para mostrar toda la zona de cobertura.
+      map.fitBounds(polygon.getBounds());
+
+      polygon.bindPopup("<b>¡Estás dentro de la zona de cobertura!</b>");
+      // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
     });
   </script>
   <script>
-  // ===============================================
-// ===     LOGICA DE COBERTURA (ACTUALIZADO)   ===
-// ===============================================
-const coverageButton = document.getElementById('coverage-button');
-const addressInput = document.getElementById('address-input');
-const coverageResultContainer = document.getElementById('coverage-result');
+    // ===============================================
+    // ===   LOGICA DE COBERTURA (SIN CAMBIOS)     ===
+    // ===============================================
+    const coverageButton = document.getElementById('coverage-button');
+    const addressInput = document.getElementById('address-input');
+    const coverageResultContainer = document.getElementById('coverage-result');
 
-if (coverageButton) {
-    coverageButton.addEventListener('click', checkCoverage);
-}
+    if (coverageButton) {
+      coverageButton.addEventListener('click', checkCoverage);
+    }
 
-// Permitir buscar presionando Enter en el input
-if (addressInput) {
-    addressInput.addEventListener('keyup', function(event) {
+    if (addressInput) {
+      addressInput.addEventListener('keyup', function (event) {
         if (event.key === "Enter") {
-            event.preventDefault();
-            coverageButton.click();
+          event.preventDefault();
+          coverageButton.click();
         }
-    });
-}
+      });
+    }
 
 
-function checkCoverage() {
-    const address = addressInput.value.trim();
-    addressInput.style.border = "1px solid #d1d5db"; // Reset border color
-    coverageResultContainer.innerHTML = ''; // Limpiar resultados anteriores
+    function checkCoverage() {
+      const address = addressInput.value.trim();
+      addressInput.style.border = "1px solid #d1d5db"; // Reset border color
+      coverageResultContainer.innerHTML = ''; // Limpiar resultados anteriores
 
-    if (address === "") {
+      if (address === "") {
         addressInput.style.border = "1px solid red";
         displayMessage('Por favor, ingresá una dirección.', 'warning');
         coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
-    }
+      }
 
-    // CAMBIO IMPORTANTE: La expresión regular ahora no exige que la dirección termine en el número.
-    // Esto permite que el usuario escriba cosas como "dpto b", "tandil", etc., después del número.
-    const match = address.match(/^(.*?)\s+(\d+)/);
+      const match = address.match(/^(.*?)\s+(\d+)/);
 
-    if (!match) {
+      if (!match) {
         displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: San Martín 550).', 'error');
         coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
-    }
+      }
 
-    const streetName = match[1];
-    const streetNumber = parseInt(match[2], 10);
+      const streetName = match[1];
+      const streetNumber = parseInt(match[2], 10);
 
-    const zonasDeCobertura = [
-        // ... (el array de zonas de cobertura sigue aquí, es el mismo de antes)
+      const zonasDeCobertura = [
         { calle: "paz", desde: 1, hasta: 1599 },
         { calle: "general paz", desde: 1, hasta: 1599 },
         { calle: "gral paz", desde: 1, hasta: 1599 },
@@ -1604,85 +1643,85 @@ function checkCoverage() {
         { calle: "pje castelli", desde: 1100, hasta: 1800 },
         { calle: "Pasaje castelli", desde: 1100, hasta: 1800 },
         { calle: "Castelli", desde: 1100, hasta: 1800 }
-    ];
-    
-    const normalizedStreet = normalizeString(streetName);
-    let isInCoverage = false;
+      ];
 
-    for (const zona of zonasDeCobertura) {
+      const normalizedStreet = normalizeString(streetName);
+      let isInCoverage = false;
+
+      for (const zona of zonasDeCobertura) {
         const normalizedZonaCalle = normalizeString(zona.calle);
         if (normalizedStreet.includes(normalizedZonaCalle) && streetNumber >= zona.desde && streetNumber <= zona.hasta) {
-            isInCoverage = true;
-            break;
+          isInCoverage = true;
+          break;
         }
-    }
+      }
 
-    if (isInCoverage) {
+      if (isInCoverage) {
         const successMessage = `
             <h3 class="text-2xl font-bold text-green-600">¡Buenas Noticias! Estás en Zona Usittel</h3>
             <p class="mt-3 text-gray-600">
-                Contactate por WhatsApp haciendo click aquí: 
+                Contactate por WhatsApp haciendo click aquí: 
                 <a href="https://wa.me/5492494060345"
                    target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2">
                     <i class="fab fa-whatsapp"></i> Chatear Ahora
                 </a>
             </p>
             <p class="mt-2 text-gray-600">
-                O si preferís, 
+                O si preferís, 
                 <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tu consulta</a> y te contactaremos.
             </p>`;
         displayMessage(successMessage, 'success');
-    } else {
+      } else {
         const failureMessage = `
             <h3 class="text-2xl font-bold text-yellow-600">Aún no llegamos a tu domicilio</h3>
             <p class="mt-3 text-gray-600">
                 Por el momento no contamos con cobertura en la dirección indicada. ¡Pero no te preocupes! Seguimos ampliando nuestra red.
             </p>
             <p class="mt-2 text-gray-600">
-                Por favor, 
+                Por favor, 
                 <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tus datos de contacto</a> para que podamos avisarte en cuanto lleguemos a tu zona.
             </p>`;
         displayMessage(failureMessage, 'warning');
-    }
-    
-    coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
+      }
 
-function normalizeString(str) {
-    return str
+      coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function normalizeString(str) {
+      return str
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replace(/[.,]/g, '') // Quita puntos y comas
         .trim();
-}
-
-function displayMessage(message, type) {
-    let iconHTML = '';
-    let colorClasses = '';
-
-    switch (type) {
-        case 'success':
-            iconHTML = '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
-            colorClasses = 'bg-green-50 border-green-200';
-            break;
-        case 'warning':
-            iconHTML = '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
-            colorClasses = 'bg-yellow-50 border-yellow-200';
-            break;
-        case 'error':
-            iconHTML = '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
-            colorClasses = 'bg-red-50 border-red-200';
-            break;
     }
 
-    coverageResultContainer.innerHTML = `
+    function displayMessage(message, type) {
+      let iconHTML = '';
+      let colorClasses = '';
+
+      switch (type) {
+        case 'success':
+          iconHTML = '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
+          colorClasses = 'bg-green-50 border-green-200';
+          break;
+        case 'warning':
+          iconHTML = '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
+          colorClasses = 'bg-yellow-50 border-yellow-200';
+          break;
+        case 'error':
+          iconHTML = '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
+          colorClasses = 'bg-red-50 border-red-200';
+          break;
+      }
+
+      coverageResultContainer.innerHTML = `
         <div class="p-6 rounded-lg border ${colorClasses} transition-opacity duration-500 ease-in-out opacity-100">
             ${iconHTML}
             <div>${message}</div>
         </div>
     `;
-}
+    }
   </script>
 </body>
 

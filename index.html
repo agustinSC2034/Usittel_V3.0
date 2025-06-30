@@ -797,13 +797,13 @@
           </div>
           <div class="w-full max-w-sm md:max-w-md mx-auto">
             <div class="mesh-carousel-container rounded-large">
-              <div class="mesh-slide active"><img src="/assets/img/mesh/mesh1.png" class="rounded-xl w-full"
+              <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
                   alt="Equipo WiFi Mesh 1"></div>
-              <div class="mesh-slide"><img src="/assets/img/mesh/mesh2.png" class="rounded-xl w-full"
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
                   alt="Equipo WiFi Mesh 2"></div>
-              <div class="mesh-slide"><img src="/assets/img/mesh/mesh3.png" class="rounded-xl w-full"
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
                   alt="Equipo WiFi Mesh 3"></div>
-              <div class="mesh-slide"><img src="/assets/img/mesh/mesh4.png" class="rounded-xl w-full"
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
                   alt="Equipo WiFi Mesh 4"></div>
             </div>
             <div class="mesh-dots-container" id="mesh-dots-container"></div>
@@ -811,7 +811,7 @@
         </div>
         <!-- Enlace agregado debajo de la sección Mesh -->
         <div class="text-center mt-10">
-          <a href="#network"
+          <a href="/pages/mesh.html"
             class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
             cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
@@ -1223,9 +1223,9 @@
         if (buttonContainer) {
           let btnHTML = '';
           if (type === 'internet') {
-            btnHTML = `<a href="#network" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="/pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
           } else if (type === 'internetTv' || type === 'soloTv') {
-            btnHTML = `<a href="#tv-section" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="/pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }

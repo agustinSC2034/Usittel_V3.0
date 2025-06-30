@@ -19,6 +19,20 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+    <!-- Tailwind CSS Aspect Ratio Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Leaflet CSS (NUEVO) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Leaflet JS (NUEVO) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <style>
         /* ================================== */
         /* ===         NAV.CSS            === */
@@ -778,6 +792,14 @@
             .mobile-header-bar {
                 display: flex;
             }
+
+
+        }
+
+        /* ESTILOS PARA EL MAPA (NUEVO) */
+        #coverage-map {
+            height: 500px;
+            width: 100%;
         }
     </style>
 </head>
@@ -820,7 +842,8 @@
 
                 <div class="nav-actions desktop-only">
                     <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank"
+                        rel="noopener">Autogestión</a>
                 </div>
             </div>
 
@@ -845,14 +868,15 @@
                 <a href="./empresas.html" class="active">Empresas</a>
                 <a href="./contacto.html">Contáctanos</a>
                 <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+                <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank"
+                    rel="noopener">Autogestión</a>
             </div>
         </nav>
     </header>
 
     <main>
         <!-- =========== Hero Section Empresas =========== -->
-        <section class="hero-empresas text-white py-20 md:py-32 min-h-[80vh] max-h-[80vh] flex items-center"
+        <section class="hero-empresas text-white py-20 md:py-32 min-h-[90vh] max-h-[90vh] flex items-center"
             style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/img/empresa/empresa.png') no-repeat center center; background-size: cover;">
             <div class="container mx-auto text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La conexión que tu empresa necesita
@@ -944,63 +968,87 @@
                     <h3 class="text-2xl font-bold text-gray-900">¿Necesitás una solución a medida?</h3>
                     <p class="text-lg text-gray-600 mt-2 mb-4">Contamos con enlaces dedicados y proyectos especiales
                         para empresas con requerimientos específicos. Contactá a nuestro equipo comercial.</p>
-                        <br>
+                    <br>
                     <a href="#contact" class="nav-button-green cta-button px-8 py-3">Contactar a Ventas</a>
                 </div>
             </div>
         </section>
 
+        <!-- =========== Coverage Section =========== -->
+        <section id="coverage" class="py-16 md:py-24 bg-gray-100">
+            <!-- Parte de "Zona de Cobertura" integrada armoniosamente (MODIFICADO) -->
+            <div id="coverage" class="mt-20 md:mt-24 text-center" style="margin-top: -2%;">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura actual</h2>
+            <div class="rounded-2xl overflow-hidden shadow-xl mb-12 max-w-5xl mx-auto">
+                <!-- Contenedor del nuevo mapa interactivo -->
+                <div id="coverage-map"></div>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
+            <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya
+                está
+                disponible en tu domicilio e iniciá el cambio.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
+                <input type="text" id="address-input" placeholder="Ingresá tu dirección, ej: San Martín 550"
+                class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="coverage-button"
+                class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
+            </div>
+            <div id="coverage-result" class="mt-6 max-w-xl mx-auto"></div>
+            </div>
+        </section>
+
         <!-- =========== NEW ORDER: Interactive Possibilities Section (20% Smaller) =========== -->
-        <section id="possibilities" class="relative py-16 md:py-24 bg-gray-900 text-white overflow-hidden hidden md:block">
+        <section id="possibilities"
+            class="relative py-16 md:py-24 bg-gray-900 text-white overflow-hidden hidden md:block">
             <!-- Particles Background Container -->
             <div id="particles-js"></div>
 
             <!-- Content -->
             <div class="container relative mx-auto px-4 text-center z-10">
-            <h2 class="text-2xl md:text-3xl font-bold">Una Conexión, Infinitas Posibilidades</h2>
-            <p class="text-base text-gray-300 mt-2 mb-10 max-w-2xl mx-auto">Nuestra red de fibra óptica es el núcleo
-                que impulsa cada aspecto de tu empresa. Explora cómo potenciamos tus servicios.</p>
+                <h2 class="text-2xl md:text-3xl font-bold">Una Conexión, Infinitas Posibilidades</h2>
+                <p class="text-base text-gray-300 mt-2 mb-10 max-w-2xl mx-auto">Nuestra red de fibra óptica es el núcleo
+                    que impulsa cada aspecto de tu empresa. Explora cómo potenciamos tus servicios.</p>
 
-            <div class="possibilities-wrapper" style="max-width:480px;height:480px;">
-                <!-- Central Nucleus -->
-                <div class="nucleus" style="width:144px;height:144px;">
-                <div class="nucleus-core" style="width:100%;height:100%;"></div>
-                <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
-                    alt="Logo de Usittel Fibra" class="nucleus-logo" style="width:96px;">
-                </div>
+                <div class="possibilities-wrapper" style="max-width:480px;height:480px;">
+                    <!-- Central Nucleus -->
+                    <div class="nucleus" style="width:144px;height:144px;">
+                        <div class="nucleus-core" style="width:100%;height:100%;"></div>
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                            alt="Logo de Usittel Fibra" class="nucleus-logo" style="width:96px;">
+                    </div>
 
-                <!-- Service Nodes -->
-                <div class="service-node node-1" style="transform:translate(0,-200px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-video"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Videollamadas Fluidas</div>
+                    <!-- Service Nodes -->
+                    <div class="service-node node-1" style="transform:translate(0,-200px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-video"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Videollamadas Fluidas</div>
+                    </div>
+                    <div class="service-node node-2" style="transform:translate(173px,-100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Nube Ultra Rápida</div>
+                    </div>
+                    <div class="service-node node-3" style="transform:translate(173px,100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-server"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Gestión de Servidores</div>
+                    </div>
+                    <div class="service-node node-4" style="transform:translate(0,200px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-shield-alt"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Seguridad Confiable</div>
+                    </div>
+                    <div class="service-node node-5" style="transform:translate(-173px,100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-headset"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Comunicaciones Claras</div>
+                    </div>
+                    <div class="service-node node-6" style="transform:translate(-173px,-100px);width:96px;">
+                        <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
+                                class="fas fa-cash-register"></i></div>
+                        <div class="node-label" style="font-size:0.8rem;">Punto de Venta Online</div>
+                    </div>
                 </div>
-                <div class="service-node node-2" style="transform:translate(173px,-100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-cloud-upload-alt"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Nube Ultra Rápida</div>
-                </div>
-                <div class="service-node node-3" style="transform:translate(173px,100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-server"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Gestión de Servidores</div>
-                </div>
-                <div class="service-node node-4" style="transform:translate(0,200px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-shield-alt"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Seguridad Confiable</div>
-                </div>
-                <div class="service-node node-5" style="transform:translate(-173px,100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-headset"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Comunicaciones Claras</div>
-                </div>
-                <div class="service-node node-6" style="transform:translate(-173px,-100px);width:96px;">
-                <div class="node-icon" style="width:56px;height:56px;font-size:22px;"><i
-                    class="fas fa-cash-register"></i></div>
-                <div class="node-label" style="font-size:0.8rem;">Punto de Venta Online</div>
-                </div>
-            </div>
             </div>
         </section>
 
@@ -1076,20 +1124,33 @@
             <div class="container mx-auto px-6 max-w-4xl">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes para Empresas</h2>
+                    <p class="text-lg text-gray-600 mt-2">Respuestas claras sobre nuestro servicio de Internet para
+                        negocios.</p>
                 </div>
                 <div id="faq-accordion" class="space-y-4">
                     <!-- FAQ Item 1 -->
                     <div class="faq-item bg-white rounded-lg interactive-card">
                         <button
                             class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Qué ventajas me da una IP Pública Estática?</span>
+                            <span>¿Cómo es la instalación de Internet WiFi en mi empresa?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Una IP estática es fundamental para alojar servidores web o de correo, establecer
-                                    conexiones VPN seguras para teletrabajo, y acceder a sistemas de cámaras de
-                                    seguridad de forma remota y confiable.</p>
+                            <div class="px-6 pb-4 text-gray-600 leading-relaxed">
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li>
+                                        <strong>Instalación profesional:</strong> Un técnico especializado realiza la
+                                        instalación de la fibra óptica y del módem WiFi.
+                                    </li>
+                                    <li>
+                                        <strong>Optimización de cobertura:</strong> El técnico se asegura de que la
+                                        señal WiFi llegue a todos los sectores de tu empresa.
+                                    </li>
+                                    <li>
+                                        <strong>Servicio inmediato:</strong> Al finalizar la instalación, tu conexión
+                                        queda lista para usar.
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1097,15 +1158,29 @@
                     <div class="faq-item bg-white rounded-lg interactive-card">
                         <button
                             class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Qué es el SLA y por qué es importante?</span>
+                            <span>¿Qué actividades aprovechan el Internet simétrico?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>El Acuerdo de Nivel de Servicio (SLA) es nuestro compromiso contractual sobre la
-                                    disponibilidad del servicio. Un SLA del 99.5% te asegura que tu conexión estará
-                                    activa y funcionando la mayor parte del tiempo, minimizando el impacto de posibles
-                                    interrupciones en tu operación.</p>
+                            <div class="px-6 pb-4 text-gray-600 leading-relaxed">
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li>
+                                        <strong>Videollamadas y trabajo remoto:</strong> Conexión estable para reuniones
+                                        virtuales y colaboración en línea.
+                                    </li>
+                                    <li>
+                                        <strong>Transferencia de archivos grandes:</strong> Ideal para diseño,
+                                        arquitectura, ingeniería y producción multimedia.
+                                    </li>
+                                    <li>
+                                        <strong>Uso de la nube:</strong> Subida y descarga de datos a máxima velocidad
+                                        para backups y gestión de recursos.
+                                    </li>
+                                    <li>
+                                        <strong>Transmisiones en vivo:</strong> Perfecto para eventos, webinars y
+                                        streaming profesional.
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1113,14 +1188,25 @@
                     <div class="faq-item bg-white rounded-lg interactive-card">
                         <button
                             class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Ofrecen soluciones de conectividad para eventos o enlaces temporales?</span>
+                            <span>¿Cuáles son las ventajas de la fibra óptica?</span>
                             <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Sí, ofrecemos soluciones flexibles y a medida para cubrir las necesidades de
-                                    conectividad de eventos, transmisiones en vivo, y proyectos temporales. Contactá a
-                                    nuestro equipo comercial para más detalles.</p>
+                            <div class="px-6 pb-4 text-gray-600 leading-relaxed">
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li>
+                                        <strong>Velocidad superior:</strong> Navegá, descargá y subí archivos a máxima
+                                        velocidad, sin interrupciones.
+                                    </li>
+                                    <li>
+                                        <strong>Estabilidad y baja latencia:</strong> Conexión confiable para
+                                        operaciones críticas y aplicaciones en tiempo real.
+                                    </li>
+                                    <li>
+                                        <strong>Mayor capacidad:</strong> Soporta múltiples dispositivos y grandes
+                                        volúmenes de datos sin perder calidad.
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1128,55 +1214,37 @@
             </div>
         </section>
 
-        <!-- =========== Coverage & Contact Section =========== -->
-        <section id="coverage" class="py-16 md:py-24 bg-white">
+        <!-- =========== Contact Section =========== -->
+        <section id="contact" class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura para Empresas</h2>
-                    <div class="rounded-xl overflow-hidden shadow-lg mb-12 max-w-5xl mx-auto"><iframe
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12789.980614131518!2d-59.13531584024659!3d-37.32174312883018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1698287538902!5m2!1ses-419!2sar"
-                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Tu empresa está en nuestra zona de
-                        cobertura?</h2>
-                    <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá la disponibilidad de nuestro
-                        servicio de fibra óptica en la dirección de tu negocio.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto"><input
-                            type="text" placeholder="Ingresá la dirección de tu empresa"
-                            class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"><button
-                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
-                    </div>
-                </div>
-                <div id="contact"
-                    class="mt-20 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card">
+                <div class="mt-0 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 interactive-card"
+                    style="background-color: white;">
                     <div>
-                        <h3 class="text-2xl font-bold mb-4">Contactá a nuestro equipo comercial</h3>
+                        <h3 class="text-2xl font-bold mb-4">¿Querés contratar o tenés una consulta?</h3>
+                        <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la
+                            brevedad.</p>
                         <form action="#" method="POST" class="space-y-4">
-                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name"
-                                    id="name" placeholder="Nombre y Apellido"
+                            <div>
+                                <label for="name" class="sr-only">Nombre</label>
+                                <input type="text" name="name" id="name" placeholder="Nombre y Apellido"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email"
-                                        id="email" placeholder="Email"
+                                <div>
+                                    <label for="email" class="sr-only">Email</label>
+                                    <input type="email" name="email" id="email" placeholder="Email"
                                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
-                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone"
-                                        id="phone" placeholder="Teléfono"
+                                <div>
+                                    <label for="phone" class="sr-only">Teléfono</label>
+                                    <input type="tel" name="phone" id="phone" placeholder="Teléfono"
                                         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
                             </div>
-                            <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject"
-                                    id="subject" placeholder="Asunto"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message"
-                                    id="message" rows="4" placeholder="Escribí tu mensaje..."
+                            <div>
+                                <label for="message" class="sr-only">Mensaje</label>
+                                <textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..."
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                            </div>
-                            <div
-                                class="bg-gray-200 border border-gray-300 rounded-md p-4 h-20 flex items-center justify-center">
-                                <span class="text-gray-500 text-sm">Espacio para reCAPTCHA</span>
                             </div>
                             <button type="submit"
                                 class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
@@ -1185,16 +1253,20 @@
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
-                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden"><iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51159.62375878248!2d-59.16484194863281!3d-37.3221088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f9b273fb189%3A0x411252d4393a7d9d!2sTandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1698284640656!5m2!1ses-419!2sar"
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
                                 width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                        <div class="mt-4 text-gray-600">
-                            <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i>Av. San Martín
-                                550, Tandil</p>
-                            <p class="flex items-center gap-2 mt-2"><i class="fa-solid fa-phone"></i>(0249) 44x-xxxx</p>
-                            <p class="flex items-center gap-2 mt-2"><i
-                                    class="fa-solid fa-envelope"></i>contacto@usittel.com.ar</p>
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                        <div class="mt-4 text-gray-600 space-y-3">
+                            <p class="flex items-center gap-3"><i
+                                    class="fa-solid fa-location-dot text-blue-500"></i>Nigro 575,
+                                Tandil, Buenos aires.</p>
+                            <p class="flex items-center gap-3"><i
+                                    class="fa-solid fa-phone text-blue-500"></i>0800-199-4545</p>
+                            <p class="flex items-center gap-3"><i
+                                    class="fa-solid fa-envelope text-blue-500"></i>contacto@usittel.com.ar</p>
                         </div>
                     </div>
                 </div>
@@ -1353,6 +1425,440 @@
             }
 
         });
+    </script>
+    <script>
+        // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (NUEVO Y ACTUALIZADO) ---
+        const map = L.map('coverage-map').setView([-37.321, -59.135], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Coordenadas actualizadas para reflejar los nuevos límites
+        const coverageAreaCoords = [
+            [-37.30468, -59.1238],
+            [-37.3069, -59.12637],
+            [-37.30767, -59.12591],
+            [-37.3128, -59.1394],
+            [-37.33198, -59.12802],
+            [-37.32687, -59.11452],
+            [-37.31597, -59.12094],
+            [-37.31185, -59.1145],
+            [-37.31117, -59.11508],
+            [-37.30675, -59.12081],
+            [-37.30661, -59.12126],
+
+        ];
+
+        const polygon = L.polygon(coverageAreaCoords, {
+            color: '#2563EB',      // Color del borde (azul oscuro)
+            weight: 3,             // Grosor del borde
+            fillColor: '#3B82F6',  // Color de relleno (azul)
+            fillOpacity: 0.45      // Opacidad del relleno
+        }).addTo(map);
+
+        // El mapa se ajusta automáticamente para mostrar toda la zona de cobertura.
+        map.fitBounds(polygon.getBounds());
+
+        polygon.bindPopup("<b>¡Estás dentro de la zona de cobertura!</b>");
+        // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
+
+    </script>
+    <script>
+        // ===============================================
+        // ===   LOGICA DE COBERTURA (SIN CAMBIOS)     ===
+        // ===============================================
+        const coverageButton = document.getElementById('coverage-button');
+        const addressInput = document.getElementById('address-input');
+        const coverageResultContainer = document.getElementById('coverage-result');
+
+        if (coverageButton) {
+            coverageButton.addEventListener('click', checkCoverage);
+        }
+
+        if (addressInput) {
+            addressInput.addEventListener('keyup', function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    coverageButton.click();
+                }
+            });
+        }
+
+
+        function checkCoverage() {
+            const address = addressInput.value.trim();
+            addressInput.style.border = "1px solid #d1d5db"; // Reset border color
+            coverageResultContainer.innerHTML = ''; // Limpiar resultados anteriores
+
+            if (address === "") {
+                addressInput.style.border = "1px solid red";
+                displayMessage('Por favor, ingresá una dirección.', 'warning');
+                coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const match = address.match(/^(.*?)\s+(\d+)/);
+
+            if (!match) {
+                displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: San Martín 550).', 'error');
+                coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const streetName = match[1];
+            const streetNumber = parseInt(match[2], 10);
+
+            const zonasDeCobertura = [
+                { calle: "paz", desde: 1, hasta: 1599 },
+                { calle: "general paz", desde: 1, hasta: 1599 },
+                { calle: "gral paz", desde: 1, hasta: 1599 },
+                { calle: "gral. paz", desde: 1, hasta: 1599 },
+                { calle: "4 de abril", desde: 1, hasta: 1600 },
+                { calle: "4 abril", desde: 1, hasta: 1600 },
+                { calle: "cuatro de abril", desde: 1, hasta: 1600 },
+                { calle: "santamarina", desde: 1, hasta: 900 },
+                { calle: "av Santamarina", desde: 1, hasta: 900 },
+                { calle: "av Santa marina", desde: 1, hasta: 900 },
+                { calle: "av. Santamarina", desde: 1, hasta: 900 },
+                { calle: "av. Santa marina", desde: 1, hasta: 900 },
+                { calle: "avenida Santa marina", desde: 1, hasta: 900 },
+                { calle: "avenida Santamarina", desde: 1, hasta: 900 },
+                { calle: "alsina", desde: 1, hasta: 1600 },
+                { calle: "alcina", desde: 1, hasta: 1600 },
+                { calle: "gral roca", desde: 1, hasta: 1600 },
+                { calle: "gral. roca", desde: 1, hasta: 1600 },
+                { calle: "general roca", desde: 1, hasta: 1600 },
+                { calle: "roca", desde: 1, hasta: 1600 },
+                { calle: "11 de septiembre", desde: 1, hasta: 1600 },
+                { calle: "11 de setiembre", desde: 1, hasta: 1600 },
+                { calle: "once de setiembre", desde: 1, hasta: 1600 },
+                { calle: "once de septiembre", desde: 1, hasta: 1600 },
+                { calle: "montiel", desde: 1, hasta: 1600 },
+                { calle: "moreno", desde: 1, hasta: 1600 },
+                { calle: "saavedra", desde: 1, hasta: 1600 },
+                { calle: "savedra", desde: 1, hasta: 1600 },
+                { calle: "saaveedra", desde: 1, hasta: 1600 },
+                { calle: "saaveedra", desde: 1, hasta: 1600 },
+                { calle: "buzon", desde: 1, hasta: 1100 },
+                { calle: "av buzon", desde: 1, hasta: 1100 },
+                { calle: "av buzón", desde: 1, hasta: 1100 },
+                { calle: "avenida buzon", desde: 1, hasta: 1100 },
+                { calle: "avenida marconi", desde: 1000, hasta: 1800 },
+                { calle: "av marconi", desde: 1000, hasta: 1800 },
+                { calle: "marconi", desde: 1000, hasta: 1800 },
+                { calle: "avenida españa", desde: 900, hasta: 1000 },
+                { calle: "av españa", desde: 900, hasta: 1000 },
+                { calle: "av. españa", desde: 900, hasta: 1000 },
+                { calle: "españa", desde: 900, hasta: 1000 },
+                { calle: "sarmiento", desde: 900, hasta: 1800 },
+                { calle: "mitre", desde: 900, hasta: 1800 },
+                { calle: "sanmartin", desde: 900, hasta: 1800 },
+                { calle: "san martin", desde: 900, hasta: 1800 },
+                { calle: "san martín", desde: 900, hasta: 1800 },
+                { calle: "pinto", desde: 900, hasta: 1800 },
+                { calle: "belgrano", desde: 900, hasta: 1800 },
+                { calle: "gral. belgrano", desde: 900, hasta: 1800 },
+                { calle: "gral belgrano", desde: 900, hasta: 1800 },
+                { calle: "general belgrano", desde: 900, hasta: 1800 },
+                { calle: "maipu", desde: 900, hasta: 1800 },
+                { calle: "maipú", desde: 900, hasta: 1800 },
+                { calle: "veinticinco de mayo", desde: 900, hasta: 1800 },
+                { calle: "25demayo", desde: 900, hasta: 1800 },
+                { calle: "25 de mayo", desde: 900, hasta: 1800 },
+                { calle: "constitucion", desde: 900, hasta: 1800 },
+                { calle: "constitución", desde: 900, hasta: 1800 },
+                { calle: "avellaneda", desde: 900, hasta: 1800 },
+                { calle: "avenida avellaneda", desde: 900, hasta: 1800 },
+                { calle: "av avellaneda", desde: 900, hasta: 1800 },
+                { calle: "av. avellaneda", desde: 900, hasta: 1800 },
+                { calle: "1 de mayo", desde: 1000, hasta: 1499 },
+                { calle: "uno de mayo", desde: 1000, hasta: 1499 },
+                { calle: "primero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "1ero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pasaje primero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pasaje 1 de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pasaje uno de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pasaje 1ero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "psje 1ero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pje 1ero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pje. 1ero de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pasaje uno de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pje 1 de mayo", desde: 1000, hasta: 1499 },
+                { calle: "psaje 1 de mayo", desde: 1000, hasta: 1499 },
+                { calle: "pje uno de mayo", desde: 1000, hasta: 1499 },
+                { calle: "psaje uno de mayo", desde: 1000, hasta: 1499 },
+                { calle: "roser", desde: 1500, hasta: 1599 },
+                { calle: "rosser", desde: 1500, hasta: 1599 },
+                { calle: "cruz roja argentina", desde: 0, hasta: 1700 },
+                { calle: "cruz roja", desde: 0, hasta: 1700 },
+                { calle: "cruz roja arg.", desde: 0, hasta: 1700 },
+                { calle: "cruz roja arg", desde: 0, hasta: 1700 },
+                { calle: "pasaje cruz roja argentina", desde: 0, hasta: 1700 },
+                { calle: "pje cruz roja argentina", desde: 0, hasta: 1700 },
+                { calle: "pje. cruz roja argentina", desde: 0, hasta: 1700 },
+                { calle: "cruz roja argentina casa", desde: 0, hasta: 1700 },
+                { calle: "cruz roja casa", desde: 0, hasta: 1700 },
+                { calle: "cruz roja arg. casa", desde: 0, hasta: 1700 },
+                { calle: "cruz roja arg casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje cruz roja argentina casa", desde: 0, hasta: 1700 },
+                { calle: "pje cruz roja argentina casa", desde: 0, hasta: 1700 },
+                { calle: "pje. duggan martignoni casa", desde: 0, hasta: 1700 },
+                { calle: "duggan martignoni", desde: 0, hasta: 1700 },
+                { calle: "dugan martinoni", desde: 0, hasta: 1700 },
+                { calle: "dugan martignoni", desde: 0, hasta: 1700 },
+                { calle: "pje. duggan martignoni ", desde: 0, hasta: 1700 },
+                { calle: "duggan martignoni casa", desde: 0, hasta: 1700 },
+                { calle: "dugan martinoni casa", desde: 0, hasta: 1700 },
+                { calle: "dugan martignoni casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje agote casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje agote", desde: 0, hasta: 1700 },
+                { calle: "pje. agote casa", desde: 0, hasta: 1700 },
+                { calle: "pje. agote", desde: 0, hasta: 1700 },
+                { calle: "pasaje luis agote casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje luis agote", desde: 0, hasta: 1700 },
+                { calle: "pje. luis agote casa", desde: 0, hasta: 1700 },
+                { calle: "pje. luis agote", desde: 0, hasta: 1700 },
+                { calle: "pje. r. gutierrez casa", desde: 0, hasta: 1700 },
+                { calle: "r. gutierrez", desde: 0, hasta: 1700 },
+                { calle: "r gutierrez", desde: 0, hasta: 1700 },
+                { calle: "r. gutierrez casa", desde: 0, hasta: 1700 },
+                { calle: "pje. r. gutierrez", desde: 0, hasta: 1700 },
+                { calle: "r. gutierrez casa", desde: 0, hasta: 1700 },
+                { calle: "r gutierrez casa", desde: 0, hasta: 1700 },
+                { calle: "pje. r gutierrez casa", desde: 0, hasta: 1700 },
+                { calle: "pje. mariano castex casa", desde: 0, hasta: 1700 },
+                { calle: "pje. mariano castex ", desde: 0, hasta: 1700 },
+                { calle: "mariano castex", desde: 0, hasta: 1700 },
+                { calle: "mariano castex casa", desde: 0, hasta: 1700 },
+                { calle: "pje mariano castex", desde: 0, hasta: 1700 },
+                { calle: "pje mariano castex casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje mariano castex casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje mariano castex ", desde: 0, hasta: 1700 },
+                { calle: "pje. baldomero moreno casa", desde: 0, hasta: 1700 },
+                { calle: "pje. baldomero moreno", desde: 0, hasta: 1700 },
+                { calle: "baldomero moreno", desde: 0, hasta: 1700 },
+                { calle: "baldomero moreno casa", desde: 0, hasta: 1700 },
+                { calle: "pje baldomero moreno", desde: 0, hasta: 1700 },
+                { calle: "pje baldomero moreno casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje baldomero moreno casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje baldomero moreno ", desde: 0, hasta: 1700 },
+                { calle: "pje. crucero gral belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pje. crucero gral belgrano", desde: 0, hasta: 1700 },
+                { calle: "crucero gral belgrano", desde: 0, hasta: 1700 },
+                { calle: "crucero gral belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pje crucero gral belgrano", desde: 0, hasta: 1700 },
+                { calle: "pje crucero gral belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje crucero gral belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje crucero gral belgrano ", desde: 0, hasta: 1700 },
+                { calle: "pje. crucero general belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pje. crucero general belgrano", desde: 0, hasta: 1700 },
+                { calle: "crucero general belgrano", desde: 0, hasta: 1700 },
+                { calle: "crucero general belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pje crucero general belgrano", desde: 0, hasta: 1700 },
+                { calle: "pje crucero general belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje crucero general belgrano casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje crucero general belgrano ", desde: 0, hasta: 1700 },
+                { calle: "pje. combate de obligado casa", desde: 0, hasta: 1700 },
+                { calle: "pje. combate de obligado", desde: 0, hasta: 1700 },
+                { calle: "combate de obligado", desde: 0, hasta: 1700 },
+                { calle: "combate de obligado casa", desde: 0, hasta: 1700 },
+                { calle: "pje combate de obligado", desde: 0, hasta: 1700 },
+                { calle: "pje combate de obligado casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje combate de obligado casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje combate de obligado", desde: 0, hasta: 1700 },
+                { calle: "pje. combate de obligado casa", desde: 0, hasta: 1700 },
+                { calle: "pje. Combatientes de malvinas", desde: 0, hasta: 1700 },
+                { calle: " Combatientes de malvinas ", desde: 0, hasta: 1700 },
+                { calle: " Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+                { calle: "pje Combatientes de malvinas ", desde: 0, hasta: 1700 },
+                { calle: "pje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje Combatientes de malvinas ", desde: 0, hasta: 1700 },
+                { calle: "pje. S. Austral", desde: 0, hasta: 1700 },
+                { calle: " S. Austral ", desde: 0, hasta: 1700 },
+                { calle: " S. Austral casa", desde: 0, hasta: 1700 },
+                { calle: "pje Soberanía Austral ", desde: 0, hasta: 1700 },
+                { calle: "pje Soberanía Austral casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje Soberanía Austral casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje Soberanía Austral ", desde: 0, hasta: 1700 },
+                { calle: "pje. puerto argentino casa", desde: 0, hasta: 1700 },
+                { calle: "pje. puerto argentino", desde: 0, hasta: 1700 },
+                { calle: "puerto argentino", desde: 0, hasta: 1700 },
+                { calle: "puerto argentino casa", desde: 0, hasta: 1700 },
+                { calle: "pje puerto argentino", desde: 0, hasta: 1700 },
+                { calle: "pje puerto argentino casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje puerto argentino casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje puerto argentino", desde: 0, hasta: 1700 },
+                { calle: "pje. jose vernet casa", desde: 0, hasta: 1700 },
+                { calle: "pje. jose vernet", desde: 0, hasta: 1700 },
+                { calle: "jose vernet", desde: 0, hasta: 1700 },
+                { calle: "jose vernet casa", desde: 0, hasta: 1700 },
+                { calle: "pje jose vernet", desde: 0, hasta: 1700 },
+                { calle: "pje jose vernet casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje jose vernet casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje jose vernet", desde: 0, hasta: 1700 },
+                { calle: "pje. c. posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "pje. c. posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "c. posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "c. posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "pje c. posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "pje c. posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje c. posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "pasaje c. posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "pje. c. posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "pje. posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto casa", desde: 0, hasta: 1700 },
+                { calle: "posta de yatasto", desde: 0, hasta: 1700 },
+                { calle: "av. machado", desde: 900, hasta: 1800 },
+                { calle: "avenida machado", desde: 900, hasta: 1800 },
+                { calle: "machado", desde: 900, hasta: 1800 },
+                { calle: "arana", desde: 900, hasta: 1800 },
+                { calle: "uriburu", desde: 900, hasta: 1800 },
+                { calle: "pellegrini", desde: 900, hasta: 1800 },
+                { calle: "montevideo", desde: 900, hasta: 1800 },
+                { calle: "las heras", desde: 900, hasta: 1800 },
+                { calle: "garibaldi", desde: 900, hasta: 1800 },
+                { calle: "av balbin", desde: 900, hasta: 1700 },
+                { calle: "balbin", desde: 900, hasta: 1700 },
+                { calle: "avenida balbin", desde: 900, hasta: 1700 },
+                { calle: "avenida colón", desde: 900, hasta: 1600 },
+                { calle: "av colón", desde: 900, hasta: 1600 },
+                { calle: "colón", desde: 900, hasta: 1600 },
+                { calle: "avenida colon", desde: 900, hasta: 1600 },
+                { calle: "av colon", desde: 900, hasta: 1600 },
+                { calle: "colon", desde: 900, hasta: 1600 },
+                { calle: "av espora", desde: 800, hasta: 1400 },
+                { calle: "espora", desde: 800, hasta: 1400 },
+                { calle: "avenida espora", desde: 800, hasta: 1400 },
+                { calle: "guatemala", desde: 900, hasta: 1500 },
+                { calle: "mejico", desde: 1000, hasta: 1400 },
+                { calle: "mexico", desde: 1000, hasta: 1400 },
+                { calle: "gomez", desde: 1200, hasta: 1400 },
+                { calle: "colectora sur", desde: 1000, hasta: 1800 },
+                { calle: "colectora sur j.c pugliese", desde: 1000, hasta: 1800 },
+                { calle: "colectora j.c pugliese", desde: 1000, hasta: 1800 },
+                { calle: "colectora pugliese", desde: 1000, hasta: 1800 },
+                { calle: "pugliese", desde: 1000, hasta: 1800 },
+                { calle: "piedrabuena", desde: 1000, hasta: 1800 },
+                { calle: "piñero", desde: 1200, hasta: 1600 },
+                { calle: "piñiero", desde: 1200, hasta: 1600 },
+                { calle: "piñeiro", desde: 1200, hasta: 1600 },
+                { calle: "primera junta", desde: 1000, hasta: 1800 },
+                { calle: "franklin", desde: 1000, hasta: 1700 },
+                { calle: "colombia", desde: 1000, hasta: 1400 },
+                { calle: "newton", desde: 900, hasta: 1400 },
+                { calle: "edison", desde: 900, hasta: 1200 },
+                { calle: "cuba", desde: 900, hasta: 1400 },
+                { calle: "haiti", desde: 900, hasta: 1400 },
+                { calle: "jurado", desde: 1200, hasta: 1400 },
+                { calle: "rauch", desde: 1000, hasta: 1400 },
+                { calle: "peyrel", desde: 1200, hasta: 1400 },
+                { calle: "honduras", desde: 1300, hasta: 1400 },
+                { calle: "pioxii", desde: 1300, hasta: 1400 },
+                { calle: "pioXII", desde: 1300, hasta: 1400 },
+                { calle: "guemes", desde: 1200, hasta: 1400 },
+                { calle: "güemes", desde: 1200, hasta: 1400 },
+                { calle: "pasaje guernica", desde: 1600, hasta: 1800 },
+                { calle: "pje guernica", desde: 1600, hasta: 1800 },
+                { calle: "pje guernica", desde: 1600, hasta: 1800 },
+                { calle: "pasaje orbe", desde: 0, hasta: 1800 },
+                { calle: "pje orbe", desde: 0, hasta: 1800 },
+                { calle: "orbe", desde: 0, hasta: 1800 },
+                { calle: "pasaje c. disney", desde: 0, hasta: 1800 },
+                { calle: "pje c. disney", desde: 0, hasta: 1800 },
+                { calle: "c. disney", desde: 0, hasta: 1800 },
+                { calle: "Pasaje interno barrio san francisco", desde: 1100, hasta: 1500 },
+                { calle: "pje interno barrio san francisco", desde: 1100, hasta: 1500 },
+                { calle: "Pasaje interno bo san francisco", desde: 1100, hasta: 1500 },
+                { calle: "liniers", desde: 1000, hasta: 1700 },
+                { calle: "pje castelli", desde: 1100, hasta: 1800 },
+                { calle: "Pasaje castelli", desde: 1100, hasta: 1800 },
+                { calle: "Castelli", desde: 1100, hasta: 1800 }
+            ];
+
+            const normalizedStreet = normalizeString(streetName);
+            let isInCoverage = false;
+
+            for (const zona of zonasDeCobertura) {
+                const normalizedZonaCalle = normalizeString(zona.calle);
+                if (normalizedStreet.includes(normalizedZonaCalle) && streetNumber >= zona.desde && streetNumber <= zona.hasta) {
+                    isInCoverage = true;
+                    break;
+                }
+            }
+
+            if (isInCoverage) {
+                const successMessage = `
+            <h3 class="text-2xl font-bold text-green-600">¡Buenas Noticias! Estás en Zona Usittel</h3>
+            <p class="mt-3 text-gray-600">
+                Contactate por WhatsApp haciendo click aquí: 
+                <a href="https://wa.me/5492494060345"
+                   target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp"></i> Chatear Ahora
+                </a>
+            </p>
+            <p class="mt-2 text-gray-600">
+                O si preferís, 
+                <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tu consulta</a> y te contactaremos.
+            </p>`;
+                displayMessage(successMessage, 'success');
+            } else {
+                const failureMessage = `
+            <h3 class="text-2xl font-bold text-yellow-600">Aún no llegamos a tu domicilio</h3>
+            <p class="mt-3 text-gray-600">
+                Por el momento no contamos con cobertura en la dirección indicada. ¡Pero no te preocupes! Seguimos ampliando nuestra red.
+            </p>
+            <p class="mt-2 text-gray-600">
+                Por favor, 
+                <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tus datos de contacto</a> para que podamos avisarte en cuanto lleguemos a tu zona.
+            </p>`;
+                displayMessage(failureMessage, 'warning');
+            }
+
+            coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function normalizeString(str) {
+            return str
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/[.,]/g, '') // Quita puntos y comas
+                .trim();
+        }
+
+        function displayMessage(message, type) {
+            let iconHTML = '';
+            let colorClasses = '';
+
+            switch (type) {
+                case 'success':
+                    iconHTML = '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
+                    colorClasses = 'bg-green-50 border-green-200';
+                    break;
+                case 'warning':
+                    iconHTML = '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
+                    colorClasses = 'bg-yellow-50 border-yellow-200';
+                    break;
+                case 'error':
+                    iconHTML = '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
+                    colorClasses = 'bg-red-50 border-red-200';
+                    break;
+            }
+
+            coverageResultContainer.innerHTML = `
+        <div class="p-6 rounded-lg border ${colorClasses} transition-opacity duration-500 ease-in-out opacity-100">
+            ${iconHTML}
+            <div>${message}</div>
+        </div>
+    `;
+        }
     </script>
 </body>
 

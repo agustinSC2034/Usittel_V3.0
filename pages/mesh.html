@@ -19,313 +19,380 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-<style>
-/* ================================== */
-/* ===         NAV.CSS            === */
-/* ================================== */
-.navbar-section *,
-.navbar-section *::before,
-.navbar-section *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <style>
+        /* ================================== */
+        /* ===         NAV.CSS            === */
+        /* ================================== */
+        .navbar-section *,
+        .navbar-section *::before,
+        .navbar-section *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-header.navbar-section {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background-color: white;
-}
+        header.navbar-section {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+        }
 
-.navbar-section {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    font-size: 16px;
-    color: #3c4043;
-}
+        .navbar-section {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #3c4043;
+        }
 
-.navbar {
-    background-color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
 
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    height: 64px;
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-}
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            height: 64px;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
 
-.logo:hover {
-    background-color: rgba(60, 64, 67, 0.08);
-}
+        .logo:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+        }
 
-.logo img {
-    height: 36px;
-}
+        .logo img {
+            height: 36px;
+        }
 
-.nav-links {
-    display: flex;
-    gap: 12px;
-    list-style: none;
-}
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+        }
 
-.nav-links li a {
-    text-decoration: none;
-    color: #60666b;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 12px 16px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
+        .nav-links li a {
+            text-decoration: none;
+            color: #60666b;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
 
-.nav-links li a:hover {
-    background-color: rgba(60, 64, 67, 0.06);
-    color: #202020;
-}
+        .nav-links li a:hover {
+            background-color: rgba(60, 64, 67, 0.06);
+            color: #202020;
+        }
 
-.nav-links li a.active {
-    color: #1a73e8;
-    font-weight: 600;
-}
+        .nav-links li a.active {
+            color: #1a73e8;
+            font-weight: 600;
+        }
 
-.nav-links .dropdown {
-    position: relative;
-}
+        .nav-links .dropdown {
+            position: relative;
+        }
 
-.nav-links .dropdown > a.active-parent {
-    background-color: rgba(26, 115, 232, 0.08);
-    color: #1a73e8;
-}
+        .nav-links .dropdown>a.active-parent {
+            background-color: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
 
-.nav-links .dropdown-menu {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    background-color: white;
-    padding: 8px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    list-style: none;
-    min-width: 180px;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
+        .nav-links .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: white;
+            padding: 8px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            list-style: none;
+            min-width: 180px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
 
-.nav-links .dropdown-menu li a {
-    display: block;
-    padding: 10px 16px;
-    color: #3c4043;
-    font-size: 15px;
-    border-radius: 4px;
-}
+        .nav-links .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #3c4043;
+            font-size: 15px;
+            border-radius: 4px;
+        }
 
-.nav-links .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+        .nav-links .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-/* CORRECTED: Added base styles for nav buttons */
-.nav-button,
-.nav-button2,
-.nav-button-green {
-    font-size: 15px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
+        /* CORRECTED: Added base styles for nav buttons */
+        .nav-button,
+        .nav-button2,
+        .nav-button-green {
+            font-size: 15px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
 
-.nav-button-green {
-    background-color: #30a172;
-    color: white !important;
-}
+        .nav-button-green {
+            background-color: #30a172;
+            color: white !important;
+        }
 
-.nav-button-green:hover {
-    background-color: #188b48;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .nav-button-green:hover {
+            background-color: #188b48;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.nav-button2 {
-    background-color: #1a73e8;
-    color: white !important;
-}
+        .nav-button2 {
+            background-color: #1a73e8;
+            color: white !important;
+        }
 
-.nav-button2:hover {
-    background-color: #175ca7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .nav-button2:hover {
+            background-color: #175ca7;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-/* ================================== */
-/* ===       CUSTOM STYLES        === */
-/* ================================== */
-html {
-    scroll-behavior: smooth;
-}
+        /* ================================== */
+        /* ===       CUSTOM STYLES        === */
+        /* ================================== */
+        html {
+            scroll-behavior: smooth;
+        }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
 
-.hero-wifimesh {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url('https://images.unsplash.com/photo-1593084313939-3d26cadcf98d?q=80&w=2070&auto=format&fit=crop')
-            no-repeat center center;
-    background-size: cover;
-}
+        .hero-wifimesh {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://images.unsplash.com/photo-1593084313939-3d26cadcf98d?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+        }
 
-.cta-button {
-    transition: all 0.3s ease;
-}
+        .cta-button {
+            transition: all 0.3s ease;
+        }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif;
-}
+        h1,
+        h2,
+        h3 {
+            font-family: 'Poppins', sans-serif;
+        }
 
-.interactive-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    border: 2px solid transparent;
-    background-color: white;
-}
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
+            background-color: white;
+        }
 
-.interactive-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border-color: #22c55e; /* green-500 */
-}
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: #22c55e;
+            /* green-500 */
+        }
 
-/* === MESH VISUALIZATION SECTION === */
-.mesh-visualization {
-    background-color: #eef2ff; /* indigo-50 */
-    position: relative;
-    overflow: hidden;
-}
+        /* === MESH VISUALIZATION SECTION === */
+        .mesh-visualization {
+            background-color: #eef2ff;
+            /* indigo-50 */
+            position: relative;
+            overflow: hidden;
+        }
 
-.house-layout {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: 350px;
-    border: 2px solid #d1d5db; /* gray-300 */
-    border-radius: 0.5rem;
-    background-color: white;
-}
+        .house-layout {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            border: 2px solid #d1d5db;
+            /* gray-300 */
+            border-radius: 0.5rem;
+            background-color: white;
+        }
 
-.room {
-    position: absolute;
-    border: 1px dashed #e5e7eb; /* gray-200 */
-    color: #6b7280; /* gray-500 */
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .room {
+            position: absolute;
+            border: 1px dashed #e5e7eb;
+            /* gray-200 */
+            color: #6b7280;
+            /* gray-500 */
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* Room positions */
-.room-living { top: 0; left: 0; width: 60%; height: 70%; }
-.room-kitchen { top: 0; right: 0; width: 40%; height: 40%; }
-.room-bed1 { top: 70%; left: 0; width: 50%; height: 30%; }
-.room-bed2 { top: 40%; right: 0; width: 40%; height: 30%; }
-.room-office { top: 70%; right: 0; width: 50%; height: 30%; }
+        /* Room positions */
+        .room-living {
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 70%;
+        }
 
-.mesh-node {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
-.mesh-node .node-icon {
-    font-size: 20px;
-    color: white;
-}
-.mesh-node .node-pulse {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: currentColor;
-    z-index: -1;
-    opacity: 0.2;
-    animation: pulse 2s infinite ease-in-out;
-}
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 0.2; }
-    50% { transform: scale(2.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 0.2; }
-}
+        .room-kitchen {
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 40%;
+        }
 
-/* Node positions and colors */
-.node-main { background-color: #4f46e5; color: #4f46e5; top: 30%; left: 25%; }
-.node-sat1 { background-color: #22c55e; color: #22c55e; top: 15%; right: 15%; }
-.node-sat2 { background-color: #22c55e; color: #22c55e; bottom: 15%; left: 65%; }
+        .room-bed1 {
+            top: 70%;
+            left: 0;
+            width: 50%;
+            height: 30%;
+        }
 
-/* === FAQ STYLES === */
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-}
-.faq-icon {
-    transition: transform 0.3s ease-in-out;
-}
-.faq-item.open .faq-icon {
-    transform: rotate(45deg);
-}
+        .room-bed2 {
+            top: 40%;
+            right: 0;
+            width: 40%;
+            height: 30%;
+        }
 
-.step-card .step-number {
-    transition: all 0.3s ease;
-}
+        .room-office {
+            top: 70%;
+            right: 0;
+            width: 50%;
+            height: 30%;
+        }
 
-.step-card:hover .step-number {
-    background-color: #22c55e;
-    color: white;
-    transform: scale(1.1);
-}
+        .mesh-node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
 
-</style>
-       <style>
+        .mesh-node .node-icon {
+            font-size: 20px;
+            color: white;
+        }
+
+        .mesh-node .node-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: currentColor;
+            z-index: -1;
+            opacity: 0.2;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+        }
+
+        /* Node positions and colors */
+        .node-main {
+            background-color: #4f46e5;
+            color: #4f46e5;
+            top: 30%;
+            left: 25%;
+        }
+
+        .node-sat1 {
+            background-color: #22c55e;
+            color: #22c55e;
+            top: 15%;
+            right: 15%;
+        }
+
+        .node-sat2 {
+            background-color: #22c55e;
+            color: #22c55e;
+            bottom: 15%;
+            left: 65%;
+        }
+
+        /* === FAQ STYLES === */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .step-card .step-number {
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover .step-number {
+            background-color: #22c55e;
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
+    <style>
         /* ========== Mobile Menu + Responsive Styles ========== */
 
         .hamburger {
@@ -495,13 +562,13 @@ h1, h2, h3 {
 
     <!-- =========== Header / Navigation =========== -->
     <header class="navbar-section">
-         <nav class="navbar">
+        <nav class="navbar">
             <div class="navbar-container">
                 <!-- Encabezado mobile -->
                 <div class="mobile-header-bar mobile-only">
                     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                     <a href="../index.html" class="logo">
-                             <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
                             alt="Usittel Logo" />
                     </a>
                 </div>
@@ -561,7 +628,8 @@ h1, h2, h3 {
 
     <main>
         <!-- =========== Hero Section WiFi Mesh =========== -->
-        <section class="hero-wifimesh text-white flex items-center relative overflow-hidden" style="min-height:calc(100vh - 64px);height:calc(100vh - 64px);">
+        <section class="hero-wifimesh text-white flex items-center relative overflow-hidden"
+            style="min-height:calc(100vh - 64px);height:calc(100vh - 64px);">
             <!-- Background Video -->
             <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay loop muted playsinline>
                 <source src="../assets/video/mesh.mp4" type="video/mp4" />
@@ -570,29 +638,34 @@ h1, h2, h3 {
             <!-- Overlay for darkening the video -->
             <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
             <div class="container mx-auto text-center px-6 relative z-20">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.</h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh, llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.</p>
-                <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar por mi plan Mesh</a>
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
+                    llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
+                </p>
+                <a href="#contact"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
+                    por mi plan Mesh</a>
             </div>
         </section>
 
         <!-- =========== Pricing Section =========== -->
         <section id="mesh-pricing" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6 max-w-2xl">
-                <div class="text-center bg-gray-50 rounded-xl p-8 lg:p-12 interactive-card border-2 border-green-500 hover:border-green-600 transition-shadow">
+                <div
+                    class="text-center bg-gray-50 rounded-xl p-8 lg:p-12 interactive-card border-2 border-green-500 hover:border-green-600 transition-shadow">
                     <h2 class="text-2xl font-bold text-gray-800">Plan WiFi Mesh Pack Inicial</h2>
                     <p class="text-gray-500 mb-4">La solución perfecta para eliminar las zonas muertas.</p>
                     <div class="my-6">
-                         <span class="text-5xl font-extrabold text-gray-900">$5.999</span>
-                         <span class="text-xl text-gray-500">/mes</span>
+                        <span class="text-5xl font-extrabold text-gray-900">$5.999</span>
+                        <span class="text-xl text-gray-500">/mes</span>
                     </div>
-                     <p class="text-lg text-gray-600 mb-6">Incluye <strong>1 equipo Mesh</strong> de última generación, ideal para cubrir departamentos y casas con problemas de cobertura.</p>
-                            <a href="https://wa.me/5492494060345"
-                            target="_blank"
-                            rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
+                    <p class="text-lg text-gray-600 mb-6">Incluye <strong>1 equipo Mesh</strong> de última generación,
+                        ideal para cubrir departamentos y casas con problemas de cobertura.</p>
+                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                        class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Consultar
+                    </a>
                 </div>
             </div>
         </section>
@@ -602,7 +675,9 @@ h1, h2, h3 {
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Cobertura Inteligente en todo tu Hogar</h2>
-                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">WiFi Mesh crea una red única y unificada. Múltiples nodos trabajan juntos para cubrir tu casa con una señal potente y estable, eliminando las zonas muertas para siempre.</p>
+                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">WiFi Mesh crea una red única y unificada.
+                        Múltiples nodos trabajan juntos para cubrir tu casa con una señal potente y estable, eliminando
+                        las zonas muertas para siempre.</p>
                 </div>
 
                 <div class="lg:flex lg:items-center lg:gap-12">
@@ -624,7 +699,7 @@ h1, h2, h3 {
                                 <i class="fas fa-satellite-dish node-icon"></i>
                                 <div class="node-pulse"></div>
                             </div>
-                             <div class="mesh-node node-sat2" title="Nodo Satélite">
+                            <div class="mesh-node node-sat2" title="Nodo Satélite">
                                 <i class="fas fa-satellite-dish node-icon"></i>
                                 <div class="node-pulse"></div>
                             </div>
@@ -634,30 +709,38 @@ h1, h2, h3 {
                     <div class="lg:w-1/2">
                         <div class="space-y-6">
                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <div
+                                    class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
                                     <i class="fas fa-wifi text-2xl"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Una Sola Red, Sin Interrupciones</h3>
-                                    <p class="text-gray-600 mt-1">Caminá por toda tu casa durante una videollamada sin que se corte. Tus dispositivos se conectan automáticamente al nodo más cercano, creando una experiencia fluida.</p>
+                                    <p class="text-gray-600 mt-1">Caminá por toda tu casa durante una videollamada sin
+                                        que se corte. Tus dispositivos se conectan automáticamente al nodo más cercano,
+                                        creando una experiencia fluida.</p>
                                 </div>
                             </div>
-                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex-shrink-0 w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
                                     <i class="fas fa-brain text-2xl"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Velocidad Inteligente</h3>
-                                    <p class="text-gray-600 mt-1">El sistema Mesh optimiza el tráfico y dirige tus dispositivos a la mejor banda (2.4GHz o 5GHz) para asegurar siempre la máxima velocidad disponible.</p>
+                                    <p class="text-gray-600 mt-1">El sistema Mesh optimiza el tráfico y dirige tus
+                                        dispositivos a la mejor banda (2.4GHz o 5GHz) para asegurar siempre la máxima
+                                        velocidad disponible.</p>
                                 </div>
                             </div>
-                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center">
+                            <div class="flex items-start gap-4">
+                                <div
+                                    class="flex-shrink-0 w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center">
                                     <i class="fas fa-expand-arrows-alt text-2xl"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Expandible y Flexible</h3>
-                                    <p class="text-gray-600 mt-1">¿Necesitás más cobertura? Simplemente agregá más nodos a tu red. El sistema se adapta al tamaño y la forma de tu hogar.</p>
+                                    <p class="text-gray-600 mt-1">¿Necesitás más cobertura? Simplemente agregá más nodos
+                                        a tu red. El sistema se adapta al tamaño y la forma de tu hogar.</p>
                                 </div>
                             </div>
                         </div>
@@ -671,33 +754,38 @@ h1, h2, h3 {
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Es la solución WiFi Mesh para vos?</h2>
-                    <p class="text-lg text-gray-600 mt-2">Si te identificás con alguna de estas situaciones, la respuesta es sí.</p>
+                    <p class="text-lg text-gray-600 mt-2">Si te identificás con alguna de estas situaciones, la
+                        respuesta es sí.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
                         <i class="fas fa-home text-blue-500 text-3xl mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">Casas Grandes o con Múltiples Plantas</h3>
-                        <p class="text-gray-600 text-sm">Las paredes gruesas y las distancias largas debilitan la señal de un router tradicional.</p>
+                        <p class="text-gray-600 text-sm">Las paredes gruesas y las distancias largas debilitan la señal
+                            de un router tradicional.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
                         <i class="fas fa-map-pin text-blue-500 text-3xl mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">Zonas Muertas o Señal Débil</h3>
-                        <p class="text-gray-600 text-sm">Si hay habitaciones, patios o quinchos donde el WiFi no llega o es muy lento.</p>
+                        <p class="text-gray-600 text-sm">Si hay habitaciones, patios o quinchos donde el WiFi no llega o
+                            es muy lento.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
                         <i class="fas fa-laptop-house text-blue-500 text-3xl mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">Home Office y Clases Online</h3>
-                        <p class="text-gray-600 text-sm">Necesitás una conexión 100% estable en tu espacio de trabajo o estudio, sin importar dónde esté.</p>
+                        <p class="text-gray-600 text-sm">Necesitás una conexión 100% estable en tu espacio de trabajo o
+                            estudio, sin importar dónde esté.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
                         <i class="fas fa-mobile-alt text-blue-500 text-3xl mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">Muchos Dispositivos Conectados</h3>
-                        <p class="text-gray-600 text-sm">Cuando celulares, consolas, TVs y computadoras compiten por el WiFi, Mesh distribuye la carga eficientemente.</p>
+                        <p class="text-gray-600 text-sm">Cuando celulares, consolas, TVs y computadoras compiten por el
+                            WiFi, Mesh distribuye la carga eficientemente.</p>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <!-- =========== How It Works Section =========== -->
         <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6">
@@ -707,21 +795,30 @@ h1, h2, h3 {
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     <!-- Step 1 -->
                     <div class="text-center p-6 step-card bg-white rounded-lg">
-                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                        <div
+                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                            1</div>
                         <h3 class="text-xl font-bold mb-2">Conectá el nodo principal</h3>
-                        <p class="text-gray-600">Enchufá el primer dispositivo Mesh a tu modem de Usittel. Él será el cerebro de tu nueva red.</p>
+                        <p class="text-gray-600">Enchufá el primer dispositivo Mesh a tu modem de Usittel. Él será el
+                            cerebro de tu nueva red.</p>
                     </div>
                     <!-- Step 2 -->
                     <div class="text-center p-6 step-card bg-white rounded-lg">
-                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                        <div
+                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                            2</div>
                         <h3 class="text-xl font-bold mb-2">Ubicá los nodos satélite</h3>
-                        <p class="text-gray-600">Distribuí los otros nodos por tu casa. Te ayudamos a encontrar los puntos estratégicos para una cobertura perfecta.</p>
+                        <p class="text-gray-600">Distribuí los otros nodos por tu casa. Te ayudamos a encontrar los
+                            puntos estratégicos para una cobertura perfecta.</p>
                     </div>
                     <!-- Step 3 -->
                     <div class="text-center p-6 step-card bg-white rounded-lg">
-                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                        <div
+                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                            3</div>
                         <h3 class="text-xl font-bold mb-2">Navegá sin límites</h3>
-                        <p class="text-gray-600">¡Listo! Abrí nuestra app, dale un nombre a tu nueva red y disfrutá de una conexión total en cada rincón.</p>
+                        <p class="text-gray-600">¡Listo! Abrí nuestra app, dale un nombre a tu nueva red y disfrutá de
+                            una conexión total en cada rincón.</p>
                     </div>
                 </div>
             </div>
@@ -732,8 +829,12 @@ h1, h2, h3 {
             <div class="container mx-auto px-6 max-w-4xl">
                 <div class="bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg text-center interactive-card">
                     <h2 class="text-3xl font-bold text-gray-900">¿Necesitás ayuda con tu WiFi Mesh?</h2>
-                    <p class="text-lg text-gray-600 mt-4 mb-8">Descargá el instructivo completo para instalar y configurar tu sistema WiFi Mesh de manera fácil y rápida. Seguí los pasos y disfrutá de la mejor conexión en toda tu casa.</p>
-                    <a href="/assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg" download>Descargar instructivo WiFi Mesh</a>
+                    <p class="text-lg text-gray-600 mt-4 mb-8">Descargá el instructivo completo para instalar y
+                        configurar tu sistema WiFi Mesh de manera fácil y rápida. Seguí los pasos y disfrutá de la mejor
+                        conexión en toda tu casa.</p>
+                    <a href="/assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg"
+                        download>Descargar instructivo</a>
                 </div>
             </div>
         </section>
@@ -741,153 +842,180 @@ h1, h2, h3 {
         <!-- =========== MOVED: FAQ Section =========== -->
         <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre WiFi Mesh</h2>
-            </div>
-            <div id="faq-accordion" class="space-y-4">
-                <!-- FAQ Item 1 -->
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Cómo percibo la mejora en el servicio de Internet?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Vas a lograr una cobertura mayor y uniforme. La tecnología MESH elimina las zonas sin señal, asegurando una señal fuerte y constante en cada rincón de tu hogar. Ya no tendrás que preocuparte por perder la conexión en ningún ambiente.</p>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre WiFi Mesh</h2>
+                </div>
+                <div id="faq-accordion" class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Cómo percibo la mejora en el servicio de Internet?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Vas a lograr una cobertura mayor y uniforme. La tecnología MESH elimina las zonas sin
+                                    señal, asegurando una señal fuerte y constante en cada rincón de tu hogar. Ya no
+                                    tendrás que preocuparte por perder la conexión en ningún ambiente.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 2 -->
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Es difícil ampliar si requiero más de un USITTEL MESH?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>¡Es super fácil! Podés añadir hasta 4 equipos mesh adicionales para extender la red
+                                    sin complicaciones. Esta característica es ideal para casas grandes o edificios de
+                                    varias plantas, garantizando que todos los espacios estén bien cubiertos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 3 -->
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>Autogestión y Redundancia</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Los equipos MESH se comunican entre sí, redirigiendo automáticamente el tráfico en
+                                    caso de que uno falle. Esto mantiene la red operativa y evita interrupciones,
+                                    proporcionando una conexión estable y confiable en todo momento.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 4 -->
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>Rendimiento Optimizado</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>La tecnología MESH optimiza automáticamente la mejor ruta de señal, priorizando el
+                                    tráfico de internet según las necesidades, como streaming, gaming y videollamadas.
+                                    Esto asegura que cada dispositivo en tu red reciba la mejor conexión posible.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-                <!-- FAQ Item 2 -->
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Es difícil ampliar si requiero más de un USITTEL MESH?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>¡Es super fácil! Podés añadir hasta 4 equipos mesh adicionales para extender la red sin complicaciones. Esta característica es ideal para casas grandes o edificios de varias plantas, garantizando que todos los espacios estén bien cubiertos.</p>
-                    </div>
-                </div>
-                </div>
-                <!-- FAQ Item 3 -->
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>Autogestión y Redundancia</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Los equipos MESH se comunican entre sí, redirigiendo automáticamente el tráfico en caso de que uno falle. Esto mantiene la red operativa y evita interrupciones, proporcionando una conexión estable y confiable en todo momento.</p>
-                    </div>
-                </div>
-                </div>
-                <!-- FAQ Item 4 -->
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>Rendimiento Optimizado</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>La tecnología MESH optimiza automáticamente la mejor ruta de señal, priorizando el tráfico de internet según las necesidades, como streaming, gaming y videollamadas. Esto asegura que cada dispositivo en tu red reciba la mejor conexión posible.</p>
-                    </div>
-                </div>
-                </div>
-            </div>
             </div>
         </section>
 
     </main>
 
     <!-- =========== Footer =========== -->
-   <footer class="bg-gray-800 text-white pt-16 pb-8">
-  <div class="container mx-auto px-6">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Usittel</h4>
-        <ul>
-          <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
-          <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a></li>
-          <li class="mb-2"><a href="./alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Servicios</h4>
-        <ul>
-          <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-          <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-          <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
-        <ul>
-          <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-          <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
-          <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4 uppercase">Legal</h4>
-        <ul>
-          <li class="mb-2"><a href="./terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-          <li class="mb-2"><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-          <li class="mb-2"><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-bold mb-4"></h4>
-        <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
-      </div>
-    </div>
-    <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-      <div class="flex space-x-4">
-        <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-        <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-        <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-      </div>
-    </div>
-  </div>
-</footer>
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./nosotros.html" class="text-gray-300 hover:text-white">Sobre
+                                nosotros</a></li>
+                        <li class="mb-2"><a href="./contacto.html" class="text-gray-300 hover:text-white">Contacto</a>
+                        </li>
+                        <li class="mb-2"><a href="./alcances_de_servicios.html"
+                                class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./internet.html" class="text-gray-300 hover:text-white">Internet Fibra
+                                Óptica</a></li>
+                        <li class="mb-2"><a href="./tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="./mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./centro de ayuda.html" class="text-gray-300 hover:text-white">Centro
+                                de ayuda</a></li>
+                        <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/"
+                                class="text-gray-300 hover:text-white">Autogestión</a></li>
+                        <li class="mb-2"><a href="./baja.html" class="text-gray-300 hover:text-white">Baja de
+                                servicio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="./terminos_y_condiciones.html"
+                                class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a
+                                href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                        <li class="mb-2"><a
+                                href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="../assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+                            class="fab fa-instagram fa-lg"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    // --- FAQ Accordion Logic ---
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach((item) => {
-        const question = item.querySelector('.faq-question');
-        const answer = item.querySelector('.faq-answer');
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- FAQ Accordion Logic ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
 
-        if (question) {
-            question.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                
-                // Close all other items
-                faqItems.forEach(i => {
-                    if (i !== item) {
-                        i.classList.remove('open');
-                        const ans = i.querySelector('.faq-answer');
-                        if (ans) {
-                           ans.style.maxHeight = null;
+                if (question) {
+                    question.addEventListener('click', () => {
+                        const isOpen = item.classList.contains('open');
+
+                        // Close all other items
+                        faqItems.forEach(i => {
+                            if (i !== item) {
+                                i.classList.remove('open');
+                                const ans = i.querySelector('.faq-answer');
+                                if (ans) {
+                                    ans.style.maxHeight = null;
+                                }
+                            }
+                        });
+
+                        // Toggle the clicked item
+                        if (isOpen) {
+                            item.classList.remove('open');
+                            answer.style.maxHeight = null;
+                        } else {
+                            item.classList.add('open');
+                            answer.style.maxHeight = answer.scrollHeight + 'px';
                         }
-                    }
-                });
-
-                // Toggle the clicked item
-                if (isOpen) {
-                    item.classList.remove('open');
-                    answer.style.maxHeight = null;
-                } else {
-                    item.classList.add('open');
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    });
                 }
             });
-        }
-    });
-});
-</script>
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const hamburger = document.getElementById("hamburger"),
@@ -915,4 +1043,5 @@ document.addEventListener("DOMContentLoaded", () => {
     </script>
 
 </body>
+
 </html>

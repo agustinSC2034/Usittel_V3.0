@@ -670,9 +670,6 @@
                 <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$15.599<span
                     class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-                <a href="#"
-                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
-                  quiero!</a>
               </div>
               <!-- Card HBO Max -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
@@ -681,9 +678,6 @@
                   acceso a la app de MAX.</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
                     class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-                <a href="#"
-                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
-                  quiero!</a>
               </div>
               <!-- Card Universal+ -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
@@ -693,9 +687,6 @@
                   de streaming Universal+.</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
                     class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
-                <a href="#"
-                  class="w-full mt-auto bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">¡Lo
-                  quiero!</a>
               </div>
             </div>
             <!-- Leyenda Aclaratoria -->
@@ -790,9 +781,12 @@
                 <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
                   ideal para casas con muchos dispositivos.</li>
               </ul>
-              <a href="#"
-                class="w-full text-center block bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors cta-button text-sm md:text-base">Consultar
-                por MESH</a>
+           <a href="https://wa.me/5492494060345"
+                            target="_blank"
+                            rel="noopener"
+                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp"></i> Consultar
+                        </a>
             </div>
           </div>
           <div class="w-full max-w-sm md:max-w-md mx-auto">
@@ -1187,7 +1181,12 @@
                           ${speedLine}
                           <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
                           <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul>
-                          <a href="#" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Contratar ahora</a>
+                                   <a href="https://wa.me/5492494060345"
+                            target="_blank"
+                            rel="noopener"
+                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp"></i> Consultar
+                        </a>
                           ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
                       </div>`;
       }

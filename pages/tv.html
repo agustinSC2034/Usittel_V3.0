@@ -552,14 +552,14 @@
             </div>
         </section>
         <style>
-        @media (max-width: 900px) {
-            .hero-tv {
-                min-height: calc(100vh - 64px);
-                background-size: cover !important;
-                background-position: center top !important;
-                background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('../assets/img/tv/background_movie2.png') !important;
+            @media (max-width: 900px) {
+                .hero-tv {
+                    min-height: calc(100vh - 64px);
+                    background-size: cover !important;
+                    background-position: center top !important;
+                    background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('../assets/img/tv/background_movie2.png') !important;
+                }
             }
-        }
         </style>
 
         <!-- =========== TV Plans Section =========== -->
@@ -587,8 +587,11 @@
                         </ul>
                         <div class="my-2"><span class="text-5xl font-extrabold text-gray-900">$13.999</span><span
                                 class="text-gray-500">/mes</span></div>
-                        <a href="#contact"
-                            class="w-full md:w-auto text-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button mt-2">Contratar</a>
+                        <a href="https://wa.me/5492494060345?text=Hola,%20quisiera%20consultar%20por%20el%20plan%20${plan.name.replace(' ', '%20')}"
+                            target="_blank" rel="noopener"
+                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp"></i> Consultar
+                        </a>
                     </div>
                     <!-- Add-ons -->
                     <div class="lg:col-span-2 space-y-6">
@@ -809,71 +812,77 @@
         <!-- =========== FAQ Section =========== -->
         <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2>
-            </div>
-            <div id="faq-accordion" class="space-y-4">
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button
-                    class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿En qué dispositivos puedo usar Sensa?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Podés usar Sensa en dispositivos Android, iOS, PC, Android TV, Chromecast y Amazon Fire TV.</p>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2>
+                </div>
+                <div id="faq-accordion" class="space-y-4">
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿En qué dispositivos puedo usar Sensa?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Podés usar Sensa en dispositivos Android, iOS, PC, Android TV, Chromecast y Amazon
+                                    Fire TV.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Necesito conexión a internet para usar Sensa?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Sí. Se recomienda una conexión a internet estable.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Cuántos canales y contenidos ofrece Sensa?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Sensa ofrece más de 100 canales en vivo y aproximadamente 6000 horas de contenido On
+                                    Demand, con estrenos diarios.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Puedo retroceder o pausar programas en vivo?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Sí, podés pausar, retroceder hasta 24 horas en la grilla y reiniciar programas en
+                                    vivo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item bg-white rounded-lg interactive-card">
+                        <button
+                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
+                            <span>¿Qué hago si olvidé mi usuario o contraseña?</span>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="px-6 pb-4 text-gray-600">
+                                <p>Apretando el botón "olvidé mi contraseña" en la app hará que te llegue un mail a tu
+                                    cuenta de correo que nos brindaste al momento de contratar el servicio y podrás
+                                    cambiar la contraseña. Si tenés problemas podés contactarnos y te ayudaremos
+                                    rápidamente.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button
-                    class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Necesito conexión a internet para usar Sensa?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Sí. Se recomienda una conexión a internet estable.</p>
-                    </div>
-                </div>
-                </div>
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button
-                    class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Cuántos canales y contenidos ofrece Sensa?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Sensa ofrece más de 100 canales en vivo y aproximadamente 6000 horas de contenido On Demand, con estrenos diarios.</p>
-                    </div>
-                </div>
-                </div>
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button
-                    class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Puedo retroceder o pausar programas en vivo?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Sí, podés pausar, retroceder hasta 24 horas en la grilla y reiniciar programas en vivo.</p>
-                    </div>
-                </div>
-                </div>
-                <div class="faq-item bg-white rounded-lg interactive-card">
-                <button
-                    class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                    <span>¿Qué hago si olvidé mi usuario o contraseña?</span>
-                    <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                </button>
-                <div class="faq-answer">
-                    <div class="px-6 pb-4 text-gray-600">
-                    <p>Apretando el botón "olvidé mi contraseña" en la app hará que te llegue un mail a tu cuenta de correo que nos brindaste al momento de contratar el servicio y podrás cambiar la contraseña. Si tenés problemas podés contactarnos y te ayudaremos rápidamente.</p>
-                    </div>
-                </div>
-                </div>
-            </div>
             </div>
         </section>
 

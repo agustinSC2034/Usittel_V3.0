@@ -1146,88 +1146,82 @@
       if (closeMenu) closeMenu.addEventListener('click', toggleMenu);
       if (toggleProducts) { toggleProducts.addEventListener('click', (e) => { e.preventDefault(); productsSubmenu.style.display = productsSubmenu.style.display === 'flex' ? 'none' : 'flex'; }); }
 
-      // Hero Animation: Fiber Optic Lines (Updated)
-      const container = document.getElementById('hero-canvas-container');
-      if (container) {
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 1, 1000);
-        camera.position.z = 200;
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), antialias: true, alpha: true });
-        renderer.setClearColor(0x0c0c1d, 1);
-        renderer.setSize(container.offsetWidth, container.offsetHeight);
-
-        const lines = [];
-        const lineCount = 200;
-        const lineColors = [new THREE.Color(0x1a73e8), new THREE.Color(0x30a172)];
-
-        for (let i = 0; i < lineCount; i++) {
-          const geometry = new THREE.BufferGeometry();
-          const points = [];
-          const length = Math.random() * 20 + 5;
-          const point1 = new THREE.Vector3(0, 0, 0);
-          const point2 = new THREE.Vector3(0, 0, -length);
-          points.push(point1, point2);
-          geometry.setFromPoints(points);
-
-          const material = new THREE.LineBasicMaterial({
-            color: lineColors[Math.floor(Math.random() * lineColors.length)],
-            linewidth: Math.random() * 1.5 + 0.5,
-          });
-
-          const line = new THREE.Line(geometry, material);
-
-          line.position.set(
-            (Math.random() - 0.5) * 150,
-            (Math.random() - 0.5) * 150,
-            (Math.random() - 0.5) * 400
-          );
-
-          line.speed = Math.random() * 1 + 0.5; // Increased speed
-
-          lines.push(line);
-          scene.add(line);
-        }
-
-        function animate() {
-          requestAnimationFrame(animate);
-          lines.forEach(line => {
-            line.position.z += line.speed;
-            if (line.position.z > camera.position.z) {
-              line.position.z = -200;
-              line.position.x = (Math.random() - 0.5) * 150;
-              line.position.y = (Math.random() - 0.5) * 150;
-            }
-          });
-          renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-          camera.aspect = container.offsetWidth / container.offsetHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(container.offsetWidth, container.offsetHeight);
-        }
-
-        window.addEventListener('resize', onWindowResize, false);
-        animate();
-      }
-
       // Plans Section Logic
       const plansData = {
-        internet: [{ name: "Fibra 100", speed: "100 Mbps", symmetric: true, price: "17242", features: ["Instalación 100% bonificada", "Ideal para Home Office", "Streaming en 4K/UHD"], popular: false }, { name: "Fibra 300", speed: "300 Mbps", symmetric: true, price: "18899", features: ["Instalación 100% bonificada", "Perfecto para familias", "Gaming online sin lag", "Múltiples streams en 4K"], popular: true }, { name: "Fibra 500", speed: "500 Mbps", symmetric: true, price: "20999", features: ["Instalación 100% bonificada", "Máxima velocidad disponible", "Para usuarios exigentes", "La mejor experiencia online"], popular: false },],
-        internetTv: [{ name: "Fibra 100 + TV", speed: "100 Mbps", symmetric: true, price: "31241", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false }, { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "32898", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true }, { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "34998", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },],
+        internet: [
+          {
+        name: "Fibra 100",
+        speed: "100 Mbps",
+        symmetric: true,
+        price: "17242",
+        features: [
+          "Instalación 100% bonificada",
+          "100 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+          "Ideal para home office",
+          "$17242 por 3 meses (promoción 25% off por 3 meses)",
+        ],
+        popular: false,
+        promo: `
+          <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
+          <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
+          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+        `
+          },
+          {
+        name: "Fibra 300",
+        speed: "300 Mbps",
+        symmetric: true,
+        price: "18899",
+        features: [
+          "Instalación 100% bonificada",
+          "300 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+          "Perfecto para familias y gaming",
+          "$18899 por 3 meses (promoción 30% off por 3 meses)"
+        ],
+        popular: true,
+        promo: `
+          <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
+          <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
+          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+        `
+          },
+          {
+        name: "Fibra 500",
+        speed: "500 Mbps",
+        symmetric: true,
+        price: "20999",
+        features: [
+          "Instalación 100% bonificada",
+          "500 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+          "La mejor experiencia online",
+          "$20999 por 6 meses (promoción 40% off por 6 meses)"
+        ],
+        popular: false,
+        promo: `
+          <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
+          <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 5 meses. A partir del mes siete (7) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
+          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+        `
+          }
+        ],
+        internetTv: [
+          { name: "Fibra 100 + TV", speed: "100 Mbps", symmetric: true, price: "31241", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false },
+          { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "32898", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true },
+          { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "34998", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },
+        ],
         soloTv: [
           {
-            name: "Sensa TV Básico",
-            speed: "Televisión Digital",
-            symmetric: false,
-            price: "13999",
-            features: [
-              "Más de 100 canales en vivo",
-              "Series y películas On-Demand",
-              "Acceso a la app Sensa multidispositivo",
-              "No requiere Internet de Usittel"
-            ],
-            popular: true
+        name: "Sensa TV Básico",
+        speed: "Televisión Digital",
+        symmetric: false,
+        price: "13999",
+        features: [
+          "Más de 100 canales en vivo",
+          "Series y películas On-Demand",
+          "Acceso a la app Sensa multidispositivo",
+          "No requiere Internet de Usittel"
+        ],
+        popular: true
           }
         ]
       };
@@ -1242,6 +1236,9 @@
       const internetTvBtn = document.getElementById('internet-tv-btn');
       const tvOnlyBtn = document.getElementById('tv-only-btn');
 
+      // NUEVO: El texto de condiciones se muestra en todos los contenedores a la vez
+      let promoVisible = false;
+
       function createPlanCard(plan, type) {
         const isSoloTvPlan = type === 'soloTv';
         const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-6';
@@ -1249,21 +1246,46 @@
           ? `<p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
           : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
 
-        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
-                          <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
-                          ${speedLine}
-                          <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
-                          <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul>
-                                   <a href="https://wa.me/5492494060345"
-                            target="_blank"
-                            rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
-                          ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
-                      </div>`;
-      }
+        // Render features, supporting custom icon for object items
+        const featuresHtml = plan.features.map(feature => {
+          if (typeof feature === 'string') {
+        return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
+          } else if (typeof feature === 'object' && feature.icon) {
+        return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
+          }
+          return '';
+        }).join('');
+      
+        // NUEVO: El texto de condiciones oculto por defecto, solo se muestra al apretar el botón
+        let promoHtml = '';
+        if (type === 'internet') {
+          promoHtml = `
+        <div class="text-center my-3">
+          <a href="#" class="promo-toggle-link text-xs text-blue-600 hover:underline">Condiciones de la promoción</a>
+        </div>
+        <div class="promo-details text-xs text-gray-500 text-left bg-gray-50 rounded-md" style="display:${promoVisible ? 'block' : 'none'};">
+          <div class="p-3">
+            ${plan.promo || ''}
+          </div>
+        </div>
+          `;
+        }
 
+        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
+        <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
+        ${speedLine}
+        <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
+        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${featuresHtml}</ul>
+        ${promoHtml}
+        <a href="https://wa.me/5492494060345?text=Hola,%20quisiera%20consultar%20por%20el%20plan%20${plan.name.replace(' ', '%20')}"
+          target="_blank"
+          rel="noopener"
+          class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+          <i class="fab fa-whatsapp"></i> Consultar
+        </a>
+        ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
+        </div>`;
+      }
 
       function displayPlans(type) {
         internetBtn.classList.remove('active');
@@ -1283,29 +1305,49 @@
           plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
 
           if (type === 'internet') {
-            internetBtn.classList.add('active');
-            premiumPacksDefault.classList.add('hidden');
+        internetBtn.classList.add('active');
+        premiumPacksDefault.classList.add('hidden');
           } else if (type === 'internetTv') {
-            internetTvBtn.classList.add('active');
-            premiumPacksDefault.classList.remove('hidden');
+        internetTvBtn.classList.add('active');
+        premiumPacksDefault.classList.remove('hidden');
           }
         }
+
+        // NUEVO: Agrega los event listeners para los toggles de las promociones después de renderizar
+        document.querySelectorAll('.promo-toggle-link').forEach(toggle => {
+          toggle.addEventListener('click', e => {
+        e.preventDefault();
+        promoVisible = !promoVisible;
+        document.querySelectorAll('.promo-details').forEach(detailsContainer => {
+          detailsContainer.style.display = promoVisible ? 'block' : 'none';
+        });
+          });
+        });
 
         const buttonContainer = document.getElementById('plan-info-button-container');
         if (buttonContainer) {
           let btnHTML = '';
           if (type === 'internet') {
-            btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+        btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
           } else if (type === 'internetTv' || type === 'soloTv') {
-            btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+        btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }
       }
 
-      internetBtn.addEventListener('click', () => displayPlans('internet'));
-      internetTvBtn.addEventListener('click', () => displayPlans('internetTv'));
-      tvOnlyBtn.addEventListener('click', () => displayPlans('soloTv'));
+      internetBtn.addEventListener('click', () => {
+        promoVisible = false;
+        displayPlans('internet');
+      });
+      internetTvBtn.addEventListener('click', () => {
+        promoVisible = false;
+        displayPlans('internetTv');
+      });
+      tvOnlyBtn.addEventListener('click', () => {
+        promoVisible = false;
+        displayPlans('soloTv');
+      });
 
       // Initial display
       displayPlans('internet');

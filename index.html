@@ -32,7 +32,7 @@
   <!-- Leaflet JS (NUEVO) -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <link rel="stylesheet" href="script.js">
+  <link rel="stylesheet" href="script.js">
 
   <style>
     /* ================================== */
@@ -546,8 +546,7 @@
               alt="Usittel Logo" /></a>
         </div>
         <div class="nav-left desktop-only"><a href="#" class="logo"><img
-              src="assets/img/logos/usittel-logo_and_name.png"
-              alt="Usittel Logo" /></a>
+              src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
           <ul class="nav-links">
             <li><a href="#">Home</a></li>
             <li class="dropdown"><a href="#plans">Productos ▾</a>
@@ -578,8 +577,8 @@
               href="pages/mesh.html">WiFi Mesh</a><a href="pages/tv.html">TV</a>
           </div>
         </div>
-        <a href="pages/empresas.html">Empresas</a><a href="pages/contacto.html">Contáctanos</a><a href="pages/centro de ayuda.html"
-          class="nav-button-green">Centro de
+        <a href="pages/empresas.html">Empresas</a><a href="pages/contacto.html">Contáctanos</a><a
+          href="pages/centro de ayuda.html" class="nav-button-green">Centro de
           ayuda</a><a href="https://www.clientes.usittel.com.ar/" class="nav-button2">Autogestión</a>
       </div>
     </nav>
@@ -587,58 +586,60 @@
 
   <main>
     <!-- =========== HERO SECTION =========== -->
-    <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6" style="background-size: cover; min-height: calc(100vh - 0px);">
+    <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6"
+      style="background-size: cover; min-height: calc(100vh - 0px);">
       <canvas id="hero-canvas"></canvas>
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="hero-content relative z-10">
-      <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png"
-        alt="Usittel Logo" class="h-16 md:h-20 mx-auto mb-5">
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
-      <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-        <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-        <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
-      </div>
+        <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
+          class="h-16 md:h-20 mx-auto mb-5">
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
+        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming,
+          gaming y trabajo sin interrupciones.</p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
+          <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+        </div>
       </div>
     </section>
     <script>
       // HERO: Imagen aleatoria de fondo
       document.addEventListener('DOMContentLoaded', function () {
-      const heroImages = [
-        'assets/img/hero/hero1.jpg',
-        'assets/img/hero/hero2.jpg',
-        'assets/img/hero/hero3.jpg'
-      ];
-      const randomImg = heroImages[Math.floor(Math.random() * heroImages.length)];
-      const heroContainer = document.getElementById('hero-container');
-      if (heroContainer) {
-        heroContainer.style.backgroundImage = `url('${randomImg}')`;
-      }
-
-      // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
-      function setHeroHeight() {
-        const nav = document.querySelector('.navbar-section');
-        const hero = document.getElementById('hero-container');
-        if (nav && hero) {
-        const navHeight = nav.offsetHeight;
-        hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+        const heroImages = [
+          'assets/img/hero/hero1.jpg',
+          'assets/img/hero/hero2.jpg',
+          'assets/img/hero/hero3.jpg'
+        ];
+        const randomImg = heroImages[Math.floor(Math.random() * heroImages.length)];
+        const heroContainer = document.getElementById('hero-container');
+        if (heroContainer) {
+          heroContainer.style.backgroundImage = `url('${randomImg}')`;
         }
-      }
-      setHeroHeight();
-      window.addEventListener('resize', setHeroHeight);
+
+        // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
+        function setHeroHeight() {
+          const nav = document.querySelector('.navbar-section');
+          const hero = document.getElementById('hero-container');
+          if (nav && hero) {
+            const navHeight = nav.offsetHeight;
+            hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+          }
+        }
+        setHeroHeight();
+        window.addEventListener('resize', setHeroHeight);
       });
     </script>
 
 
-    <!-- =========== Services Section (ORDEN 1) =========== -->
+    <!-- =========== Services Section =========== -->
     <section class="py-16 md:py-24 bg-white" id="tv-section">
       <div class="container mx-auto px-6">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una conexión pensada para vos</h2>
           <p class="text-lg text-gray-600 mt-2">Todo lo que necesitás para tu hogar en un solo lugar.</p>
         </div>
-        
-         
+
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="bg-gray-50 p-8 rounded-xl text-center hover-glow-card">
             <div class="text-blue-600 mb-4"><i class="fas fa-tv fa-3x"></i></div>
@@ -653,7 +654,7 @@
             <p class="text-gray-600">Navegá a la velocidad de la luz con planes simétricos para trabajar, estudiar y
               disfrutar del mejor entretenimiento.</p>
           </div>
-         
+
           <div class="bg-gray-50 p-8 rounded-xl text-center hover-glow-card">
             <div class="text-blue-600 mb-4"><i class="fas fa-wifi fa-3x"></i></div>
             <h3 class="text-2xl font-bold mb-3">WiFi Mesh</h3>
@@ -725,7 +726,7 @@
           </div>
         </div>
 
-        <!-- Contenedor para la vista especial "Solo TV" (ACTUALIZADO) -->
+        <!-- Contenedor para la vista especial "Solo TV" -->
         <div id="solo-tv-view" class="hidden max-w-7xl mx-auto">
           <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
             <!-- Columna Izquierda: Plan TV -->
@@ -738,7 +739,8 @@
               <div class="space-y-4">
                 <!-- Card Pack Fútbol -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
-                  <b class="h-20 w-20 rounded-lg object-contain flex-shrink-0" style="font-size: x-large; text-align: justify;">PACK FUTBOL</b>
+                  <b class="h-20 w-20 rounded-lg object-contain flex-shrink-0"
+                    style="font-size: x-large; text-align: justify;">PACK FUTBOL</b>
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
                     <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
@@ -784,57 +786,103 @@
         <div id="plan-info-button-container" class="text-center mt-10"></div>
       </div>
     </section>
+
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
     <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
       <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
-            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
-                MESH</span>
-            <div
-              class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
-              style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
-              <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
-              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
-                  class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
-              <ul class="space-y-2 text-gray-600 mb-5">
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
-                  tecnología MESH de última generación.</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
-                  adapta a tu hogar (hasta 4 equipos).</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
-                  ideal para casas con muchos dispositivos.</li>
-              </ul>
-           <a href="https://wa.me/5492494060345"
-                            target="_blank"
-                            rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
-            </div>
-          </div>
-          <div class="w-full max-w-sm md:max-w-md mx-auto">
-            <div class="mesh-carousel-container rounded-large">
-              <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 1"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 2"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 3"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 4"></div>
-            </div>
-            <div class="mesh-dots-container" id="mesh-dots-container"></div>
-          </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
+        <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
+          MESH</span>
+        <div
+          class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
+          style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
+          <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
+          <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
+            class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
+          <ul class="space-y-2 text-gray-600 mb-5">
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
+            tecnología MESH de última generación.</li>
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
+            adapta a tu hogar (hasta 4 equipos).</li>
+          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
+            ideal para casas con muchos dispositivos.</li>
+          </ul>
+          <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+          class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+          <i class="fab fa-whatsapp"></i> Consultar
+          </a>
         </div>
-        <!-- Enlace agregado debajo de la sección Mesh -->
-        <div class="text-center mt-10">
-          <a href="pages/mesh.html"
-            class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
-            cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="w-full max-w-sm md:max-w-md mx-auto">
+        <div class="mesh-carousel-container rounded-large">
+          <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
+            alt="Equipo WiFi Mesh 1"></div>
+          <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
+            alt="Equipo WiFi Mesh 2"></div>
+          <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
+            alt="Equipo WiFi Mesh 3"></div>
+          <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
+            alt="Equipo WiFi Mesh 4"></div>
+        </div>
+        <div class="mesh-dots-container" id="mesh-dots-container"></div>
         </div>
       </div>
+      <!-- Enlace agregado debajo de la sección Mesh -->
+      <div class="text-center mt-10">
+        <a href="pages/mesh.html"
+        class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
+        cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
+      </div>
+      </div>
+      <script>
+      // Carrousel automático para Mesh
+      document.addEventListener('DOMContentLoaded', function () {
+        const meshSlides = document.querySelectorAll('.mesh-slide');
+        const meshDotsContainer = document.getElementById('mesh-dots-container');
+        let currentMeshSlide = 0;
+        let meshInterval;
+
+        function createMeshDots() {
+        if (!meshDotsContainer) return;
+        meshDotsContainer.innerHTML = '';
+        meshSlides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.classList.add('mesh-dot');
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => {
+          showMeshSlide(i);
+          resetMeshInterval();
+          });
+          meshDotsContainer.appendChild(dot);
+        });
+        }
+
+        function showMeshSlide(n) {
+        if (!meshSlides.length) return;
+        meshSlides[currentMeshSlide].classList.remove('active');
+        meshDotsContainer.children[currentMeshSlide].classList.remove('active');
+        currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
+        meshSlides[currentMeshSlide].classList.add('active');
+        meshDotsContainer.children[currentMeshSlide].classList.add('active');
+        }
+
+        function nextMeshSlide() {
+        showMeshSlide(currentMeshSlide + 1);
+        }
+
+        function resetMeshInterval() {
+        clearInterval(meshInterval);
+        meshInterval = setInterval(nextMeshSlide, 1500);
+        }
+
+        if (meshSlides.length > 1) {
+        createMeshDots();
+        meshInterval = setInterval(nextMeshSlide, 1500);
+        }
+      });
+      </script>
     </section>
 
     <!-- =========== Network & Coverage Section (ORDEN 4 - UNIFICADA Y MODIFICADA) =========== -->
@@ -1058,8 +1106,8 @@
         <div>
           <h4 class="font-bold mb-4 uppercase">Legal</h4>
           <ul>
-            <li class="mb-2"><a href="pages/terminos_y_condiciones.html"
-                class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+            <li class="mb-2"><a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos
+                y condiciones</a></li>
             <li class="mb-2"><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
                 class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
             <li class="mb-2"><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"

@@ -546,7 +546,7 @@
               alt="Usittel Logo" /></a>
         </div>
         <div class="nav-left desktop-only"><a href="#" class="logo"><img
-              src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+              src="assets/img/logos/usittel-logo_and_name.png"
               alt="Usittel Logo" /></a>
           <ul class="nav-links">
             <li><a href="#">Home</a></li>
@@ -562,7 +562,7 @@
           </ul>
         </div>
         <div class="nav-actions desktop-only">
-          <a href="/pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+          <a href="pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
           <a href="https://www.clientes.usittel.com.ar/" class="nav-button2">Autogestión</a>
         </div>
       </div>
@@ -587,19 +587,47 @@
 
   <main>
     <!-- =========== HERO SECTION =========== -->
-        <section class="relative min-h-[93vh] flex items-center justify-center text-white text-center px-6" style="background: url('assets/img/internet/bannerHome.jpg') no-repeat center center; background-size: cover;">
-            <div class="absolute inset-0 bg-black opacity-50"></div>
-            <div class="relative z-10">
-                <img src="assets/img/logos/usittel_logo_and_name_blanco.png"
-                    alt="Usittel Logo" class="h-16 md:h-20 mx-auto mb-5">
-                <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-                    <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
-                </div>
-            </div>
-        </section>
+    <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6" style="background-size: cover; min-height: calc(100vh - 0px);">
+      <canvas id="hero-canvas"></canvas>
+      <div class="absolute inset-0 bg-black opacity-50"></div>
+      <div class="hero-content relative z-10">
+      <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png"
+        alt="Usittel Logo" class="h-16 md:h-20 mx-auto mb-5">
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
+      <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming, gaming y trabajo sin interrupciones.</p>
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
+        <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+      </div>
+      </div>
+    </section>
+    <script>
+      // HERO: Imagen aleatoria de fondo
+      document.addEventListener('DOMContentLoaded', function () {
+      const heroImages = [
+        'assets/img/hero/hero1.jpg',
+        'assets/img/hero/hero2.jpg',
+        'assets/img/hero/hero3.jpg'
+      ];
+      const randomImg = heroImages[Math.floor(Math.random() * heroImages.length)];
+      const heroContainer = document.getElementById('hero-container');
+      if (heroContainer) {
+        heroContainer.style.backgroundImage = `url('${randomImg}')`;
+      }
+
+      // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
+      function setHeroHeight() {
+        const nav = document.querySelector('.navbar-section');
+        const hero = document.getElementById('hero-container');
+        if (nav && hero) {
+        const navHeight = nav.offsetHeight;
+        hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+        }
+      }
+      setHeroHeight();
+      window.addEventListener('resize', setHeroHeight);
+      });
+    </script>
 
 
     <!-- =========== Services Section (ORDEN 1) =========== -->
@@ -614,9 +642,9 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="bg-gray-50 p-8 rounded-xl text-center hover-glow-card">
             <div class="text-blue-600 mb-4"><i class="fas fa-tv fa-3x"></i></div>
-            <h3 class="text-2xl font-bold mb-3">Televisión con Sensa</h3>
+            <h3 class="text-2xl font-bold mb-3">USITTEL TV</h3>
             <p class="text-gray-600">Accedé a más de 100 canales en vivo, series y películas on-demand. Llevá tu tele a
-              donde vayas con la app Sensa.</p>
+              donde vayas con la app en tus dispositivos.</p>
           </div>
 
           <div class="bg-gray-50 p-8 rounded-xl text-center hover-glow-card">
@@ -664,8 +692,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 max-w-4xl mx-auto">
               <!-- Card Pack Fútbol -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-                <img src="https://placehold.co/120x60/1a237e/ffffff?text=PACK+FÚTBOL" alt="Logo Pack Fútbol"
-                  class="h-10 md:h-12 mb-3">
+                <b class="h-10 md:h-12 mb-3" style="font-size: xx-large;">PACK FUTBOL</b>
                 <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$15.599<span
                     class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
@@ -711,8 +738,7 @@
               <div class="space-y-4">
                 <!-- Card Pack Fútbol -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
-                  <img src="https://placehold.co/90x90/1a237e/ffffff?text=FP" alt="Logo Pack Fútbol"
-                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
+                  <b class="h-20 w-20 rounded-lg object-contain flex-shrink-0" style="font-size: x-large; text-align: justify;">PACK FUTBOL</b>
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
                     <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
@@ -804,7 +830,7 @@
         </div>
         <!-- Enlace agregado debajo de la sección Mesh -->
         <div class="text-center mt-10">
-          <a href="/pages/mesh.html"
+          <a href="pages/mesh.html"
             class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
             cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
@@ -1221,9 +1247,9 @@
         if (buttonContainer) {
           let btnHTML = '';
           if (type === 'internet') {
-            btnHTML = `<a href="/pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
           } else if (type === 'internetTv' || type === 'soloTv') {
-            btnHTML = `<a href="/pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }

@@ -632,28 +632,34 @@
             style="min-height:calc(100vh - 64px);height:calc(100vh - 64px);">
             <!-- Background Video -->
             <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay loop muted playsinline
-                style="object-position: center;">
-                <source src="../assets/video/mesh.mp4" type="video/mp4" />
-                Tu navegador no soporta videos HTML5.
+            style="object-position: center;">
+            <source src="../assets/video/mesh.mp4" type="video/mp4" />
+            Tu navegador no soporta videos HTML5.
             </video>
             <!-- Overlay for darkening the video (less opacity for more clarity) -->
             <div class="absolute inset-0 bg-black" style="opacity:0.10; z-index:10;"></div>
             <div class="container mx-auto text-center px-6 relative z-20">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
-                </h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
-                    llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
-                </p>
-                <a href="#contact"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
-                    por mi plan Mesh</a>
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
+                llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
+            </p>
+            <a href="#contact"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
+                por mi plan Mesh</a>
             </div>
             <style>
-                @media (max-width: 900px) {
-                    .hero-wifimesh video {
-                        object-position: 85% center !important;
-                    }
+            @media (max-width: 900px) {
+                .hero-wifimesh video {
+                object-position: 85% center !important;
                 }
+            }
+            @media (max-width: 640px) {
+                .hero-wifimesh {
+                min-height: 95vh !important;
+                height: 95vh !important;
+                }
+            }
             </style>
         </section>
 

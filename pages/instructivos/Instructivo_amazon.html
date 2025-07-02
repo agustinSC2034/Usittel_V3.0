@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructivo: ¿Mi Fire TV es compatible?</title>
+        <link rel="icon" type="image/png" href="/assets/icons/usittel-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .page {
+            background-color: white;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .logo-laraplay {
+            width: 180px;
+            /* Truco para pasar el logo blanco a negro para fondo claro */
+            filter: brightness(0) invert(0);
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            color: #2c1e5a; /* Violeta corporativo */
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 2.5rem;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        .step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ede9fe; /* Violeta claro */
+            color: #5b21b6; /* Violeta oscuro */
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+        }
+        .step-content h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+        .step-content p {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .result-box.compatible {
+            background-color: #dcfce7; /* Verde claro */
+            border: 1px solid #16a34a;
+            color: #15803d;
+        }
+        .result-box.not-compatible {
+            background-color: #fee2e2; /* Rojo claro */
+            border: 1px solid #dc2626;
+            color: #b91c1c;
+        }
+        .result-box h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        /* Estilos para impresión */
+        @media print {
+            body {
+                background-color: #ffffff;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <!-- Encabezado con Logo -->
+        <header class="flex justify-center border-b pb-4">
+            <img src="/assets/img/logos/usittel-logo_and_name.png" alt="Logo LARAPLAY" class="mx-auto" style="width: 150px; display: block;">
+        </header>
+
+        <main>
+            <h1>¿Mi Amazon Fire TV es compatible?</h1>
+            <p class="subtitle">Cómo verificar tu versión de Fire OS en 3 simples pasos.</p>
+
+            <!-- Paso 1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h2>Ir a Configuración</h2>
+                    <p>Encendé tu dispositivo Fire TV y, con el control remoto, navegá hasta el menú principal en la parte superior. Seleccioná la opción de <strong>Configuración</strong> (el ícono del engranaje ⚙️).</p>
+                </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h2>Seleccionar "Mi Fire TV"</h2>
+                    <p>Dentro del menú de Configuración, desplazate hacia la derecha y seleccioná la opción que dice <strong>"Mi Fire TV"</strong> o <strong>"Dispositivo y software"</strong> (el nombre puede variar ligeramente).</p>
+                </div>
+            </div>
+            
+            <!-- Paso 3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h2>Verificar la Versión</h2>
+                    <p>En la siguiente pantalla, seleccioná <strong>"Acerca de"</strong>. Buscá el campo llamado <strong>"Versión del software de Fire OS"</strong>. El número que aparece es la versión de tu sistema.</p>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="result-box compatible">
+                <h3>✅ Si la versión es Fire OS 6 o superior:</h3>
+                <p>¡Excelente! Tu dispositivo es 100% compatible con LARAPLAY.</p>
+            </div>
+            
+            <div class="result-box not-compatible" style="margin-top: 1rem;">
+                <h3>⚠️ Si la versión es Fire OS 5 o inferior:</h3>
+                <p>La aplicación podría no funcionar correctamente. Te recomendamos contactar a nuestro soporte técnico para evaluar alternativas.</p>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

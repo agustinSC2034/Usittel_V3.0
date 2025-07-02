@@ -233,34 +233,237 @@
             opacity: 1;
         }
     </style>
+    <style>
+        /* ========== Mobile Menu + Responsive Styles ========== */
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background-color: #3c4043;
+            border-radius: 2px;
+        }
+
+        .mobile-header-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .mobile-menu-slide {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 16px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1001;
+        }
+
+        .mobile-menu-slide.show {
+            left: 0;
+        }
+
+        .mobile-menu-slide a {
+            text-decoration: none;
+            color: #3c4043;
+            font-size: 16px;
+            padding: 10px 8px;
+            border-radius: 6px;
+        }
+
+        .mobile-menu-slide .nav-button-green,
+        .mobile-menu-slide .nav-button2 {
+            padding: 12px 18px;
+            margin-top: 8px;
+            text-align: center;
+            display: block;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-menu-header img {
+            height: 32px;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #3c4043;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .mobile-menu-slide hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin-bottom: 16px;
+        }
+
+        .submenu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .submenu-toggle {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            text-align: left;
+            color: #3c4043;
+            padding: 10px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submenu {
+            display: none;
+            flex-direction: column;
+            padding-left: 12px;
+            margin-top: -4px;
+        }
+
+        .submenu a {
+            font-size: 15px;
+            padding: 8px 12px;
+            color: #3c4043;
+        }
+
+        .submenu.show {
+            display: flex;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .desktop-only {
+            display: flex;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        /* Breakpoint para mobile */
+        @media (max-width: 900px) {
+            .mobile-only {
+                display: flex !important;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-header-bar {
+                display: flex;
+            }
+        }
+    </style>
 </head>
 
 <body class="text-gray-800">
 
     <!-- =========== Header / Navigation =========== -->
+     <!-- =========== Header / Navigation =========== -->
     <header class="navbar-section">
         <nav class="navbar">
             <div class="navbar-container">
-                <div class="nav-left">
-                    <a href="/index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
-                    <ul class="nav-links">
-                        <li><a href="/index.html">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#">Productos ▾</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="./internet.html">Internet</a></li>
-                                <li><a href="./mesh.html">WiFi Mesh</a></li>
-                                <li><a href="./tv.html">TV</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="./empresas.html">Empresas</a></li>
-                        <li><a href="./contacto.html">Contáctanos</a></li>
-                    </ul>
-                </div>
-                <div class="nav-actions">
-                    <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-                </div>
+            <!-- Encabezado mobile -->
+            <div class="mobile-header-bar mobile-only">
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            <a href="../index.html" class="logo">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+                alt="Usittel Logo" />
+            </a>
+            </div>
+
+            <!-- Encabezado desktop -->
+            <div class="nav-left desktop-only">
+            <a href="../index.html" class="logo">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+                alt="Usittel Logo" />
+            </a>
+            <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#">Productos ▾</a>
+                <ul class="dropdown-menu">
+                <li><a href="./internet.html">Internet</a></li>
+                <li><a href="./mesh.html">WiFi Mesh</a></li>
+                <li><a href="./tv.html">TV</a></li>
+                </ul>
+            </li>
+            <li><a href="./empresas.html">Empresas</a></li>
+            <li><a href="./contacto.html">Contáctanos</a></li>
+            </ul>
+            </div>
+
+            <div class="nav-actions desktop-only">
+            <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener noreferrer">Autogestión</a>
+            </div>
+            </div>
+
+            <!-- Overlay y menú mobile -->
+            <div class="overlay" id="overlay"></div>
+            <div class="mobile-menu-slide" id="mobileMenu">
+            <div class="mobile-menu-header">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+            alt="Usittel Logo" />
+            <button class="close-menu" id="closeMenu">&times;</button>
+            </div>
+            <hr />
+            <a href="../index.html">Home</a>
+            <div class="submenu-container">
+            <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
+            <div class="submenu" id="productsSubmenu">
+            <a href="./internet.html">Internet</a>
+            <a href="./mesh.html">WiFi Mesh</a>
+            <a href="./tv.html">TV</a>
+            </div>
+            </div>
+            <a href="./empresas.html">Empresas</a>
+            <a href="./contacto.html">Contáctanos</a>
+            <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener noreferrer">Autogestión</a>
             </div>
         </nav>
     </header>
@@ -296,7 +499,7 @@
         </section>
 
         <!-- =========== Mission & Vision Section =========== -->
-        <section class="py-16 md:py-24 bg-gray-300">
+        <section class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6 max-w-5xl">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-900">Nuestra Misión</h2>
@@ -391,6 +594,32 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const hamburger = document.getElementById("hamburger"),
+                mobileMenu = document.getElementById("mobileMenu"),
+                overlay = document.getElementById("overlay"),
+                closeMenu = document.getElementById("closeMenu"),
+                toggleProducts = document.getElementById("toggleProducts"),
+                productsSubmenu = document.getElementById("productsSubmenu");
+
+            function toggleMenu() {
+                mobileMenu.classList.toggle("show");
+                overlay.classList.toggle("show");
+            }
+
+            if (hamburger) hamburger.addEventListener("click", toggleMenu);
+            if (overlay) overlay.addEventListener("click", toggleMenu);
+            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
+            if (toggleProducts) {
+                toggleProducts.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>

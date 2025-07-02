@@ -603,7 +603,7 @@
       </div>
     </section>
     <script>
-      // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop)
+      // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop, nunca repite la última)
       document.addEventListener('DOMContentLoaded', function () {
         const heroImagesDesktop = [
           'assets/img/hero/hero1.jpg',
@@ -620,12 +620,24 @@
           return window.innerWidth <= 900;
         }
 
+        function getLastHeroImgKey() {
+          return isMobile() ? 'lastHeroImgMobile' : 'lastHeroImgDesktop';
+        }
+
         function setHeroBackground() {
           const heroContainer = document.getElementById('hero-container');
           if (!heroContainer) return;
           const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
-          const randomImg = images[Math.floor(Math.random() * images.length)];
+          const lastImgKey = getLastHeroImgKey();
+          const lastImg = sessionStorage.getItem(lastImgKey);
+
+          // Filtrar la última imagen usada
+          const availableImages = images.filter(img => img !== lastImg);
+          // Si solo queda una (o ninguna), usar la lista completa
+          const pool = availableImages.length > 0 ? availableImages : images;
+          const randomImg = pool[Math.floor(Math.random() * pool.length)];
           heroContainer.style.backgroundImage = `url('${randomImg}')`;
+          sessionStorage.setItem(lastImgKey, randomImg);
         }
 
         // Ajustar altura del hero para ocupar el 100vh menos la altura del nav

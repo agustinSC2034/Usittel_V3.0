@@ -591,60 +591,60 @@
       <canvas id="hero-canvas"></canvas>
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="hero-content relative z-10">
-      <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
-        class="h-16 md:h-20 mx-auto mb-5">
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
-      <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming,
-        gaming y trabajo sin interrupciones.</p>
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-        <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-        <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
-      </div>
+        <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
+          class="h-16 md:h-20 mx-auto mb-5">
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
+        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming,
+          gaming y trabajo sin interrupciones.</p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
+          <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+        </div>
       </div>
     </section>
     <script>
       // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop)
       document.addEventListener('DOMContentLoaded', function () {
-      const heroImagesDesktop = [
-        'assets/img/hero/hero1.jpg',
-        'assets/img/hero/hero2.jpg',
-        'assets/img/hero/hero3.jpg'
-      ];
-      const heroImagesMobile = [
-        'assets/img/hero/hero1_mobile.jpg',
-        'assets/img/hero/hero2_mobile.jpg',
-        'assets/img/hero/hero3_mobile.jpg'
-      ];
+        const heroImagesDesktop = [
+          'assets/img/hero/hero1.jpg',
+          'assets/img/hero/hero2.jpg',
+          'assets/img/hero/hero3.jpg'
+        ];
+        const heroImagesMobile = [
+          'assets/img/hero/hero1_mobile.jpg',
+          'assets/img/hero/hero2_mobile.jpg',
+          'assets/img/hero/hero3_mobile.jpg'
+        ];
 
-      function isMobile() {
-        return window.innerWidth <= 900;
-      }
-
-      function setHeroBackground() {
-        const heroContainer = document.getElementById('hero-container');
-        if (!heroContainer) return;
-        const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
-        const randomImg = images[Math.floor(Math.random() * images.length)];
-        heroContainer.style.backgroundImage = `url('${randomImg}')`;
-      }
-
-      // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
-      function setHeroHeight() {
-        const nav = document.querySelector('.navbar-section');
-        const hero = document.getElementById('hero-container');
-        if (nav && hero) {
-        const navHeight = nav.offsetHeight;
-        hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+        function isMobile() {
+          return window.innerWidth <= 900;
         }
-      }
 
-      setHeroBackground();
-      setHeroHeight();
+        function setHeroBackground() {
+          const heroContainer = document.getElementById('hero-container');
+          if (!heroContainer) return;
+          const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
+          const randomImg = images[Math.floor(Math.random() * images.length)];
+          heroContainer.style.backgroundImage = `url('${randomImg}')`;
+        }
 
-      window.addEventListener('resize', function () {
+        // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
+        function setHeroHeight() {
+          const nav = document.querySelector('.navbar-section');
+          const hero = document.getElementById('hero-container');
+          if (nav && hero) {
+            const navHeight = nav.offsetHeight;
+            hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+          }
+        }
+
         setHeroBackground();
         setHeroHeight();
-      });
+
+        window.addEventListener('resize', function () {
+          setHeroBackground();
+          setHeroHeight();
+        });
       });
     </script>
 
@@ -808,98 +808,98 @@
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
     <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
       <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        <div>
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
-        <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
-          MESH</span>
-        <div
-          class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
-          style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
-          <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
-          <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
-            class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
-          <ul class="space-y-2 text-gray-600 mb-5">
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
-            tecnología MESH de última generación.</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
-            adapta a tu hogar (hasta 4 equipos).</li>
-          <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
-            ideal para casas con muchos dispositivos.</li>
-          </ul>
-          <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-          class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
-          <i class="fab fa-whatsapp"></i> Consultar
-          </a>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
+            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
+                MESH</span>
+            <div
+              class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
+              style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
+              <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
+              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
+                  class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
+              <ul class="space-y-2 text-gray-600 mb-5">
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
+                  tecnología MESH de última generación.</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
+                  adapta a tu hogar (hasta 4 equipos).</li>
+                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
+                  ideal para casas con muchos dispositivos.</li>
+              </ul>
+              <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          </div>
+          <div class="w-full max-w-sm md:max-w-md mx-auto">
+            <div class="mesh-carousel-container rounded-large">
+              <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 1"></div>
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 2"></div>
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 3"></div>
+              <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
+                  alt="Equipo WiFi Mesh 4"></div>
+            </div>
+            <div class="mesh-dots-container" id="mesh-dots-container"></div>
+          </div>
         </div>
+        <!-- Enlace agregado debajo de la sección Mesh -->
+        <div class="text-center mt-10">
+          <a href="pages/mesh.html"
+            class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
+            cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
-        <div class="w-full max-w-sm md:max-w-md mx-auto">
-        <div class="mesh-carousel-container rounded-large">
-          <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
-            alt="Equipo WiFi Mesh 1"></div>
-          <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
-            alt="Equipo WiFi Mesh 2"></div>
-          <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
-            alt="Equipo WiFi Mesh 3"></div>
-          <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
-            alt="Equipo WiFi Mesh 4"></div>
-        </div>
-        <div class="mesh-dots-container" id="mesh-dots-container"></div>
-        </div>
-      </div>
-      <!-- Enlace agregado debajo de la sección Mesh -->
-      <div class="text-center mt-10">
-        <a href="pages/mesh.html"
-        class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
-        cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
-      </div>
       </div>
       <script>
-      // Carrousel automático para Mesh
-      document.addEventListener('DOMContentLoaded', function () {
-        const meshSlides = document.querySelectorAll('.mesh-slide');
-        const meshDotsContainer = document.getElementById('mesh-dots-container');
-        let currentMeshSlide = 0;
-        let meshInterval;
+        // Carrousel automático para Mesh
+        document.addEventListener('DOMContentLoaded', function () {
+          const meshSlides = document.querySelectorAll('.mesh-slide');
+          const meshDotsContainer = document.getElementById('mesh-dots-container');
+          let currentMeshSlide = 0;
+          let meshInterval;
 
-        function createMeshDots() {
-        if (!meshDotsContainer) return;
-        meshDotsContainer.innerHTML = '';
-        meshSlides.forEach((_, i) => {
-          const dot = document.createElement('button');
-          dot.classList.add('mesh-dot');
-          if (i === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => {
-          showMeshSlide(i);
-          resetMeshInterval();
-          });
-          meshDotsContainer.appendChild(dot);
+          function createMeshDots() {
+            if (!meshDotsContainer) return;
+            meshDotsContainer.innerHTML = '';
+            meshSlides.forEach((_, i) => {
+              const dot = document.createElement('button');
+              dot.classList.add('mesh-dot');
+              if (i === 0) dot.classList.add('active');
+              dot.addEventListener('click', () => {
+                showMeshSlide(i);
+                resetMeshInterval();
+              });
+              meshDotsContainer.appendChild(dot);
+            });
+          }
+
+          function showMeshSlide(n) {
+            if (!meshSlides.length) return;
+            meshSlides[currentMeshSlide].classList.remove('active');
+            meshDotsContainer.children[currentMeshSlide].classList.remove('active');
+            currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
+            meshSlides[currentMeshSlide].classList.add('active');
+            meshDotsContainer.children[currentMeshSlide].classList.add('active');
+          }
+
+          function nextMeshSlide() {
+            showMeshSlide(currentMeshSlide + 1);
+          }
+
+          function resetMeshInterval() {
+            clearInterval(meshInterval);
+            meshInterval = setInterval(nextMeshSlide, 1500);
+          }
+
+          if (meshSlides.length > 1) {
+            createMeshDots();
+            meshInterval = setInterval(nextMeshSlide, 1500);
+          }
         });
-        }
-
-        function showMeshSlide(n) {
-        if (!meshSlides.length) return;
-        meshSlides[currentMeshSlide].classList.remove('active');
-        meshDotsContainer.children[currentMeshSlide].classList.remove('active');
-        currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-        meshSlides[currentMeshSlide].classList.add('active');
-        meshDotsContainer.children[currentMeshSlide].classList.add('active');
-        }
-
-        function nextMeshSlide() {
-        showMeshSlide(currentMeshSlide + 1);
-        }
-
-        function resetMeshInterval() {
-        clearInterval(meshInterval);
-        meshInterval = setInterval(nextMeshSlide, 1500);
-        }
-
-        if (meshSlides.length > 1) {
-        createMeshDots();
-        meshInterval = setInterval(nextMeshSlide, 1500);
-        }
-      });
       </script>
     </section>
 
@@ -1168,54 +1168,54 @@
       const plansData = {
         internet: [
           {
-        name: "Fibra 100",
-        speed: "100 Mbps",
-        symmetric: true,
-        price: "17242",
-        features: [
-          "Instalación 100% bonificada",
-          "100 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-          "Ideal para home office",
-          "$17242 por 3 meses (promoción 25% off por 3 meses)",
-        ],
-        popular: false,
-        promo: `
+            name: "Fibra 100",
+            speed: "100 Mbps",
+            symmetric: true,
+            price: "17242",
+            features: [
+              "Instalación 100% bonificada",
+              "100 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+              "Ideal para home office",
+              "$17242 por 3 meses (promoción 25% off por 3 meses)",
+            ],
+            popular: false,
+            promo: `
           <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
           <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
           <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
         `
           },
           {
-        name: "Fibra 300",
-        speed: "300 Mbps",
-        symmetric: true,
-        price: "18899",
-        features: [
-          "Instalación 100% bonificada",
-          "300 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-          "Perfecto para familias y gaming",
-          "$18899 por 3 meses (promoción 30% off por 3 meses)"
-        ],
-        popular: true,
-        promo: `
+            name: "Fibra 300",
+            speed: "300 Mbps",
+            symmetric: true,
+            price: "18899",
+            features: [
+              "Instalación 100% bonificada",
+              "300 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+              "Perfecto para familias y gaming",
+              "$18899 por 3 meses (promoción 30% off por 3 meses)"
+            ],
+            popular: true,
+            promo: `
           <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
           <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
           <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
         `
           },
           {
-        name: "Fibra 500",
-        speed: "500 Mbps",
-        symmetric: true,
-        price: "20999",
-        features: [
-          "Instalación 100% bonificada",
-          "500 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-          "La mejor experiencia online",
-          "$20999 por 6 meses (promoción 40% off por 6 meses)"
-        ],
-        popular: false,
-        promo: `
+            name: "Fibra 500",
+            speed: "500 Mbps",
+            symmetric: true,
+            price: "20999",
+            features: [
+              "Instalación 100% bonificada",
+              "500 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
+              "La mejor experiencia online",
+              "$20999 por 6 meses (promoción 40% off por 6 meses)"
+            ],
+            popular: false,
+            promo: `
           <p>Promoción válida para nuevos clientes, que sean personas físicas que contraten el servicio de USITTEL para sus hogares (servicio residencial).</p>
           <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 5 meses. A partir del mes siete (7) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
           <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
@@ -1223,23 +1223,74 @@
           }
         ],
         internetTv: [
-          { name: "Fibra 100 + TV", speed: "100 Mbps", symmetric: true, price: "31241", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false },
-          { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "32898", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true },
-          { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "34998", features: ["Instalación 100% bonificada", "Pack Sensa TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },
+          {
+            name: "Fibra 100 + TV",
+            speed: "100 Mbps",
+            symmetric: true,
+            price: "31241",
+            features: [
+              "Instalación 100% bonificada",
+              "Pack Sensa TV incluido",
+              "+100 canales en vivo",
+              "Contenido On-Demand"
+            ],
+            popular: false,
+            promo: `
+             <p>El precio de combo incluye en su composición una parte del precio (La de internet) que se encuentra bonificada. </p>
+              <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
+          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+            `
+          },
+          {
+            name: "Fibra 300 + TV",
+            speed: "300 Mbps",
+            symmetric: true,
+            price: "32898",
+            features: [
+              "Instalación 100% bonificada",
+              "Pack Sensa TV incluido",
+              "Ideal para toda la familia",
+              "Mirá en múltiples pantallas"
+            ],
+            popular: true,
+            promo: `
+               <p>El precio de combo incluye en su composición una parte del precio (La de internet) que se encuentra bonificada. </p>
+          <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 2 meses. A partir del mes cuatro (4) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.</p>
+          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+            `
+          },
+          {
+            name: "Fibra 500 + TV",
+            speed: "500 Mbps",
+            symmetric: true,
+            price: "34998",
+            features: [
+              "Instalación 100% bonificada",
+              "Pack Sensa TV incluido",
+              "La experiencia completa",
+              "Velocidad y entretenimiento"
+            ],
+            popular: false,
+            promo: `
+              <p>El precio de combo incluye en su composición una parte del precio (La de internet) que se encuentra bonificada. 
+              <p class="mt-2">La bonificación detallada será sobre el precio de lista vigente al momento de emitirse la factura correspondiente y durante los siguientes 5 meses. A partir del mes siete (7) el cliente deberá abonar el precio de lista total sin bonificaciones vigente en ese momento.
+              <br><br> El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
+            `
+          }
         ],
         soloTv: [
           {
-        name: "Sensa TV Básico",
-        speed: "Televisión Digital",
-        symmetric: false,
-        price: "13999",
-        features: [
-          "Más de 100 canales en vivo",
-          "Series y películas On-Demand",
-          "Acceso a la app Sensa multidispositivo",
-          "No requiere Internet de Usittel"
-        ],
-        popular: true
+            name: "Sensa TV Básico",
+            speed: "Televisión Digital",
+            symmetric: false,
+            price: "13999",
+            features: [
+              "Más de 100 canales en vivo",
+              "Series y películas On-Demand",
+              "Acceso a la app Sensa multidispositivo",
+              "No requiere Internet de Usittel"
+            ],
+            popular: true
           }
         ]
       };
@@ -1267,23 +1318,23 @@
         // Render features, supporting custom icon for object items
         const featuresHtml = plan.features.map(feature => {
           if (typeof feature === 'string') {
-        return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
+            return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
           } else if (typeof feature === 'object' && feature.icon) {
-        return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
+            return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
           }
           return '';
         }).join('');
-      
-        // NUEVO: El texto de condiciones oculto por defecto, solo se muestra al apretar el botón
+
+        // Mostrar el enlace de condiciones en internet e internetTv
         let promoHtml = '';
-        if (type === 'internet') {
+        if (type === 'internet' || type === 'internetTv') {
           promoHtml = `
         <div class="text-center my-3">
           <a href="#" class="promo-toggle-link text-xs text-blue-600 hover:underline">Condiciones de la promoción</a>
         </div>
         <div class="promo-details text-xs text-gray-500 text-left bg-gray-50 rounded-md" style="display:${promoVisible ? 'block' : 'none'};">
           <div class="p-3">
-            ${plan.promo || ''}
+        ${plan.promo || ''}
           </div>
         </div>
           `;
@@ -1323,22 +1374,22 @@
           plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
 
           if (type === 'internet') {
-        internetBtn.classList.add('active');
-        premiumPacksDefault.classList.add('hidden');
+            internetBtn.classList.add('active');
+            premiumPacksDefault.classList.add('hidden');
           } else if (type === 'internetTv') {
-        internetTvBtn.classList.add('active');
-        premiumPacksDefault.classList.remove('hidden');
+            internetTvBtn.classList.add('active');
+            premiumPacksDefault.classList.remove('hidden');
           }
         }
 
         // NUEVO: Agrega los event listeners para los toggles de las promociones después de renderizar
         document.querySelectorAll('.promo-toggle-link').forEach(toggle => {
           toggle.addEventListener('click', e => {
-        e.preventDefault();
-        promoVisible = !promoVisible;
-        document.querySelectorAll('.promo-details').forEach(detailsContainer => {
-          detailsContainer.style.display = promoVisible ? 'block' : 'none';
-        });
+            e.preventDefault();
+            promoVisible = !promoVisible;
+            document.querySelectorAll('.promo-details').forEach(detailsContainer => {
+              detailsContainer.style.display = promoVisible ? 'block' : 'none';
+            });
           });
         });
 
@@ -1346,9 +1397,9 @@
         if (buttonContainer) {
           let btnHTML = '';
           if (type === 'internet') {
-        btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
           } else if (type === 'internetTv' || type === 'soloTv') {
-        btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }
@@ -1497,7 +1548,7 @@
       const match = address.match(/^(.*?)\s+(\d+)/);
 
       if (!match) {
-        displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: San Martín 550).', 'error');
+        displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).', 'error');
         coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }

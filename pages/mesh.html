@@ -391,6 +391,49 @@
             color: white;
             transform: scale(1.1);
         }
+
+        /* === MESH CALCULATOR STYLES === */
+        .calculator-step {
+            display: none;
+        }
+
+        .calculator-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-bar-fill {
+            transition: width 0.4s ease-in-out;
+        }
+
+        .radio-label {
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="radio"]:checked+.radio-label {
+            border-color: #2563eb;
+            /* blue-600 */
+            background-color: #dbeafe;
+            /* blue-100 */
+            color: #1e40af;
+            /* blue-800 */
+        }
+
+        input[type="radio"]:checked+.radio-label i {
+            color: #2563eb;
+        }
     </style>
     <style>
         /* ========== Mobile Menu + Responsive Styles ========== */
@@ -557,26 +600,26 @@
         }
 
         .whatsapp-float {
-      position: left;
-      bottom: 15px;
-      right: 15px;
-      width: 50px;
-      height: 50px;
-      background-color: #25d366;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 35px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-      transition: transform 0.2s ease;
-    }
+            position: left;
+            bottom: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.2s ease;
+        }
 
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
@@ -654,34 +697,40 @@
             style="min-height:calc(100vh - 64px);height:calc(100vh - 64px);">
             <!-- Background Video -->
             <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay loop muted playsinline
-            style="object-position: center;">
-            <source src="../assets/video/mesh.mp4" type="video/mp4" />
-            Tu navegador no soporta videos HTML5.
+                style="object-position: center;">
+                <source src="../assets/video/mesh.mp4" type="video/mp4" />
+                Tu navegador no soporta videos HTML5.
             </video>
             <!-- Overlay for darkening the video (less opacity for more clarity) -->
             <div class="absolute inset-0 bg-black" style="opacity:0.10; z-index:10;"></div>
             <div class="container mx-auto text-center px-6 relative z-20">
-            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
-            </h1>
-            <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
-                llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
-            </p>
-            <a href="#contact"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
-                por mi plan Mesh</a>
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
+                    llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center hidden sm:flex">
+                    <a href="#mesh-pricing"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
+                        por mi plan Mesh</a>
+                    <a href="#mesh-calculator"
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">¿Cuántos
+                        Mesh necesito?</a>
+                </div>
             </div>
             <style>
-            @media (max-width: 900px) {
-                .hero-wifimesh video {
-                object-position: 85% center !important;
+                @media (max-width: 900px) {
+                    .hero-wifimesh video {
+                        object-position: 85% center !important;
+                    }
                 }
-            }
-            @media (max-width: 640px) {
-                .hero-wifimesh {
-                min-height: 95vh !important;
-                height: 95vh !important;
+
+                @media (max-width: 640px) {
+                    .hero-wifimesh {
+                        min-height: 95vh !important;
+                        height: 95vh !important;
+                    }
                 }
-            }
             </style>
         </section>
 
@@ -706,8 +755,167 @@
             </div>
         </section>
 
+        <!-- =========== NEW: Mesh Calculator Section =========== -->
+        <section id="mesh-calculator" class="py-16 md:py-24 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Encontrá la configuración ideal para tu
+                        hogar</h2>
+                    <p class="text-lg text-gray-600 mt-2">Respondé estas preguntas y te diremos cuántos equipos Mesh
+                        necesitás.</p>
+                </div>
+                <div id="calculator-container" class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <!-- Progress Bar -->
+                    <div class="mb-8">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-base font-medium text-blue-700">Progreso</span>
+                            <span class="text-sm font-medium text-blue-700" id="progress-text">Paso 1 de 4</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Steps Container -->
+                    <div id="steps-container">
+                        <!-- Step 1: Ambientes -->
+                        <div id="step-1" class="calculator-step active">
+                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántos ambientes tiene tu domicilio?</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <label><input type="radio" name="ambientes" value="1" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <i class="fas fa-square text-gray-400 text-2xl mb-2"></i>
+                                        <p>1-2</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="ambientes" value="2" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <i class="fas fa-th-large text-gray-400 text-2xl mb-2"></i>
+                                        <p>3-4</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="ambientes" value="3" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100 col-span-2 md:col-span-1">
+                                        <i class="fas fa-th text-gray-400 text-2xl mb-2"></i>
+                                        <p>5 o más</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Step 2: Metros Cuadrados -->
+                        <div id="step-2" class="calculator-step">
+                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántos m² tiene tu domicilio?</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <label><input type="radio" name="m2" value="1" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>Hasta 100m²</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="m2" value="2" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>Hasta 200m²</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="m2" value="3" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>Hasta 300m²</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="m2" value="4" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>+300m²</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Step 3: Plantas -->
+                        <div id="step-3" class="calculator-step">
+                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántas plantas tiene tu domicilio?</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <label><input type="radio" name="plantas" value="1" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <i class="fas fa-building text-gray-400 text-2xl mb-2"></i>
+                                        <p>1 Planta</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="plantas" value="2" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <i class="fas fa-city text-gray-400 text-2xl mb-2"></i>
+                                        <p>2 Plantas</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="plantas" value="3" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <i class="far fa-building text-gray-400 text-2xl mb-2"></i>
+                                        <p>3 o más</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Step 4: Distribucion -->
+                        <div id="step-4" class="calculator-step">
+                            <h3 class="text-xl font-bold text-center mb-6">¿Qué distribución tiene tu domicilio?</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <label><input type="radio" name="distribucion" value="1" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>Cuadrada</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="distribucion" value="1" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>Rectangular</p>
+                                    </div>
+                                </label>
+                                <label><input type="radio" name="distribucion" value="2" class="hidden">
+                                    <div
+                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                        <p>En "L"</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Result Screen -->
+                    <div id="result-screen" class="hidden">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold text-gray-900">¡Esta es tu configuración ideal!</h3>
+                            <div class="my-6 bg-gray-50 p-6 rounded-lg">
+                                <p class="text-gray-600">Según tu selección:</p>
+                                <ul id="user-selection" class="font-semibold text-gray-800 my-2"></ul>
+                                <p class="text-gray-600 mt-4">Te recomendamos:</p>
+                                <p id="recommendation" class="text-3xl font-extrabold text-blue-600"></p>
+                                <p id="recommendation-subtext" class="text-gray-600 mt-2"></p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                                <a id="buy-now" href="https://wa.me/5492494060345" target="_blank"
+                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full cta-button">
+                                    ¡Lo quiero!
+                                </a>
+                                <button id="retake-test"
+                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full cta-button">Rehacer
+                                    Test</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- =========== What is WiFi Mesh? Visualization Section =========== -->
-        <section class="py-16 md:py-24 mesh-visualization">
+        <section class="py-16 md:py-24 mesh-visualization bg-blue-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Cobertura Inteligente en todo tu Hogar</h2>
@@ -822,7 +1030,7 @@
             </div>
         </section>
 
-        <section class="py-16 md:py-24 bg-gray-100">
+        <section class="py-16 md:py-24 bg-blue-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Instalá tu WiFi Mesh en 3 simples pasos
@@ -891,7 +1099,7 @@
         </section>
 
         <!-- =========== MOVED: FAQ Section =========== -->
-        <section class="py-16 md:py-24 bg-gray-100">
+        <section class="py-16 md:py-24 bg-blue-50">
             <div class="container mx-auto px-6 max-w-4xl">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre WiFi Mesh</h2>
@@ -1030,21 +1238,59 @@
         </div>
     </footer>
 
-     <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-       class="flex items-center no-underline group hover:no-underline focus:no-underline"
-       aria-label="Chateá con nosotros por WhatsApp">
-      <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-            style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-        <i class="fab fa-whatsapp"></i>
-      </span>
-      <span class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors" style="min-width: 126px;">
-        <span>¿Necesitás ayuda?</span>
-        <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-      </span>
-    </a>
-  </div>
+    <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
+    <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
+        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+            class="flex items-center no-underline group hover:no-underline focus:no-underline"
+            aria-label="Chateá con nosotros por WhatsApp">
+            <span
+                class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
+                style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
+                <i class="fab fa-whatsapp"></i>
+            </span>
+            <span
+                class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors"
+                style="min-width: 126px;">
+                <span>¿Necesitás ayuda?</span>
+                <span class="font-semibold mt-0.5">Chateá con nosotros</span>
+            </span>
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- FAQ Accordion Logic ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+
+                if (question) {
+                    question.addEventListener('click', () => {
+                        const isOpen = item.classList.contains('open');
+
+                        faqItems.forEach(i => {
+                            if (i !== item) {
+                                i.classList.remove('open');
+                                const ans = i.querySelector('.faq-answer');
+                                if (ans) {
+                                    ans.style.maxHeight = null;
+                                }
+                            }
+                        });
+
+                        if (isOpen) {
+                            item.classList.remove('open');
+                            answer.style.maxHeight = null;
+                        } else {
+                            item.classList.add('open');
+                            answer.style.maxHeight = answer.scrollHeight + 'px';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
 
     <script>
@@ -1106,6 +1352,154 @@
                     productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
                 });
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- FAQ Accordion Logic ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+
+                if (question) {
+                    question.addEventListener('click', () => {
+                        const isOpen = item.classList.contains('open');
+
+                        faqItems.forEach(i => {
+                            if (i !== item) {
+                                i.classList.remove('open');
+                                const ans = i.querySelector('.faq-answer');
+                                if (ans) {
+                                    ans.style.maxHeight = null;
+                                }
+                            }
+                        });
+
+                        if (isOpen) {
+                            item.classList.remove('open');
+                            answer.style.maxHeight = null;
+                        } else {
+                            item.classList.add('open');
+                            answer.style.maxHeight = answer.scrollHeight + 'px';
+                        }
+                    });
+                }
+            });
+
+            // --- Mesh Calculator Logic ---
+            const steps = document.querySelectorAll('.calculator-step');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const stepsContainer = document.getElementById('steps-container');
+            const resultScreen = document.getElementById('result-screen');
+            const retakeTestBtn = document.getElementById('retake-test');
+
+            let currentStep = 0;
+            const userSelections = {};
+
+            const updateProgress = () => {
+                const progressPercentage = (currentStep / steps.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                if (currentStep < steps.length) {
+                    progressText.textContent = `Paso ${currentStep + 1} de ${steps.length}`;
+                }
+            };
+
+            const nextStep = () => {
+                if (currentStep < steps.length - 1) {
+                    steps[currentStep].classList.remove('active');
+                    currentStep++;
+                    steps[currentStep].classList.add('active');
+                    updateProgress();
+                } else {
+                    showResult();
+                }
+            };
+
+            const showResult = () => {
+                stepsContainer.style.display = 'none';
+                resultScreen.style.display = 'block';
+
+                let score = 0;
+                const selectionList = document.getElementById('user-selection');
+                selectionList.innerHTML = '';
+
+                for (const key in userSelections) {
+                    score += userSelections[key].score;
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i>${userSelections[key].text}`;
+                    selectionList.appendChild(li);
+                }
+
+                // CAMBIO: Nueva lógica de recomendación
+                let recommendationText = '';
+                let recommendationSubtext = ''; // Texto adicional para el resultado
+
+                if (score <= 2) {
+                    recommendationText = 'No necesitás WiFi Mesh';
+                    recommendationSubtext = 'Con el módem estándar de Usittel tu cobertura es suficiente.';
+                } else if (score <= 4) {
+                    recommendationText = '1 Equipo Mesh';
+                    recommendationSubtext = 'Ideal para eliminar esa zona difícil y potenciar tu señal.';
+                } else if (score <= 7) {
+                    recommendationText = '2 Equipos Mesh';
+                    recommendationSubtext = 'La configuración más popular para una cobertura total y sin interrupciones.';
+                } else if (score <= 9) {
+                    recommendationText = '3 Equipos Mesh';
+                    recommendationSubtext = 'Para hogares grandes con múltiples plantas y alta demanda de conexión.';
+                } else {
+                    recommendationText = '4 Equipos o más';
+                    recommendationSubtext = 'Para tu caso, te recomendamos consultar con un asesor para un plan a medida.';
+                }
+
+                document.getElementById('recommendation').textContent = recommendationText;
+                document.getElementById('recommendation-subtext').textContent = recommendationSubtext; // Mostramos el subtexto
+
+                progressBar.style.width = '100%';
+                progressText.textContent = '¡Sugerencia Lista!';
+            };
+
+            const resetCalculator = () => {
+                stepsContainer.style.display = 'block';
+                resultScreen.style.display = 'none';
+                currentStep = 0;
+                steps.forEach(step => step.classList.remove('active'));
+                steps[0].classList.add('active');
+                updateProgress();
+                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            };
+
+            steps.forEach((step) => {
+                const radios = step.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        // CAMBIO: Nueva lógica de puntuación
+                        const points = {
+                            ambientes: { '1-2': 0, '3-4': 1, '5 o más': 2 },
+                            m2: { 'Hasta 100m²': 1, 'Hasta 200m²': 2, 'Hasta 300m²': 3, '+300m²': 4 },
+                            plantas: { '1 Planta': 0, '2 Plantas': 2, '3 o más': 3 },
+                            distribucion: { 'Cuadrada': 1, 'Rectangular': 1, 'En "L"': 2 }
+                        };
+                        const selectionText = radio.nextElementSibling.textContent.trim();
+                        userSelections[radio.name] = {
+                            score: points[radio.name][selectionText] || 0,
+                            text: selectionText
+                        };
+
+                        updateProgress();
+                        setTimeout(nextStep, 300);
+                    });
+                });
+            });
+
+            if (retakeTestBtn) {
+                retakeTestBtn.addEventListener('click', resetCalculator);
+            }
+
+            updateProgress();
         });
     </script>
 

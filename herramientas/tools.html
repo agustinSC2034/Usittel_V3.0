@@ -124,21 +124,10 @@
         // --- CONFIGURACIÓN Y DATOS ---
         // Cargar datos de las NAPs desde archivo externo
         let napData = [];
-        let localAddresses = {};
         
         // Función para cargar los datos de las NAPs
         async function cargarDatosNAPs() {
             try {
-                // Cargar base de datos local de direcciones
-                try {
-                    const addressesResponse = await fetch('tandil_addresses.json');
-                    if (addressesResponse.ok) {
-                        localAddresses = await addressesResponse.json();
-                        console.log('✅ Base de datos local de direcciones cargada.');
-                    }
-                } catch (error) {
-                    console.log('⚠️ No se pudo cargar la base de datos local de direcciones.');
-                }
                 
                 // Intentar cargar como JSON primero (más confiable)
                 try {
@@ -215,54 +204,13 @@
         // --- FUNCIONES ---
 
         /**
-         * Busca una dirección en la base de datos local.
-         */
-        function findLocalAddress(address) {
-            const searchTerms = address.toLowerCase().split(' ');
-            const street = searchTerms[0];
-            const number = searchTerms[1];
-            
-            if (localAddresses[street] && localAddresses[street][number]) {
-                console.log(`📍 Dirección encontrada en base de datos local: ${street} ${number}`);
-                return localAddresses[street][number];
-            }
-            
-            // Buscar variaciones (ej: "pellegrini" vs "av pellegrini")
-            const variations = [
-                street,
-                street.replace('av', '').replace('avenida', '').trim(),
-                street.replace('calle', '').trim(),
-                street.replace('general', 'gral').trim(),
-                street.replace('gral', 'general').trim()
-            ];
-            
-            for (const variation of variations) {
-                if (localAddresses[variation] && localAddresses[variation][number]) {
-                    console.log(`📍 Dirección encontrada en base de datos local (variación): ${variation} ${number}`);
-                    return localAddresses[variation][number];
-                }
-            }
-            
-            return null;
-        }
-        
-        /**
-         * Geolocaliza una dirección usando múltiples servicios.
+         * Geolocaliza una dirección usando servicios de geocodificación.
          */
         async function geocodeAddress(address) {
             const fullAddress = `${address}, Tandil, Buenos Aires, Argentina`;
             
             // Intentar con múltiples servicios en paralelo
             const services = [
-                // Servicio 0: Base de datos local (más rápido)
-                async () => {
-                    const localResult = findLocalAddress(address);
-                    if (localResult) {
-                        return { lat: localResult.lat, lon: localResult.lon, service: 'LocalDB' };
-                    }
-                    return null;
-                },
-                
                 // Servicio 1: Nominatim (OpenStreetMap)
                 async () => {
                     const encodedAddress = encodeURIComponent(fullAddress);
@@ -292,7 +240,7 @@
                     return null;
                 },
                 
-                // Servicio 2: Geocoding API de Google (gratuita, sin API key)
+                // Servicio 2: Geocoding API de Google
                 async () => {
                     const encodedAddress = encodeURIComponent(fullAddress);
                     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg`;
@@ -314,17 +262,6 @@
                         console.log('Google falló:', error.message);
                     }
                     return null;
-                },
-                
-                // Servicio 3: Búsqueda local inteligente
-                async () => {
-                    console.log("🔍 Intentando búsqueda local por dirección similar...");
-                    const similarNap = findSimilarAddress(address);
-                    if (similarNap) {
-                        console.log(`📍 Encontrada NAP similar: ${similarNap.direccion}`);
-                        return { lat: similarNap.lat, lon: similarNap.lon, service: 'Local' };
-                    }
-                    return null;
                 }
             ];
             
@@ -336,32 +273,6 @@
                 if (result.status === 'fulfilled' && result.value) {
                     const coords = result.value;
                     console.log(`✅ Geolocalización exitosa con ${coords.service}: ${coords.lat}, ${coords.lon}`);
-                    
-                    // Si se usó búsqueda local, mostrar mensaje informativo
-                    if (coords.service === 'Local') {
-                        const infoDiv = document.createElement('div');
-                        infoDiv.className = 'p-3 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg';
-                        infoDiv.innerHTML = `<strong>ℹ️ Información:</strong> No se pudo geolocalizar la dirección exacta. Se está usando una ubicación aproximada basada en una NAP cercana.`;
-                        document.querySelector('.max-w-6xl').insertBefore(infoDiv, document.getElementById('resultsContainer'));
-                        
-                        setTimeout(() => {
-                            if (infoDiv.parentNode) {
-                                infoDiv.parentNode.removeChild(infoDiv);
-                            }
-                        }, 5000);
-                    } else if (coords.service === 'LocalDB') {
-                        const infoDiv = document.createElement('div');
-                        infoDiv.className = 'p-3 mb-4 text-sm text-green-700 bg-green-100 rounded-lg';
-                        infoDiv.innerHTML = `<strong>✅ Dirección encontrada:</strong> Ubicación obtenida de la base de datos local de Tandil.`;
-                        document.querySelector('.max-w-6xl').insertBefore(infoDiv, document.getElementById('resultsContainer'));
-                        
-                        setTimeout(() => {
-                            if (infoDiv.parentNode) {
-                                infoDiv.parentNode.removeChild(infoDiv);
-                            }
-                        }, 5000);
-                    }
-                    
                     return { lat: coords.lat, lon: coords.lon };
                 }
             }
@@ -370,81 +281,7 @@
             return null;
         }
         
-        /**
-         * Busca una dirección similar en las NAPs locales como fallback.
-         */
-        function findSimilarAddress(address) {
-            const searchTerms = address.toLowerCase().split(' ');
-            const bestMatches = [];
-            
-            // Buscar NAPs que contengan términos de búsqueda
-            for (const nap of napData) {
-                const napAddress = nap.direccion.toLowerCase();
-                const napTerms = napAddress.split(' ');
-                
-                let matchScore = 0;
-                let hasStreetMatch = false;
-                
-                // Verificar coincidencias de calle
-                for (const term of searchTerms) {
-                    if (term.length > 2) {
-                        // Buscar coincidencias exactas de calle
-                        for (const napTerm of napTerms) {
-                            if (napTerm.includes(term) || term.includes(napTerm)) {
-                                // Si es una calle conocida, dar más puntos
-                                if (isKnownStreet(term)) {
-                                    matchScore += 10;
-                                    hasStreetMatch = true;
-                                } else {
-                                    matchScore += 1;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // Solo considerar si hay coincidencia de calle
-                if (hasStreetMatch && matchScore > 0) {
-                    bestMatches.push({ nap, score: matchScore });
-                }
-            }
-            
-            // Ordenar por puntuación y devolver el mejor
-            if (bestMatches.length > 0) {
-                bestMatches.sort((a, b) => b.score - a.score);
-                console.log(`🔍 Mejor coincidencia encontrada: ${bestMatches[0].nap.direccion} (puntuación: ${bestMatches[0].score})`);
-                return bestMatches[0].nap;
-            }
-            
-            return null;
-        }
-        
-        /**
-         * Verifica si un término es una calle conocida en Tandil.
-         */
-        function isKnownStreet(term) {
-            const knownStreets = [
-                'pellegrini', 'montiel', 'buzon', 'saavedra', 'moreno', 'alsina', 
-                'santamarina', 'roca', 'abril', 'paz', 'marconi', 'mitre', 'avellaneda',
-                'haiti', 'cuba', 'colombia', 'newton', 'liniers', 'franklin', 'mexico',
-                'guatemala', 'honduras', 'rauch', 'piedrabuena', 'pinero', 'gomez',
-                'peyrel', 'uriburu', 'arana', 'machado', 'balbin', 'espora', 'edison',
-                'jurado', 'primera', 'junta', 'guemes', 'pio', 'castelli', 'montevideo',
-                'garibaldi', 'heras', 'colon', 'alem', 'sta', 'ana', 'gran', 'gral',
-                'general', 'belgrano', 'san', 'martin', 'sarmiento', 'maipu', 'pinto',
-                'brandsen', 'ezeiza', 'suipacha', 'jujuy', 'kramer', 'garcia', 'cardiel',
-                'canal', 'animas', 'pasteur', 'granaderos', 'malvinas', 'saenz', 'pena',
-                'valle', 'fournier', 'chacabuco', 'independencia', 'rodriguez', 'julio',
-                'lorenzo', 'bolivia', 'dhers', 'chaco', 'saavedra', 'lamas', 'rosales',
-                'basilico', 'muniz', 'ijurco', 'chapaleofu', 'caseros', 'casacuberta',
-                'salceda', 'mons', 'actis', 'loberia', 'tacuari', 'aeronautica',
-                'argentina', 'quintana', 'guido', 'argerich', 'fleming', 'ariztegui',
-                'patagonia', 'cheverrier', 'juan', 'justo', 'san', 'francisco',
-                'ameghino', 'ruta', 'de', 'la', 'costa', 'del', 'valle'
-            ];
-            
-            return knownStreets.includes(term.toLowerCase());
-        }
+
 
         /**
          * Calcula la distancia en metros entre dos puntos geográficos (fórmula de Haversine).
@@ -549,13 +386,18 @@
             loadingDiv.classList.add('hidden');
 
             if (!clientCoords) {
-                errorMessage.textContent = 'No se pudo encontrar la dirección ingresada. Verifique que sea correcta e intente nuevamente. Si el problema persiste, puede ser un problema temporal de conexión con el servicio de geolocalización.';
+                errorMessage.textContent = 'No se pudo conectar con los servicios de geolocalización. Verifique su conexión a internet e intente nuevamente. Si el problema persiste, puede ser un problema temporal de los servicios de geocodificación.';
                 errorDiv.classList.remove('hidden');
                 return;
             }
 
             mapAndInfoDiv.classList.remove('hidden');
             currentClientCoords = clientCoords;
+            
+            // Forzar el redimensionamiento del mapa para evitar el gris
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
             
             if (clientMarker) map.removeLayer(clientMarker);
             napMarkers.forEach(m => map.removeLayer(m));
@@ -580,15 +422,9 @@
                 html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#1d4ed8" class="w-10 h-10 drop-shadow-lg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>`,
                 className: '', iconSize: [40, 40], iconAnchor: [20, 40],
             });
-
-            // Verificar si se usó el fallback (coordenadas de una NAP)
-            const usedFallback = napData.some(nap => nap.lat === clientCoords.lat && nap.lon === clientCoords.lon);
-            const popupContent = usedFallback 
-                ? `<b>Dirección del Cliente</b><br>${address}<br><small style="color: orange;">⚠️ Ubicación aproximada (fallback)</small>`
-                : `<b>Dirección del Cliente</b><br>${address}`;
                 
             clientMarker = L.marker([clientCoords.lat, clientCoords.lon], { icon: clientIcon }).addTo(map)
-                .bindPopup(popupContent).openPopup();
+                .bindPopup(`<b>Dirección del Cliente</b><br>${address}`).openPopup();
             
             // Mostrar solo las 10 NAPs más cercanas
             const napsToShow = sortedNaps.slice(0, 10);
@@ -694,6 +530,15 @@
             }
         });
         showAllButton.addEventListener('click', toggleAllNaps);
+        
+        // Listener para redimensionamiento de ventana (arregla el mapa gris)
+        window.addEventListener('resize', () => {
+            if (map) {
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 100);
+            }
+        });
 
         // --- INICIALIZACIÓN ---
         initializeApp();

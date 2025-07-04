@@ -1,11 +1,11 @@
 
-reCAPTCHA icon
+
 Se completó la configuración.
-checkmark
 Administra la configuración del proyecto de Google Cloud
-checkmark
 Hasta 10,000 de evaluaciones al mes sin costo
-Visita el proyecto de Google Cloud Platform que aloja tus claves de reCAPTCHA para habilitar las funciones avanzadas.
+Sitio registrado: usittel.com.ar
+
+Correo donde quiero enviar los mails que vengan de estos formularios: contacto@usittel.com.ar
 
 Inserta esta clave de sitio en el código HTML que utiliza tu sitio.
 6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0

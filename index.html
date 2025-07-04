@@ -34,6 +34,9 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <link rel="stylesheet" href="script.js">
 
+  <!-- reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <style>
     /* ================================== */
     /* ===         NAV.CSS            === */
@@ -1012,7 +1015,7 @@
           class="bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <div>
             <h3 class="text-2xl font-bold mb-4">Envianos tu consulta</h3>
-            <form action="#" method="POST" class="space-y-4">
+            <form id="contact-form" action="process_form.php" method="POST" class="space-y-4">
               <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name"
                   placeholder="Nombre y Apellido"
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -1035,10 +1038,13 @@
                   placeholder="Escribí tu mensaje..."
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
-              <div class="bg-gray-200 border border-gray-300 rounded-md p-4 h-20 flex items-center justify-center"><span
-                  class="text-gray-500 text-sm">Espacio para reCAPTCHA</span></div><button type="submit"
+              <div class="flex justify-center mb-4">
+                <div class="g-recaptcha" data-sitekey="6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0"></div>
+              </div>
+              <button type="submit" id="submit-btn"
                 class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
                 Mensaje</button>
+              <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
             </form>
           </div>
           <div>
@@ -1905,6 +1911,86 @@
         </div>
     `;
     }
+  </script>
+
+  <!-- Script para manejar el formulario de contacto -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const contactForm = document.getElementById('contact-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const formMessage = document.getElementById('form-message');
+
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Verificar reCAPTCHA
+          const recaptchaResponse = grecaptcha.getResponse();
+          if (!recaptchaResponse) {
+            showMessage('Por favor, completa el reCAPTCHA.', 'error');
+            return;
+          }
+
+          // Cambiar estado del botón
+          const originalText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+          submitBtn.disabled = true;
+
+          // Crear FormData
+          const formData = new FormData(contactForm);
+          formData.append('g-recaptcha-response', recaptchaResponse);
+
+          // Enviar formulario con fetch
+          fetch('process_form.php', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              showMessage(data.message, 'success');
+              contactForm.reset();
+              grecaptcha.reset();
+            } else {
+              showMessage(data.message, 'error');
+              grecaptcha.reset();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showMessage('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.', 'error');
+            grecaptcha.reset();
+          })
+          .finally(() => {
+            // Restaurar botón
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          });
+        });
+      }
+
+      function showMessage(message, type) {
+        formMessage.className = 'mt-4 p-4 rounded-lg';
+        
+        if (type === 'success') {
+          formMessage.className += ' bg-green-100 border border-green-400 text-green-700';
+          formMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i>' + message;
+        } else {
+          formMessage.className += ' bg-red-100 border border-red-400 text-red-700';
+          formMessage.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>' + message;
+        }
+        
+        formMessage.classList.remove('hidden');
+        
+        // Hacer scroll al mensaje
+        formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+          formMessage.classList.add('hidden');
+        }, 5000);
+      }
+    });
   </script>
 </body>
 

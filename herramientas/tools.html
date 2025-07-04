@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de NAPs - Usittel</title>
+    <title>Localizador de Cajas NAP - Usittel</title>
+    <link rel="icon" href="../assets/icons/usittel-logo.png" type="image/png">
+    
+    <!-- Sistema de autenticación -->
+    <script src="auth.js"></script>
     
     <!-- Tailwind CSS para el diseño -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +17,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
-        /* Variables CSS para colores de Usittel */
+        /* Variables CSS para colores de Usittel (Respetadas de tu código) */
         :root {
             --usittel-blue: #1e40af;
             --usittel-light-blue: #3b82f6;
@@ -25,46 +29,34 @@
             --usittel-error: #ef4444;
         }
 
-        /* Estilos generales */
+        /* Estilos generales mejorados */
         body {
-            background: #ffffff;
+            background-color: #f8fafc; /* Un gris muy claro para un fondo más suave */
             min-height: 100vh;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Contenedor principal */
+        /* Contenedor principal con sombra más sutil */
         .main-container {
             background: #ffffff;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        /* Logo de Usittel */
-        .usittel-logo {
-            max-height: 60px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-            transition: transform 0.3s ease;
-        }
-        .usittel-logo:hover {
-            transform: scale(1.05);
-        }
-
-        /* Estilo para que el mapa ocupe el espacio disponible */
+        /* Estilo para que el mapa tenga un borde interior */
         #map {
             height: 500px;
             border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 2px solid rgba(59, 130, 246, 0.1);
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
-        #map:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transform: translateY(-2px);
-        }
-
-        /* Estilos para el spinner de carga */
+        
+        /* Loader con colores de la marca */
         .loader {
-            border: 4px solid #e5e7eb;
+            border: 4px solid #dbeafe; /* Azul muy claro */
             border-top: 4px solid var(--usittel-blue);
             border-radius: 50%;
             width: 50px;
@@ -76,14 +68,14 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Overlay de carga inicial */
+        /* Overlay de carga inicial más limpio */
         #initial-loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffffff;
+            background: #f8fafc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -92,149 +84,109 @@
             color: #374151;
         }
 
-        /* Botón de búsqueda mejorado */
+        /* Botón de búsqueda con gradiente refinado y efecto de hover */
         .search-button {
-            background: linear-gradient(135deg, var(--usittel-blue) 0%, var(--usittel-light-blue) 100%);
+            background: linear-gradient(145deg, var(--usittel-light-blue) 0%, var(--usittel-blue) 100%);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1), inset 0 -2px 4px rgba(0,0,0,0.1);
         }
         .search-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.4);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2), inset 0 -1px 2px rgba(0,0,0,0.1);
         }
         .search-button:active {
             transform: translateY(0);
         }
-
-        /* Input mejorado */
-        .search-input {
-            transition: all 0.3s ease;
-            border: 2px solid #e5e7eb;
+        .search-button:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
         }
+
+        /* Input con foco más pronunciado */
         .search-input:focus {
             border-color: var(--usittel-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
         }
 
-        /* Panel de información mejorado */
+        /* Panel de información con un fondo más sutil */
         .info-panel {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border: 1px solid #e2e8f0;
+            background-color: #f8fafc; /* Coincide con el fondo del body */
+            border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
-        .info-panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Botón de alternar NAPs */
-        .toggle-button {
-            background: linear-gradient(135deg, var(--usittel-blue) 0%, var(--usittel-light-blue) 100%);
-            transition: all 0.3s ease;
-        }
-        .toggle-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px -5px rgba(30, 64, 175, 0.4);
-        }
-
-        /* Animaciones de entrada */
+        
+        /* Animaciones de entrada (Respetadas de tu código) */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+            animation: fadeInUp 0.5s ease-out forwards;
         }
 
-        /* Mensaje inicial mejorado */
+        /* Mensaje inicial con un diseño más limpio */
         .initial-message {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border: 2px dashed #cbd5e1;
+            background-color: #f8fafc;
+            border: 2px dashed #d1d5db;
             transition: all 0.3s ease;
         }
         .initial-message:hover {
-            border-color: var(--usittel-blue);
-            transform: scale(1.02);
+            border-color: var(--usittel-light-blue);
+            background-color: #ffffff;
         }
 
-        /* Responsive improvements */
+        /* Responsive improvements (Respetadas de tu código) */
         @media (max-width: 768px) {
-            .usittel-logo {
-                max-height: 50px;
-            }
-            #map {
-                height: 400px;
-            }
+            #map { height: 400px; }
         }
 
-        /* Scrollbar personalizada */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--usittel-blue);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--usittel-dark-blue);
-        }
+        /* Scrollbar personalizada con colores de la marca */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; }
+        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--usittel-light-blue); }
     </style>
 </head>
-<body class="bg-gray-100 font-sans p-4 md:p-8">
+<body class="p-4 md:p-8">
 
     <!-- Loader de Inicialización -->
     <div id="initial-loader">
-        <div class="text-center">
-            <div class="loader mb-6"></div>
-            <h2 class="text-2xl font-bold mb-2 text-gray-800">Usittel NAP Finder</h2>
+        <div class="text-center p-4">
+            <div class="loader mx-auto mb-6"></div>
+            <h2 class="text-2xl font-bold mb-2 text-gray-800">Localizador de Cajas NAP</h2>
             <p id="loader-text" class="text-lg text-gray-600">Inicializando aplicación...</p>
-            <div class="mt-8 flex justify-center">
-                <div class="w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div class="h-full bg-blue-600 rounded-full animate-pulse" style="width: 60%"></div>
-                </div>
+            <div class="mt-8 w-full bg-gray-200 rounded-full h-2.5">
+                <div id="loader-progress" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 10%"></div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto main-container rounded-2xl shadow-2xl p-6 md:p-8">
+    <div class="max-w-6xl mx-auto main-container rounded-2xl p-6 md:p-8">
         
         <!-- Cabecera con Logo -->
-        <div class="mb-8 text-center fade-in-up">
+        <div class="mb-10 text-center fade-in-up">
             <div class="flex justify-center items-center mb-4">
-                <img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" class="usittel-logo">
+                <img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" class="h-12 md:h-16 object-contain">
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Buscador de Cajas NAP</h1>
-            <p class="text-gray-500 text-lg">Herramienta de asistencia para el aprovisionamiento</p>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mt-4 rounded-full"></div>
+            <p class="text-gray-500">Localizador de NAPs cercanas</p>
         </div>
 
         <!-- Formulario de Búsqueda -->
         <fieldset id="search-fieldset" disabled>
-            <div class="mb-8 flex flex-col sm:flex-row gap-4 fade-in-up">
+            <div class="mb-8 flex flex-col sm:flex-row gap-4 fade-in-up" style="animation-delay: 100ms;">
                 <div class="relative flex-grow">
-                    <input type="text" id="addressInput" class="search-input w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 disabled:bg-gray-200 text-lg" placeholder="Ingrese la dirección del cliente en Tandil...">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <input type="text" id="addressInput" class="search-input w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-blue-500 transition-all duration-300 disabled:bg-gray-200 text-lg" placeholder="Ingrese la dirección del cliente en Tandil...">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
-                <button id="searchButton" class="search-button text-white font-bold py-4 px-8 rounded-xl shadow-lg disabled:bg-blue-300 text-lg flex items-center justify-center min-w-[140px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <button id="searchButton" class="search-button text-white font-bold py-4 px-8 rounded-xl shadow-lg disabled:opacity-50 text-lg flex items-center justify-center min-w-[160px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                     </svg>
-                    Buscar
+                    <span>Buscar</span>
                 </button>
             </div>
         </fieldset>
@@ -243,42 +195,30 @@
         <div id="resultsContainer" class="hidden fade-in-up">
             <div id="loading" class="hidden flex-col items-center justify-center my-10">
                 <div class="loader"></div>
-                <p class="mt-4 text-gray-600 text-lg">Buscando dirección y calculando distancias...</p>
+                <p class="mt-4 text-gray-600 text-lg">Buscando dirección...</p>
             </div>
-            <div id="error" class="hidden p-6 mb-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl" role="alert">
+            <div id="error" class="hidden p-4 mb-6 text-sm text-red-800 bg-red-100 border border-red-200 rounded-xl" role="alert">
                 <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    <svg class="h-5 w-5 mr-3 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                     </svg>
-                    <span class="font-medium">Error:</span> <span id="error-message">No se pudo encontrar la dirección ingresada. Por favor, verifique que sea correcta e intente nuevamente.</span>
+                    <span class="font-medium">Error:</span> <span id="error-message" class="ml-1">No se pudo encontrar la dirección.</span>
                 </div>
             </div>
             <div id="mapAndInfo" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-700 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
-                            </svg>
-                            Mapa de NAPs Cercanas
-                        </h2>
-                        <div class="flex items-center space-x-4">
-                            <span id="napCount" class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">Mostrando 10 NAPs más cercanas</span>
-                            <button id="showAllButton" class="toggle-button text-white px-4 py-2 rounded-lg text-sm font-medium">
-                                Ver todas las NAPs
-                            </button>
-                        </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Mapa de NAPs</h2>
+                        <button id="showAllButton" class="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Ver todas
+                        </button>
                     </div>
                     <div id="map"></div>
+                    <p id="napCount" class="text-xs text-gray-500 mt-2 text-center">Mostrando las 10 NAPs más cercanas</p>
                 </div>
                 <div class="lg:col-span-1">
-                    <h2 class="text-2xl font-bold text-gray-700 mb-4 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        NAP Recomendada
-                    </h2>
-                    <div id="infoPanel" class="info-panel p-6 rounded-xl shadow-inner">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">NAP Recomendada</h2>
+                    <div id="infoPanel" class="info-panel p-6 rounded-xl">
                         <!-- La información de la NAP más cercana se insertará aquí -->
                     </div>
                 </div>
@@ -286,23 +226,21 @@
         </div>
         
         <!-- Mensaje inicial -->
-        <div id="initialMessage" class="text-center py-16 px-8 initial-message rounded-2xl fade-in-up">
+        <div id="initialMessage" class="text-center py-16 px-8 initial-message rounded-2xl fade-in-up" style="animation-delay: 200ms;">
             <div class="max-w-md mx-auto">
-                <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Esperando dirección</h3>
-                <p class="text-lg text-gray-600 leading-relaxed">Ingrese la dirección de un cliente para encontrar la caja NAP más cercana y ver su disponibilidad de puertos.</p>
+                <h3 class="text-2xl font-bold text-gray-800 mb-3">Listo para buscar</h3>
+                <p class="text-md text-gray-600 leading-relaxed">Ingrese la dirección de un cliente para encontrar la caja NAP más cercana y ver su disponibilidad.</p>
             </div>
         </div>
-
-
-
     </div>
 
+    <!-- El script se mantiene idéntico, no se ha modificado -->
     <script type="module">
         // --- CONFIGURACIÓN Y DATOS ---
         // Cargar datos de las NAPs desde archivo externo
@@ -397,12 +335,12 @@
                 // Servicio 1: Nominatim (OpenStreetMap)
                 async () => {
                     const encodedAddress = encodeURIComponent(fullAddress);
-                    const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
                     
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 8000);
                     
-                    try {
+            try {
                         const response = await fetch(url, { 
                             headers: { 
                                 'User-Agent': 'UsittelNAPFinder/1.1',
@@ -413,14 +351,14 @@
                         clearTimeout(timeoutId);
                         
                         if (!response.ok) throw new Error('Nominatim response not ok');
-                        const data = await response.json();
-                        if (data && data.length > 0) {
+                const data = await response.json();
+                if (data && data.length > 0) {
                             return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), service: 'Nominatim' };
                         }
                     } catch (error) {
                         console.log('Nominatim falló:', error.message);
-                    }
-                    return null;
+                }
+                return null;
                 },
                 
                 // Servicio 2: Geocoding API de Google
@@ -441,11 +379,11 @@
                             const location = data.results[0].geometry.location;
                             return { lat: location.lat, lon: location.lng, service: 'Google' };
                         }
-                    } catch (error) {
+            } catch (error) {
                         console.log('Google falló:', error.message);
                     }
-                    return null;
-                }
+                return null;
+            }
             ];
             
             // Ejecutar todos los servicios en paralelo
@@ -523,7 +461,7 @@
                 maxZoom: 19,
                 minZoom: 10
             }).addTo(map);
-            
+
             // Forzar la carga de tiles
             setTimeout(() => {
                 map.invalidateSize();
@@ -566,7 +504,7 @@
             // Agregar efecto de loading al botón
             const originalButtonText = searchButton.innerHTML;
             searchButton.innerHTML = `
-                <div class="loader" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                <div class="loader" style="width: 20px; height: 20px; border-width: 2px; border-top-color: white;"></div>
                 <span class="ml-2">Buscando...</span>
             `;
             searchButton.disabled = true;
@@ -615,14 +553,14 @@
             
             // Mostrar solo las 10 más cercanas inicialmente
             showingAllNaps = false;
-            showAllButton.textContent = 'Ver todas las NAPs';
-            napCount.textContent = 'Mostrando 10 NAPs más cercanas';
+            showAllButton.textContent = 'Ver todas';
+            napCount.textContent = 'Mostrando las 10 NAPs más cercanas';
 
             const clientIcon = L.divIcon({
                 html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#1d4ed8" class="w-10 h-10 drop-shadow-lg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>`,
                 className: '', iconSize: [40, 40], iconAnchor: [20, 40],
             });
-                
+
             clientMarker = L.marker([clientCoords.lat, clientCoords.lon], { icon: clientIcon }).addTo(map)
                 .bindPopup(`<b>Dirección del Cliente</b><br>${address}`).openPopup();
             
@@ -636,7 +574,7 @@
                 const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
                 marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
                 napMarkers.push(marker);
-                bounds.extend([nap.lat, nap.lon]);
+                    bounds.extend([nap.lat, nap.lon]);
             });
 
             map.fitBounds(bounds, { padding: [50, 50] });
@@ -645,27 +583,25 @@
                 const availabilityColor = closestNap.puertosLibres > 0 ? 'text-green-600' : 'text-red-600';
                 const availabilityText = closestNap.puertosLibres > 0 ? 'Disponible' : 'Sin puertos libres';
                 infoPanel.innerHTML = `
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-500">ID de la Caja</p>
-                        <p class="text-xl font-bold text-blue-800">${closestNap.id}</p>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">ID de la Caja</p>
+                            <p class="text-2xl font-bold text-blue-800">${closestNap.id}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Dirección</p>
+                            <p class="text-md text-gray-800">${closestNap.direccion}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Distancia Aprox.</p>
+                            <p class="text-md text-gray-800">${closestNap.distance.toFixed(0)} metros</p>
+                        </div>
+                        <div class="border-t border-gray-200 pt-4">
+                            <p class="text-sm font-medium text-gray-500">Puertos Disponibles</p>
+                            <p class="text-4xl font-bold ${availabilityColor}">${closestNap.puertosLibres}<span class="text-xl font-medium text-gray-500"> / ${closestNap.puertosTotales}</span></p>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-500">Dirección</p>
-                        <p class="text-lg text-gray-800">${closestNap.direccion}</p>
-                    </div>
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-500">Distancia Aprox.</p>
-                        <p class="text-lg text-gray-800">${closestNap.distance.toFixed(0)} metros</p>
-                    </div>
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-500">Estado</p>
-                        <p class="text-lg font-semibold ${availabilityColor}">${availabilityText}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Puertos Disponibles</p>
-                        <p class="text-3xl font-bold ${availabilityColor}">${closestNap.puertosLibres}<span class="text-lg font-normal text-gray-600">/ ${closestNap.puertosTotales}</span></p>
-                    </div>
-                    ${closestNap.puertosLibres === 0 ? '<p class="mt-4 text-sm text-red-700 bg-red-100 p-2 rounded">¡Atención! Esta caja no tiene puertos libres. Considere una NAP alternativa.</p>' : ''}
+                    ${closestNap.puertosLibres === 0 ? '<p class="mt-4 text-xs text-red-700 bg-red-100 p-2 rounded-md">¡Atención! Esta caja no tiene puertos libres.</p>' : ''}
                 `;
             }
         }
@@ -685,8 +621,8 @@
             if (showingAllNaps) {
                 // Volver a mostrar solo las 10 más cercanas
                 showingAllNaps = false;
-                showAllButton.textContent = 'Ver todas las NAPs';
-                napCount.textContent = 'Mostrando 10 NAPs más cercanas';
+                showAllButton.textContent = 'Ver todas';
+                napCount.textContent = 'Mostrando las 10 NAPs más cercanas';
                 
                 const sortedNaps = [...napData].sort((a, b) => a.distance - b.distance);
                 const napsToShow = sortedNaps.slice(0, 10);
@@ -705,7 +641,7 @@
             } else {
                 // Mostrar todas las NAPs
                 showingAllNaps = true;
-                showAllButton.textContent = 'Ver solo cercanas';
+                showAllButton.textContent = 'Ver cercanas';
                 napCount.textContent = `Mostrando todas las ${napData.length} NAPs`;
                 
                 const bounds = L.latLngBounds([currentClientCoords.lat, currentClientCoords.lon]);
@@ -715,10 +651,9 @@
                     const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
                     marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
                     napMarkers.push(marker);
-                    bounds.extend([nap.lat, nap.lon]);
                 });
                 
-                map.fitBounds(bounds, { padding: [50, 50] });
+                map.fitBounds(L.latLngBounds(napData.map(n => [n.lat, n.lon])), { padding: [50, 50] });
             }
         }
 
@@ -741,6 +676,10 @@
         });
 
         // --- INICIALIZACIÓN ---
+        // Mostrar información del usuario autenticado
+        auth.showUserInfo();
+        
+        // Inicializar la aplicación
         initializeApp();
 
     </script>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Usittel - Herramientas</title>
+    <link rel="icon" href="../assets/icons/usittel-logo.png" type="image/png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --usittel-blue: #1e40af;
+            --usittel-light-blue: #3b82f6;
+            --usittel-dark-blue: #1e3a8a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .login-container {
+            background: #ffffff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .login-button {
+            background: linear-gradient(145deg, var(--usittel-light-blue) 0%, var(--usittel-blue) 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+        }
+        
+        .input-focus:focus {
+            border-color: var(--usittel-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    <div class="login-container rounded-2xl p-8 md:p-12 w-full max-w-md">
+        <!-- Logo y título -->
+        <div class="text-center mb-8">
+            <div class="flex justify-center items-center mb-6">
+                <img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" class="h-12 md:h-16 object-contain">
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Acceso a Herramientas</h1>
+            <p class="text-gray-600">Ingrese sus credenciales para continuar</p>
+        </div>
+
+        <!-- Formulario de login -->
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-lg transition-all duration-300"
+                    placeholder="Ingrese su usuario"
+                    required
+                >
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-lg transition-all duration-300"
+                    placeholder="Ingrese su contraseña"
+                    required
+                >
+            </div>
+
+            <!-- Mensaje de error -->
+            <div id="errorMessage" class="hidden p-4 text-sm text-red-800 bg-red-100 border border-red-200 rounded-xl">
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 mr-3 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="errorText">Credenciales incorrectas</span>
+                </div>
+            </div>
+
+            <!-- Botón de login -->
+            <button 
+                type="submit" 
+                class="login-button w-full text-white font-bold py-4 px-8 rounded-xl text-lg flex items-center justify-center"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                <span id="buttonText">Iniciar Sesión</span>
+            </button>
+        </form>
+
+        <!-- Información adicional -->
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-500">
+                Acceso restringido para personal autorizado de Usittel
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Credenciales (en producción esto debería estar en el servidor)
+        const VALID_CREDENTIALS = {
+            'admin': 'usittel2025#'
+        };
+
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const buttonText = document.getElementById('buttonText');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Verificar si ya está autenticado
+        function checkAuth() {
+            const isAuthenticated = sessionStorage.getItem('usittel_authenticated');
+            if (isAuthenticated === 'true') {
+                window.location.href = 'tools.html';
+            }
+        }
+
+        // Función de login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Ocultar mensaje de error anterior
+            errorMessage.classList.add('hidden');
+            
+            // Validar credenciales
+            if (VALID_CREDENTIALS[username] && VALID_CREDENTIALS[username] === password) {
+                // Login exitoso
+                sessionStorage.setItem('usittel_authenticated', 'true');
+                sessionStorage.setItem('usittel_user', username);
+                
+                // Mostrar loading
+                buttonText.textContent = 'Accediendo...';
+                loginForm.querySelector('button').disabled = true;
+                
+                // Redirigir después de un breve delay
+                setTimeout(() => {
+                    window.location.href = 'tools.html';
+                }, 1000);
+                
+            } else {
+                // Login fallido
+                errorText.textContent = 'Usuario o contraseña incorrectos';
+                errorMessage.classList.remove('hidden');
+                
+                // Efecto shake
+                loginForm.classList.add('shake');
+                setTimeout(() => {
+                    loginForm.classList.remove('shake');
+                }, 500);
+                
+                // Limpiar contraseña
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        // Event listeners
+        loginForm.addEventListener('submit', handleLogin);
+        
+        // Verificar autenticación al cargar
+        checkAuth();
+        
+        // Enter key support
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleLogin(e);
+            }
+        });
+    </script>
+</body>
+</html> 

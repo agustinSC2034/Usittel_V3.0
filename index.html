@@ -2,22 +2,22 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Usittel - Internet por Fibra Óptica en Tandil</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Google Fonts: Poppins & Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-    rel="stylesheet">
+    rel="stylesheet" />
 
   <!-- Font Awesome for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Tailwind CSS Aspect Ratio Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
@@ -32,7 +32,7 @@
   <!-- Leaflet JS (NUEVO) -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <link rel="stylesheet" href="script.js">
+  <link rel="stylesheet" href="script.js" />
 
   <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -57,7 +57,7 @@
     }
 
     .navbar-section {
-      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      font-family: "Poppins", "Segoe UI", sans-serif;
       font-size: 16px;
       color: #3c4043;
     }
@@ -380,7 +380,7 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: "Inter", sans-serif;
       background-color: #f8f9fa;
     }
 
@@ -411,7 +411,8 @@
 
     .cta-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
 
     .plan-toggle {
@@ -442,14 +443,15 @@
     h1,
     h2,
     h3 {
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
     }
 
     .faq-answer {
       overflow: hidden;
       max-height: 0;
       opacity: 0;
-      transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
+      transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out,
+        padding 0.5s ease-in-out;
       padding-left: 1rem;
       padding-right: 1rem;
     }
@@ -529,14 +531,16 @@
     .hover-glow-card {
       position: relative;
       border: 2px solid transparent;
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, border-color 0.3s ease,
+        box-shadow 0.3s ease;
     }
 
     .hover-glow-card:hover {
       transform: translateY(-5px);
       border-color: #30a172;
       /* Verde de Usittel */
-      box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
+      box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
+        0 8px 10px -6px rgba(48, 161, 114, 0.15);
     }
 
     /* ESTILOS PARA EL MAPA (NUEVO) */
@@ -548,21 +552,24 @@
 </head>
 
 <body class="text-gray-800">
-
   <!-- =========== Header / Navigation =========== -->
   <header class="navbar-section">
     <nav class="navbar">
       <div class="navbar-container">
         <div class="mobile-header-bar mobile-only">
-          <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><a href="#"
-            class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
+          <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+          </div>
+          <a href="#" class="logo"><img
+              src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
               alt="Usittel Logo" /></a>
         </div>
-        <div class="nav-left desktop-only"><a href="#" class="logo"><img
-              src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+        <div class="nav-left desktop-only">
+          <a href="#" class="logo"><img src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
           <ul class="nav-links">
             <li><a href="#" class="active">Home</a></li>
-            <li class="dropdown"><a href="#plans">Productos ▾</a>
+            <li class="dropdown">
+              <a href="#plans">Productos ▾</a>
               <ul class="dropdown-menu">
                 <li><a href="pages/internet.html">Internet</a></li>
                 <li><a href="pages/mesh.html">WiFi Mesh</a></li>
@@ -580,19 +587,24 @@
       </div>
       <div class="overlay" id="overlay"></div>
       <div class="mobile-menu-slide" id="mobileMenu">
-        <div class="mobile-menu-header"><img
-            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-            alt="Usittel Logo" /><button class="close-menu" id="closeMenu">&times;</button></div>
+        <div class="mobile-menu-header">
+          <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
+            alt="Usittel Logo" /><button class="close-menu" id="closeMenu">&times;</button>
+        </div>
         <hr />
         <a href="#" class="active">Home</a>
-        <div class="submenu-container"><button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
-          <div class="submenu" id="productsSubmenu"><a href="pages/internet.html">Internet</a><a
-              href="pages/mesh.html">WiFi Mesh</a><a href="pages/tv.html">TV</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="pages/internet.html">Internet</a><a href="pages/mesh.html">WiFi Mesh</a><a
+              href="pages/tv.html">TV</a>
           </div>
         </div>
         <a href="pages/empresas.html">Empresas</a><a href="pages/contacto.html">Contáctanos</a><a
-          href="pages/centro de ayuda.html" class="nav-button-green">Centro de
-          ayuda</a><a href="https://www.clientes.usittel.com.ar/" class="nav-button2">Autogestión</a>
+          href="pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a><a
+          href="https://www.clientes.usittel.com.ar/" class="nav-button2">Autogestión</a>
       </div>
     </nav>
   </header>
@@ -600,15 +612,19 @@
   <main>
     <!-- =========== HERO SECTION =========== -->
     <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6"
-      style="background-size: cover; min-height: calc(100vh - 0px);">
+      style="background-size: cover; min-height: calc(100vh - 0px)">
       <canvas id="hero-canvas"></canvas>
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="hero-content relative z-10">
         <img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
-          class="h-16 md:h-20 mx-auto mb-5">
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">La fibra óptica más rápida de Tandil.</h1>
-        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">Velocidad y confiabilidad para streaming,
-          gaming y trabajo sin interrupciones.</p>
+          class="h-16 md:h-20 mx-auto mb-5" />
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
+          La fibra óptica más rápida de Tandil.
+        </h1>
+        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">
+          Velocidad y confiabilidad para streaming, gaming y trabajo sin
+          interrupciones.
+        </p>
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
           <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
           <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
@@ -617,16 +633,16 @@
     </section>
     <script>
       // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop, nunca repite la última)
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         const heroImagesDesktop = [
-          'assets/img/hero/hero1.jpg',
-          'assets/img/hero/hero2.jpg',
-          'assets/img/hero/hero3.jpg'
+          "assets/img/hero/hero1.jpg",
+          "assets/img/hero/hero2.jpg",
+          "assets/img/hero/hero3.jpg",
         ];
         const heroImagesMobile = [
-          'assets/img/hero/hero1_mobile.jpg',
-          'assets/img/hero/hero2_mobile.jpg',
-          'assets/img/hero/hero3_mobile.jpg'
+          "assets/img/hero/hero1_mobile.jpg",
+          "assets/img/hero/hero2_mobile.jpg",
+          "assets/img/hero/hero3_mobile.jpg",
         ];
 
         function isMobile() {
@@ -634,18 +650,18 @@
         }
 
         function getLastHeroImgKey() {
-          return isMobile() ? 'lastHeroImgMobile' : 'lastHeroImgDesktop';
+          return isMobile() ? "lastHeroImgMobile" : "lastHeroImgDesktop";
         }
 
         function setHeroBackground() {
-          const heroContainer = document.getElementById('hero-container');
+          const heroContainer = document.getElementById("hero-container");
           if (!heroContainer) return;
           const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
           const lastImgKey = getLastHeroImgKey();
           const lastImg = sessionStorage.getItem(lastImgKey);
 
           // Filtrar la última imagen usada
-          const availableImages = images.filter(img => img !== lastImg);
+          const availableImages = images.filter((img) => img !== lastImg);
           // Si solo queda una (o ninguna), usar la lista completa
           const pool = availableImages.length > 0 ? availableImages : images;
           const randomImg = pool[Math.floor(Math.random() * pool.length)];
@@ -655,8 +671,8 @@
 
         // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
         function setHeroHeight() {
-          const nav = document.querySelector('.navbar-section');
-          const hero = document.getElementById('hero-container');
+          const nav = document.querySelector(".navbar-section");
+          const hero = document.getElementById("hero-container");
           if (nav && hero) {
             const navHeight = nav.offsetHeight;
             hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
@@ -666,58 +682,79 @@
         setHeroBackground();
         setHeroHeight();
 
-        window.addEventListener('resize', function () {
+        window.addEventListener("resize", function () {
           setHeroBackground();
           setHeroHeight();
         });
       });
     </script>
 
-
     <!-- =========== Services Section =========== -->
     <section class="py-16 md:py-24 bg-white" id="tv-section">
       <div class="container mx-auto px-6 max-w-7xl">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Una conexión pensada para vos</h2>
-          <p class="text-lg text-gray-600 mt-2">Todo lo que necesitás para tu hogar en un solo lugar.</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+            Una conexión pensada para vos
+          </h2>
+          <p class="text-lg text-gray-600 mt-2">
+            Todo lo que necesitás para tu hogar en un solo lugar.
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
-            <div class="text-blue-600 mb-4"><i class="fas fa-tv fa-3x"></i></div>
+            <div class="text-blue-600 mb-4">
+              <i class="fas fa-tv fa-3x"></i>
+            </div>
             <h3 class="text-2xl font-bold mb-3">USITTEL TV</h3>
-            <p class="text-gray-600">Accedé a más de 100 canales en vivo, series y películas on-demand. Llevá tu tele a
-              donde vayas con la app en tus dispositivos.</p>
+            <p class="text-gray-600">
+              Accedé a más de 100 canales en vivo, series y películas
+              on-demand. Llevá tu tele a donde vayas con la app en tus
+              dispositivos.
+            </p>
           </div>
 
           <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
-            <div class="text-blue-600 mb-4"><i class="fas fa-rocket fa-3x"></i></div>
+            <div class="text-blue-600 mb-4">
+              <i class="fas fa-rocket fa-3x"></i>
+            </div>
             <h3 class="text-2xl font-bold mb-3">Internet Fibra Óptica</h3>
-            <p class="text-gray-600">Navegá a la velocidad de la luz con planes simétricos para trabajar, estudiar y
-              disfrutar del mejor entretenimiento.</p>
+            <p class="text-gray-600">
+              Navegá a la velocidad de la luz con planes simétricos para
+              trabajar, estudiar y disfrutar del mejor entretenimiento.
+            </p>
           </div>
 
           <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
-            <div class="text-blue-600 mb-4"><i class="fas fa-wifi fa-3x"></i></div>
+            <div class="text-blue-600 mb-4">
+              <i class="fas fa-wifi fa-3x"></i>
+            </div>
             <h3 class="text-2xl font-bold mb-3">WiFi Mesh</h3>
-            <p class="text-gray-600">Eliminá las zonas sin señal. Con nuestra tecnología WiFi Mesh, garantizamos
-              cobertura total en cada rincón de tu casa.</p>
+            <p class="text-gray-600">
+              Eliminá las zonas sin señal. Con nuestra tecnología WiFi Mesh,
+              garantizamos cobertura total en cada rincón de tu casa.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
     <section id="plans" class="py-12 md:py-20 bg-gray-100 text-[0.9rem] md:text-[0.95rem]">
-      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
+      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px">
         <div class="text-center mb-10 md:mb-10">
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Nuestros Planes</h2>
-          <p class="text-base md:text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Simple, transparente
-            y sin
-            sorpresas.</p>
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+            Nuestros Planes
+          </h2>
+          <p class="text-base md:text-lg text-gray-600 mt-2">
+            Elegí la velocidad perfecta para vos. Simple, transparente y sin
+            sorpresas.
+          </p>
         </div>
         <div class="flex justify-center mb-8 md:mb-10">
           <div class="plan-toggle scale-90">
-            <button id="internet-only-btn" class="active">Solo Internet</button>
+            <button id="internet-only-btn" class="active">
+              Solo Internet
+            </button>
             <button id="internet-tv-btn">Internet + TV</button>
             <button id="tv-only-btn">Solo TV</button>
           </div>
@@ -726,43 +763,55 @@
         <!-- Contenedor para la vista por defecto (Internet y Combos) -->
         <div id="default-plans-view">
           <div id="plan-cards-container"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto">
-          </div>
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto"></div>
           <div id="premium-packs-container-default" class="hidden">
             <div class="text-center my-10 pt-6 border-t border-gray-300">
-              <h3 class="text-xl md:text-2xl font-bold text-gray-900">Potenciá tu plan con Packs Premium</h3>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-900">
+                Potenciá tu plan con Packs Premium
+              </h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-7 max-w-4xl mx-auto">
               <!-- Card Pack Fútbol -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-                <b class="h-10 md:h-12 mb-3" style="font-size: xx-large;">PACK FUTBOL</b>
-                <p class="text-gray-600 font-medium flex-grow">Todo el fútbol de la Liga Profesional Argentina.</p>
-                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$15.599<span
-                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                <b class="h-10 md:h-12 mb-3" style="font-size: xx-large">PACK FUTBOL</b>
+                <p class="text-gray-600 font-medium flex-grow">
+                  Todo el fútbol de la Liga Profesional Argentina.
+                </p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">
+                  $15.599<span class="text-sm md:text-base font-normal text-gray-500">/mes</span>
+                </p>
               </div>
               <!-- Card HBO Max -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
-                <img src="assets/img/logos/max-logo-black.png" alt="Logo HBO MAX" class="h-10 md:h-12 mb-3">
-                <p class="text-gray-600 font-medium flex-grow">Disfrutá todos los canales premium de HBO y además tenés
-                  acceso a la app de MAX.</p>
-                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
-                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                <img src="assets/img/logos/max-logo-black.png" alt="Logo HBO MAX" class="h-10 md:h-12 mb-3" />
+                <p class="text-gray-600 font-medium flex-grow">
+                  Disfrutá todos los canales premium de HBO y además tenés
+                  acceso a la app de MAX.
+                </p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">
+                  $5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span>
+                </p>
               </div>
               <!-- Card Universal+ -->
               <div class="bg-white rounded-xl p-4 md:p-5 text-center flex flex-col items-center hover-glow-card">
                 <img src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
-                  class="h-10 md:h-12 mb-3">
-                <p class="text-gray-600 font-medium flex-grow">Acceso a todos los canales premium Universal y a la app
-                  de streaming Universal+.</p>
-                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">$5.999<span
-                    class="text-sm md:text-base font-normal text-gray-500">/mes</span></p>
+                  class="h-10 md:h-12 mb-3" />
+                <p class="text-gray-600 font-medium flex-grow">
+                  Acceso a todos los canales premium Universal y a la app de
+                  streaming Universal+.
+                </p>
+                <p class="text-xl md:text-2xl font-bold text-gray-900 my-2">
+                  $5.999<span class="text-sm md:text-base font-normal text-gray-500">/mes</span>
+                </p>
               </div>
             </div>
             <!-- Leyenda Aclaratoria -->
             <div class="text-center mt-6">
-              <p class="text-xs md:text-sm text-gray-500 max-w-2xl mx-auto"><i
-                  class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium
-                requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.
+              <p class="text-xs md:text-sm text-gray-500 max-w-2xl mx-auto">
+                <i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium
+                requiere
+                contar con un abono básico de Televisión activo. No pueden ser
+                adquiridos de forma individual.
               </p>
             </div>
           </div>
@@ -777,39 +826,50 @@
             </div>
             <!-- Columna Derecha: Packs Premium -->
             <div class="lg:col-span-2">
-              <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-left">Agregá Packs Premium</h3>
+              <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-left">
+                Agregá Packs Premium
+              </h3>
               <div class="space-y-4">
                 <!-- Card Pack Fútbol -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
                   <b class="h-20 w-20 rounded-lg object-contain flex-shrink-0"
-                    style="font-size: x-large; text-align: justify;">PACK FUTBOL</b>
+                    style="font-size: x-large; text-align: justify">PACK FUTBOL</b>
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack Fútbol</h4>
-                    <p class="text-sm text-gray-600">Viví todos los partidos de la liga argentina.</p>
-                    <p class="text-lg font-bold text-green-600 mt-1">$13.999<span
-                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                    <p class="text-sm text-gray-600">
+                      Viví todos los partidos de la liga argentina.
+                    </p>
+                    <p class="text-lg font-bold text-green-600 mt-1">
+                      $13.999<span class="text-sm font-normal text-gray-500">/mes</span>
+                    </p>
                   </div>
                 </div>
                 <!-- Card HBO Max -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
                   <img src="assets/img/logos/max-logo-black.png" alt="Logo HBO"
-                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
+                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0" />
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack HBO</h4>
-                    <p class="text-sm text-gray-600">Canales premium y acceso a la app MAX.</p>
-                    <p class="text-lg font-bold text-green-600 mt-1">$5.999<span
-                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                    <p class="text-sm text-gray-600">
+                      Canales premium y acceso a la app MAX.
+                    </p>
+                    <p class="text-lg font-bold text-green-600 mt-1">
+                      $5.999<span class="text-sm font-normal text-gray-500">/mes</span>
+                    </p>
                   </div>
                 </div>
                 <!-- Card Universal+ -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
                   <img src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
-                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0">
+                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0" />
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Universal+</h4>
-                    <p class="text-sm text-gray-600">Canales premium y acceso a la app de streaming.</p>
-                    <p class="text-lg font-bold text-green-600 mt-1">$5.999<span
-                        class="text-sm font-normal text-gray-500">/mes</span></p>
+                    <p class="text-sm text-gray-600">
+                      Canales premium y acceso a la app de streaming.
+                    </p>
+                    <p class="text-lg font-bold text-green-600 mt-1">
+                      $5.999<span class="text-sm font-normal text-gray-500">/mes</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -817,9 +877,11 @@
           </div>
           <!-- Leyenda Aclaratoria -->
           <div class="text-center mt-12 pt-8 border-t border-gray-200">
-            <p class="text-sm text-gray-500 max-w-2xl mx-auto"><i
-                class="fas fa-info-circle mr-1 text-blue-500"></i>Importante: La contratación de los packs premium
-              requiere contar con un abono básico de Televisión activo. No pueden ser adquiridos de forma individual.
+            <p class="text-sm text-gray-500 max-w-2xl mx-auto">
+              <i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante:
+              La contratación de los packs premium requiere contar con un
+              abono básico de Televisión activo. No pueden ser adquiridos de
+              forma individual.
             </p>
           </div>
         </div>
@@ -831,25 +893,41 @@
 
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
     <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
-      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px;">
+      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">¿Problemas de cobertura WiFi en tu casa?</h2>
-            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">Con la tecnología de <span class="font-bold">USITTEL
-                MESH</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+              ¿Problemas de cobertura WiFi en tu casa?
+            </h2>
+            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">
+              Con la tecnología de <span class="font-bold">USITTEL MESH</span>
+            </p>
+
             <div
               class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
-              style="border-color: #30a172; box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);">
+              style="
+                  border-color: #30a172;
+                  box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
+                    0 8px 10px -6px rgba(48, 161, 114, 0.15);
+                ">
               <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
-              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">$5.499 <span
-                  class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span></p>
+              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">
+                $5.499
+                <span class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span>
+              </p>
               <ul class="space-y-2 text-gray-600 mb-5">
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación:
-                  tecnología MESH de última generación.</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se
-                  adapta a tu hogar (hasta 4 equipos).</li>
-                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable:
-                  ideal para casas con muchos dispositivos.</li>
+                <li class="flex items-center">
+                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última
+                  generación.
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4
+                  equipos).
+                </li>
+                <li class="flex items-center">
+                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos
+                  dispositivos.
+                </li>
               </ul>
               <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
                 class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
@@ -859,14 +937,18 @@
           </div>
           <div class="w-full max-w-sm md:max-w-md mx-auto">
             <div class="mesh-carousel-container rounded-large">
-              <div class="mesh-slide active"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 1"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 2"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 3"></div>
-              <div class="mesh-slide"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full"
-                  alt="Equipo WiFi Mesh 4"></div>
+              <div class="mesh-slide active">
+                <img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 1" />
+              </div>
+              <div class="mesh-slide">
+                <img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 2" />
+              </div>
+              <div class="mesh-slide">
+                <img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 3" />
+              </div>
+              <div class="mesh-slide">
+                <img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 4" />
+              </div>
             </div>
             <div class="mesh-dots-container" id="mesh-dots-container"></div>
           </div>
@@ -875,25 +957,28 @@
         <div class="text-center mt-10">
           <a href="pages/mesh.html"
             class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
-            cómo la tecnología Mesh se integra con nuestra red de Fibra Óptica <span aria-hidden="true">→</span></a>
+            cómo la tecnología Mesh se integra con nuestra red de
+            Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
       </div>
       <script>
         // Carrousel automático para Mesh
-        document.addEventListener('DOMContentLoaded', function () {
-          const meshSlides = document.querySelectorAll('.mesh-slide');
-          const meshDotsContainer = document.getElementById('mesh-dots-container');
+        document.addEventListener("DOMContentLoaded", function () {
+          const meshSlides = document.querySelectorAll(".mesh-slide");
+          const meshDotsContainer = document.getElementById(
+            "mesh-dots-container"
+          );
           let currentMeshSlide = 0;
           let meshInterval;
 
           function createMeshDots() {
             if (!meshDotsContainer) return;
-            meshDotsContainer.innerHTML = '';
+            meshDotsContainer.innerHTML = "";
             meshSlides.forEach((_, i) => {
-              const dot = document.createElement('button');
-              dot.classList.add('mesh-dot');
-              if (i === 0) dot.classList.add('active');
-              dot.addEventListener('click', () => {
+              const dot = document.createElement("button");
+              dot.classList.add("mesh-dot");
+              if (i === 0) dot.classList.add("active");
+              dot.addEventListener("click", () => {
                 showMeshSlide(i);
                 resetMeshInterval();
               });
@@ -903,11 +988,15 @@
 
           function showMeshSlide(n) {
             if (!meshSlides.length) return;
-            meshSlides[currentMeshSlide].classList.remove('active');
-            meshDotsContainer.children[currentMeshSlide].classList.remove('active');
+            meshSlides[currentMeshSlide].classList.remove("active");
+            meshDotsContainer.children[currentMeshSlide].classList.remove(
+              "active"
+            );
             currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-            meshSlides[currentMeshSlide].classList.add('active');
-            meshDotsContainer.children[currentMeshSlide].classList.add('active');
+            meshSlides[currentMeshSlide].classList.add("active");
+            meshDotsContainer.children[currentMeshSlide].classList.add(
+              "active"
+            );
           }
 
           function nextMeshSlide() {
@@ -930,24 +1019,30 @@
     <!-- =========== Network & Coverage Section (ORDEN 4 - UNIFICADA Y MODIFICADA) =========== -->
     <section id="network" class="py-16 md:py-24 bg-gray-100">
       <div class="container mx-auto px-6">
-        
-
         <!-- Parte de "Zona de Cobertura" integrada armoniosamente (MODIFICADO) -->
-        <div id="coverage" class="mt-20 md:mt-24 text-center" style="margin-top: -6px;">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Zona de cobertura actual</h2>
+        <div id="coverage" class="mt-20 md:mt-24 text-center" style="margin-top: -6px">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            Zona de cobertura actual
+          </h2>
           <div class="rounded-2xl overflow-hidden shadow-xl mb-12 max-w-5xl mx-auto">
             <!-- Contenedor del nuevo mapa interactivo -->
             <div id="coverage-map"></div>
           </div>
-          <br><br>
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Llegamos a tu casa?</h2>
-          <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">Verificá si nuestra red de fibra óptica ya está
-            disponible en tu domicilio e iniciá el cambio.</p>
+          <br /><br />
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+            ¿Llegamos a tu casa?
+          </h2>
+          <p class="text-lg text-gray-600 mt-2 mb-8 max-w-2xl mx-auto">
+            Verificá si nuestra red de fibra óptica ya está disponible en tu
+            domicilio e iniciá el cambio.
+          </p>
           <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
             <input type="text" id="address-input" placeholder="Ingresá tu dirección, ej: San Martín 550"
-              class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full sm:w-2/3 px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             <button id="coverage-button"
-              class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">Consultar</button>
+              class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button">
+              Consultar
+            </button>
           </div>
           <div id="coverage-result" class="mt-6 max-w-xl mx-auto"></div>
         </div>
@@ -959,7 +1054,9 @@
       <div class="container mx-auto px-6">
         <div class="bg-white p-8 lg:p-12 rounded-xl shadow-lg max-w-4xl mx-auto">
           <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+              Preguntas Frecuentes
+            </h2>
           </div>
           <div id="faq-accordion" class="divide-y divide-gray-200">
             <!-- Pregunta 1 -->
@@ -969,10 +1066,14 @@
                 <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">Significa que tenés la misma velocidad de subida que de bajada. Esto es ideal para
-                  videollamadas,
-                  subir contenido a redes sociales, jugar online y trabajar con archivos en la nube, ya que la conexión
-                  es igual de rápida en ambas direcciones.</p><br>
+                <p class="pt-2">
+                  Significa que tenés la misma velocidad de subida que de
+                  bajada. Esto es ideal para videollamadas, subir contenido a
+                  redes sociales, jugar online y trabajar con archivos en la
+                  nube, ya que la conexión es igual de rápida en ambas
+                  direcciones.
+                </p>
+                <br />
               </div>
             </div>
             <!-- Pregunta 2 -->
@@ -982,10 +1083,13 @@
                 <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un
-                  técnico
-                  especializado coordinará una visita para realizar la instalación del cable de fibra óptica y dejar el
-                  módem configurado y funcionando.</p><br>
+                <p class="pt-2">
+                  Una vez que contratás el servicio y confirmamos la
+                  disponibilidad en tu domicilio, un técnico especializado
+                  coordinará una visita para realizar la instalación del cable
+                  de fibra óptica y dejar el módem configurado y funcionando.
+                </p>
+                <br />
               </div>
             </div>
             <!-- Pregunta 3 -->
@@ -995,9 +1099,13 @@
                 <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">Sí, podés conectar tu propio router a nuestro módem (ONT). Sin embargo, para garantizar
-                  la mejor
-                  experiencia y cobertura, recomendamos nuestros equipos y la solución WiFi Mesh.</p><br>
+                <p class="pt-2">
+                  Sí, podés conectar tu propio router a nuestro módem (ONT).
+                  Sin embargo, para garantizar la mejor experiencia y
+                  cobertura, recomendamos nuestros equipos y la solución WiFi
+                  Mesh.
+                </p>
+                <br />
               </div>
             </div>
             <!-- Pregunta 4 -->
@@ -1007,10 +1115,13 @@
                 <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">Podés comunicarte con nuestro centro de atención al cliente por teléfono, WhatsApp o a
-                  través de
-                  nuestra área de autogestión. Nuestro equipo de soporte técnico local te ayudará a resolver cualquier
-                  inconveniente.</p><br>
+                <p class="pt-2">
+                  Podés comunicarte con nuestro centro de atención al cliente
+                  por teléfono, WhatsApp o a través de nuestra área de
+                  autogestión. Nuestro equipo de soporte técnico local te
+                  ayudará a resolver cualquier inconveniente.
+                </p>
+                <br />
               </div>
             </div>
           </div>
@@ -1026,25 +1137,30 @@
           <div>
             <h3 class="text-2xl font-bold mb-4">Envianos tu consulta</h3>
             <form id="contact-form" action="process_form.php" method="POST" class="space-y-4">
-              <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name"
+              <div>
+                <label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name"
                   placeholder="Nombre y Apellido"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email"
+                <div>
+                  <label for="email" class="sr-only">Email</label><input type="email" name="email" id="email"
                     placeholder="Email"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
-                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone"
+                <div>
+                  <label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone"
                     placeholder="Teléfono"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
-              <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject"
+              <div>
+                <label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject"
                   placeholder="Asunto"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
-              <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4"
+              <div>
+                <label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4"
                   placeholder="Escribí tu mensaje..."
                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
@@ -1052,8 +1168,9 @@
                 <div class="g-recaptcha" data-sitekey="6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0"></div>
               </div>
               <button type="submit" id="submit-btn"
-                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
-                Mensaje</button>
+                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">
+                Enviar Mensaje
+              </button>
               <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
             </form>
           </div>
@@ -1062,106 +1179,143 @@
             <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
-                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                width="100%" height="300" style="border: 0" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="mt-4 text-gray-600 space-y-3">
-              <p class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-blue-500"></i>Nigro 575,
-                Tandil, Buenos aires.</p>
-              <p class="flex items-center gap-3"><i class="fa-solid fa-phone text-blue-500"></i>0800-199-4545</p>
-              <p class="flex items-center gap-3"><i
-                  class="fa-solid fa-envelope text-blue-500"></i>contacto@usittel.com.ar</p>
+              <p class="flex items-center gap-3">
+                <i class="fa-solid fa-location-dot text-blue-500"></i>Nigro
+                575, Tandil, Buenos aires.
+              </p>
+              <p class="flex items-center gap-3">
+                <i class="fa-solid fa-phone text-blue-500"></i>0800-199-4545
+              </p>
+              <p class="flex items-center gap-3">
+                <i class="fa-solid fa-envelope text-blue-500"></i>contacto@usittel.com.ar
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
   </main>
 
   <footer class="bg-gray-800 text-white pt-16 pb-8">
     <div class="container mx-auto px-6 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Columna de Contacto y Horarios -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                <div class="space-y-3 text-gray-300">
-                    <p class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                        <span>Nigro 575, Tandil</span>
-                    </p>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span>+54 9 249 406-0345</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
-                    </div>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <span>0800-199-4545</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                    </div>
-                </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i class="fab fa-whatsapp text-green-400"></i>
+                <span>+54 9 249 406-0345</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">
+                L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.
+              </p>
             </div>
-
-            <!-- Columna de Servicios -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="pages/internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                    <li><a href="pages/tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-                    <li><a href="pages/mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                </ul>
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
             </div>
-
-            <!-- Columna de Soporte -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="pages/centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                    <li><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="pages/baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Legal y Logo -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                <ul class="space-y-2">
-                    <li><a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-                </ul>
-                <div class="pt-4">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
-                </div>
-            </div>
+          </div>
         </div>
 
-        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-            </div>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="pages/internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="pages/tv.html" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="pages/mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+          </ul>
         </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="pages/centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a>
+            </li>
+            <li>
+              <a href="pages/baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
 
   <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
+  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%">
     <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-       class="flex items-center no-underline group hover:no-underline focus:no-underline"
-       aria-label="Chateá con nosotros por WhatsApp">
+      class="flex items-center no-underline group hover:no-underline focus:no-underline"
+      aria-label="Chateá con nosotros por WhatsApp">
       <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-            style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
+        style="font-size: 37.8px; width: 50.4px; height: 50.4px">
         <i class="fab fa-whatsapp"></i>
       </span>
-      <span class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors" style="min-width: 126px;">
+      <span
+        class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors"
+        style="min-width: 126px">
         <span>¿Necesitás ayuda?</span>
         <span class="font-semibold mt-0.5">Chateá con nosotros</span>
       </span>
@@ -1169,14 +1323,28 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       // Mobile Menu Logic
-      const hamburger = document.getElementById('hamburger'), mobileMenu = document.getElementById('mobileMenu'), overlay = document.getElementById('overlay'), closeMenu = document.getElementById('closeMenu'), toggleProducts = document.getElementById('toggleProducts'), productsSubmenu = document.getElementById('productsSubmenu');
-      function toggleMenu() { mobileMenu.classList.toggle('show'); overlay.classList.toggle('show'); }
-      if (hamburger) hamburger.addEventListener('click', toggleMenu);
-      if (overlay) overlay.addEventListener('click', toggleMenu);
-      if (closeMenu) closeMenu.addEventListener('click', toggleMenu);
-      if (toggleProducts) { toggleProducts.addEventListener('click', (e) => { e.preventDefault(); productsSubmenu.style.display = productsSubmenu.style.display === 'flex' ? 'none' : 'flex'; }); }
+      const hamburger = document.getElementById("hamburger"),
+        mobileMenu = document.getElementById("mobileMenu"),
+        overlay = document.getElementById("overlay"),
+        closeMenu = document.getElementById("closeMenu"),
+        toggleProducts = document.getElementById("toggleProducts"),
+        productsSubmenu = document.getElementById("productsSubmenu");
+      function toggleMenu() {
+        mobileMenu.classList.toggle("show");
+        overlay.classList.toggle("show");
+      }
+      if (hamburger) hamburger.addEventListener("click", toggleMenu);
+      if (overlay) overlay.addEventListener("click", toggleMenu);
+      if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
+      if (toggleProducts) {
+        toggleProducts.addEventListener("click", (e) => {
+          e.preventDefault();
+          productsSubmenu.style.display =
+            productsSubmenu.style.display === "flex" ? "none" : "flex";
+        });
+      }
 
       // Plans Section Logic
       const plansData = {
@@ -1193,13 +1361,14 @@
             ],
             popular: false,
             promoMonths: "3",
-            promoFinal: "Precio final: $22.988,79 <br> a partir del 4to mes.<br>",
+            promoFinal:
+              "Precio final: $22.988,79 <br> a partir del 4to mes.<br>",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
             El precio promocional de $14.499 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $22.988,79.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente. <br><br>`
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente. <br><br>`,
           },
-            {
+          {
             name: "Fibra 300",
             speed: "300 Mbps",
             symmetric: true,
@@ -1211,13 +1380,14 @@
             ],
             popular: true,
             promoMonths: "6",
-            promoFinal: "Precio final: $26.998 <br> (precio fijo hasta el mes 9).",
+            promoFinal:
+              "Precio final: $26.998 <br> (precio fijo hasta el mes 9).",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
             El precio promocional de $15.999 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes nueve (9) inclusive, el precio será de $26.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio de lista del servicio se mantiene fijo hasta el mes 9.`
-            },
-            {
+            El precio de lista del servicio se mantiene fijo hasta el mes 9.`,
+          },
+          {
             name: "Fibra 500",
             speed: "500 Mbps",
             symmetric: true,
@@ -1229,12 +1399,13 @@
             ],
             popular: false,
             promoMonths: "6",
-            promoFinal: "Precio final: $34.999 <br> (precio fijo hasta el mes 12).",
+            promoFinal:
+              "Precio final: $34.999 <br> (precio fijo hasta el mes 12).",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
             El precio promocional de $19.249,10 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes doce (12) inclusive, el precio será de $34.999.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio de lista del servicio se mantiene fijo hasta el mes 12.`
-            }
+            El precio de lista del servicio se mantiene fijo hasta el mes 12.`,
+          },
         ],
         internetTv: [
           {
@@ -1246,16 +1417,17 @@
               "Instalación 100% bonificada",
               "Pack Sensa TV incluido",
               "+100 canales en vivo",
-              "Contenido On-Demand"
+              "Contenido On-Demand",
             ],
             popular: false,
             promoMonths: "3",
-            promoFinal: "Precio final: $36.987,79 a partir del 4to mes en combo.",
+            promoFinal:
+              "Precio final: $36.987,79 a partir del 4to mes en combo.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
             El precio promocional de $23.328 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $36.987,79.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
           {
             name: "Fibra 300 + TV",
@@ -1266,7 +1438,7 @@
               "Instalación 100% bonificada",
               "Pack Sensa TV incluido",
               "Ideal para toda la familia",
-              "Mirá en múltiples pantallas"
+              "Mirá en múltiples pantallas",
             ],
             popular: true,
             promoMonths: "6",
@@ -1275,7 +1447,7 @@
             El precio promocional de $24.295 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes nueve (9) inclusive, el precio será de $40.997.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
           {
             name: "Fibra 500 + TV",
@@ -1286,17 +1458,18 @@
               "Instalación 100% bonificada",
               "Pack Sensa TV incluido",
               "La experiencia completa",
-              "Velocidad y entretenimiento"
+              "Velocidad y entretenimiento",
             ],
             popular: false,
             promoMonths: "6",
-            promoFinal: "Precio final: $48.998 (precio fijo hasta el mes 12).",
+            promoFinal:
+              "Precio final: $48.998 (precio fijo hasta el mes 12).",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
             El precio promocional de $26.948 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes doce (12) inclusive, el precio será de $48.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
-          }
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
+          },
         ],
         soloTv: [
           {
@@ -1308,60 +1481,76 @@
               "Más de 100 canales en vivo",
               "Series y películas On-Demand",
               "Acceso a la app Sensa multidispositivo",
-              "No requiere Internet de Usittel"
+              "No requiere Internet de Usittel",
             ],
-            popular: true
-          }
-        ]
+            popular: true,
+          },
+        ],
       };
 
-      const defaultPlansView = document.getElementById('default-plans-view');
-      const soloTvView = document.getElementById('solo-tv-view');
-      const planCardsContainer = document.getElementById('plan-cards-container');
-      const soloTvCardContainer = document.getElementById('solo-tv-card-container');
-      const premiumPacksDefault = document.getElementById('premium-packs-container-default');
+      const defaultPlansView = document.getElementById("default-plans-view");
+      const soloTvView = document.getElementById("solo-tv-view");
+      const planCardsContainer = document.getElementById(
+        "plan-cards-container"
+      );
+      const soloTvCardContainer = document.getElementById(
+        "solo-tv-card-container"
+      );
+      const premiumPacksDefault = document.getElementById(
+        "premium-packs-container-default"
+      );
 
-      const internetBtn = document.getElementById('internet-only-btn');
-      const internetTvBtn = document.getElementById('internet-tv-btn');
-      const tvOnlyBtn = document.getElementById('tv-only-btn');
+      const internetBtn = document.getElementById("internet-only-btn");
+      const internetTvBtn = document.getElementById("internet-tv-btn");
+      const tvOnlyBtn = document.getElementById("tv-only-btn");
 
       // NUEVO: El texto de condiciones se muestra en todos los contenedores a la vez
 
       function createPlanCard(plan, type) {
-        const isSoloTvPlan = type === 'soloTv';
-        const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-8';
-        const speedLine = plan.speed.includes('Mbps')
-          ? `<p class="text-gray-500 mb-2">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
+        const isSoloTvPlan = type === "soloTv";
+        const paddingClass = isSoloTvPlan ? "p-8 md:p-10" : "p-8";
+        const speedLine = plan.speed.includes("Mbps")
+          ? `<p class="text-gray-500 mb-2">${plan.speed} ${plan.symmetric ? "Simétricos" : ""
+          }</p>`
           : `<p class="text-blue-600 font-semibold mb-2">${plan.speed}</p>`;
 
         // Render features, supporting custom icon for object items
-        const featuresHtml = plan.features.map(feature => {
-          if (typeof feature === 'string') {
-            return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
-          } else if (typeof feature === 'object' && feature.icon) {
-            return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
-          }
-          return '';
-        }).join('');
+        const featuresHtml = plan.features
+          .map((feature) => {
+            if (typeof feature === "string") {
+              return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
+            } else if (typeof feature === "object" && feature.icon) {
+              return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
+            }
+            return "";
+          })
+          .join("");
 
         // Mostrar el enlace de condiciones en internet e internetTv
-        let promoHtml = '';
-        if (type === 'internet' || type === 'internetTv') {
+        let promoHtml = "";
+        if (type === "internet" || type === "internetTv") {
           promoHtml = `
-        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${new Intl.NumberFormat('es-AR').format(plan.price)} por ${plan.promoMonths || '3'} meses</div>
-        <div class="text-xs text-gray-500 mb-2">${plan.promoFinal || ''}</div>
+        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${new Intl.NumberFormat(
+            "es-AR"
+          ).format(plan.price)} por ${plan.promoMonths || "3"} meses</div>
+        <div class="text-xs text-gray-500 mb-2">${plan.promoFinal || ""}</div>
         <a href="#" class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 promo-toggle-link">Condiciones de la promoción</a>
         <div class="promo-details hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
-          ${plan.promo || ''}
+          ${plan.promo || ""}
         </div>
           `;
         }
 
-        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
+        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular
+            ? "border-blue-500 border-2 relative bg-white"
+            : "border-gray-200 bg-white"
+          }">
         <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
         ${speedLine}
         <div class="my-2">
-          <span class="text-4xl font-extrabold text-gray-900">${new Intl.NumberFormat('es-AR').format(plan.price)}</span>
+          <span class="text-4xl font-extrabold text-gray-900">${new Intl.NumberFormat(
+            "es-AR"
+          ).format(plan.price)}</span>
           <span class="text-gray-500"> $/mes</span>
         </div>
         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">${featuresHtml}</ul>
@@ -1372,129 +1561,148 @@
           class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
           <i class="fab fa-whatsapp"></i> Consultar
         </a>
-        ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>' : ''}
+        ${plan.popular
+            ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>'
+            : ""
+          }
         </div>`;
       }
 
       function displayPlans(type) {
-        internetBtn.classList.remove('active');
-        internetTvBtn.classList.remove('active');
-        tvOnlyBtn.classList.remove('active');
+        internetBtn.classList.remove("active");
+        internetTvBtn.classList.remove("active");
+        tvOnlyBtn.classList.remove("active");
 
-        if (type === 'soloTv') {
-          defaultPlansView.classList.add('hidden');
-          soloTvView.classList.remove('hidden');
-          soloTvCardContainer.innerHTML = createPlanCard(plansData.soloTv[0], 'soloTv');
-          tvOnlyBtn.classList.add('active');
+        if (type === "soloTv") {
+          defaultPlansView.classList.add("hidden");
+          soloTvView.classList.remove("hidden");
+          soloTvCardContainer.innerHTML = createPlanCard(
+            plansData.soloTv[0],
+            "soloTv"
+          );
+          tvOnlyBtn.classList.add("active");
         } else {
-          soloTvView.classList.add('hidden');
-          defaultPlansView.classList.remove('hidden');
+          soloTvView.classList.add("hidden");
+          defaultPlansView.classList.remove("hidden");
 
-          planCardsContainer.innerHTML = '';
-          plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
+          planCardsContainer.innerHTML = "";
+          plansData[type].forEach((plan) => {
+            planCardsContainer.innerHTML += createPlanCard(plan, type);
+          });
 
-          if (type === 'internet') {
-            internetBtn.classList.add('active');
-            premiumPacksDefault.classList.add('hidden');
-          } else if (type === 'internetTv') {
-            internetTvBtn.classList.add('active');
-            premiumPacksDefault.classList.remove('hidden');
+          if (type === "internet") {
+            internetBtn.classList.add("active");
+            premiumPacksDefault.classList.add("hidden");
+          } else if (type === "internetTv") {
+            internetTvBtn.classList.add("active");
+            premiumPacksDefault.classList.remove("hidden");
           }
         }
 
         // NUEVO: Agrega los event listeners para los toggles de las promociones después de renderizar
-        document.querySelectorAll('.promo-toggle-link').forEach(toggle => {
-          toggle.addEventListener('click', e => {
+        document.querySelectorAll(".promo-toggle-link").forEach((toggle) => {
+          toggle.addEventListener("click", (e) => {
             e.preventDefault();
-            document.querySelectorAll('.promo-details').forEach(detailsContainer => {
-              detailsContainer.classList.toggle('hidden');
-            });
+            document
+              .querySelectorAll(".promo-details")
+              .forEach((detailsContainer) => {
+                detailsContainer.classList.toggle("hidden");
+              });
           });
         });
 
-        const buttonContainer = document.getElementById('plan-info-button-container');
+        const buttonContainer = document.getElementById(
+          "plan-info-button-container"
+        );
         if (buttonContainer) {
-          let btnHTML = '';
-          if (type === 'internet') {
+          let btnHTML = "";
+          if (type === "internet") {
             btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
-          } else if (type === 'internetTv' || type === 'soloTv') {
+          } else if (type === "internetTv" || type === "soloTv") {
             btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }
       }
 
-      internetBtn.addEventListener('click', () => {
-        displayPlans('internet');
+      internetBtn.addEventListener("click", () => {
+        displayPlans("internet");
       });
-      internetTvBtn.addEventListener('click', () => {
-        displayPlans('internetTv');
+      internetTvBtn.addEventListener("click", () => {
+        displayPlans("internetTv");
       });
-      tvOnlyBtn.addEventListener('click', () => {
-        displayPlans('soloTv');
+      tvOnlyBtn.addEventListener("click", () => {
+        displayPlans("soloTv");
       });
 
       // Initial display
-      displayPlans('internet');
+      displayPlans("internet");
 
       // FAQ Accordion Logic
-      const faqContainer = document.getElementById('faq-accordion');
+      const faqContainer = document.getElementById("faq-accordion");
       if (faqContainer) {
-        const questions = faqContainer.querySelectorAll('.faq-question');
-        questions.forEach(question => {
-          question.addEventListener('click', () => {
+        const questions = faqContainer.querySelectorAll(".faq-question");
+        questions.forEach((question) => {
+          question.addEventListener("click", () => {
             const answer = question.nextElementSibling;
-            const isOpen = question.classList.contains('open');
+            const isOpen = question.classList.contains("open");
 
-            questions.forEach(q => {
+            questions.forEach((q) => {
               if (q !== question) {
-                q.classList.remove('open');
+                q.classList.remove("open");
                 q.nextElementSibling.style.maxHeight = null;
               }
             });
 
             if (isOpen) {
-              question.classList.remove('open');
+              question.classList.remove("open");
               answer.style.maxHeight = null;
             } else {
-              question.classList.add('open');
-              answer.style.maxHeight = answer.scrollHeight + 'px';
+              question.classList.add("open");
+              answer.style.maxHeight = answer.scrollHeight + "px";
             }
           });
         });
       }
 
       // Mesh Carousel Logic
-      const meshSlides = document.querySelectorAll('.mesh-slide');
-      const meshDotsContainer = document.getElementById('mesh-dots-container');
+      const meshSlides = document.querySelectorAll(".mesh-slide");
+      const meshDotsContainer = document.getElementById(
+        "mesh-dots-container"
+      );
       let currentMeshSlide = 0;
       function createMeshDots() {
         if (!meshDotsContainer) return;
-        meshDotsContainer.innerHTML = '';
+        meshDotsContainer.innerHTML = "";
         meshSlides.forEach((_, i) => {
-          const dot = document.createElement('button');
-          dot.classList.add('mesh-dot');
-          if (i === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => showMeshSlide(i));
+          const dot = document.createElement("button");
+          dot.classList.add("mesh-dot");
+          if (i === 0) dot.classList.add("active");
+          dot.addEventListener("click", () => showMeshSlide(i));
           meshDotsContainer.appendChild(dot);
         });
       }
       function showMeshSlide(n) {
         if (!meshSlides.length) return;
-        meshSlides[currentMeshSlide].classList.remove('active');
-        meshDotsContainer.children[currentMeshSlide].classList.remove('active');
+        meshSlides[currentMeshSlide].classList.remove("active");
+        meshDotsContainer.children[currentMeshSlide].classList.remove(
+          "active"
+        );
         currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-        meshSlides[currentMeshSlide].classList.add('active');
-        meshDotsContainer.children[currentMeshSlide].classList.add('active');
+        meshSlides[currentMeshSlide].classList.add("active");
+        meshDotsContainer.children[currentMeshSlide].classList.add("active");
       }
-      if (meshSlides.length > 1) { createMeshDots(); }
+      if (meshSlides.length > 1) {
+        createMeshDots();
+      }
 
       // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (NUEVO Y ACTUALIZADO) ---
-      const map = L.map('coverage-map').setView([-37.321, -59.135], 13);
+      const map = L.map("coverage-map").setView([-37.321, -59.135], 13);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution:
+          '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
       // Coordenadas actualizadas para reflejar los nuevos límites
@@ -1510,14 +1718,13 @@
         [-37.31117, -59.11508],
         [-37.30675, -59.12081],
         [-37.30661, -59.12126],
-
       ];
 
       const polygon = L.polygon(coverageAreaCoords, {
-        color: '#2563EB',      // Color del borde (azul oscuro)
-        weight: 3,             // Grosor del borde
-        fillColor: '#3B82F6',  // Color de relleno (azul)
-        fillOpacity: 0.45      // Opacidad del relleno
+        color: "#2563EB", // Color del borde (azul oscuro)
+        weight: 3, // Grosor del borde
+        fillColor: "#3B82F6", // Color de relleno (azul)
+        fillOpacity: 0.45, // Opacidad del relleno
       }).addTo(map);
 
       // El mapa se ajusta automáticamente para mostrar toda la zona de cobertura.
@@ -1531,16 +1738,17 @@
     // ===============================================
     // ===   LOGICA DE COBERTURA (SIN CAMBIOS)     ===
     // ===============================================
-    const coverageButton = document.getElementById('coverage-button');
-    const addressInput = document.getElementById('address-input');
-    const coverageResultContainer = document.getElementById('coverage-result');
+    const coverageButton = document.getElementById("coverage-button");
+    const addressInput = document.getElementById("address-input");
+    const coverageResultContainer =
+      document.getElementById("coverage-result");
 
     if (coverageButton) {
-      coverageButton.addEventListener('click', checkCoverage);
+      coverageButton.addEventListener("click", checkCoverage);
     }
 
     if (addressInput) {
-      addressInput.addEventListener('keyup', function (event) {
+      addressInput.addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
           coverageButton.click();
@@ -1548,24 +1756,32 @@
       });
     }
 
-
     function checkCoverage() {
       const address = addressInput.value.trim();
       addressInput.style.border = "1px solid #d1d5db"; // Reset border color
-      coverageResultContainer.innerHTML = ''; // Limpiar resultados anteriores
+      coverageResultContainer.innerHTML = ""; // Limpiar resultados anteriores
 
       if (address === "") {
         addressInput.style.border = "1px solid red";
-        displayMessage('Por favor, ingresá una dirección.', 'warning');
-        coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        displayMessage("Por favor, ingresá una dirección.", "warning");
+        coverageResultContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
         return;
       }
 
       const match = address.match(/^(.*?)\s+(\d+)/);
 
       if (!match) {
-        displayMessage('Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).', 'error');
-        coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        displayMessage(
+          "Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).",
+          "error"
+        );
+        coverageResultContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
         return;
       }
 
@@ -1714,13 +1930,21 @@
         { calle: "pje crucero gral belgrano casa", desde: 0, hasta: 1700 },
         { calle: "pasaje crucero gral belgrano casa", desde: 0, hasta: 1700 },
         { calle: "pasaje crucero gral belgrano ", desde: 0, hasta: 1700 },
-        { calle: "pje. crucero general belgrano casa", desde: 0, hasta: 1700 },
+        {
+          calle: "pje. crucero general belgrano casa",
+          desde: 0,
+          hasta: 1700,
+        },
         { calle: "pje. crucero general belgrano", desde: 0, hasta: 1700 },
         { calle: "crucero general belgrano", desde: 0, hasta: 1700 },
         { calle: "crucero general belgrano casa", desde: 0, hasta: 1700 },
         { calle: "pje crucero general belgrano", desde: 0, hasta: 1700 },
         { calle: "pje crucero general belgrano casa", desde: 0, hasta: 1700 },
-        { calle: "pasaje crucero general belgrano casa", desde: 0, hasta: 1700 },
+        {
+          calle: "pasaje crucero general belgrano casa",
+          desde: 0,
+          hasta: 1700,
+        },
         { calle: "pasaje crucero general belgrano ", desde: 0, hasta: 1700 },
         { calle: "pje. combate de obligado casa", desde: 0, hasta: 1700 },
         { calle: "pje. combate de obligado", desde: 0, hasta: 1700 },
@@ -1736,7 +1960,11 @@
         { calle: " Combatientes de malvinas casa", desde: 0, hasta: 1700 },
         { calle: "pje Combatientes de malvinas ", desde: 0, hasta: 1700 },
         { calle: "pje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
-        { calle: "pasaje Combatientes de malvinas casa", desde: 0, hasta: 1700 },
+        {
+          calle: "pasaje Combatientes de malvinas casa",
+          desde: 0,
+          hasta: 1700,
+        },
         { calle: "pasaje Combatientes de malvinas ", desde: 0, hasta: 1700 },
         { calle: "pje. S. Austral", desde: 0, hasta: 1700 },
         { calle: " S. Austral ", desde: 0, hasta: 1700 },
@@ -1835,13 +2063,25 @@
         { calle: "pasaje c. disney", desde: 0, hasta: 1800 },
         { calle: "pje c. disney", desde: 0, hasta: 1800 },
         { calle: "c. disney", desde: 0, hasta: 1800 },
-        { calle: "Pasaje interno barrio san francisco", desde: 1100, hasta: 1500 },
-        { calle: "pje interno barrio san francisco", desde: 1100, hasta: 1500 },
-        { calle: "Pasaje interno bo san francisco", desde: 1100, hasta: 1500 },
+        {
+          calle: "Pasaje interno barrio san francisco",
+          desde: 1100,
+          hasta: 1500,
+        },
+        {
+          calle: "pje interno barrio san francisco",
+          desde: 1100,
+          hasta: 1500,
+        },
+        {
+          calle: "Pasaje interno bo san francisco",
+          desde: 1100,
+          hasta: 1500,
+        },
         { calle: "liniers", desde: 1000, hasta: 1700 },
         { calle: "pje castelli", desde: 1100, hasta: 1800 },
         { calle: "Pasaje castelli", desde: 1100, hasta: 1800 },
-        { calle: "Castelli", desde: 1100, hasta: 1800 }
+        { calle: "Castelli", desde: 1100, hasta: 1800 },
       ];
 
       const normalizedStreet = normalizeString(streetName);
@@ -1849,7 +2089,11 @@
 
       for (const zona of zonasDeCobertura) {
         const normalizedZonaCalle = normalizeString(zona.calle);
-        if (normalizedStreet.includes(normalizedZonaCalle) && streetNumber >= zona.desde && streetNumber <= zona.hasta) {
+        if (
+          normalizedStreet.includes(normalizedZonaCalle) &&
+          streetNumber >= zona.desde &&
+          streetNumber <= zona.hasta
+        ) {
           isInCoverage = true;
           break;
         }
@@ -1869,7 +2113,7 @@
                 O si preferís, 
                 <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tu consulta</a> y te contactaremos.
             </p>`;
-        displayMessage(successMessage, 'success');
+        displayMessage(successMessage, "success");
       } else {
         const failureMessage = `
             <h3 class="text-2xl font-bold text-yellow-600">Aún no llegamos a tu domicilio</h3>
@@ -1880,10 +2124,13 @@
                 Por favor, 
                 <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tus datos de contacto</a> para que podamos avisarte en cuanto lleguemos a tu zona.
             </p>`;
-        displayMessage(failureMessage, 'warning');
+        displayMessage(failureMessage, "warning");
       }
 
-      coverageResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      coverageResultContainer.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
 
     function normalizeString(str) {
@@ -1891,26 +2138,29 @@
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
-        .replace(/[.,]/g, '') // Quita puntos y comas
+        .replace(/[.,]/g, "") // Quita puntos y comas
         .trim();
     }
 
     function displayMessage(message, type) {
-      let iconHTML = '';
-      let colorClasses = '';
+      let iconHTML = "";
+      let colorClasses = "";
 
       switch (type) {
-        case 'success':
-          iconHTML = '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
-          colorClasses = 'bg-green-50 border-green-200';
+        case "success":
+          iconHTML =
+            '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
+          colorClasses = "bg-green-50 border-green-200";
           break;
-        case 'warning':
-          iconHTML = '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
-          colorClasses = 'bg-yellow-50 border-yellow-200';
+        case "warning":
+          iconHTML =
+            '<i class="fas fa-info-circle fa-2x text-yellow-500 mb-3"></i>';
+          colorClasses = "bg-yellow-50 border-yellow-200";
           break;
-        case 'error':
-          iconHTML = '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
-          colorClasses = 'bg-red-50 border-red-200';
+        case "error":
+          iconHTML =
+            '<i class="fas fa-exclamation-triangle fa-2x text-red-500 mb-3"></i>';
+          colorClasses = "bg-red-50 border-red-200";
           break;
       }
 
@@ -1925,79 +2175,87 @@
 
   <!-- Script para manejar el formulario de contacto -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const contactForm = document.getElementById('contact-form');
-      const submitBtn = document.getElementById('submit-btn');
-      const formMessage = document.getElementById('form-message');
+    document.addEventListener("DOMContentLoaded", function () {
+      const contactForm = document.getElementById("contact-form");
+      const submitBtn = document.getElementById("submit-btn");
+      const formMessage = document.getElementById("form-message");
 
       if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener("submit", function (e) {
           e.preventDefault();
-          
+
           // Verificar reCAPTCHA
           const recaptchaResponse = grecaptcha.getResponse();
           if (!recaptchaResponse) {
-            showMessage('Por favor, completa el reCAPTCHA.', 'error');
+            showMessage("Por favor, completa el reCAPTCHA.", "error");
             return;
           }
 
           // Cambiar estado del botón
           const originalText = submitBtn.innerHTML;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+          submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Enviando...';
           submitBtn.disabled = true;
 
           // Crear FormData
           const formData = new FormData(contactForm);
-          formData.append('g-recaptcha-response', recaptchaResponse);
+          formData.append("g-recaptcha-response", recaptchaResponse);
 
           // Enviar formulario con fetch
-          fetch('process_form.php', {
-            method: 'POST',
-            body: formData
+          fetch("process_form.php", {
+            method: "POST",
+            body: formData,
           })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              showMessage(data.message, 'success');
-              contactForm.reset();
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                showMessage(data.message, "success");
+                contactForm.reset();
+                grecaptcha.reset();
+              } else {
+                showMessage(data.message, "error");
+                grecaptcha.reset();
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              showMessage(
+                "Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.",
+                "error"
+              );
               grecaptcha.reset();
-            } else {
-              showMessage(data.message, 'error');
-              grecaptcha.reset();
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            showMessage('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.', 'error');
-            grecaptcha.reset();
-          })
-          .finally(() => {
-            // Restaurar botón
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-          });
+            })
+            .finally(() => {
+              // Restaurar botón
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            });
         });
       }
 
       function showMessage(message, type) {
-        formMessage.className = 'mt-4 p-4 rounded-lg';
-        
-        if (type === 'success') {
-          formMessage.className += ' bg-green-100 border border-green-400 text-green-700';
-          formMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i>' + message;
+        formMessage.className = "mt-4 p-4 rounded-lg";
+
+        if (type === "success") {
+          formMessage.className +=
+            " bg-green-100 border border-green-400 text-green-700";
+          formMessage.innerHTML =
+            '<i class="fas fa-check-circle mr-2"></i>' + message;
         } else {
-          formMessage.className += ' bg-red-100 border border-red-400 text-red-700';
-          formMessage.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>' + message;
+          formMessage.className +=
+            " bg-red-100 border border-red-400 text-red-700";
+          formMessage.innerHTML =
+            '<i class="fas fa-exclamation-triangle mr-2"></i>' + message;
         }
-        
-        formMessage.classList.remove('hidden');
-        
+
+        formMessage.classList.remove("hidden");
+
         // Hacer scroll al mensaje
-        formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
+        formMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+
         // Ocultar mensaje después de 5 segundos
         setTimeout(() => {
-          formMessage.classList.add('hidden');
+          formMessage.classList.add("hidden");
         }, 5000);
       }
     });

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de NAPs - Usittel</title>
+    
+    <!-- Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet.js para el mapa interactivo -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style>
+        /* Estilo para que el mapa ocupe el espacio disponible */
+        #map {
+            height: 500px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        /* Estilos para el spinner de carga */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Overlay de carga inicial */
+        #initial-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans p-4 md:p-8">
+
+    <!-- Loader de Inicialización -->
+    <div id="initial-loader">
+        <div class="loader"></div>
+        <p id="loader-text" class="mt-4 text-gray-700 font-medium text-lg">Inicializando aplicación...</p>
+    </div>
+
+    <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 md:p-8">
+        
+        <!-- Cabecera -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Buscador de Cajas NAP</h1>
+            <p class="text-gray-500 mt-2">Herramienta de asistencia para el aprovisionamiento - Usittel</p>
+        </div>
+
+        <!-- Formulario de Búsqueda -->
+        <fieldset id="search-fieldset" disabled>
+            <div class="mb-8 flex flex-col sm:flex-row gap-4">
+                <input type="text" id="addressInput" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition disabled:bg-gray-200" placeholder="Ingrese la dirección del cliente en Tandil...">
+                <button id="searchButton" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors shadow-md disabled:bg-blue-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                    Buscar
+                </button>
+            </div>
+        </fieldset>
+
+        <!-- Contenedor de Resultados y Mapa -->
+        <div id="resultsContainer" class="hidden">
+            <div id="loading" class="hidden flex-col items-center justify-center my-10">
+                <div class="loader"></div>
+                <p class="mt-4 text-gray-600">Buscando dirección y calculando distancias...</p>
+            </div>
+            <div id="error" class="hidden p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                <span class="font-medium">Error:</span> <span id="error-message">No se pudo encontrar la dirección ingresada. Por favor, verifique que sea correcta e intente nuevamente.</span>
+            </div>
+            <div id="mapAndInfo" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Mapa de NAPs Cercanas</h2>
+                        <div class="flex items-center space-x-4">
+                            <span id="napCount" class="text-sm text-gray-600">Mostrando 10 NAPs más cercanas</span>
+                            <button id="showAllButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                Ver todas las NAPs
+                            </button>
+                        </div>
+                    </div>
+                    <div id="map"></div>
+                </div>
+                <div class="lg:col-span-1">
+                    <h2 class="text-2xl font-bold text-gray-700 mb-4">NAP Recomendada</h2>
+                    <div id="infoPanel" class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <!-- La información de la NAP más cercana se insertará aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mensaje inicial -->
+        <div id="initialMessage" class="text-center py-12 px-6 bg-gray-50 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <h3 class="mt-2 text-xl font-medium text-gray-900">Esperando dirección</h3>
+            <p class="mt-1 text-md text-gray-500">Ingrese la dirección de un cliente para encontrar la caja NAP más cercana y ver su disponibilidad.</p>
+        </div>
+
+    </div>
+
+    <script type="module">
+        // --- CONFIGURACIÓN Y DATOS ---
+        // Cargar datos de las NAPs desde archivo externo
+        let napData = [];
+        let localAddresses = {};
+        
+        // Función para cargar los datos de las NAPs
+        async function cargarDatosNAPs() {
+            try {
+                // Cargar base de datos local de direcciones
+                try {
+                    const addressesResponse = await fetch('tandil_addresses.json');
+                    if (addressesResponse.ok) {
+                        localAddresses = await addressesResponse.json();
+                        console.log('✅ Base de datos local de direcciones cargada.');
+                    }
+                } catch (error) {
+                    console.log('⚠️ No se pudo cargar la base de datos local de direcciones.');
+                }
+                
+                // Intentar cargar como JSON primero (más confiable)
+                try {
+                    const response = await fetch('nap_data.json');
+                    if (response.ok) {
+                        napData = await response.json();
+                        console.log(`✅ Se cargaron ${napData.length} NAPs desde archivo JSON.`);
+                        return true;
+                    }
+                } catch (jsonError) {
+                    console.log('⚠️ No se pudo cargar como JSON, intentando como JS...');
+                }
+                
+                // Fallback: cargar como JavaScript
+                const response = await fetch('nap_data.js');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const scriptContent = await response.text();
+                
+                console.log('📄 Contenido del archivo JS cargado:', scriptContent.substring(0, 200) + '...');
+                
+                // Crear un script element y agregarlo al DOM
+                const scriptElement = document.createElement('script');
+                scriptElement.type = 'text/javascript';
+                scriptElement.textContent = scriptContent;
+                
+                // Agregar el script al head del documento
+                document.head.appendChild(scriptElement);
+                
+                // Esperar un momento para que se ejecute
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                // Verificar si el array se cargó correctamente
+                if (typeof window.napData !== 'undefined' && Array.isArray(window.napData)) {
+                    napData = window.napData;
+                    console.log(`✅ Se cargaron ${napData.length} NAPs desde archivo JS.`);
+                    return true;
+                } else {
+                    console.error('❌ El array napData no se definió correctamente');
+                    console.log('Tipo de window.napData:', typeof window.napData);
+                    console.log('Contenido de window.napData:', window.napData);
+                    throw new Error('No se pudo cargar el array napData');
+                }
+            } catch (error) {
+                console.error('❌ Error al cargar datos de NAPs:', error);
+                return false;
+            }
+        }
+
+        const TANDIL_COORDS = [-37.3217, -59.1332]; // Coordenadas de Tandil para centrar el mapa
+        let map;
+        let clientMarker;
+        let napMarkers = [];
+        let showingAllNaps = false;
+        let currentClientCoords = null;
+
+        // --- ELEMENTOS DEL DOM ---
+        const addressInput = document.getElementById('addressInput');
+        const searchButton = document.getElementById('searchButton');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const initialMessage = document.getElementById('initialMessage');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const errorMessage = document.getElementById('error-message');
+        const mapAndInfoDiv = document.getElementById('mapAndInfo');
+        const infoPanel = document.getElementById('infoPanel');
+        const initialLoader = document.getElementById('initial-loader');
+        const loaderText = document.getElementById('loader-text');
+        const searchFieldset = document.getElementById('search-fieldset');
+        const showAllButton = document.getElementById('showAllButton');
+        const napCount = document.getElementById('napCount');
+
+        // --- FUNCIONES ---
+
+        /**
+         * Busca una dirección en la base de datos local.
+         */
+        function findLocalAddress(address) {
+            const searchTerms = address.toLowerCase().split(' ');
+            const street = searchTerms[0];
+            const number = searchTerms[1];
+            
+            if (localAddresses[street] && localAddresses[street][number]) {
+                console.log(`📍 Dirección encontrada en base de datos local: ${street} ${number}`);
+                return localAddresses[street][number];
+            }
+            
+            // Buscar variaciones (ej: "pellegrini" vs "av pellegrini")
+            const variations = [
+                street,
+                street.replace('av', '').replace('avenida', '').trim(),
+                street.replace('calle', '').trim(),
+                street.replace('general', 'gral').trim(),
+                street.replace('gral', 'general').trim()
+            ];
+            
+            for (const variation of variations) {
+                if (localAddresses[variation] && localAddresses[variation][number]) {
+                    console.log(`📍 Dirección encontrada en base de datos local (variación): ${variation} ${number}`);
+                    return localAddresses[variation][number];
+                }
+            }
+            
+            return null;
+        }
+        
+        /**
+         * Geolocaliza una dirección usando múltiples servicios.
+         */
+        async function geocodeAddress(address) {
+            const fullAddress = `${address}, Tandil, Buenos Aires, Argentina`;
+            
+            // Intentar con múltiples servicios en paralelo
+            const services = [
+                // Servicio 0: Base de datos local (más rápido)
+                async () => {
+                    const localResult = findLocalAddress(address);
+                    if (localResult) {
+                        return { lat: localResult.lat, lon: localResult.lon, service: 'LocalDB' };
+                    }
+                    return null;
+                },
+                
+                // Servicio 1: Nominatim (OpenStreetMap)
+                async () => {
+                    const encodedAddress = encodeURIComponent(fullAddress);
+                    const url = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    
+                    try {
+                        const response = await fetch(url, { 
+                            headers: { 
+                                'User-Agent': 'UsittelNAPFinder/1.1',
+                                'Accept': 'application/json'
+                            },
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+                        
+                        if (!response.ok) throw new Error('Nominatim response not ok');
+                        const data = await response.json();
+                        if (data && data.length > 0) {
+                            return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), service: 'Nominatim' };
+                        }
+                    } catch (error) {
+                        console.log('Nominatim falló:', error.message);
+                    }
+                    return null;
+                },
+                
+                // Servicio 2: Geocoding API de Google (gratuita, sin API key)
+                async () => {
+                    const encodedAddress = encodeURIComponent(fullAddress);
+                    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg`;
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    
+                    try {
+                        const response = await fetch(url, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        
+                        if (!response.ok) throw new Error('Google response not ok');
+                        const data = await response.json();
+                        if (data.results && data.results.length > 0) {
+                            const location = data.results[0].geometry.location;
+                            return { lat: location.lat, lon: location.lng, service: 'Google' };
+                        }
+                    } catch (error) {
+                        console.log('Google falló:', error.message);
+                    }
+                    return null;
+                },
+                
+                // Servicio 3: Búsqueda local inteligente
+                async () => {
+                    console.log("🔍 Intentando búsqueda local por dirección similar...");
+                    const similarNap = findSimilarAddress(address);
+                    if (similarNap) {
+                        console.log(`📍 Encontrada NAP similar: ${similarNap.direccion}`);
+                        return { lat: similarNap.lat, lon: similarNap.lon, service: 'Local' };
+                    }
+                    return null;
+                }
+            ];
+            
+            // Ejecutar todos los servicios en paralelo
+            const results = await Promise.allSettled(services.map(service => service()));
+            
+            // Encontrar el primer resultado exitoso
+            for (const result of results) {
+                if (result.status === 'fulfilled' && result.value) {
+                    const coords = result.value;
+                    console.log(`✅ Geolocalización exitosa con ${coords.service}: ${coords.lat}, ${coords.lon}`);
+                    
+                    // Si se usó búsqueda local, mostrar mensaje informativo
+                    if (coords.service === 'Local') {
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = 'p-3 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg';
+                        infoDiv.innerHTML = `<strong>ℹ️ Información:</strong> No se pudo geolocalizar la dirección exacta. Se está usando una ubicación aproximada basada en una NAP cercana.`;
+                        document.querySelector('.max-w-6xl').insertBefore(infoDiv, document.getElementById('resultsContainer'));
+                        
+                        setTimeout(() => {
+                            if (infoDiv.parentNode) {
+                                infoDiv.parentNode.removeChild(infoDiv);
+                            }
+                        }, 5000);
+                    } else if (coords.service === 'LocalDB') {
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = 'p-3 mb-4 text-sm text-green-700 bg-green-100 rounded-lg';
+                        infoDiv.innerHTML = `<strong>✅ Dirección encontrada:</strong> Ubicación obtenida de la base de datos local de Tandil.`;
+                        document.querySelector('.max-w-6xl').insertBefore(infoDiv, document.getElementById('resultsContainer'));
+                        
+                        setTimeout(() => {
+                            if (infoDiv.parentNode) {
+                                infoDiv.parentNode.removeChild(infoDiv);
+                            }
+                        }, 5000);
+                    }
+                    
+                    return { lat: coords.lat, lon: coords.lon };
+                }
+            }
+            
+            console.error("❌ Todos los servicios de geolocalización fallaron para:", address);
+            return null;
+        }
+        
+        /**
+         * Busca una dirección similar en las NAPs locales como fallback.
+         */
+        function findSimilarAddress(address) {
+            const searchTerms = address.toLowerCase().split(' ');
+            const bestMatches = [];
+            
+            // Buscar NAPs que contengan términos de búsqueda
+            for (const nap of napData) {
+                const napAddress = nap.direccion.toLowerCase();
+                const napTerms = napAddress.split(' ');
+                
+                let matchScore = 0;
+                let hasStreetMatch = false;
+                
+                // Verificar coincidencias de calle
+                for (const term of searchTerms) {
+                    if (term.length > 2) {
+                        // Buscar coincidencias exactas de calle
+                        for (const napTerm of napTerms) {
+                            if (napTerm.includes(term) || term.includes(napTerm)) {
+                                // Si es una calle conocida, dar más puntos
+                                if (isKnownStreet(term)) {
+                                    matchScore += 10;
+                                    hasStreetMatch = true;
+                                } else {
+                                    matchScore += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Solo considerar si hay coincidencia de calle
+                if (hasStreetMatch && matchScore > 0) {
+                    bestMatches.push({ nap, score: matchScore });
+                }
+            }
+            
+            // Ordenar por puntuación y devolver el mejor
+            if (bestMatches.length > 0) {
+                bestMatches.sort((a, b) => b.score - a.score);
+                console.log(`🔍 Mejor coincidencia encontrada: ${bestMatches[0].nap.direccion} (puntuación: ${bestMatches[0].score})`);
+                return bestMatches[0].nap;
+            }
+            
+            return null;
+        }
+        
+        /**
+         * Verifica si un término es una calle conocida en Tandil.
+         */
+        function isKnownStreet(term) {
+            const knownStreets = [
+                'pellegrini', 'montiel', 'buzon', 'saavedra', 'moreno', 'alsina', 
+                'santamarina', 'roca', 'abril', 'paz', 'marconi', 'mitre', 'avellaneda',
+                'haiti', 'cuba', 'colombia', 'newton', 'liniers', 'franklin', 'mexico',
+                'guatemala', 'honduras', 'rauch', 'piedrabuena', 'pinero', 'gomez',
+                'peyrel', 'uriburu', 'arana', 'machado', 'balbin', 'espora', 'edison',
+                'jurado', 'primera', 'junta', 'guemes', 'pio', 'castelli', 'montevideo',
+                'garibaldi', 'heras', 'colon', 'alem', 'sta', 'ana', 'gran', 'gral',
+                'general', 'belgrano', 'san', 'martin', 'sarmiento', 'maipu', 'pinto',
+                'brandsen', 'ezeiza', 'suipacha', 'jujuy', 'kramer', 'garcia', 'cardiel',
+                'canal', 'animas', 'pasteur', 'granaderos', 'malvinas', 'saenz', 'pena',
+                'valle', 'fournier', 'chacabuco', 'independencia', 'rodriguez', 'julio',
+                'lorenzo', 'bolivia', 'dhers', 'chaco', 'saavedra', 'lamas', 'rosales',
+                'basilico', 'muniz', 'ijurco', 'chapaleofu', 'caseros', 'casacuberta',
+                'salceda', 'mons', 'actis', 'loberia', 'tacuari', 'aeronautica',
+                'argentina', 'quintana', 'guido', 'argerich', 'fleming', 'ariztegui',
+                'patagonia', 'cheverrier', 'juan', 'justo', 'san', 'francisco',
+                'ameghino', 'ruta', 'de', 'la', 'costa', 'del', 'valle'
+            ];
+            
+            return knownStreets.includes(term.toLowerCase());
+        }
+
+        /**
+         * Calcula la distancia en metros entre dos puntos geográficos (fórmula de Haversine).
+         */
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Radio de la Tierra en metros
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // en metros
+        }
+        
+        /**
+         * Crea un icono de color para la NAP según su disponibilidad.
+         */
+        function createNapIcon(availability) {
+            let color;
+            if (availability > 0.5) color = '#22c55e'; // Más del 50% libre - verde
+            else if (availability > 0.1) color = '#f97316'; // Más del 10% libre - naranja
+            else color = '#ef4444'; // 10% o menos libre - rojo
+            return L.divIcon({
+                html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${color}" class="w-8 h-8 drop-shadow-lg"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.1.4-.27.61-.473A10.764 10.764 0 0014.25 16C15.503 15.092 16.5 13.51 16.5 12c0-1.51-.997-3.092-2.25-4 .996-1.141 1.5-2.578 1.5-4 0-3.866-3.582-7-8-7s-8 3.134-8 7c0 1.422.504 2.859 1.5 4-1.253.908-2.25 2.49-2.25 4 0 1.51.997 3.092 2.25 4a10.764 10.764 0 003.125 2.231c.21.203.424.373.61.473.097.054.192.103.28.14l.018.008.006.003zM10 11.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd" /></svg>`,
+                className: '', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32]
+            });
+        }
+        
+        /**
+         * Inicializa el mapa y prepara los datos de las NAPs.
+         */
+        async function initializeApp() {
+            // Actualizar texto del loader
+            loaderText.textContent = 'Cargando datos de NAPs...';
+            
+            // Cargar datos de NAPs desde archivo externo
+            const datosCargados = await cargarDatosNAPs();
+            if (!datosCargados) {
+                loaderText.textContent = 'Error al cargar datos. Recargando...';
+                setTimeout(() => window.location.reload(), 3000);
+                return;
+            }
+            
+            // Simular carga inicial
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            map = L.map('map', {
+                zoomControl: true,
+                attributionControl: true
+            }).setView(TANDIL_COORDS, 13);
+            
+            // Cargar el mapa inmediatamente para evitar el gris
+            const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+                minZoom: 10
+            }).addTo(map);
+            
+            // Forzar la carga de tiles
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
+
+            // Procesar datos de las NAPs
+            napData.forEach(nap => {
+                const puertosLibres = nap.puertosTotales - nap.puertosOcupados;
+                const disponibilidad = nap.puertosTotales > 0 ? puertosLibres / nap.puertosTotales : 0;
+                nap.puertosLibres = puertosLibres;
+                nap.disponibilidad = disponibilidad;
+            });
+            
+            // Pre-cargar el mapa para evitar el gris inicial
+            map.invalidateSize();
+            
+            console.log(`Se cargaron ${napData.length} NAPs correctamente.`);
+            initialLoader.style.display = 'none'; // Ocultar el loader
+            searchFieldset.disabled = false; // Habilitar el formulario de búsqueda
+        }
+
+        /**
+         * Función principal que se ejecuta al hacer clic en "Buscar".
+         */
+        async function handleSearch() {
+            const address = addressInput.value.trim();
+            if (!address) return;
+
+            // Limpiar mensajes informativos anteriores
+            const existingInfo = document.querySelector('.text-blue-700.bg-blue-100');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+
+            initialMessage.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            loadingDiv.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            mapAndInfoDiv.classList.add('hidden');
+
+            const clientCoords = await geocodeAddress(address);
+
+            loadingDiv.classList.add('hidden');
+
+            if (!clientCoords) {
+                errorMessage.textContent = 'No se pudo encontrar la dirección ingresada. Verifique que sea correcta e intente nuevamente. Si el problema persiste, puede ser un problema temporal de conexión con el servicio de geolocalización.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            mapAndInfoDiv.classList.remove('hidden');
+            currentClientCoords = clientCoords;
+            
+            if (clientMarker) map.removeLayer(clientMarker);
+            napMarkers.forEach(m => map.removeLayer(m));
+            napMarkers = [];
+
+            // Calcular distancias y ordenar NAPs
+            napData.forEach(nap => {
+                const distance = getDistance(clientCoords.lat, clientCoords.lon, nap.lat, nap.lon);
+                nap.distance = distance;
+            });
+            
+            // Ordenar por distancia
+            const sortedNaps = [...napData].sort((a, b) => a.distance - b.distance);
+            const closestNap = sortedNaps[0];
+            
+            // Mostrar solo las 10 más cercanas inicialmente
+            showingAllNaps = false;
+            showAllButton.textContent = 'Ver todas las NAPs';
+            napCount.textContent = 'Mostrando 10 NAPs más cercanas';
+
+            const clientIcon = L.divIcon({
+                html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#1d4ed8" class="w-10 h-10 drop-shadow-lg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>`,
+                className: '', iconSize: [40, 40], iconAnchor: [20, 40],
+            });
+
+            // Verificar si se usó el fallback (coordenadas de una NAP)
+            const usedFallback = napData.some(nap => nap.lat === clientCoords.lat && nap.lon === clientCoords.lon);
+            const popupContent = usedFallback 
+                ? `<b>Dirección del Cliente</b><br>${address}<br><small style="color: orange;">⚠️ Ubicación aproximada (fallback)</small>`
+                : `<b>Dirección del Cliente</b><br>${address}`;
+                
+            clientMarker = L.marker([clientCoords.lat, clientCoords.lon], { icon: clientIcon }).addTo(map)
+                .bindPopup(popupContent).openPopup();
+            
+            // Mostrar solo las 10 NAPs más cercanas
+            const napsToShow = sortedNaps.slice(0, 10);
+            
+            const bounds = L.latLngBounds([clientCoords.lat, clientCoords.lon]);
+
+            napsToShow.forEach(nap => {
+                const icon = createNapIcon(nap.disponibilidad);
+                const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
+                marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                napMarkers.push(marker);
+                bounds.extend([nap.lat, nap.lon]);
+            });
+
+            map.fitBounds(bounds, { padding: [50, 50] });
+
+            if (closestNap) {
+                const availabilityColor = closestNap.puertosLibres > 0 ? 'text-green-600' : 'text-red-600';
+                const availabilityText = closestNap.puertosLibres > 0 ? 'Disponible' : 'Sin puertos libres';
+                infoPanel.innerHTML = `
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">ID de la Caja</p>
+                        <p class="text-xl font-bold text-blue-800">${closestNap.id}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Dirección</p>
+                        <p class="text-lg text-gray-800">${closestNap.direccion}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Distancia Aprox.</p>
+                        <p class="text-lg text-gray-800">${closestNap.distance.toFixed(0)} metros</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500">Estado</p>
+                        <p class="text-lg font-semibold ${availabilityColor}">${availabilityText}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Puertos Disponibles</p>
+                        <p class="text-3xl font-bold ${availabilityColor}">${closestNap.puertosLibres}<span class="text-lg font-normal text-gray-600">/ ${closestNap.puertosTotales}</span></p>
+                    </div>
+                    ${closestNap.puertosLibres === 0 ? '<p class="mt-4 text-sm text-red-700 bg-red-100 p-2 rounded">¡Atención! Esta caja no tiene puertos libres. Considere una NAP alternativa.</p>' : ''}
+                `;
+            }
+        }
+
+        // --- FUNCIONES ADICIONALES ---
+        
+        /**
+         * Función para alternar entre mostrar todas las NAPs o solo las cercanas
+         */
+        function toggleAllNaps() {
+            if (!currentClientCoords) return;
+            
+            // Limpiar marcadores existentes
+            napMarkers.forEach(m => map.removeLayer(m));
+            napMarkers = [];
+            
+            if (showingAllNaps) {
+                // Volver a mostrar solo las 10 más cercanas
+                showingAllNaps = false;
+                showAllButton.textContent = 'Ver todas las NAPs';
+                napCount.textContent = 'Mostrando 10 NAPs más cercanas';
+                
+                const sortedNaps = [...napData].sort((a, b) => a.distance - b.distance);
+                const napsToShow = sortedNaps.slice(0, 10);
+                
+                const bounds = L.latLngBounds([currentClientCoords.lat, currentClientCoords.lon]);
+                
+                napsToShow.forEach(nap => {
+                    const icon = createNapIcon(nap.disponibilidad);
+                    const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
+                    marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                    napMarkers.push(marker);
+                    bounds.extend([nap.lat, nap.lon]);
+                });
+                
+                map.fitBounds(bounds, { padding: [50, 50] });
+            } else {
+                // Mostrar todas las NAPs
+                showingAllNaps = true;
+                showAllButton.textContent = 'Ver solo cercanas';
+                napCount.textContent = `Mostrando todas las ${napData.length} NAPs`;
+                
+                const bounds = L.latLngBounds([currentClientCoords.lat, currentClientCoords.lon]);
+                
+                napData.forEach(nap => {
+                    const icon = createNapIcon(nap.disponibilidad);
+                    const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
+                    marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                    napMarkers.push(marker);
+                    bounds.extend([nap.lat, nap.lon]);
+                });
+                
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        searchButton.addEventListener('click', handleSearch);
+        addressInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                handleSearch();
+            }
+        });
+        showAllButton.addEventListener('click', toggleAllNaps);
+
+        // --- INICIALIZACIÓN ---
+        initializeApp();
+
+    </script>
+</body>
+</html>

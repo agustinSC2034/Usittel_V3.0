@@ -1064,63 +1064,75 @@
   </main>
 
   <footer class="bg-gray-800 text-white pt-16 pb-8">
-    <div class="container mx-auto px-6">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-        <div>
-          <h4 class="font-bold mb-4 uppercase">Usittel</h4>
-          <ul>
-            <li class="mb-2"><a href="pages/nosotros.html" class="text-gray-300 hover:text-white">Sobre nosotros</a>
-            </li>
-            <li class="mb-2"><a href="pages/contacto.html" class="text-gray-300 hover:text-white">Contacto</a></li>
-            <li class="mb-2"><a href="pages/alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances
-                de servicios</a></li>
-          </ul>
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Columna de Contacto y Horarios -->
+            <div class="space-y-4">
+                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
+                <div class="space-y-3 text-gray-300">
+                    <p class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+                        <span>Nigro 575, Tandil</span>
+                    </p>
+                    <div class="space-y-2">
+                        <p class="flex items-center gap-3">
+                            <i class="fab fa-whatsapp text-green-400"></i>
+                            <span>+54 9 249 406-0345</span>
+                        </p>
+                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="flex items-center gap-3">
+                            <i class="fas fa-phone text-blue-400"></i>
+                            <span>0800-199-4545</span>
+                        </p>
+                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna de Servicios -->
+            <div>
+                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+                <ul class="mt-4 space-y-2">
+                    <li><a href="pages/internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                    <li><a href="pages/tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
+                    <li><a href="pages/mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna de Soporte -->
+            <div>
+                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+                <ul class="mt-4 space-y-2">
+                    <li><a href="pages/centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
+                    <li><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
+                    <li><a href="pages/baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna de Legal y Logo -->
+            <div class="space-y-4">
+                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
+                </ul>
+                <div class="pt-4">
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
+                </div>
+            </div>
         </div>
-        <div>
-          <h4 class="font-bold mb-4 uppercase">Servicios</h4>
-          <ul>
-            <li class="mb-2"><a href="pages/internet.html" class="text-gray-300 hover:text-white">Internet Fibra
-                Óptica</a></li>
-            <li class="mb-2"><a href="pages/tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-            <li class="mb-2"><a href="pages/mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-          </ul>
+
+        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+            <div class="flex space-x-4">
+                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+            </div>
         </div>
-        <div>
-          <h4 class="font-bold mb-4 uppercase">Soporte y información</h4>
-          <ul>
-            <li class="mb-2"><a href="/pages/centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de
-                ayuda</a></li>
-            <li class="mb-2"><a href="https://www.clientes.usittel.com.ar/"
-                class="text-gray-300 hover:text-white">Autogestión</a></li>
-            <li class="mb-2"><a href="pages/baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold mb-4 uppercase">Legal</h4>
-          <ul>
-            <li class="mb-2"><a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos
-                y condiciones</a></li>
-            <li class="mb-2"><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
-                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-            <li class="mb-2"><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
-                class="text-gray-300 hover:text-white">Ley 24240</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold mb-4"></h4><img
-            src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
-            alt="Logo Usina de Tandil" class="rounded-md" />
-        </div>
-      </div>
-      <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-        <div class="flex space-x-4"><a href="https://www.facebook.com/people/Usittel/100093569816699/#"
-            class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a><a
-            href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
-              class="fab fa-instagram fa-lg"></i></a><a
-            href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
-            class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a></div>
-      </div>
     </div>
   </footer>
 
@@ -1162,16 +1174,14 @@
               "Instalación 100% bonificada",
               "100 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
               "Ideal para home office",
-              "Precio promocional: $14.499/mes por 3 meses",
             ],
             popular: false,
-            promo: `
-          <p>Precio promocional: $14.499 por mes durante 3 meses.</p>
-          <p>Precio final: $22.988,79 a partir del 4to mes.</p>
-          <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-          <p class="mt-2">Promoción válida para nuevos clientes, personas físicas que contraten el servicio residencial de USITTEL.</p>
-          <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-        `
+            promoMonths: "3",
+            promoFinal: "Precio final: $22.988,79 <br> a partir del 4to mes.<br>",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $14.499 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $22.988,79.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente. <br><br>`
           },
             {
             name: "Fibra 300",
@@ -1182,16 +1192,14 @@
               "Instalación 100% bonificada",
               "300 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
               "Perfecto para familias y gaming",
-              "Precio promocional: $15.999/mes por 6 meses",
             ],
             popular: true,
-            promo: `
-            <p>Precio promocional: $15.999 por mes durante 6 meses.</p>
-            <p>Precio final: $26.998 por mes hasta el mes 9.</p>
-            <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-            <p class="mt-2">Promoción válida para nuevos clientes, personas físicas que contraten el servicio residencial de USITTEL.</p>
-            <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-          `
+            promoMonths: "6",
+            promoFinal: "Precio final: $26.998 <br> (precio fijo hasta el mes 9).",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $15.999 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes nueve (9) inclusive, el precio será de $26.998.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
             },
             {
             name: "Fibra 500",
@@ -1202,16 +1210,14 @@
               "Instalación 100% bonificada",
               "500 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
               "La mejor experiencia online",
-              "Precio promocional: $19.249/mes por 6 meses",
             ],
             popular: false,
-            promo: `
-            <p>Precio promocional: $19.249 por mes durante 6 meses.</p>
-            <p>Precio final: $34.999 por mes hasta el mes 12.</p>
-            <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-            <p class="mt-2">Promoción válida para nuevos clientes, personas físicas que contraten el servicio residencial de USITTEL.</p>
-            <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-          `
+            promoMonths: "6",
+            promoFinal: "Precio final: $34.999 <br> (precio fijo hasta el mes 12).",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $19.249,10 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes doce (12) inclusive, el precio será de $34.999.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
             }
         ],
         internetTv: [
@@ -1227,13 +1233,13 @@
               "Contenido On-Demand"
             ],
             popular: false,
-            promo: `
-              <p>Precio promocional: $23.328 por mes durante 3 meses.</p>
-              <p>Precio final: $36.987,79 a partir del 4to mes en combo.</p>
-              <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-              <p class="mt-2">Nota: Se respetan los descuentos sobre la TV en la velocidad.</p>
-              <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-            `
+            promoMonths: "3",
+            promoFinal: "Precio final: $36.987,79 a partir del 4to mes en combo.",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $23.328 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $36.987,79.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
           },
           {
             name: "Fibra 300 + TV",
@@ -1247,13 +1253,13 @@
               "Mirá en múltiples pantallas"
             ],
             popular: true,
-            promo: `
-              <p>Precio promocional: $24.295 por mes durante 6 meses.</p>
-              <p>Precio final: $40.997 (precio fijo hasta el mes 9).</p>
-              <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-              <p class="mt-2">Nota: Se respetan los descuentos sobre la TV en la velocidad.</p>
-              <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-            `
+            promoMonths: "6",
+            promoFinal: "Precio final: $40.997 (precio fijo hasta el mes 9).",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $24.295 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes nueve (9) inclusive, el precio será de $40.997.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
           },
           {
             name: "Fibra 500 + TV",
@@ -1267,13 +1273,13 @@
               "Velocidad y entretenimiento"
             ],
             popular: false,
-            promo: `
-              <p>Precio promocional: $26.948 por mes durante 6 meses.</p>
-              <p>Precio final: $48.998 (precio fijo hasta el mes 12).</p>
-              <p class="mt-2">La adhesión al débito automático es un requisito para acceder a la bonificación en la instalación y a los precios promocionales.</p>
-              <p class="mt-2">Nota: Se respetan los descuentos sobre la TV en la velocidad.</p>
-              <p class="mt-2">El precio de lista del Servicio de USITTEL podrá sufrir modificaciones durante el plazo de contratación del servicio, conforme a la normativa vigente.</p>
-            `
+            promoMonths: "6",
+            promoFinal: "Precio final: $48.998 (precio fijo hasta el mes 12).",
+            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
+            El precio promocional de $26.948 es válido durante los primeros 6 meses. A partir del mes siete (7) y hasta el mes doce (12) inclusive, el precio será de $48.998.<br><br>
+            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
+            Nota: Se respetan los descuentos sobre la TV en la velocidad.<br><br>
+            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`
           }
         ],
         soloTv: [
@@ -1304,14 +1310,13 @@
       const tvOnlyBtn = document.getElementById('tv-only-btn');
 
       // NUEVO: El texto de condiciones se muestra en todos los contenedores a la vez
-      let promoVisible = false;
 
       function createPlanCard(plan, type) {
         const isSoloTvPlan = type === 'soloTv';
-        const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-6';
+        const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-8';
         const speedLine = plan.speed.includes('Mbps')
-          ? `<p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
-          : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
+          ? `<p class="text-gray-500 mb-2">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
+          : `<p class="text-blue-600 font-semibold mb-2">${plan.speed}</p>`;
 
         // Render features, supporting custom icon for object items
         const featuresHtml = plan.features.map(feature => {
@@ -1327,13 +1332,11 @@
         let promoHtml = '';
         if (type === 'internet' || type === 'internetTv') {
           promoHtml = `
-        <div class="text-center my-3">
-          <a href="#" class="promo-toggle-link text-xs text-blue-600 hover:underline">Condiciones de la promoción</a>
-        </div>
-        <div class="promo-details text-xs text-gray-500 text-left bg-gray-50 rounded-md" style="display:${promoVisible ? 'block' : 'none'};">
-          <div class="p-3">
-        ${plan.promo || ''}
-          </div>
+        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${new Intl.NumberFormat('es-AR').format(plan.price)} por ${plan.promoMonths || '3'} meses</div>
+        <div class="text-xs text-gray-500 mb-2">${plan.promoFinal || ''}</div>
+        <a href="#" class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 promo-toggle-link">Condiciones de la promoción</a>
+        <div class="promo-details hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+          ${plan.promo || ''}
         </div>
           `;
         }
@@ -1341,8 +1344,11 @@
         return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
         <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
         ${speedLine}
-        <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(plan.price)}</span><span class="text-gray-500">/mes</span></div>
-        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${featuresHtml}</ul>
+        <div class="my-2">
+          <span class="text-4xl font-extrabold text-gray-900">${new Intl.NumberFormat('es-AR').format(plan.price)}</span>
+          <span class="text-gray-500"> $/mes</span>
+        </div>
+        <ul class="space-y-3 text-gray-600 mb-4 flex-grow">${featuresHtml}</ul>
         ${promoHtml}
         <a href="https://wa.me/5492494060345?text=Hola,%20quisiera%20consultar%20por%20el%20plan%20${plan.name.replace(' ', '%20')}"
           target="_blank"
@@ -1350,7 +1356,7 @@
           class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
           <i class="fab fa-whatsapp"></i> Consultar
         </a>
-        ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
+        ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>' : ''}
         </div>`;
       }
 
@@ -1384,9 +1390,8 @@
         document.querySelectorAll('.promo-toggle-link').forEach(toggle => {
           toggle.addEventListener('click', e => {
             e.preventDefault();
-            promoVisible = !promoVisible;
             document.querySelectorAll('.promo-details').forEach(detailsContainer => {
-              detailsContainer.style.display = promoVisible ? 'block' : 'none';
+              detailsContainer.classList.toggle('hidden');
             });
           });
         });
@@ -1404,15 +1409,12 @@
       }
 
       internetBtn.addEventListener('click', () => {
-        promoVisible = false;
         displayPlans('internet');
       });
       internetTvBtn.addEventListener('click', () => {
-        promoVisible = false;
         displayPlans('internetTv');
       });
       tvOnlyBtn.addEventListener('click', () => {
-        promoVisible = false;
         displayPlans('soloTv');
       });
 

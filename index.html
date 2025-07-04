@@ -125,6 +125,11 @@
       color: #202020;
     }
 
+    .nav-links li a.active {
+      color: #1a73e8;
+      font-weight: 600;
+    }
+
     .nav-links .dropdown {
       position: relative;
     }
@@ -238,6 +243,11 @@
       font-size: 16px;
       padding: 10px 8px;
       border-radius: 6px;
+    }
+
+    .mobile-menu-slide a.active {
+      color: #1a73e8;
+      font-weight: 600;
     }
 
     .mobile-menu-slide .nav-button-green,
@@ -551,7 +561,7 @@
         <div class="nav-left desktop-only"><a href="#" class="logo"><img
               src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
           <ul class="nav-links">
-            <li><a href="#">Home</a></li>
+            <li><a href="#" class="active">Home</a></li>
             <li class="dropdown"><a href="#plans">Productos ▾</a>
               <ul class="dropdown-menu">
                 <li><a href="pages/internet.html">Internet</a></li>
@@ -574,7 +584,7 @@
             src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
             alt="Usittel Logo" /><button class="close-menu" id="closeMenu">&times;</button></div>
         <hr />
-        <a href="#">Home</a>
+        <a href="#" class="active">Home</a>
         <div class="submenu-container"><button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
           <div class="submenu" id="productsSubmenu"><a href="pages/internet.html">Internet</a><a
               href="pages/mesh.html">WiFi Mesh</a><a href="pages/tv.html">TV</a>
@@ -1356,7 +1366,7 @@
         </div>
         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">${featuresHtml}</ul>
         ${promoHtml}
-        <a href="https://wa.me/5492494060345?text=Hola,%20quisiera%20consultar%20por%20el%20plan%20${plan.name.replace(' ', '%20')}"
+        <a href="https://wa.me/5492494060345"
           target="_blank"
           rel="noopener"
           class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">

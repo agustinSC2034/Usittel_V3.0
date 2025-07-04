@@ -491,40 +491,100 @@ h1, h2, h3 {
                 <div class="grid lg:grid-cols-2 gap-8 items-start">
                     
                     <!-- Form -->
-                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg interactive-card">
-                        <h2 class="text-2xl font-bold mb-5 text-gray-900">Envianos tu consulta</h2>
-                        <form id="contact-form" action="../process_form.php" method="POST" class="space-y-4">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg interactive-card flex flex-col h-full">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-envelope text-6xl text-blue-500"></i>
+                            <h2 class="text-2xl font-bold text-gray-900 mt-4">Envianos tu consulta</h2>
+                            <p class="text-gray-600 mt-2">Completá el formulario y te responderemos pronto</p>
+                        </div>
+                        
+                        <form id="contact-form" action="../process_form.php" method="POST" class="space-y-4 flex-grow">
                             <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                                 <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             </div>
                             <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="5" placeholder="Escribí tu mensaje..." class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
+                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
                             <div class="flex justify-center mb-4">
                                 <div class="g-recaptcha" data-sitekey="6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0"></div>
                             </div>
-                            <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar Mensaje</button>
-                            <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
+                            <div class="mt-auto">
+                                <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Enviar Mensaje
+                                </button>
+                                <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
+                            </div>
                         </form>
                     </div>
 
                     <!-- WhatsApp Info -->
                     <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg interactive-card flex flex-col h-full">
-                        <div class="text-center">
+                        <div class="text-center mb-6">
                             <i class="fab fa-whatsapp text-6xl text-green-500"></i>
                             <h2 class="text-2xl font-bold text-gray-900 mt-4">Atención por WhatsApp</h2>
-                            <p class="text-gray-600 mt-2 mb-6">El canal más directo para resolver todo.</p>
                         </div>
-                        <ul class="space-y-3 text-gray-600 mb-6 flex-grow">
-                            <li class="flex items-center gap-3"><i class="fas fa-rocket text-blue-500 w-5 text-center"></i><span>Contratar servicios</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-user-cog text-blue-500 w-5 text-center"></i><span>Consultas administrativas</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-file-invoice-dollar text-blue-500 w-5 text-center"></i><span>Gestión de facturación</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-tools text-blue-500 w-5 text-center"></i><span>Soporte Técnico</span></li>
-                        </ul>
-                         <a href="https://wa.me/5492494060345" target="_blank" class="w-full block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full cta-button">
-                            Chatear con un representante
-                        </a>
+                        
+                        <!-- Servicios disponibles -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">¿Qué podés hacer por WhatsApp?</h3>
+                            <ul class="space-y-3 text-gray-600">
+                                <li class="flex items-center gap-3">
+                                    <i class="fas fa-rocket text-blue-500 w-5 text-center"></i>
+                                    <span>Contratar servicios</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fas fa-user-cog text-blue-500 w-5 text-center"></i>
+                                    <span>Consultas administrativas</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fas fa-file-invoice-dollar text-blue-500 w-5 text-center"></i>
+                                    <span>Gestión de facturación</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fas fa-tools text-blue-500 w-5 text-center"></i>
+                                    <span>Soporte Técnico</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fas fa-map-marker-alt text-blue-500 w-5 text-center"></i>
+                                    <span>Información sobre cobertura</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Horarios de atención -->
+                        <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Horarios de atención</h3>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex justify-between">
+                                    <span>Lunes a Viernes:</span>
+                                    <span class="font-medium">8:00 - 20:00 hs</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Sábados, Domingos y Feriados:</span>
+                                    <span class="font-medium">10:00 - 16:00 hs</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tiempo de respuesta -->
+                        <div class="mb-6 bg-blue-50 p-4 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-bolt text-blue-500"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Respuesta rápida</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botón de WhatsApp -->
+                        <div class="mt-auto">
+                            <a href="https://wa.me/5492494060345" target="_blank" class="w-full block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full cta-button">
+                                <i class="fab fa-whatsapp mr-2"></i>
+                                Chatear con un representante
+                            </a>
+                        </div>
                     </div>
                 </div>
 

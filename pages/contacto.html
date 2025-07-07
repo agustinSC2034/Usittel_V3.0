@@ -5,6 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - Contacto</title>
+    <meta name="description" content="Contactá a Usittel para contratar servicios de internet, TV o WiFi Mesh. Soporte técnico, atención personalizada y asesoramiento en Tandil." />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Usittel - Contacto" />
+    <meta property="og:description" content="Contactá a Usittel para contratar servicios de internet, TV o WiFi Mesh. Soporte técnico, atención personalizada y asesoramiento en Tandil." />
+    <meta property="og:image" content="/assets/img/logos/usittel-logo_and_name.png" />
+    <meta property="og:type" content="website" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Usittel - Contacto" />
+    <meta name="twitter:description" content="Contactá a Usittel para contratar servicios de internet, TV o WiFi Mesh. Soporte técnico, atención personalizada y asesoramiento en Tandil." />
+    <meta name="twitter:image" content="/assets/img/logos/usittel-logo_and_name.png" />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
@@ -21,6 +32,8 @@
 
     <!-- reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
 
 <style>
         /* NAVIGATION STYLES */
@@ -499,13 +512,13 @@ h1, h2, h3 {
                         </div>
                         
                         <form id="contact-form" action="../process_form.php" method="POST" class="space-y-4 flex-grow">
-                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             </div>
-                            <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
+                            <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                            <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
                             <div class="flex justify-center mb-4">
                                 <div class="g-recaptcha" data-sitekey="6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0"></div>
                             </div>

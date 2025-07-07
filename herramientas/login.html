@@ -124,10 +124,8 @@
     </div>
 
     <script>
-        // Credenciales (en producción esto debería estar en el servidor)
-        const VALID_CREDENTIALS = {
-            'admin': 'usittel2025#'
-        };
+        // Ya no se usan credenciales en el frontend
+        // El login se valida en el servidor vía login.php
 
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
@@ -144,60 +142,48 @@
             }
         }
 
-        // Función de login
-        function handleLogin(event) {
+        // Función de login usando AJAX
+        async function handleLogin(event) {
             event.preventDefault();
-            
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
-            
-            // Ocultar mensaje de error anterior
             errorMessage.classList.add('hidden');
-            
-            // Validar credenciales
-            if (VALID_CREDENTIALS[username] && VALID_CREDENTIALS[username] === password) {
-                // Login exitoso
-                sessionStorage.setItem('usittel_authenticated', 'true');
-                sessionStorage.setItem('usittel_user', username);
-                
-                // Mostrar loading
-                buttonText.textContent = 'Accediendo...';
-                loginForm.querySelector('button').disabled = true;
-                
-                // Redirigir después de un breve delay
-                setTimeout(() => {
-                    window.location.href = 'tools.html';
-                }, 1000);
-                
-            } else {
-                // Login fallido
-                errorText.textContent = 'Usuario o contraseña incorrectos';
+            buttonText.textContent = 'Verificando...';
+            loginForm.querySelector('button').disabled = true;
+
+            try {
+                const response = await fetch('login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (result.status === 'ok') {
+                    sessionStorage.setItem('usittel_authenticated', 'true');
+                    sessionStorage.setItem('usittel_user', username);
+                    buttonText.textContent = 'Accediendo...';
+                    setTimeout(() => {
+                        window.location.href = 'tools.html';
+                    }, 1000);
+                } else {
+                    throw new Error('Usuario o contraseña incorrectos');
+                }
+            } catch (e) {
+                errorText.textContent = e.message || 'Error de conexión';
                 errorMessage.classList.remove('hidden');
-                
-                // Efecto shake
                 loginForm.classList.add('shake');
                 setTimeout(() => {
                     loginForm.classList.remove('shake');
                 }, 500);
-                
-                // Limpiar contraseña
                 passwordInput.value = '';
                 passwordInput.focus();
+                buttonText.textContent = 'Iniciar Sesión';
+                loginForm.querySelector('button').disabled = false;
             }
         }
 
-        // Event listeners
         loginForm.addEventListener('submit', handleLogin);
-        
-        // Verificar autenticación al cargar
         checkAuth();
-        
-        // Enter key support
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleLogin(e);
-            }
-        });
     </script>
 </body>
 </html> 

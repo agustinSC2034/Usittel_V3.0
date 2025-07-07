@@ -307,6 +307,19 @@
             color: #374151;
             /* gray-700 */
         }
+
+        /* Efecto de glow y zoom para el Set Top Box */
+        .stb-glow {
+            border-radius: 1.5rem;
+            box-shadow: 0 0 0 0 #22c55e;
+            transition: box-shadow 0.3s;
+        }
+        .stb-img {
+            transition: transform 0.3s;
+        }
+        .stb-interactive:hover .stb-img {
+            transform: scale(1.05);
+        }
     </style>
     <style>
         /* MOBILE MENU & RESPONSIVE STYLES */
@@ -645,61 +658,34 @@
             </div>
         </section>
 
-        <!-- Sección Set Top Box ZTE -->
-        <section class="py-16 md:py-24 bg-white">
-            <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">¿No tenés Smart TV? ¡Tenemos la solución!</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sumá un <b>Set Top Box ZTE</b> y convertí tu TV en Smart. Disfrutá de Usittel TV con la app Sensa ya instalada, aunque tu televisor no pueda descargar apps.</p>
-                </div>
-                <!-- Carrusel de imágenes ZTE -->
-                <div class="relative flex justify-center items-center mb-8">
-                    <button id="zte-prev" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 shadow transition hidden md:block"><i class="fas fa-chevron-left"></i></button>
-                    <div class="w-full max-w-xs mx-auto">
-                        <div id="zte-carousel" class="overflow-hidden rounded-xl shadow-lg">
-                            <picture>
-                                <source srcset="../assets/img/tv/zte1.webp" type="image/webp">
-                                <img src="../assets/img/tv/zte1.png" alt="Set Top Box ZTE 1" class="w-full h-56 object-contain bg-white" id="zte-img" />
-                            </picture>
+        <section id="set-top-box" class="py-16 md:py-24 bg-gray-800 text-white">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-center stb-interactive cursor-pointer">
+                        <div class="relative inline-block">
+                            <div class="absolute inset-0 stb-glow"></div>
+                            <img id="stb-img" src="../assets/img/tv/zte1.png" alt="Set Top Box ZTE" class="stb-img relative z-10 w-full max-w-sm mx-auto drop-shadow-2xl rounded-2xl">
                         </div>
                     </div>
-                    <button id="zte-next" class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 shadow transition hidden md:block"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="text-center mb-6">
-                    <span class="inline-block bg-green-100 text-green-800 text-lg font-bold px-6 py-2 rounded-full">Solo $4.999 mensuales</span>
-                </div>
-                <div class="text-center">
-                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg inline-block"><i class="fab fa-whatsapp mr-2"></i>Consultar por WhatsApp</a>
+                    <div class="text-center lg:text-left">
+                        <span class="inline-block bg-blue-500 text-white text-sm font-bold px-3 py-1 rounded-full mb-4">OPCIONAL</span>
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">¿No tenés Smart TV? <br>¡Tenemos la solución!</h2>
+                        <p class="text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">Sumá un <strong>Set Top Box</strong> y convertí cualquier TV en un Smart TV de última generación. Disfrutá de la app Sensa y tus plataformas favoritas como YouTube y Netflix.</p>
+                        <ul class="space-y-3 mt-6 text-left inline-block">
+                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>App Sensa TV preinstalada</span></li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Acceso a YouTube, Netflix y más</span></li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Control remoto con comando de voz</span></li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Soporta resolución 4K Ultra HD</span></li>
+                        </ul>
+                        <div class="mt-8 flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
+                             <div class="text-3xl font-extrabold">$4.999<span class="text-lg font-normal text-gray-400">/mes</span></div>
+                             <a href="https://wa.me/5492494060345?text=Hola%2C%20estoy%20interesado%20en%20el%20Set%20Top%20Box." target="_blank" rel="noopener" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button inline-flex items-center gap-2">
+                                <i class="fab fa-whatsapp"></i> Lo quiero
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <script>
-                // Carrusel simple para ZTE
-                document.addEventListener("DOMContentLoaded", function () {
-                    const images = [
-                        { webp: "../assets/img/tv/zte1.webp", fallback: "../assets/img/tv/zte1.png", alt: "Set Top Box ZTE 1" },
-                        { webp: "../assets/img/tv/zte2.webp", fallback: "../assets/img/tv/zte2.png", alt: "Set Top Box ZTE 2" }
-                    ];
-                    let current = 0;
-                    const img = document.getElementById("zte-img");
-                    const prev = document.getElementById("zte-prev");
-                    const next = document.getElementById("zte-next");
-                    function updateImg() {
-                        img.src = images[current].fallback;
-                        img.alt = images[current].alt;
-                        img.parentElement.querySelector('source').srcset = images[current].webp;
-                    }
-                    if (prev && next) {
-                        prev.addEventListener("click", function () {
-                            current = (current - 1 + images.length) % images.length;
-                            updateImg();
-                        });
-                        next.addEventListener("click", function () {
-                            current = (current + 1) % images.length;
-                            updateImg();
-                        });
-                    }
-                });
-            </script>
         </section>
 
         <!-- App Features & Video Section (REORDERED) -->
@@ -1118,6 +1104,23 @@
                     productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
                 });
             }
+        });
+    </script>
+    <script>
+        // Carrusel automático para la imagen del Set Top Box
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = [
+                { src: "../assets/img/tv/zte1.webp", alt: "Set Top Box ZTE 1" },
+                { src: "../assets/img/tv/zte4.webp", alt: "Set Top Box ZTE 2" },
+                { src: "../assets/img/tv/zte3.webp", alt: "Set Top Box ZTE 3" }
+            ];
+            let current = 0;
+            const img = document.getElementById("stb-img");
+            setInterval(() => {
+                current = (current + 1) % images.length;
+                img.src = images[current].src;
+                img.alt = images[current].alt;
+            }, 1800);
         });
     </script>
 

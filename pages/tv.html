@@ -645,6 +645,62 @@
             </div>
         </section>
 
+        <!-- Sección Set Top Box ZTE -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">¿No tenés Smart TV? ¡Tenemos la solución!</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sumá un <b>Set Top Box ZTE</b> y convertí tu TV en Smart. Disfrutá de Usittel TV con la app Sensa ya instalada, aunque tu televisor no pueda descargar apps.</p>
+                </div>
+                <!-- Carrusel de imágenes ZTE -->
+                <div class="relative flex justify-center items-center mb-8">
+                    <button id="zte-prev" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 shadow transition hidden md:block"><i class="fas fa-chevron-left"></i></button>
+                    <div class="w-full max-w-xs mx-auto">
+                        <div id="zte-carousel" class="overflow-hidden rounded-xl shadow-lg">
+                            <picture>
+                                <source srcset="../assets/img/tv/zte1.webp" type="image/webp">
+                                <img src="../assets/img/tv/zte1.png" alt="Set Top Box ZTE 1" class="w-full h-56 object-contain bg-white" id="zte-img" />
+                            </picture>
+                        </div>
+                    </div>
+                    <button id="zte-next" class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 shadow transition hidden md:block"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="text-center mb-6">
+                    <span class="inline-block bg-green-100 text-green-800 text-lg font-bold px-6 py-2 rounded-full">Solo $4.999 mensuales</span>
+                </div>
+                <div class="text-center">
+                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg inline-block"><i class="fab fa-whatsapp mr-2"></i>Consultar por WhatsApp</a>
+                </div>
+            </div>
+            <script>
+                // Carrusel simple para ZTE
+                document.addEventListener("DOMContentLoaded", function () {
+                    const images = [
+                        { webp: "../assets/img/tv/zte1.webp", fallback: "../assets/img/tv/zte1.png", alt: "Set Top Box ZTE 1" },
+                        { webp: "../assets/img/tv/zte2.webp", fallback: "../assets/img/tv/zte2.png", alt: "Set Top Box ZTE 2" }
+                    ];
+                    let current = 0;
+                    const img = document.getElementById("zte-img");
+                    const prev = document.getElementById("zte-prev");
+                    const next = document.getElementById("zte-next");
+                    function updateImg() {
+                        img.src = images[current].fallback;
+                        img.alt = images[current].alt;
+                        img.parentElement.querySelector('source').srcset = images[current].webp;
+                    }
+                    if (prev && next) {
+                        prev.addEventListener("click", function () {
+                            current = (current - 1 + images.length) % images.length;
+                            updateImg();
+                        });
+                        next.addEventListener("click", function () {
+                            current = (current + 1) % images.length;
+                            updateImg();
+                        });
+                    }
+                });
+            </script>
+        </section>
 
         <!-- App Features & Video Section (REORDERED) -->
         <section class="py-16 md:py-24 bg-white">

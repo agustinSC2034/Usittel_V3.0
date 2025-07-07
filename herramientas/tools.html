@@ -469,10 +469,20 @@
 
             // Procesar datos de las NAPs
             napData.forEach(nap => {
-                const puertosLibres = nap.puertosTotales - nap.puertosOcupados;
-                const disponibilidad = nap.puertosTotales > 0 ? puertosLibres / nap.puertosTotales : 0;
-                nap.puertosLibres = puertosLibres;
-                nap.disponibilidad = disponibilidad;
+                // Compatibilidad con ambos formatos de datos
+                // Si no existe 'nombre', usar el 'id' como nombre visible
+                nap.nombre = nap.nombre || nap.id;
+                // Cálculo de puertos libres y totales según el formato
+                if (typeof nap.puertosDisponibles !== 'undefined') {
+                    nap.puertosLibres = nap.puertosDisponibles;
+                    nap.puertosTotales = nap.puertosOcupados + nap.puertosDisponibles;
+                } else if (typeof nap.puertosTotales !== 'undefined' && typeof nap.puertosOcupados !== 'undefined') {
+                    nap.puertosLibres = nap.puertosTotales - nap.puertosOcupados;
+                } else {
+                    nap.puertosLibres = 0;
+                    nap.puertosTotales = 0;
+                }
+                nap.disponibilidad = nap.puertosTotales > 0 ? nap.puertosLibres / nap.puertosTotales : 0;
             });
             
             // Pre-cargar el mapa para evitar el gris inicial
@@ -572,7 +582,7 @@
             napsToShow.forEach(nap => {
                 const icon = createNapIcon(nap.disponibilidad);
                 const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
-                marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                marker.bindPopup(`<b>${nap.nombre}</b><br><span class='text-xs text-gray-500'>ID: ${nap.id}</span><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance ? nap.distance.toFixed(0) : ''} m</b>`);
                 napMarkers.push(marker);
                     bounds.extend([nap.lat, nap.lon]);
             });
@@ -585,8 +595,12 @@
                 infoPanel.innerHTML = `
                     <div class="space-y-4">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">ID de la Caja</p>
-                            <p class="text-2xl font-bold text-blue-800">${closestNap.id}</p>
+                            <p class="text-sm font-medium text-gray-500">Nombre de la Caja</p>
+                            <p class="text-2xl font-bold text-blue-800">${closestNap.nombre}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">ID Phantom</p>
+                            <p class="text-xs text-gray-500">${closestNap.id}</p>
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-500">Dirección</p>
@@ -632,7 +646,7 @@
                 napsToShow.forEach(nap => {
                     const icon = createNapIcon(nap.disponibilidad);
                     const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
-                    marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                    marker.bindPopup(`<b>${nap.nombre}</b><br><span class='text-xs text-gray-500'>ID: ${nap.id}</span><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
                     napMarkers.push(marker);
                     bounds.extend([nap.lat, nap.lon]);
                 });
@@ -649,7 +663,7 @@
                 napData.forEach(nap => {
                     const icon = createNapIcon(nap.disponibilidad);
                     const marker = L.marker([nap.lat, nap.lon], { icon: icon }).addTo(map);
-                    marker.bindPopup(`<b>${nap.id}</b><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
+                    marker.bindPopup(`<b>${nap.nombre}</b><br><span class='text-xs text-gray-500'>ID: ${nap.id}</span><br>${nap.direccion}<br>Puertos Libres: <b>${nap.puertosLibres} / ${nap.puertosTotales}</b><br>Distancia: <b>${nap.distance.toFixed(0)} m</b>`);
                     napMarkers.push(marker);
                 });
                 

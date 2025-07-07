@@ -24,38 +24,43 @@ def excel_to_json(excel_file: str) -> List[Dict[str, Any]]:
         # Leer el archivo Excel
         df = pd.read_excel(excel_file)
         
-        # Verificar columnas requeridas
-        required_columns = ['ID_NAP', 'DIRECCION', 'PUERTOS_TOTALES', 'PUERTOS_OCUPADOS']
-        missing_columns = [col for col in required_columns if col not in df.columns]
+        # Renombrar columnas para el formato esperado
+        df = df.rename(columns={
+            'id': 'id',
+            'nombre_nap': 'nombre',
+            'direccion': 'direccion',
+            'puertos_utilizados': 'puertosOcupados',
+            'puertos_disponibles': 'puertosDisponibles',
+            'Latitud': 'lat',
+            'Longitud': 'lon',
+        })
         
-        if missing_columns:
-            print(f"❌ Error: Faltan las siguientes columnas: {missing_columns}")
-            print("Las columnas requeridas son:")
-            for col in required_columns:
-                print(f"  - {col}")
-            return []
+        # Solo dejar las columnas relevantes
+        campos = ['id', 'nombre', 'direccion', 'puertosOcupados', 'puertosDisponibles', 'lat', 'lon']
+        df = df[[c for c in campos if c in df.columns]]
         
-        # Verificar si existen columnas de coordenadas
-        has_coordinates = 'LATITUD' in df.columns and 'LONGITUD' in df.columns
+        # Verificar si existen columnas de coordenadas (Latitud, Longitud)
+        has_coordinates = 'lat' in df.columns and 'lon' in df.columns
         
         if not has_coordinates:
-            print("⚠️  Advertencia: No se encontraron columnas LATITUD y LONGITUD.")
+            print("⚠️  Advertencia: No se encontraron columnas Latitud y Longitud.")
             print("Se generarán coordenadas de ejemplo. Deberás actualizarlas manualmente.")
         
         # Convertir a lista de diccionarios
         naps = []
         for idx, (index, row) in enumerate(df.iterrows()):
             nap = {
-                'id': str(row['ID_NAP']),
-                'direccion': str(row['DIRECCION']),
-                'puertosTotales': int(row['PUERTOS_TOTALES']),
-                'puertosOcupados': int(row['PUERTOS_OCUPADOS'])
+                'id': str(row['id']),
+                'nombre': str(row['nombre']),
+                'direccion': str(row['direccion']),
+                'puertosOcupados': int(row['puertosOcupados']),
+                'puertosDisponibles': int(row['puertosDisponibles'])
             }
             
             # Agregar coordenadas si existen, sino usar coordenadas de ejemplo
             if has_coordinates:
-                nap['lat'] = float(row['LATITUD'])
-                nap['lon'] = float(row['LONGITUD'])
+                nap['lat'] = float(row['lat'])
+                nap['lon'] = float(row['lon'])
             else:
                 # Coordenadas de ejemplo (centro de Tandil + offset)
                 base_lat = -37.3217
@@ -85,8 +90,8 @@ def generate_javascript_code(naps: List[Dict[str, Any]]) -> str:
     js_code = "const napData = [\n"
     
     for nap in naps:
-        js_code += f"    {{ id: \"{nap['id']}\", direccion: \"{nap['direccion']}\", "
-        js_code += f"puertosTotales: {nap['puertosTotales']}, puertosOcupados: {nap['puertosOcupados']}, "
+        js_code += f"    {{ id: \"{nap['id']}\", nombre: \"{nap['nombre']}\", direccion: \"{nap['direccion']}\", "
+        js_code += f"puertosOcupados: {nap['puertosOcupados']}, puertosDisponibles: {nap['puertosDisponibles']}, "
         js_code += f"lat: {nap['lat']}, lon: {nap['lon']} }},\n"
     
     js_code = js_code.rstrip(',\n') + "\n];"
@@ -110,13 +115,12 @@ def save_json_file(naps: List[Dict[str, Any]], output_file: str = "nap_data.json
 
 def main():
     """Función principal"""
-    if len(sys.argv) != 2:
-        print("Uso: python excel_to_json.py archivo.xlsx")
-        print("\nEjemplo:")
-        print("  python excel_to_json.py cajas_naps.xlsx")
+    if len(sys.argv) < 2:
+        print("Uso: python excel_to_json.py <archivo_excel> [<archivo_json>]")
         sys.exit(1)
     
     excel_file = sys.argv[1]
+    json_file = sys.argv[2] if len(sys.argv) > 2 else None
     
     # Verificar que el archivo existe
     if not os.path.exists(excel_file):
@@ -135,28 +139,30 @@ def main():
     print(f"✅ Se procesaron {len(naps)} NAPs correctamente.")
     
     # Guardar archivo JSON
-    save_json_file(naps)
+    if json_file:
+        save_json_file(naps, json_file)
     
     # Generar código JavaScript
     js_code = generate_javascript_code(naps)
     
     # Guardar código JavaScript en archivo separado
-    with open("nap_data.js", 'w', encoding='utf-8') as f:
+    js_file = excel_file.replace('.xlsx', '.js')
+    with open(js_file, 'w', encoding='utf-8') as f:
         f.write(js_code)
     
     print("✅ Código JavaScript guardado como: nap_data.js")
     
     # Mostrar instrucciones
-    print("\n📋 Instrucciones para actualizar tools.html:")
+    print("\n�� Instrucciones para actualizar tools.html:")
     print("1. Abre el archivo tools.html")
     print("2. Busca la línea que dice 'const napData = ['")
     print("3. Reemplaza todo el array con el contenido de nap_data.js")
     print("4. Guarda el archivo")
     
     # Mostrar estadísticas
-    total_ports = sum(nap['puertosTotales'] for nap in naps)
-    occupied_ports = sum(nap['puertosOcupados'] for nap in naps)
-    available_ports = total_ports - occupied_ports
+    total_ports = sum(nap['puertosOcupados'] for nap in naps)
+    available_ports = sum(nap['puertosDisponibles'] for nap in naps)
+    occupied_ports = total_ports - available_ports
     
     print(f"\n📊 Estadísticas:")
     print(f"  - Total de NAPs: {len(naps)}")

@@ -154,3 +154,36 @@ Para dudas técnicas o mejoras:
 **Versión**: 1.0  
 **Última actualización**: Julio 2025  
 **Compatible con**: Chrome, Firefox, Safari, Edge 
+
+# Actualización semanal de NAPs
+
+## ¿Qué hacer cuando recibís un nuevo archivo Excel de NAPs?
+
+### 1. Preparar el archivo Excel
+- Asegurate de que las columnas tengan estos nombres exactos:
+  - `id` (ID Phantom)
+  - `nombre_nap` (nombre visible de la NAP)
+  - `direccion`
+  - `puertos_utilizados`
+  - `puertos_disponibles`
+  - `Latitud`
+  - `Longitud`
+
+### 2. Reemplazar el archivo actual
+- Copiá el nuevo archivo Excel a la carpeta `herramientas/` y llamalo `naps.xlsx` (o actualizá el nombre en el comando si usás otro).
+
+### 3. Ejecutar el script de conversión
+Abrí una terminal en la carpeta del proyecto y ejecutá:
+```bash
+python herramientas/excel_to_json.py herramientas/naps.xlsx
+```
+
+### 4. Verificar los cambios
+- El script va a generar automáticamente:
+  - `nap_data.json` (datos en formato JSON)
+  - `nap_data.js` (datos para la web)
+- La web de herramientas se actualizará sola con los nuevos datos.
+
+---
+
+¿Dudas? Consultá este archivo o pedí ayuda. 

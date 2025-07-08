@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // CAPTCHA GOOGLE
     $ip = $_SERVER['REMOTE_ADDR'];
     $captcha = $_POST['g-recaptcha-response'];
-    $secretkey = "6LeX74spAAAAAApSGnvOXALpuyaLvLkcrqtkY6_7";
+    $secretkey = "6LfEbnsrAAAAALRrPfoTWSrk8rcvjqpLmqUKjufb";
 
     // Validar el captcha utilizando cURL
     $ch = curl_init();

@@ -1091,16 +1091,23 @@
                                 </div>
                             </div>
                             <div>
+                                <label for="subject" class="sr-only">Asunto</label>
+                                <input type="text" name="subject" id="subject" placeholder="Asunto" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
                                 <label for="message" class="sr-only">Mensaje</label>
                                 <textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                             </div>
                             <div class="flex justify-center mb-4">
-                                <div class="g-recaptcha" data-sitekey="6LdMZnsrAAAAAGWDykuC-6MKe8MFvumA2TkdxtH9"></div>
+                                <div class="g-recaptcha" data-sitekey="6LeX74spAAAAAApSGnvOXALpuyaLvLkcrqtkY6_7"></div>
                             </div>
                             <button type="submit" id="submit-btn"
-                                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
-                                Mensaje</button>
+                                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Enviar Mensaje
+                            </button>
                         </form>
                     </div>
                     <div>

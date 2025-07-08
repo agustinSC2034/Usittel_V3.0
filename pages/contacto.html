@@ -510,12 +510,12 @@ h1, h2, h3 {
                             <div><label for="name" class="sr-only">Nombre</label><input type="text" name="name" id="name" placeholder="Nombre y Apellido" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div><label for="email" class="sr-only">Email</label><input type="email" name="email" id="email" placeholder="Email" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
-                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+                                <div><label for="phone" class="sr-only">Teléfono</label><input type="tel" name="phone" id="phone" placeholder="Teléfono" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             </div>
                             <div><label for="subject" class="sr-only">Asunto</label><input type="text" name="subject" id="subject" placeholder="Asunto" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
                             <div><label for="message" class="sr-only">Mensaje</label><textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
                             <div class="flex justify-center mb-4">
-                                <div class="g-recaptcha" data-sitekey="6LdMZnsrAAAAAGWDykuC-6MKe8MFvumA2TkdxtH9"></div>
+                                <div class="g-recaptcha" data-sitekey="6LeX74spAAAAAApSGnvOXALpuyaLvLkcrqtkY6_7"></div>
                             </div>
                             <div class="mt-auto">
                                 <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">
@@ -736,9 +736,11 @@ h1, h2, h3 {
                 });
             }
 
-            // Script simplificado para el formulario de contacto
+            // Script mejorado para el formulario de contacto
             const contactForm = document.getElementById('contact-form');
             const submitBtn = document.getElementById('submit-btn');
+            const submitBtnText = submitBtn.querySelector('span');
+            const originalText = submitBtnText.textContent;
 
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
@@ -750,13 +752,12 @@ h1, h2, h3 {
                         return;
                     }
 
-                    // Cambiar estado del botón
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                    // Cambiar el texto del botón
                     submitBtn.disabled = true;
+                    submitBtnText.textContent = 'Enviando...';
 
-                    // El formulario se enviará normalmente (sin preventDefault)
-                    // El PHP manejará la respuesta con alert() y redirección
+                    // El formulario se enviará normalmente a Formspree
+                    // Formspree se encargará de la redirección después del envío
                 });
             }
         });

@@ -1,16 +1,24 @@
-# Configuración para PHP
+# Habilitar el motor de PHP
+AddHandler application/x-httpd-php .php
 AddType application/x-httpd-php .php
 
-# Forzar ejecución de PHP
-<Files *.php>
+# Asegurar que los archivos PHP se ejecuten
+<FilesMatch "\.php$">
     SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Permitir acceso a archivos PHP
+<Files "*.php">
+    Require all granted
 </Files>
 
-# Configuración de seguridad
-<Files "*.php">
-    Order Allow,Deny
-    Allow from all
-</Files>
+# Configuración del directorio
+<IfModule mod_dir.c>
+    DirectoryIndex index.php index.html
+</IfModule>
+
+# Configuración de caracteres
+AddDefaultCharset UTF-8
 
 # Configuración de headers para JSON
 <Files "*.php">

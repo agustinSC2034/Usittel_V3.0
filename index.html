@@ -1140,69 +1140,65 @@
     </section>
 
     <!-- =========== Contact Section (ORDEN 7) =========== -->
-    <section id="contact" class="py-16 md:py-24 bg-white">
+    <section id="contact" class="py-8 md:py-12 bg-white">
       <div class="container mx-auto px-6">
-        <div
-          class="bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          <div>
-            <h3 class="text-2xl font-bold mb-4">Envianos tu consulta</h3>
-            <form id="contact-form" action="process_form_simple.php" method="POST" class="space-y-4">
-              <div>
-                <label for="name" class="sr-only">Nombre</label>
-                <input type="text" name="name" id="name" placeholder="Nombre y Apellido" required
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label for="email" class="sr-only">Email</label>
-                  <input type="email" name="email" id="email" placeholder="Email" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <div class="bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg max-w-7xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-2xl font-bold mb-4">Contactanos</h3>
+              <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                  <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-phone text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-lg">Teléfono</h4>
+                    <a href="tel:08001994545" class="text-gray-600 hover:text-blue-600">0800-199-4545</a>
+                    <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16hs.</p>
+                  </div>
                 </div>
-                <div>
-                  <label for="phone" class="sr-only">Teléfono</label>
-                  <input type="tel" name="phone" id="phone" placeholder="Teléfono"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="flex items-center gap-4">
+                  <div class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                    <i class="fab fa-whatsapp text-3xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-lg">WhatsApp</h4>
+                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
+                    <p class="text-sm text-gray-500">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                  <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-envelope text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-lg">Email</h4>
+                    <a href="mailto:contacto@usittel.com.ar" class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                  <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-location-dot text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-lg">Oficina</h4>
+                    <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label for="subject" class="sr-only">Asunto</label>
-                <input type="text" name="subject" id="subject" placeholder="Asunto" required
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div>
-                <label for="message" class="sr-only">Mensaje</label>
-                <textarea name="message" id="message" rows="4" placeholder="Escribí tu mensaje..." required
-                  class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-              </div>
-              <div class="flex justify-center mb-4">
-                <div class="g-recaptcha" data-sitekey="6LfEbnsrAAAAAKj0g_A84ETzAurInhR6UYo4Zu-u"></div>
-              </div>
-              <button type="submit" id="submit-btn"
-                class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">
-                <i class="fas fa-paper-plane mr-2"></i>
-                Enviar Mensaje
-              </button>
-            </form>
-          </div>
-          <div>
-            <h3 class="text-2xl font-bold mb-4">Nuestra oficina</h3>
-            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
-                width="100%" height="300" style="border: 0" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-            <div class="mt-4 text-gray-600 space-y-3">
-              <p class="flex items-center gap-3">
-                <i class="fa-solid fa-location-dot text-blue-500"></i>Nigro
-                575, Tandil, Buenos aires.
-              </p>
-              <p class="flex items-center gap-3">
-                <i class="fa-solid fa-phone text-blue-500"></i>0800-199-4545
-              </p>
-              <p class="flex items-center gap-3">
-                <i class="fa-solid fa-envelope text-blue-500"></i>contacto@usittel.com.ar
-              </p>
+
+            <div>
+              <h3 class="text-2xl font-bold mb-4">Nuestra ubicación</h3>
+              <div class="rounded-lg overflow-hidden shadow-lg h-[300px]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
+                  width="100%" height="100%" style="border: 0" allowfullscreen="" loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
+              </div>
             </div>
           </div>
         </div>

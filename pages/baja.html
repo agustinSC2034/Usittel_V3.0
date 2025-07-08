@@ -642,32 +642,66 @@
 
             const formHTML = `
         <h3 class="text-xl font-bold text-gray-900 mb-4" id="form-title"></h3>
-                                <form id="baja-form" action="../process_form_simple.php" method="POST" class="space-y-4">
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Nombre y Apellido del Titular</label>
-                <input type="text" name="name" id="name" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Contactanos</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                <i class="fa-solid fa-phone text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Teléfono</h4>
+                                <a href="tel:08001994545" class="text-gray-600 hover:text-blue-600">0800-199-4545</a>
+                                <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16hs.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                <i class="fab fa-whatsapp text-3xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">WhatsApp</h4>
+                                <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
+                                <p class="text-sm text-gray-500">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                <i class="fa-solid fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Email</h4>
+                                <a href="mailto:contacto@usittel.com.ar" class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                <i class="fa-solid fa-location-dot text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Oficina</h4>
+                                <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Nuestra ubicación</h3>
+                    <div class="rounded-lg overflow-hidden shadow-lg h-[300px]">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label for="docNumber" class="block text-sm font-medium text-gray-700">Nº de Documento del Titular</label>
-                <input type="text" name="docNumber" id="docNumber" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="contractNumber" class="block text-sm font-medium text-gray-700">Nº de Cliente o Contrato</label>
-                <input type="text" name="contractNumber" id="contractNumber" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="message" class="block text-sm font-medium text-gray-700">Motivo de la solicitud</label>
-                <textarea name="message" id="message" rows="4" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-            </div>
-            <div class="flex justify-center mb-4">
-                <div class="g-recaptcha" data-sitekey="6LfEbnsrAAAAAKj0g_A84ETzAurInhR6UYo4Zu-u"></div>
-            </div>
-            <button type="submit" id="submit-btn" class="w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 cta-button">
-                <i class="fas fa-paper-plane mr-2"></i>
-                Confirmar Solicitud
-            </button>
-            <input type="hidden" name="subject" value="Solicitud de Baja">
-        </form>
+        </div>
     `;
 
             function showForm(type) {
@@ -685,36 +719,8 @@
 
                 // Agregar event listener al formulario después de que se genere
                 setTimeout(() => {
-                    const bajaForm = document.getElementById('baja-form');
-                    const submitBtn = document.getElementById('submit-btn');
-                    const formMessage = document.getElementById('form-message');
-
-                    if (bajaForm) {
-                        bajaForm.addEventListener('submit', function(e) {
-                            // Verificar reCAPTCHA antes de enviar
-                            const recaptchaResponse = grecaptcha.getResponse();
-                            if (!recaptchaResponse) {
-                                e.preventDefault();
-                                alert('Por favor, completa el reCAPTCHA.');
-                                return;
-                            }
-
-                            // Cambiar estado del botón
-                            const originalText = submitBtn.innerHTML;
-                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-                            submitBtn.disabled = true;
-
-                            // Agregar tipo de formulario como campo oculto
-                            const formTypeInput = document.createElement('input');
-                            formTypeInput.type = 'hidden';
-                            formTypeInput.name = 'form_type';
-                            formTypeInput.value = type;
-                            bajaForm.appendChild(formTypeInput);
-
-                            // El formulario se enviará normalmente (sin preventDefault)
-                            // El PHP manejará la respuesta con alert() y redirección
-                        });
-                    }
+                    // Ya no necesitamos manejar el envío del formulario
+                    // Solo mostramos la información de contacto
                 }, 100);
             }
 

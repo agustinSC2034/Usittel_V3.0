@@ -1,7 +1,10 @@
 <?php
 // Configuración de reCAPTCHA
-$recaptcha_secret = "6LeslXYrAAAAABux5XaOxNpklsorUxqBjFoNKFET";
-$recaptcha_site_key = "6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0";
+$recaptcha_secret = "6LdMZnsrAAAAAAyufRJSVQcNp-gWHXkOvIFxm-sA";
+$recaptcha_site_key = "6LdMZnsrAAAAAGWDykuC-6MKe8MFvumA2TkdxtH9";
+
+// Agregar logging para debug
+error_log("reCAPTCHA Debug - Secret: " . substr($recaptcha_secret, 0, 10) . "...");
 
 // Función para validar reCAPTCHA
 function verifyRecaptcha($recaptcha_response, $secret_key) {
@@ -12,18 +15,39 @@ function verifyRecaptcha($recaptcha_response, $secret_key) {
         'remoteip' => $_SERVER['REMOTE_ADDR']
     );
 
-    $options = array(
-        'http' => array(
-            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method' => 'POST',
-            'content' => http_build_query($data)
-        )
-    );
-
-    $context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    // Usar cURL en lugar de file_get_contents para mejor compatibilidad
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Usittel-Contact-Form/1.0');
+    
+    $result = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+    
+    // Log para debug
+    error_log("reCAPTCHA Response - HTTP Code: " . $http_code . ", Result: " . substr($result, 0, 100));
+    if ($curl_error) {
+        error_log("reCAPTCHA cURL Error: " . $curl_error);
+    }
+    
+    if ($result === false || $http_code !== 200) {
+        error_log("reCAPTCHA Error: HTTP " . $http_code . " - " . $curl_error);
+        return false;
+    }
+    
     $response = json_decode($result);
-
+    
+    if (!$response) {
+        error_log("reCAPTCHA JSON Error: " . json_last_error_msg());
+        return false;
+    }
+    
     return $response->success;
 }
 

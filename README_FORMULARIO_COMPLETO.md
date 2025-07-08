@@ -33,8 +33,8 @@ Se ha implementado reCAPTCHA en **todos los formularios** del sitio web de Usitt
 
 ### ✅ **reCAPTCHA v2**
 - Validación en todos los formularios
-- Clave del sitio: `6LeslXYrAAAAAGq-17vR48byhElevpQ6xh98OuT0`
-- Clave secreta: `6LeslXYrAAAAABux5XaOxNpklsorUxqBjFoNKFET`
+- Clave del sitio: `6LdMZnsrAAAAAGWDykuC-6MKe8MFvumA2TkdxtH9`
+- Clave secreta: `6LdMZnsrAAAAAAyufRJSVQcNp-gWHXkOvIFxm-sA`
 
 ### ✅ **Validación de Datos**
 - Limpieza de entrada (XSS protection)

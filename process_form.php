@@ -61,7 +61,7 @@ function cleanInput($data) {
 
 // Función para enviar email
 function sendEmail($name, $email, $phone, $subject, $message, $form_type = 'contact') {
-    $to = "contacto@usittel.com.ar";
+    $to = "agustinsc2034@gmail.com";
     
     // Determinar el asunto según el tipo de formulario
     switch ($form_type) {

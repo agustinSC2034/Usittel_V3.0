@@ -1,0 +1,18 @@
+# Configuración para PHP
+AddType application/x-httpd-php .php
+
+# Forzar ejecución de PHP
+<Files *.php>
+    SetHandler application/x-httpd-php
+</Files>
+
+# Configuración de seguridad
+<Files "*.php">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Configuración de headers para JSON
+<Files "*.php">
+    Header set Content-Type "application/json; charset=utf-8"
+</Files> 

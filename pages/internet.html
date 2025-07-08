@@ -1072,7 +1072,7 @@
                         <h3 class="text-2xl font-bold mb-4">¿Querés contratar o tenés una consulta?</h3>
                         <p class="text-gray-600 mb-6">Dejanos tu mensaje y un representante se pondrá en contacto a la
                             brevedad.</p>
-                        <form id="contact-form" action="../process_form.php" method="POST" class="space-y-4">
+                        <form id="contact-form" action="../process_form_simple.php" method="POST" class="space-y-4">
                             <div>
                                 <label for="name" class="sr-only">Nombre</label>
                                 <input type="text" name="name" id="name" placeholder="Nombre y Apellido" required
@@ -1101,7 +1101,6 @@
                             <button type="submit" id="submit-btn"
                                 class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 cta-button">Enviar
                                 Mensaje</button>
-                            <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
                         </form>
                     </div>
                     <div>
@@ -1753,19 +1752,17 @@
     `;
         }
 
-        // Script para manejar el formulario de contacto
+        // Script simplificado para el formulario de contacto
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
-        const formMessage = document.getElementById('form-message');
 
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Verificar reCAPTCHA
+                // Verificar reCAPTCHA antes de enviar
                 const recaptchaResponse = grecaptcha.getResponse();
                 if (!recaptchaResponse) {
-                    showMessage('Por favor, completa el reCAPTCHA.', 'error');
+                    e.preventDefault();
+                    alert('Por favor, completa el reCAPTCHA.');
                     return;
                 }
 
@@ -1774,59 +1771,9 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
                 submitBtn.disabled = true;
 
-                // Crear FormData
-                const formData = new FormData(contactForm);
-                formData.append('g-recaptcha-response', recaptchaResponse);
-
-                // Enviar formulario con fetch
-                fetch('../process_form.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showMessage(data.message, 'success');
-                        contactForm.reset();
-                        grecaptcha.reset();
-                    } else {
-                        showMessage(data.message, 'error');
-                        grecaptcha.reset();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showMessage('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.', 'error');
-                    grecaptcha.reset();
-                })
-                .finally(() => {
-                    // Restaurar botón
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                });
+                // El formulario se enviará normalmente (sin preventDefault)
+                // El PHP manejará la respuesta con alert() y redirección
             });
-        }
-
-        function showMessage(message, type) {
-            formMessage.className = 'mt-4 p-4 rounded-lg';
-            
-            if (type === 'success') {
-                formMessage.className += ' bg-green-100 border border-green-400 text-green-700';
-                formMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i>' + message;
-            } else {
-                formMessage.className += ' bg-red-100 border border-red-400 text-red-700';
-                formMessage.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>' + message;
-            }
-            
-            formMessage.classList.remove('hidden');
-            
-            // Hacer scroll al mensaje
-            formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Ocultar mensaje después de 5 segundos
-            setTimeout(() => {
-                formMessage.classList.add('hidden');
-            }, 5000);
         }
     </script>
 </body>

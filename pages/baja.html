@@ -642,7 +642,7 @@
 
             const formHTML = `
         <h3 class="text-xl font-bold text-gray-900 mb-4" id="form-title"></h3>
-        <form id="baja-form" action="../process_form.php" method="POST" class="space-y-4">
+                                <form id="baja-form" action="../process_form_simple.php" method="POST" class="space-y-4">
             <div>
                 <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre y Apellido del Titular</label>
                 <input type="text" name="fullName" id="fullName" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -663,7 +663,6 @@
                                 <div class="g-recaptcha" data-sitekey="6LdMZnsrAAAAAGWDykuC-6MKe8MFvumA2TkdxtH9"></div>
                             </div>
             <button type="submit" id="submit-btn" class="w-full bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 cta-button">Confirmar Solicitud</button>
-            <div id="form-message" class="mt-4 p-4 rounded-lg hidden"></div>
         </form>
     `;
 
@@ -688,12 +687,11 @@
 
                     if (bajaForm) {
                         bajaForm.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            
-                            // Verificar reCAPTCHA
+                            // Verificar reCAPTCHA antes de enviar
                             const recaptchaResponse = grecaptcha.getResponse();
                             if (!recaptchaResponse) {
-                                showMessage('Por favor, completa el reCAPTCHA.', 'error');
+                                e.preventDefault();
+                                alert('Por favor, completa el reCAPTCHA.');
                                 return;
                             }
 
@@ -702,60 +700,16 @@
                             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
                             submitBtn.disabled = true;
 
-                            // Crear FormData
-                            const formData = new FormData(bajaForm);
-                            formData.append('g-recaptcha-response', recaptchaResponse);
-                            formData.append('form_type', type); // Agregar tipo de formulario
+                            // Agregar tipo de formulario como campo oculto
+                            const formTypeInput = document.createElement('input');
+                            formTypeInput.type = 'hidden';
+                            formTypeInput.name = 'form_type';
+                            formTypeInput.value = type;
+                            bajaForm.appendChild(formTypeInput);
 
-                            // Enviar formulario con fetch
-                            fetch('../process_form.php', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    showMessage(data.message, 'success');
-                                    bajaForm.reset();
-                                    grecaptcha.reset();
-                                } else {
-                                    showMessage(data.message, 'error');
-                                    grecaptcha.reset();
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                showMessage('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.', 'error');
-                                grecaptcha.reset();
-                            })
-                            .finally(() => {
-                                // Restaurar botón
-                                submitBtn.innerHTML = originalText;
-                                submitBtn.disabled = false;
-                            });
+                            // El formulario se enviará normalmente (sin preventDefault)
+                            // El PHP manejará la respuesta con alert() y redirección
                         });
-                    }
-
-                    function showMessage(message, type) {
-                        formMessage.className = 'mt-4 p-4 rounded-lg';
-                        
-                        if (type === 'success') {
-                            formMessage.className += ' bg-green-100 border border-green-400 text-green-700';
-                            formMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i>' + message;
-                        } else {
-                            formMessage.className += ' bg-red-100 border border-red-400 text-red-700';
-                            formMessage.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>' + message;
-                        }
-                        
-                        formMessage.classList.remove('hidden');
-                        
-                        // Hacer scroll al mensaje
-                        formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        
-                        // Ocultar mensaje después de 5 segundos
-                        setTimeout(() => {
-                            formMessage.classList.add('hidden');
-                        }, 5000);
                     }
                 }, 100);
             }

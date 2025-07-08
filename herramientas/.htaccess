@@ -2,15 +2,15 @@
 # Este archivo protege los datos de NAPs y otros archivos privados
 
 # Denegar acceso directo a archivos de datos
-<Files "nap_data.json">
-    Order Deny,Allow
-    Deny from all
-</Files>
+# <Files "nap_data.json">
+#     Order Deny,Allow
+#     Deny from all
+# </Files>
 
-<Files "nap_data.js">
-    Order Deny,Allow
-    Deny from all
-</Files>
+# <Files "nap_data.js">
+#     Order Deny,Allow
+#     Deny from all
+# </Files>
 
 <Files "cajas_naps.csv">
     Order Deny,Allow

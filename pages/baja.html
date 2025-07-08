@@ -30,9 +30,6 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <style>
         /* NAVIGATION STYLES */
         .navbar-section *,
@@ -209,18 +206,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .cancellation-form-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out;
-        }
-
-        .cancellation-form-container.open {
-            max-height: 1000px;
-            /* Adjust as needed */
-            padding-top: 2rem;
-        }
-
         .cta-button {
             transition: all 0.3s ease;
         }
@@ -230,504 +215,171 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
-    <style>
-        /* MOBILE MENU & RESPONSIVE STYLES */
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background-color: #3c4043;
-            border-radius: 2px;
-        }
-
-        .mobile-header-bar {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .mobile-menu-slide {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 16px;
-            transition: left 0.3s ease-in-out;
-            z-index: 1001;
-        }
-
-        .mobile-menu-slide.show {
-            left: 0;
-        }
-
-        .mobile-menu-slide a {
-            text-decoration: none;
-            color: #3c4043;
-            font-size: 16px;
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-
-        .mobile-menu-slide .nav-button-green,
-        .mobile-menu-slide .nav-button2 {
-            padding: 12px 18px;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-menu-header img {
-            height: 32px;
-        }
-
-        .close-menu {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #3c4043;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .mobile-menu-slide hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-bottom: 16px;
-        }
-
-        .submenu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .submenu-toggle {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 16px;
-            text-align: left;
-            color: #3c4043;
-            padding: 10px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 400;
-        }
-
-        .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 12px;
-            margin-top: -4px;
-        }
-
-        .submenu a {
-            font-size: 15px;
-            padding: 8px 12px;
-            color: #3c4043;
-        }
-
-        .submenu.show {
-            display: flex;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .desktop-only {
-            display: flex;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        /* Breakpoint para mobile */
-        @media (max-width: 900px) {
-            .mobile-only {
-                display: flex !important;
-            }
-
-            .desktop-only {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-header-bar {
-                display: flex;
-            }
-        }
-    </style>
-
-
 </head>
 
 <body class="text-gray-800">
 
-    <!-- Header / Navigation -->
+    <!-- =========== Header / Navigation =========== -->
     <header class="navbar-section">
         <nav class="navbar">
             <div class="navbar-container">
-            <!-- Encabezado mobile -->
-            <div class="mobile-header-bar mobile-only">
-            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-            <a href="../index.html" class="logo">
-            <picture><source srcset="../assets/img/logos/usittel-logo.webp" type="image/webp"><img src="../assets/img/logos/usittel-logo.png" alt="Usittel Logo" /></picture>
-            </a>
-            </div>
-
-            <!-- Encabezado desktop -->
-            <div class="nav-left desktop-only">
-            <a href="../index.html" class="logo">
-            <picture><source srcset="../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></picture>
-            </a>
-            <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
-            <li class="dropdown">
-                <a href="./internet.html">Productos ▾</a>
-                <ul class="dropdown-menu">
-                <li><a href="./internet.html">Internet</a></li>
-                <li><a href="./mesh.html">WiFi Mesh</a></li>
-                <li><a href="./tv.html">TV</a></li>
-                </ul>
-            </li>
-            <li><a href="./empresas.html">Empresas</a></li>
-            <li><a href="./contacto.html">Contáctanos</a></li>
-            </ul>
-            </div>
-
-            <div class="nav-actions desktop-only">
-            <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-            </div>
-            </div>
-
-            <!-- Overlay y menú mobile -->
-            <div class="overlay" id="overlay"></div>
-            <div class="mobile-menu-slide" id="mobileMenu">
-            <div class="mobile-menu-header">
-            <picture><source srcset="../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></picture>
-            <button class="close-menu" id="closeMenu">&times;</button>
-            </div>
-            <hr />
-            <a href="../index.html">Home</a>
-            <div class="submenu-container">
-            <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
-            <div class="submenu" id="productsSubmenu">
-            <a href="./internet.html">Internet</a>
-            <a href="./mesh.html">WiFi Mesh</a>
-            <a href="./tv.html">TV</a>
-            </div>
-            </div>
-            <a href="./empresas.html">Empresas</a>
-            <a href="./contacto.html">Contáctanos</a>
-            <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
-            <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+                <div class="nav-left">
+                    <a href="../index.html" class="logo"><img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></a>
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li class="dropdown">
+                            <a href="#">Productos ▾</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="./internet.html">Internet</a></li>
+                                <li><a href="./mesh.html">WiFi Mesh</a></li>
+                                <li><a href="./tv.html">TV</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="./empresas.html">Empresas</a></li>
+                        <li><a href="./contacto.html">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="./centro de ayuda.html" class="nav-button-green">Centro de ayuda</a>
+                    <a href="https://www.clientes.usittel.com.ar/" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+                </div>
             </div>
         </nav>
-
     </header>
 
     <main>
-        <!-- Hero Section -->
+        <!-- =========== Hero Section =========== -->
         <section class="bg-white py-20 md:py-28">
             <div class="container mx-auto text-center px-6">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Solicitud de Baja y
-                    Arrepentimiento</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Desde aquí puede gestionar la baja de sus servicios o
-                    el arrepentimiento de una compra.</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Solicitud de Baja de Servicio</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Desde aquí puede gestionar la baja de sus servicios o el arrepentimiento de una compra.</p>
             </div>
         </section>
 
-        <!-- Retention & Cancellation Section -->
+        <!-- =========== Retention & Cancellation Section =========== -->
         <section class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-6 max-w-4xl">
-
+            <div class="container mx-auto px-6 max-w-5xl">
+                
                 <!-- Retention Block -->
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg mb-12">
-                    <div class="flex items-start gap-4">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg mb-16">
+                     <div class="flex items-start gap-4">
                         <i class="fas fa-info-circle text-blue-600 text-3xl"></i>
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900">Antes de continuar, ¡hablemos!</h2>
-                            <p class="text-gray-700 mt-2">A veces, los problemas tienen una solución más simple de lo
-                                que parece. Si estás teniendo inconvenientes técnicos, de facturación o sentís que tu
-                                plan no se ajusta a tus necesidades, nuestro equipo puede ayudarte.</p>
-                            <div class="mt-6">
-                                <a href="https://wa.me/5492494060345" target="_blank"
-                                    class="cta-button inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
+                             <h2 class="text-2xl font-bold text-gray-900">Antes de continuar, ¡hablemos!</h2>
+                             <p class="text-gray-700 mt-2">A veces, los problemas tienen una solución más simple de lo que parece. Si estás teniendo inconvenientes técnicos, de facturación o sentís que tu plan no se ajusta a tus necesidades, nuestro equipo puede ayudarte.</p>
+                             <div class="mt-6">
+                                <a href="https://wa.me/5492494060345" target="_blank" class="cta-button inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
                                     <i class="fab fa-whatsapp mr-2"></i> Hablar con un representante
                                 </a>
-                            </div>
+                             </div>
                         </div>
-                    </div>
+                     </div>
                 </div>
 
                 <!-- Cancellation Options -->
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Gestionar mi servicio</h2>
-                    <div class="bg-white p-8 rounded-lg shadow-md">
-                        <p class="text-center text-gray-600 mb-8">Si ya tomaste una decisión, podés iniciar tu gestión
-                            desde aquí. Seleccioná la opción que corresponda.</p>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <!-- Arrepentimiento -->
-                            <button id="arrepentimiento-btn"
-                                class="text-left bg-gray-100 p-6 rounded-lg hover:bg-gray-200 transition-colors w-full">
-                                <h3 class="text-xl font-bold text-gray-800">Botón de Arrepentimiento</h3>
-                                <p class="text-gray-600 mt-1">Si contrataste un servicio en los últimos 10 días y querés
-                                    cancelarlo.</p>
-                            </button>
-                            <!-- Baja -->
-                            <button id="baja-btn"
-                                class="text-left bg-gray-100 p-6 rounded-lg hover:bg-gray-200 transition-colors w-full">
-                                <h3 class="text-xl font-bold text-gray-800">Solicitud de Baja</h3>
-                                <p class="text-gray-600 mt-1">Para clientes existentes que desean dar de baja uno o más
-                                    servicios.</p>
-                            </button>
-                        </div>
-
-                        <!-- Cancellation Form Container -->
-                        <div id="cancellation-form-container" class="cancellation-form-container">
-                            <div id="cancellation-form-content" class="bg-white border-t-2 border-gray-200 pt-8">
-                                <!-- Form content will be injected here by JS -->
+                     <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Canales para solicitar la baja</h2>
+                     <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Si ya tomaste una decisión, podés gestionar la baja de tu servicio a través de cualquiera de nuestros canales de atención.</p>
+                     
+                     <div class="grid md:grid-cols-1 gap-8">
+                        <!-- WhatsApp Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-8 border-2 border-green-500">
+                            <div class="flex-shrink-0 text-center">
+                                <i class="fab fa-whatsapp text-7xl text-green-500"></i>
+                            </div>
+                            <div class="text-center md:text-left flex-grow">
+                                <h3 class="text-2xl font-bold text-gray-900">Atención por WhatsApp</h3>
+                                <p class="text-gray-600 mt-2">La forma más rápida y directa para iniciar tu gestión. Un representante te guiará en el proceso.</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <a href="https://wa.me/5492494060345?text=Hola%2C%20quisiera%20iniciar%20la%20solicitud%20de%20baja%20de%20mi%20servicio." target="_blank" class="cta-button inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full">
+                                    Solicitar Baja
+                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
 
-                <!-- Other Contact Methods -->
-                <div class="text-center mt-16">
-                    <h3 class="text-xl font-bold text-gray-800">Otros Canales de Contacto</h3>
-                    <p class="text-gray-600 mt-2">También podés realizar tu gestión comunicándote a nuestro <br>
-                        <strong>0800 199 4545</strong> o acercándote a nuestra oficina en <strong>Nigro 575,
-                            Tandil.</strong></p>
+                    <div class="grid md:grid-cols-3 gap-8 mt-8">
+                         <!-- Phone Card -->
+                         <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+                            <i class="fas fa-phone-alt text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Línea Telefónica</h3>
+                            <p class="text-gray-600 mt-2">Comunicate con nuestro centro de atención al cliente.</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">0800 199 4545</p>
+                            <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16 hs.</p>
+                         </div>
+                         <!-- Email Card -->
+                         <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+                            <i class="fas fa-envelope text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Email</h3>
+                            <p class="text-gray-600 mt-2">Envianos tu solicitud por correo electrónico.</p>
+                            <a href="mailto:contacto@usittel.com.ar" class="font-semibold text-lg text-blue-600 hover:underline mt-2 inline-block">contacto@usittel.com.ar</a>
+                         </div>
+                         <!-- Office Card -->
+                         <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+                            <i class="fas fa-building text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Oficina Comercial</h3>
+                            <p class="text-gray-600 mt-2">También podés acercarte personalmente.</p>
+                            <p class="text-lg font-semibold text-gray-900 mt-2">Nigro 575, Tandil</p>
+                            <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16 hs.</p>
+                         </div>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-  <footer class="bg-gray-800 text-white pt-16 pb-8">
-    <div class="container mx-auto px-6 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Columna de Contacto y Horarios -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                <div class="space-y-3 text-gray-300">
-                    <p class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                        <span>Nigro 575, Tandil</span>
-                    </p>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span>+54 9 249 406-0345</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
-                    </div>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <span>0800-199-4545</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Columna de Servicios -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                    <li><a href="tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-                    <li><a href="mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Soporte -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                    <li><a href="https://www.clientes.usittel.com.ar/" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Legal y Logo -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                <ul class="space-y-2">
-                    <li><a href="terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-                </ul>
-                <div class="pt-4">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
-                </div>
-            </div>
-        </div>
-
-        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-            </div>
-        </div>
-    </div>
-  </footer>
-
-     <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-       class="flex items-center no-underline group hover:no-underline focus:no-underline"
-       aria-label="Chateá con nosotros por WhatsApp">
-      <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-            style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-        <i class="fab fa-whatsapp"></i>
-      </span>
-      <span class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors" style="min-width: 126px;">
-        <span>¿Necesitás ayuda?</span>
-        <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-      </span>
-    </a>
-  </div>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const arrepentimientoBtn = document.getElementById('arrepentimiento-btn');
-            const bajaBtn = document.getElementById('baja-btn');
-            const formContainer = document.getElementById('cancellation-form-container');
-            const formContent = document.getElementById('cancellation-form-content');
-
-            const formHTML = `
-        <h3 class="text-xl font-bold text-gray-900 mb-4" id="form-title"></h3>
-        <div class="bg-gray-100 p-8 lg:p-12 rounded-xl shadow-lg max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- =========== Footer =========== -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
                 <div>
-                    <h3 class="text-2xl font-bold mb-4">Contactanos</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                <i class="fa-solid fa-phone text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-lg">Teléfono</h4>
-                                <a href="tel:08001994545" class="text-gray-600 hover:text-blue-600">0800-199-4545</a>
-                                <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16hs.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-4">
-                            <div class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                <i class="fab fa-whatsapp text-3xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-lg">WhatsApp</h4>
-                                <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
-                                <p class="text-sm text-gray-500">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                <i class="fa-solid fa-envelope text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-lg">Email</h4>
-                                <a href="mailto:contacto@usittel.com.ar" class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-4">
-                            <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                <i class="fa-solid fa-location-dot text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-lg">Oficina</h4>
-                                <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 class="font-bold mb-4 uppercase">Usittel</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Sobre nosotros</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Trabajá con nosotros</a></li>
+                    </ul>
                 </div>
-
                 <div>
-                    <h3 class="text-2xl font-bold mb-4">Nuestra ubicación</h3>
-                    <div class="rounded-lg overflow-hidden shadow-lg h-[300px]">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
-                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
-                    </div>
+                    <h4 class="font-bold mb-4 uppercase">Servicios</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Soporte</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Preguntas Frecuentes</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Medios de pago</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Test de velocidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 uppercase">Legal</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4"></h4>
+                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md" />
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
                 </div>
             </div>
         </div>
-    `;
-
-            function showForm(type) {
-                formContent.innerHTML = formHTML;
-                const formTitle = document.getElementById('form-title');
-
-                if (type === 'arrepentimiento') {
-                    formTitle.textContent = 'Formulario de Arrepentimiento de Compra';
-                } else {
-                    formTitle.textContent = 'Formulario de Solicitud de Baja';
-                }
-
-                formContainer.classList.add('open');
-                formContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-                // Agregar event listener al formulario después de que se genere
-                setTimeout(() => {
-                    // Ya no necesitamos manejar el envío del formulario
-                    // Solo mostramos la información de contacto
-                }, 100);
-            }
-
-            arrepentimientoBtn.addEventListener('click', () => showForm('arrepentimiento'));
-            bajaBtn.addEventListener('click', () => showForm('baja'));
-        });
-    </script>
+    </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -755,7 +407,5 @@
         });
     </script>
 
-
 </body>
-
 </html>

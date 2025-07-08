@@ -124,8 +124,9 @@
     </div>
 
     <script>
-        // Ya no se usan credenciales en el frontend
-        // El login se valida en el servidor vía login.php
+        // Credenciales autorizadas (temporales hasta solucionar PHP)
+        const AUTHORIZED_USER = 'admin';
+        const AUTHORIZED_PASSWORD = 'Usittel#2025#';
 
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
@@ -142,23 +143,20 @@
             }
         }
 
-        // Función de login usando AJAX
-        async function handleLogin(event) {
+        // Función de login con JavaScript
+        function handleLogin(event) {
             event.preventDefault();
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
+            
             errorMessage.classList.add('hidden');
             buttonText.textContent = 'Verificando...';
             loginForm.querySelector('button').disabled = true;
 
-            try {
-                const response = await fetch('login.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const result = await response.json();
-                if (result.status === 'ok') {
+            // Simular delay de verificación
+            setTimeout(() => {
+                if (username === AUTHORIZED_USER && password === AUTHORIZED_PASSWORD) {
+                    // Login exitoso
                     sessionStorage.setItem('usittel_authenticated', 'true');
                     sessionStorage.setItem('usittel_user', username);
                     buttonText.textContent = 'Accediendo...';
@@ -166,20 +164,19 @@
                         window.location.href = 'tools.html';
                     }, 1000);
                 } else {
-                    throw new Error('Usuario o contraseña incorrectos');
+                    // Login fallido
+                    errorText.textContent = 'Usuario o contraseña incorrectos';
+                    errorMessage.classList.remove('hidden');
+                    loginForm.classList.add('shake');
+                    setTimeout(() => {
+                        loginForm.classList.remove('shake');
+                    }, 500);
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    buttonText.textContent = 'Iniciar Sesión';
+                    loginForm.querySelector('button').disabled = false;
                 }
-            } catch (e) {
-                errorText.textContent = e.message || 'Error de conexión';
-                errorMessage.classList.remove('hidden');
-                loginForm.classList.add('shake');
-                setTimeout(() => {
-                    loginForm.classList.remove('shake');
-                }, 500);
-                passwordInput.value = '';
-                passwordInput.focus();
-                buttonText.textContent = 'Iniciar Sesión';
-                loginForm.querySelector('button').disabled = false;
-            }
+            }, 500);
         }
 
         loginForm.addEventListener('submit', handleLogin);

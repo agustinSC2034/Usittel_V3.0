@@ -1,4 +1,4 @@
-// Sistema de autenticación para herramientas Usittel
+// Sistema de autenticación para herramientas Usittel (JavaScript puro)
 class UsittelAuth {
     constructor() {
         this.checkAuth();
@@ -61,6 +61,14 @@ class UsittelAuth {
             document.body.appendChild(userInfo);
         }
     }
+
+    // Verificar autenticación en tiempo real
+    verifyAuth() {
+        if (!this.checkAuth()) {
+            return false;
+        }
+        return true;
+    }
 }
 
 // Inicializar autenticación
@@ -71,4 +79,9 @@ if (window.location.pathname.includes('nap_data.json') ||
     window.location.pathname.includes('nap_data.js') ||
     window.location.pathname.includes('cajas_naps.csv')) {
     auth.redirectToLogin();
-} 
+}
+
+// Verificar autenticación cada 30 segundos
+setInterval(() => {
+    auth.verifyAuth();
+}, 30000); 

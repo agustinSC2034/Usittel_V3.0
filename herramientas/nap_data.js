@@ -1,4 +1,4 @@
-const napData = [
+window.napData = [
     { id: "LABO-TANDIL", direccion: "Santamarina 450 , TANDIL", puertosTotales: 8, puertosOcupados: 7, lat: -37.3257523, lon: -59.1300813 },
     { id: "SM-C05-40", direccion: "Roser 1578, TANDIL", puertosTotales: 8, puertosOcupados: 4, lat: -37.3291518, lon: -59.1173412 },
     { id: "SM-C01-07", direccion: "BUZON 830, TANDIL", puertosTotales: 16, puertosOcupados: 0, lat: -37.3169184, lon: -59.1205074 },

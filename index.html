@@ -630,78 +630,84 @@
     <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6"
       style="background-size: cover; min-height: calc(100vh - 0px)">
       <canvas id="hero-canvas"></canvas>
-      <div class="absolute inset-0 bg-black opacity-50"></div>
+      <!-- Ajuste: Menos opacidad para ver más la imagen de fondo -->
+      <div class="absolute inset-0 bg-black" style="opacity:0.32"></div>
       <div class="hero-content relative z-10">
-        <picture><source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
-          class="h-16 md:h-20 mx-auto mb-5" /></picture>
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
-          La fibra óptica más rápida de Tandil.
-        </h1>
-        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">
-          Velocidad y confiabilidad para streaming, gaming y trabajo sin
-          interrupciones.
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-          <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
-        </div>
+      <picture><source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
+        class="h-16 md:h-20 mx-auto mb-5" /></picture>
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
+        La fibra óptica más rápida de Tandil.
+      </h1>
+      <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">
+        Velocidad y confiabilidad para streaming, gaming y trabajo sin
+        interrupciones.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4"></div>
+        <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
+        <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+      </div>
       </div>
     </section>
     <script>
       // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop, nunca repite la última)
       document.addEventListener("DOMContentLoaded", function () {
-        const heroImagesDesktop = [
-          "assets/img/hero/hero1.jpg",
-          "assets/img/hero/hero2.jpg",
-          "assets/img/hero/hero3.jpg",
-        ];
-        const heroImagesMobile = [
-          "assets/img/hero/hero1_mobile.jpg",
-          "assets/img/hero/hero2_mobile.jpg",
-          "assets/img/hero/hero3_mobile.jpg",
-        ];
+      const heroImagesDesktop = [
+        "assets/img/hero/web/hero_final_1.png",
+        "assets/img/hero/web/hero_final_2.jpg",
+        "assets/img/hero/web/hero_final_4.png",
+        "assets/img/hero/web/hero_final_5.png",
+        "assets/img/hero/web/hero_final_6.png",
+        "assets/img/hero/web/hero_final_8.png",
+        "assets/img/hero/web/hero_final_10.png",
+      ];
+      const heroImagesMobile = [
+        "assets/img/hero/mobile/hero_mobile.jpg",
+        "assets/img/hero/mobile/hero_mobile.png",
+        "assets/img/hero/mobile/hero_final_7.png",
+        "assets/img/hero/mobile/hero_mobile_final_4.png",
+      ];
 
-        function isMobile() {
-          return window.innerWidth <= 900;
+      function isMobile() {
+        return window.innerWidth <= 900;
+      }
+
+      function getLastHeroImgKey() {
+        return isMobile() ? "lastHeroImgMobile" : "lastHeroImgDesktop";
+      }
+
+      function setHeroBackground() {
+        const heroContainer = document.getElementById("hero-container");
+        if (!heroContainer) return;
+        const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
+        const lastImgKey = getLastHeroImgKey();
+        const lastImg = sessionStorage.getItem(lastImgKey);
+
+        // Filtrar la última imagen usada
+        const availableImages = images.filter((img) => img !== lastImg);
+        // Si solo queda una (o ninguna), usar la lista completa
+        const pool = availableImages.length > 0 ? availableImages : images;
+        const randomImg = pool[Math.floor(Math.random() * pool.length)];
+        heroContainer.style.backgroundImage = `url('${randomImg}')`;
+        sessionStorage.setItem(lastImgKey, randomImg);
+      }
+
+      // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
+      function setHeroHeight() {
+        const nav = document.querySelector(".navbar-section");
+        const hero = document.getElementById("hero-container");
+        if (nav && hero) {
+        const navHeight = nav.offsetHeight;
+        hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
         }
+      }
 
-        function getLastHeroImgKey() {
-          return isMobile() ? "lastHeroImgMobile" : "lastHeroImgDesktop";
-        }
+      setHeroBackground();
+      setHeroHeight();
 
-        function setHeroBackground() {
-          const heroContainer = document.getElementById("hero-container");
-          if (!heroContainer) return;
-          const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
-          const lastImgKey = getLastHeroImgKey();
-          const lastImg = sessionStorage.getItem(lastImgKey);
-
-          // Filtrar la última imagen usada
-          const availableImages = images.filter((img) => img !== lastImg);
-          // Si solo queda una (o ninguna), usar la lista completa
-          const pool = availableImages.length > 0 ? availableImages : images;
-          const randomImg = pool[Math.floor(Math.random() * pool.length)];
-          heroContainer.style.backgroundImage = `url('${randomImg}')`;
-          sessionStorage.setItem(lastImgKey, randomImg);
-        }
-
-        // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
-        function setHeroHeight() {
-          const nav = document.querySelector(".navbar-section");
-          const hero = document.getElementById("hero-container");
-          if (nav && hero) {
-            const navHeight = nav.offsetHeight;
-            hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
-          }
-        }
-
+      window.addEventListener("resize", function () {
         setHeroBackground();
         setHeroHeight();
-
-        window.addEventListener("resize", function () {
-          setHeroBackground();
-          setHeroHeight();
-        });
+      });
       });
     </script>
 

@@ -40,7 +40,7 @@ Geolocalización: Pensar en cómo convertir las direcciones de los domicilios y 
 
 Cálculo de Proximidad Real: Una vez que todo esté en un mapa virtual, idear una forma de calcular la distancia real en metros entre un domicilio y las cajas cercanas.
 
-Filtrado por Radio: Establecer un radio de acción efectivo (por ejemplo, 100 o 150 metros) para determinar qué significa "muy cerca". Un cliente dentro de este radio de una caja vacía es un candidato ideal.
+Filtrado por Radio: Establecer un radio de acción efectivo (por ejemplo, 100 metros o menos) para determinar qué significa "muy cerca". Un cliente dentro de este radio de una caja vacía es un candidato ideal.
 
 El resultado final debería ser un listado limpio que contenga, para cada cliente potencial, información sobre la caja más cercana y la distancia a la que se encuentra.
 

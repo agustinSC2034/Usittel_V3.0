@@ -1,0 +1,982 @@
+{
+  "4 de April 1190": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE septiembre 0906": {
+    "exito": true,
+    "lat": -37.3181018,
+    "lon": -59.1270709,
+    "direccion_completa": "11 DE septiembre 0906, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 0966": {
+    "exito": true,
+    "lat": -37.3174923,
+    "lon": -59.1274384,
+    "direccion_completa": "11 DE septiembre 0966, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 0970": {
+    "exito": true,
+    "lat": -37.3174517,
+    "lon": -59.1274629,
+    "direccion_completa": "11 DE septiembre 0970, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 0973": {
+    "exito": true,
+    "lat": -37.3173849,
+    "lon": -59.1273157,
+    "direccion_completa": "11 DE septiembre 0973, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1012": {
+    "exito": true,
+    "lat": -37.3168048,
+    "lon": -59.1278354,
+    "direccion_completa": "11 DE SEPTIEMBRE 1012, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1041": {
+    "exito": true,
+    "lat": -37.3165077,
+    "lon": -59.1278467,
+    "direccion_completa": "11 DE SEPTIEMBRE 1041, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1050 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1052 - DTO. 3": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 de septiembre 1060": {
+    "exito": true,
+    "lat": -37.3163626,
+    "lon": -59.1281065,
+    "direccion_completa": "11 de septiembre 1060, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1068 - DTO. 10": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 - DTO. 5": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 - DTO. 6": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 PISO 1 - 3": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 PISO 1 - 7": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 PISO 2 - 8": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1068 PISO 2 - 9": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1080 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1083": {
+    "exito": true,
+    "lat": -37.3161235,
+    "lon": -59.1280739,
+    "direccion_completa": "11 DE SEPTIEMBRE 1083, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1127": {
+    "exito": true,
+    "lat": -37.3154822,
+    "lon": -59.128452,
+    "direccion_completa": "11 DE SEPTIEMBRE 1127, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1135": {
+    "exito": true,
+    "lat": -37.3154067,
+    "lon": -59.1284968,
+    "direccion_completa": "11 DE SEPTIEMBRE 1135, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1136": {
+    "exito": true,
+    "lat": -37.3154248,
+    "lon": -59.1286638,
+    "direccion_completa": "11 DE SEPTIEMBRE 1136, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1150 - 4": {
+    "exito": true,
+    "lat": -37.3146532,
+    "lon": -59.1290249,
+    "direccion_completa": "11 DE SEPTIEMBRE 1150 - 4, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1163": {
+    "exito": true,
+    "lat": -37.3151424,
+    "lon": -59.1286536,
+    "direccion_completa": "11 DE SEPTIEMBRE 1163, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1166": {
+    "exito": true,
+    "lat": -37.3151455,
+    "lon": -59.1288341,
+    "direccion_completa": "11 DE SEPTIEMBRE 1166, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1179": {
+    "exito": true,
+    "lat": -37.3149914,
+    "lon": -59.1287431,
+    "direccion_completa": "11 DE SEPTIEMBRE 1179, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1187": {
+    "exito": true,
+    "lat": -37.3149159,
+    "lon": -59.1287879,
+    "direccion_completa": "11 DE SEPTIEMBRE 1187, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 1190": {
+    "exito": true,
+    "lat": -37.314922,
+    "lon": -59.1289704,
+    "direccion_completa": "11 DE septiembre 1190, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1190": {
+    "exito": true,
+    "lat": -37.314922,
+    "lon": -59.1289704,
+    "direccion_completa": "11 DE SEPTIEMBRE 1190, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1203": {
+    "exito": true,
+    "lat": -37.3144776,
+    "lon": -59.1290515,
+    "direccion_completa": "11 DE SEPTIEMBRE 1203, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 1240": {
+    "exito": true,
+    "lat": -37.3142087,
+    "lon": -59.1293673,
+    "direccion_completa": "11 DE septiembre 1240, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1260": {
+    "exito": true,
+    "lat": -37.3140265,
+    "lon": -59.1294722,
+    "direccion_completa": "11 DE SEPTIEMBRE 1260, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1322 - DTO. 1": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1322 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1322 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1332": {
+    "exito": true,
+    "lat": -37.3131,
+    "lon": -59.130035,
+    "direccion_completa": "11 DE SEPTIEMBRE 1332, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1352": {
+    "exito": true,
+    "lat": -37.3129178,
+    "lon": -59.13014,
+    "direccion_completa": "11 DE SEPTIEMBRE 1352, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 1353": {
+    "exito": true,
+    "lat": -37.3128516,
+    "lon": -59.1300126,
+    "direccion_completa": "11 DE septiembre 1353, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1353": {
+    "exito": true,
+    "lat": -37.3128516,
+    "lon": -59.1300126,
+    "direccion_completa": "11 DE SEPTIEMBRE 1353, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1359": {
+    "exito": true,
+    "lat": -37.3127972,
+    "lon": -59.1300434,
+    "direccion_completa": "11 DE SEPTIEMBRE 1359, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1385 - DTO. A": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1386": {
+    "exito": true,
+    "lat": -37.3126081,
+    "lon": -59.1303185,
+    "direccion_completa": "11 DE SEPTIEMBRE 1386, Tandil, Buenos Aires, Argentina"
+  },
+  "11 de septiembre 1420": {
+    "exito": true,
+    "lat": -37.3120234,
+    "lon": -59.1306708,
+    "direccion_completa": "11 de septiembre 1420, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1441": {
+    "exito": true,
+    "lat": -37.311792,
+    "lon": -59.1306277,
+    "direccion_completa": "11 DE SEPTIEMBRE 1441, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1447": {
+    "exito": true,
+    "lat": -37.3117376,
+    "lon": -59.1306585,
+    "direccion_completa": "11 DE SEPTIEMBRE 1447, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1451- DTO.": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 1521": {
+    "exito": true,
+    "lat": -37.310835,
+    "lon": -59.1312004,
+    "direccion_completa": "11 DE SEPTIEMBRE 1521, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE septiembre 1549": {
+    "exito": true,
+    "lat": -37.3105804,
+    "lon": -59.1313502,
+    "direccion_completa": "11 DE septiembre 1549, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 1579": {
+    "exito": true,
+    "lat": -37.3103077,
+    "lon": -59.1315106,
+    "direccion_completa": "11 DE SEPTIEMBRE 1579, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 902": {
+    "exito": true,
+    "lat": -37.3181424,
+    "lon": -59.1270464,
+    "direccion_completa": "11 DE SEPTIEMBRE 902, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 919": {
+    "exito": true,
+    "lat": -37.31793,
+    "lon": -59.1269957,
+    "direccion_completa": "11 DE SEPTIEMBRE 919, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 920": {
+    "exito": true,
+    "lat": -37.3179596,
+    "lon": -59.1271566,
+    "direccion_completa": "11 DE SEPTIEMBRE 920, Tandil, Buenos Aires, Argentina"
+  },
+  "11 DE SEPTIEMBRE 943 - DTO. 1": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 953 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "11 DE SEPTIEMBRE 984": {
+    "exito": true,
+    "lat": -37.3173095,
+    "lon": -59.1275486,
+    "direccion_completa": "11 DE SEPTIEMBRE 984, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 0918": {
+    "exito": true,
+    "lat": -37.3196085,
+    "lon": -59.1316259,
+    "direccion_completa": "4 DE abril 0918, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 0933": {
+    "exito": true,
+    "lat": -37.3193926,
+    "lon": -59.1315053,
+    "direccion_completa": "4 DE abril 0933, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1013": {
+    "exito": true,
+    "lat": -37.3184037,
+    "lon": -59.1320896,
+    "direccion_completa": "4 DE ABRIL 1013, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1015": {
+    "exito": true,
+    "lat": -37.3183858,
+    "lon": -59.1321006,
+    "direccion_completa": "4 DE abril 1015, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1015": {
+    "exito": true,
+    "lat": -37.3183858,
+    "lon": -59.1321006,
+    "direccion_completa": "4 DE ABRIL 1015, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1024": {
+    "exito": true,
+    "lat": -37.3183583,
+    "lon": -59.1323521,
+    "direccion_completa": "4 DE ABRIL 1024, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1031": {
+    "exito": true,
+    "lat": -37.3182427,
+    "lon": -59.132188,
+    "direccion_completa": "4 DE ABRIL 1031, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1044": {
+    "exito": true,
+    "lat": -37.3181759,
+    "lon": -59.1324569,
+    "direccion_completa": "4 DE ABRIL 1044, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1044 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "4 DE ABRIL 1074": {
+    "exito": true,
+    "lat": -37.3179023,
+    "lon": -59.132614,
+    "direccion_completa": "4 DE ABRIL 1074, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1075": {
+    "exito": true,
+    "lat": -37.3178492,
+    "lon": -59.1324283,
+    "direccion_completa": "4 DE abril 1075, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1117": {
+    "exito": true,
+    "lat": -37.3172071,
+    "lon": -59.1327869,
+    "direccion_completa": "4 DE ABRIL 1117, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1120": {
+    "exito": true,
+    "lat": -37.3172533,
+    "lon": -59.1330052,
+    "direccion_completa": "4 DE ABRIL 1120, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1120 PISO P.A. - D": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "4 DE abril 1139": {
+    "exito": true,
+    "lat": -37.3169951,
+    "lon": -59.1329052,
+    "direccion_completa": "4 DE abril 1139, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1146": {
+    "exito": true,
+    "lat": -37.3170039,
+    "lon": -59.133145,
+    "direccion_completa": "4 DE ABRIL 1146, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1148": {
+    "exito": true,
+    "lat": -37.3169847,
+    "lon": -59.1331557,
+    "direccion_completa": "4 DE ABRIL 1148, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1158": {
+    "exito": true,
+    "lat": -37.3168888,
+    "lon": -59.1332095,
+    "direccion_completa": "4 DE abril 1158, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1163": {
+    "exito": true,
+    "lat": -37.3167639,
+    "lon": -59.1330342,
+    "direccion_completa": "4 DE ABRIL 1163, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1165": {
+    "exito": true,
+    "lat": -37.3167446,
+    "lon": -59.1330449,
+    "direccion_completa": "4 DE ABRIL 1165, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1176": {
+    "exito": true,
+    "lat": -37.3167162,
+    "lon": -59.1333062,
+    "direccion_completa": "4 DE ABRIL 1176, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1182": {
+    "exito": true,
+    "lat": -37.3166587,
+    "lon": -59.1333385,
+    "direccion_completa": "4 DE ABRIL 1182, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1193": {
+    "exito": true,
+    "lat": -37.3164748,
+    "lon": -59.1331954,
+    "direccion_completa": "4 DE ABRIL 1193, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1208": {
+    "exito": true,
+    "lat": -37.3161804,
+    "lon": -59.1336366,
+    "direccion_completa": "4 DE abril 1208, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1208": {
+    "exito": true,
+    "lat": -37.3161804,
+    "lon": -59.1336366,
+    "direccion_completa": "4 DE ABRIL 1208, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1226": {
+    "exito": true,
+    "lat": -37.3160165,
+    "lon": -59.1337311,
+    "direccion_completa": "4 DE ABRIL 1226, Tandil, Buenos Aires, Argentina"
+  },
+  "4 de abril 1229": {
+    "exito": true,
+    "lat": -37.3159375,
+    "lon": -59.1335701,
+    "direccion_completa": "4 de abril 1229, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1254": {
+    "exito": true,
+    "lat": -37.3157614,
+    "lon": -59.133878,
+    "direccion_completa": "4 DE ABRIL 1254, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1270": {
+    "exito": true,
+    "lat": -37.3156157,
+    "lon": -59.133962,
+    "direccion_completa": "4 DE ABRIL 1270, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1278": {
+    "exito": true,
+    "lat": -37.3155428,
+    "lon": -59.134004,
+    "direccion_completa": "4 DE ABRIL 1278, Tandil, Buenos Aires, Argentina"
+  },
+  "4 de Abril 1284": {
+    "exito": true,
+    "lat": -37.3154881,
+    "lon": -59.1340355,
+    "direccion_completa": "4 de Abril 1284, Tandil, Buenos Aires, Argentina"
+  },
+  "4 de abril 1337": {
+    "exito": true,
+    "lat": -37.3146551,
+    "lon": -59.1343265,
+    "direccion_completa": "4 de abril 1337, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1348": {
+    "exito": true,
+    "lat": -37.3146302,
+    "lon": -59.1345261,
+    "direccion_completa": "4 DE ABRIL 1348, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1358": {
+    "exito": true,
+    "lat": -37.3145391,
+    "lon": -59.1345785,
+    "direccion_completa": "4 DE ABRIL 1358, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1374": {
+    "exito": true,
+    "lat": -37.3143934,
+    "lon": -59.1346625,
+    "direccion_completa": "4 DE ABRIL 1374, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1444 - FTE.": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "4 DE ABRIL 1460": {
+    "exito": true,
+    "lat": -37.3133438,
+    "lon": -59.1352768,
+    "direccion_completa": "4 DE ABRIL 1460, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1465 - DTO. 1": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "4 DE ABRIL 1465 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "4 DE ABRIL 1471": {
+    "exito": true,
+    "lat": -37.3131742,
+    "lon": -59.1351999,
+    "direccion_completa": "4 DE ABRIL 1471, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1496": {
+    "exito": true,
+    "lat": -37.3130158,
+    "lon": -59.1354658,
+    "direccion_completa": "4 DE ABRIL 1496, Tandil, Buenos Aires, Argentina"
+  },
+  "4 de abril 1496": {
+    "exito": true,
+    "lat": -37.3130158,
+    "lon": -59.1354658,
+    "direccion_completa": "4 de abril 1496, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1501": {
+    "exito": true,
+    "lat": -37.3126884,
+    "lon": -59.1355115,
+    "direccion_completa": "4 DE abril 1501, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1501": {
+    "exito": true,
+    "lat": -37.3126884,
+    "lon": -59.1355115,
+    "direccion_completa": "4 DE ABRIL 1501, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1520": {
+    "exito": true,
+    "lat": -37.3125792,
+    "lon": -59.1357326,
+    "direccion_completa": "4 DE ABRIL 1520, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1528": {
+    "exito": true,
+    "lat": -37.3125063,
+    "lon": -59.1357746,
+    "direccion_completa": "4 DE ABRIL 1528, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1541": {
+    "exito": true,
+    "lat": -37.3123258,
+    "lon": -59.135717,
+    "direccion_completa": "4 DE ABRIL 1541, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1543": {
+    "exito": true,
+    "lat": -37.3123077,
+    "lon": -59.1357273,
+    "direccion_completa": "4 DE ABRIL 1543, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE abril 1557": {
+    "exito": true,
+    "lat": -37.3121808,
+    "lon": -59.1357992,
+    "direccion_completa": "4 DE abril 1557, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1557": {
+    "exito": true,
+    "lat": -37.3121808,
+    "lon": -59.1357992,
+    "direccion_completa": "4 DE ABRIL 1557, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 1587": {
+    "exito": true,
+    "lat": -37.3119089,
+    "lon": -59.1359533,
+    "direccion_completa": "4 DE ABRIL 1587, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 918": {
+    "exito": true,
+    "lat": -37.3196085,
+    "lon": -59.1316259,
+    "direccion_completa": "4 DE ABRIL 918, Tandil, Buenos Aires, Argentina"
+  },
+  "4 DE ABRIL 988": {
+    "exito": true,
+    "lat": -37.3189263,
+    "lon": -59.1320162,
+    "direccion_completa": "4 DE ABRIL 988, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1055": {
+    "exito": true,
+    "lat": -37.3174704,
+    "lon": -59.1308679,
+    "direccion_completa": "ALSINA 1055, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1085 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 1111": {
+    "exito": true,
+    "lat": -37.3167328,
+    "lon": -59.1312944,
+    "direccion_completa": "ALSINA 1111, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1155": {
+    "exito": true,
+    "lat": -37.3163226,
+    "lon": -59.1315408,
+    "direccion_completa": "ALSINA 1155, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1211": {
+    "exito": true,
+    "lat": -37.3155384,
+    "lon": -59.1320417,
+    "direccion_completa": "ALSINA 1211, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1220": {
+    "exito": true,
+    "lat": -37.3155154,
+    "lon": -59.1322168,
+    "direccion_completa": "ALSINA 1220, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1242": {
+    "exito": true,
+    "lat": -37.315315,
+    "lon": -59.1323323,
+    "direccion_completa": "ALSINA 1242, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1267": {
+    "exito": true,
+    "lat": -37.3150308,
+    "lon": -59.1323293,
+    "direccion_completa": "ALSINA 1267, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1272": {
+    "exito": true,
+    "lat": -37.3150417,
+    "lon": -59.1324898,
+    "direccion_completa": "ALSINA 1272, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1274 - DPTO. 3": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 1285": {
+    "exito": true,
+    "lat": -37.3148676,
+    "lon": -59.1324218,
+    "direccion_completa": "ALSINA 1285, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1334": {
+    "exito": true,
+    "lat": -37.3141932,
+    "lon": -59.1330166,
+    "direccion_completa": "ALSINA 1334, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1362": {
+    "exito": true,
+    "lat": -37.3139382,
+    "lon": -59.1331635,
+    "direccion_completa": "ALSINA 1362, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1385": {
+    "exito": true,
+    "lat": -37.3136774,
+    "lon": -59.1331261,
+    "direccion_completa": "ALSINA 1385, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1402": {
+    "exito": true,
+    "lat": -37.3133251,
+    "lon": -59.1335363,
+    "direccion_completa": "ALSINA 1402, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1429": {
+    "exito": true,
+    "lat": -37.3130166,
+    "lon": -59.1335371,
+    "direccion_completa": "ALSINA 1429, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1438": {
+    "exito": true,
+    "lat": -37.3129972,
+    "lon": -59.1337253,
+    "direccion_completa": "ALSINA 1438, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1455 - SERV. COMUNES": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 1470": {
+    "exito": true,
+    "lat": -37.3127057,
+    "lon": -59.1338933,
+    "direccion_completa": "ALSINA 1470, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1482": {
+    "exito": true,
+    "lat": -37.3125964,
+    "lon": -59.1339563,
+    "direccion_completa": "ALSINA 1482, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1518": {
+    "exito": true,
+    "lat": -37.3120417,
+    "lon": -59.1342751,
+    "direccion_completa": "ALSINA 1518, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1536": {
+    "exito": true,
+    "lat": -37.3118777,
+    "lon": -59.1343696,
+    "direccion_completa": "ALSINA 1536, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1547": {
+    "exito": true,
+    "lat": -37.3117201,
+    "lon": -59.1343173,
+    "direccion_completa": "ALSINA 1547, Tandil, Buenos Aires, Argentina"
+  },
+  "Alsina 1550": {
+    "exito": true,
+    "lat": -37.3117502,
+    "lon": -59.1344431,
+    "direccion_completa": "Alsina 1550, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1567": {
+    "exito": true,
+    "lat": -37.3115389,
+    "lon": -59.1344201,
+    "direccion_completa": "ALSINA 1567, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 1580": {
+    "exito": true,
+    "lat": -37.3114769,
+    "lon": -59.1346005,
+    "direccion_completa": "ALSINA 1580, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 912": {
+    "exito": true,
+    "lat": -37.3191284,
+    "lon": -59.130108,
+    "direccion_completa": "ALSINA 912, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 926": {
+    "exito": true,
+    "lat": -37.3189932,
+    "lon": -59.130186,
+    "direccion_completa": "ALSINA 926, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 954": {
+    "exito": true,
+    "lat": -37.3187228,
+    "lon": -59.1303421,
+    "direccion_completa": "ALSINA 954, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 956 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 957": {
+    "exito": true,
+    "lat": -37.3186543,
+    "lon": -59.1301674,
+    "direccion_completa": "ALSINA 957, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 959 - LOC.": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 960 PISO P.A. - 5": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 962": {
+    "exito": true,
+    "lat": -37.3186455,
+    "lon": -59.1303867,
+    "direccion_completa": "ALSINA 962, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 980": {
+    "exito": true,
+    "lat": -37.3184716,
+    "lon": -59.1304871,
+    "direccion_completa": "ALSINA 980, Tandil, Buenos Aires, Argentina"
+  },
+  "Alsina 981": {
+    "exito": true,
+    "lat": -37.3184182,
+    "lon": -59.1303079,
+    "direccion_completa": "Alsina 981, Tandil, Buenos Aires, Argentina"
+  },
+  "ALSINA 997 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ALSINA 999": {
+    "exito": true,
+    "lat": -37.3182412,
+    "lon": -59.1304133,
+    "direccion_completa": "ALSINA 999, Tandil, Buenos Aires, Argentina"
+  },
+  "Alsina y Machado": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1038": {
+    "exito": true,
+    "lat": -37.3131261,
+    "lon": -59.1365424,
+    "direccion_completa": "ARANA 1038, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1070": {
+    "exito": true,
+    "lat": -37.3129778,
+    "lon": -59.1361432,
+    "direccion_completa": "ARANA 1070, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1072 - 1": {
+    "exito": true,
+    "lat": -37.3094333,
+    "lon": -59.1266744,
+    "direccion_completa": "ARANA 1072 - 1, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1073": {
+    "exito": true,
+    "lat": -37.3130582,
+    "lon": -59.1359886,
+    "direccion_completa": "ARANA 1073, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1074 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1098 - 1": {
+    "exito": true,
+    "lat": -37.3094333,
+    "lon": -59.1266744,
+    "direccion_completa": "ARANA 1098 - 1, Tandil, Buenos Aires, Argentina"
+  },
+  "Arana 1106": {
+    "exito": true,
+    "lat": -37.3126731,
+    "lon": -59.1353367,
+    "direccion_completa": "Arana 1106, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1156 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1164": {
+    "exito": true,
+    "lat": -37.3124244,
+    "lon": -59.1346708,
+    "direccion_completa": "ARANA 1164, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1178 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1178 - DTO. 4": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1179": {
+    "exito": true,
+    "lat": -37.3124652,
+    "lon": -59.1344101,
+    "direccion_completa": "ARANA 1179, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1185 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "Arana 1185 dto. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1198": {
+    "exito": true,
+    "lat": -37.3122787,
+    "lon": -59.1342805,
+    "direccion_completa": "ARANA 1198, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1206": {
+    "exito": true,
+    "lat": -37.3120852,
+    "lon": -59.133878,
+    "direccion_completa": "ARANA 1206, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1243": {
+    "exito": true,
+    "lat": -37.3120577,
+    "lon": -59.1333632,
+    "direccion_completa": "ARANA 1243, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1288": {
+    "exito": true,
+    "lat": -37.3117336,
+    "lon": -59.1329366,
+    "direccion_completa": "ARANA 1288, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1317 - PTA . ALTA - DTO.1": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1324": {
+    "exito": true,
+    "lat": -37.311447,
+    "lon": -59.1322163,
+    "direccion_completa": "ARANA 1324, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1330": {
+    "exito": true,
+    "lat": -37.3114213,
+    "lon": -59.1321474,
+    "direccion_completa": "ARANA 1330, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1349": {
+    "exito": true,
+    "lat": -37.3114657,
+    "lon": -59.1318276,
+    "direccion_completa": "ARANA 1349, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1356": {
+    "exito": true,
+    "lat": -37.3113098,
+    "lon": -59.1318489,
+    "direccion_completa": "ARANA 1356, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1359": {
+    "exito": true,
+    "lat": -37.3114229,
+    "lon": -59.1317128,
+    "direccion_completa": "ARANA 1359, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1363 - DTO. 2": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1363 - DTO. 3": {
+    "exito": false,
+    "error": "No encontrado"
+  },
+  "ARANA 1369": {
+    "exito": true,
+    "lat": -37.31138,
+    "lon": -59.1315979,
+    "direccion_completa": "ARANA 1369, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1375 - 2": {
+    "exito": true,
+    "lat": -37.3116725,
+    "lon": -59.1325986,
+    "direccion_completa": "ARANA 1375 - 2, Tandil, Buenos Aires, Argentina"
+  },
+  "ARANA 1383": {
+    "exito": true,
+    "lat": -37.31132,
+    "lon": -59.1314372,
+    "direccion_completa": "ARANA 1383, Tandil, Buenos Aires, Argentina"
+  }
+}

@@ -34,37 +34,54 @@ class ProcesadorZona1:
             json.dump(self.cache_geocoding, f, ensure_ascii=False, indent=2)
     
     def limpiar_direccion(self, direccion):
-        """Limpiar y normalizar dirección"""
+        """Limpiar y normalizar dirección de forma SUPER AGRESIVA"""
         if pd.isna(direccion):
             return None
         
-        direccion = str(direccion).strip()
+        direccion = str(direccion).strip().upper()
         
-        # Lista MUY ESPECÍFICA de sufijos a remover (solo al final)
-        sufijos_especificos = [
-            r'\s*[-–]\s*(DPTO|DTO|DEPTO|DEPARTAMENTO)\s*\w*$',
-            r'\s+(DPTO|DTO|DEPTO|DEPARTAMENTO)\s*\w*$',
-            r'\s*[-–]\s*(CASA|LOCAL|OFICINA|TALLER)\s*\w*$',
-            r'\s+(CASA|LOCAL|OFICINA|TALLER)\s*\w*$',
-            r'\s*[-–]\s*(INT\.?|INTERNO|INTERNA)\s*\w*$',
-            r'\s+(INT\.?|INTERNO|INTERNA)\s*\w*$',
-            r'\s*[-–]\s*PH\s*\w*$',
-            r'\s+PH\s*\w*$',
-            r'\s*[-–]\s*(PISO|P\.)\s*\w*$',
-            r'\s+(PISO|P\.)\s*\w*$',
-            r'\s*\(\s*(DPTO|DTO|DEPTO)\s*\d*\s*\)$',
-            r'\s*/\d+\s*$',
-            r'\s+[A-Z]\s*$',
-        ]
+        # PASO 1: Remover TODO después del primer guión o palabra clave
+        direccion = re.sub(r'\s*[-–]\s*DTO\.?\s*.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*DEPTO\.?\s*.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*PISO\s*.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*LOC\.?\s*.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*P\.?A\.?.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*P\.?B\.?.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*FTE\.?.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*FDO\.?.*$', '', direccion)
+        direccion = re.sub(r'\s*[-–]\s*\d+.*$', '', direccion)
         
-        # Aplicar limpiezas específicas solo al final
-        for patron in sufijos_especificos:
-            direccion = re.sub(patron, '', direccion, flags=re.IGNORECASE)
+        # PASO 2: Remover información entre paréntesis
+        direccion = re.sub(r'\s*\([^)]*\)', '', direccion)
         
-        # Limpiar espacios múltiples
-        direccion = ' '.join(direccion.split())
+        # PASO 3: Remover prefijos problemáticos
+        direccion = re.sub(r'^BO\.?\s+', '', direccion)
+        direccion = re.sub(r'^BARRIO\s+', '', direccion)
         
-        return direccion if direccion else None
+        # PASO 4: Remover códigos internos ANYWHERE
+        direccion = re.sub(r'\s+INT\s+\d+', '', direccion)
+        direccion = re.sub(r'\s+MON\.?\s*\w*', '', direccion)
+        direccion = re.sub(r'\s+B\s+FONAVI', '', direccion)
+        direccion = re.sub(r'\s+PISO\s+\w+', '', direccion)
+        
+        # PASO 5: Normalizar espacios
+        direccion = re.sub(r'\s+', ' ', direccion)
+        direccion = direccion.strip()
+        
+        # PASO 6: Extraer solo calle y número
+        match = re.match(r'^(.+?)\s+(\d+)', direccion)
+        if match:
+            calle = match.group(1).strip()
+            numero = match.group(2)
+            calle = ' '.join(word.capitalize() for word in calle.split())
+            return f"{calle} {numero}"
+        
+        # Si no hay número, capitalizar y devolver
+        if direccion:
+            direccion = ' '.join(word.capitalize() for word in direccion.split())
+            return direccion
+            
+        return None
 
     def geocodificar_direccion(self, direccion):
         """Geocodificar una dirección usando cache"""
@@ -155,13 +172,52 @@ def main():
         print("🚀 PROCESADOR ZONA 1 - ALGORITMO MEJORADO")
         print("="*55)
         print("🔧 CARACTERÍSTICAS:")
-        print("   ✅ Limpieza mejorada de direcciones")
+        print("   ✅ Limpieza AGRESIVA de direcciones")
         print("   ✅ Usa archivo NAPs corregido con 375 NAPs")
-        print("   ✅ Filtro ocupación ≤ 30%")
+        print("   ✅ TODAS las NAPs disponibles (sin filtro ocupación)")
         print("   ✅ Distancia máxima ≤ 150m")
         print("   ✅ Compatibilidad de calles verificada")
         
         procesador = ProcesadorZona1()
+        
+        # PASO 0: Prueba de limpieza de direcciones
+        print("\n🧪 PASO 0: Prueba de limpieza de direcciones")
+        direcciones_prueba = [
+            "MAIPU 1350 - DTO. 14",
+            "MITRE 1454 - DTO. 2", 
+            "25 DE MAYO 1357 - DTO. 3",
+            "SAAVEDRA 532 PISO 1 - 6",
+            "AVELLANEDA 1244 PISO 1 -",
+            "PAZ 423 - LOC. 2",
+            "PINTO 1048 PISO P.A.",
+            "25 DE MAYO 1357 - FTE.",
+            "BELGRANO 1370 - PA DTO. 3",
+            "PAZ 879 PISO P.A.",
+            "MONTIEL 837 - FDO.",
+            "SAAVEDRA 643 - P.A. - 5",
+            "SARMIENTO 1153 PISO P.B. - 7",
+            "11 DE SEPTIEMBRE 651 - DTO. 16",
+            "MONTIEL 374 - 052",
+            "25 DE MAYO 942 - 10",
+            "MAIPU 1120 MON. F PISO 2 - DTO. 14",
+            "AVELLANEDA 1025 - DTO. 8 (COMPLEJO)",
+            "BO. ATSA INT 7 1326 - 15",
+            "BUZON 250 B FONAVI"
+        ]
+        
+        print("🧪 PRUEBAS DE LIMPIEZA DE DIRECCIONES")
+        print("="*50)
+        print("ANTES → DESPUÉS")
+        print("-"*50)
+        
+        for dir_original in direcciones_prueba:
+            dir_limpia = procesador.limpiar_direccion(dir_original)
+            print(f"{dir_original:<35} → {dir_limpia}")
+        
+        confirmacion = input("\n¿Las direcciones se están limpiando correctamente? (s/n): ")
+        if confirmacion.lower() != 's':
+            print("❌ Proceso cancelado. Revisa la función de limpieza.")
+            return
         
         # 1. Cargar clientes ZONA 1
         print("\n📂 PASO 1: Cargando clientes ZONA 1...")
@@ -178,9 +234,9 @@ def main():
         df_naps = pd.read_excel('excels_con_los_datos_de_partida/archivo_final_naps.xlsx')
         print(f"📊 NAPs disponibles: {len(df_naps)}")
         
-        # Filtrar NAPs con ocupación ≤ 30%
-        naps_disponibles = df_naps[df_naps['Ocupacion_caja'] <= 0.30].copy()
-        print(f"📊 NAPs con ocupación ≤ 30%: {len(naps_disponibles)}")
+        # Usar TODAS las NAPs (sin filtro de ocupación)
+        naps_disponibles = df_naps.copy()
+        print(f"📊 NAPs a utilizar: {len(naps_disponibles)} (TODAS - sin filtro de ocupación)")
         
         # 3. Geocodificar clientes
         print(f"\n🌍 PASO 3: Geocodificando {len(df_clientes)} clientes...")

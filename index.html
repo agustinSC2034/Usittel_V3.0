@@ -587,17 +587,17 @@
             <li class="dropdown">
               <a href="#plans">Productos ▾</a>
               <ul class="dropdown-menu">
-                <li><a href="pages/internet.html">Internet</a></li>
-                <li><a href="pages/mesh.html">WiFi Mesh</a></li>
-                <li><a href="pages/tv.html">TV</a></li>
+                <li><a href="pages/internet/">Internet</a></li>
+                <li><a href="pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="pages/tv/">TV</a></li>
               </ul>
             </li>
-            <li><a href="pages/empresas.html">Empresas</a></li>
-            <li><a href="pages/contacto.html">Contáctanos</a></li>
+            <li><a href="pages/empresas/">Empresas</a></li>
+            <li><a href="pages/contacto/">Contáctanos</a></li>
           </ul>
         </div>
         <div class="nav-actions desktop-only">
-          <a href="pages/centro-de-ayuda.html" class="nav-button-green">Centro de ayuda</a>
+          <a href="pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
           <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
         </div>
       </div>
@@ -614,12 +614,12 @@
             Productos ▾
           </button>
           <div class="submenu" id="productsSubmenu">
-            <a href="pages/internet.html">Internet</a><a href="pages/mesh.html">WiFi Mesh</a><a
-              href="pages/tv.html">TV</a>
+            <a href="pages/internet/">Internet</a><a href="pages/mesh/">WiFi Mesh</a><a
+              href="pages/tv/">TV</a>
           </div>
         </div>
-        <a href="pages/empresas.html">Empresas</a><a href="pages/contacto.html">Contáctanos</a><a
-          href="pages/centro de ayuda.html" class="nav-button-green">Centro de ayuda</a><a
+        <a href="pages/empresas/">Empresas</a><a href="pages/contacto/">Contáctanos</a><a
+          href="pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a><a
           href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
       </div>
     </nav>
@@ -979,7 +979,7 @@
         </div>
         <!-- Enlace agregado debajo de la sección Mesh -->
         <div class="text-center mt-10">
-          <a href="pages/mesh.html"
+          <a href="pages/mesh/"
             class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm md:text-base">Descubrí
             cómo la tecnología Mesh se integra con nuestra red de
             Fibra Óptica <span aria-hidden="true">→</span></a>
@@ -1257,16 +1257,16 @@
           <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
           <ul class="mt-4 space-y-2">
             <li>
-              <a href="pages/internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+              <a href="pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
             </li>
             <li>
-              <a href="pages/tv.html" class="text-gray-300 hover:text-white">Televisión</a>
+              <a href="pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
             </li>
             <li>
-              <a href="pages/mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+              <a href="pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
             </li>
             <li>
-              <a href="pages/alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+              <a href="pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
             </li>
           </ul>
         </div>
@@ -1276,13 +1276,13 @@
           <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
           <ul class="mt-4 space-y-2">
             <li>
-              <a href="pages/centro-de-ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+              <a href="pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
             </li>
             <li>
               <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
             </li>
             <li>
-              <a href="pages/baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a>
+              <a href="pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
             </li>
           </ul>
         </div>
@@ -1292,7 +1292,7 @@
           <h4 class="font-bold uppercase tracking-wider">Legal</h4>
           <ul class="space-y-2">
             <li>
-              <a href="pages/terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y
+              <a href="pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
                 condiciones</a>
             </li>
             <li>
@@ -1640,9 +1640,9 @@
         if (buttonContainer) {
           let btnHTML = "";
           if (type === "internet") {
-            btnHTML = `<a href="pages/internet.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/internet/" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden=\"true\">→</span></a>`;
           } else if (type === "internetTv" || type === "soloTv") {
-            btnHTML = `<a href="pages/tv.html" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">→</span></a>`;
+            btnHTML = `<a href="pages/tv/" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden=\"true\">→</span></a>`;
           }
           buttonContainer.innerHTML = btnHTML;
         }

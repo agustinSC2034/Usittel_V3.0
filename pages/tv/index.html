@@ -5,20 +5,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - TV Digital</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/icons/usittel-logo.png">
 
-    <meta name="description" content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/icons/usittel-logo.png">
+
+    <meta name="description"
+        content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
     <!-- Open Graph -->
     <meta property="og:title" content="Usittel - TV en vivo y Streaming" />
-    <meta property="og:description" content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
+    <meta property="og:description"
+        content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
     <meta property="og:image" content="/assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - TV en vivo y Streaming" />
-    <meta name="twitter:description" content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
+    <meta name="twitter:description"
+        content="Disfrutá de TV en vivo y streaming con Usittel. Acceso a canales, películas y series desde cualquier dispositivo. Servicio para hogares y empresas en Tandil." />
     <meta name="twitter:image" content="/assets/img/logos/usittel-logo_and_name.png" />
 
     <!-- Tailwind CSS -->
@@ -318,9 +321,11 @@
             box-shadow: 0 0 0 0 #22c55e;
             transition: box-shadow 0.3s;
         }
+
         .stb-img {
             transition: transform 0.3s;
         }
+
         .stb-interactive:hover .stb-img {
             transform: scale(1.05);
         }
@@ -500,37 +505,35 @@
                 <!-- Encabezado mobile -->
                 <div class="mobile-header-bar mobile-only">
                     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                    <a href="/index.html" class="logo">
-                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo.png"
-                            alt="Usittel Logo" />
+                    <a href="/" class="logo">
+                        <img src="/assets/img/logos/usittel-logo.png" alt="Usittel Logo" />
                     </a>
                 </div>
 
                 <!-- Encabezado desktop -->
                 <div class="nav-left desktop-only">
-                    <a href="/index.html" class="logo">
-                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-                            alt="Usittel Logo" />
+                    <a href="/" class="logo">
+                        <img src="/assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
                     </a>
                     <ul class="nav-links">
-                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="/index.html">Home</a></li>
                         <li class="dropdown">
                             <a href="#" class="active-parent">Productos ▾</a>
                             <ul class="dropdown-menu">
-                                <li><a href="internet.html">Internet</a></li>
-                                <li><a href="mesh.html">WiFi Mesh</a></li>
-                                <li><a href="tv.html" class="active">TV</a></li>
+                                <li><a href="../internet/">Internet</a></li>
+                                <li><a href="../mesh/">WiFi Mesh</a></li>
+                                <li><a href="../tv/" class="active">TV</a></li>
                             </ul>
                         </li>
-                        <li><a href="empresas.html">Empresas</a></li>
-                        <li><a href="contacto.html">Contáctanos</a></li>
+                        <li><a href="../empresas/">Empresas</a></li>
+                        <li><a href="../contacto/">Contáctanos</a></li>
                     </ul>
                 </div>
 
                 <div class="nav-actions desktop-only">
-                    <a href="centro-de-ayuda.html" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank"
-                        rel="noopener">Autogestión</a>
+                    <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+                    <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+                        target="_blank" rel="noopener">Autogestión</a>
                 </div>
             </div>
 
@@ -538,25 +541,24 @@
             <div class="overlay" id="overlay"></div>
             <div class="mobile-menu-slide" id="mobileMenu">
                 <div class="mobile-menu-header">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usittel-logo_and_name.png"
-                        alt="Usittel Logo" />
+                    <img src="/assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
                     <button class="close-menu" id="closeMenu">&times;</button>
                 </div>
                 <hr />
-                <a href="../index.html">Home</a>
+                <a href="/index.html">Home</a>
                 <div class="submenu-container">
                     <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
                     <div class="submenu" id="productsSubmenu">
-                        <a href="internet.html">Internet</a>
-                        <a href="mesh.html">WiFi Mesh</a>
-                        <a href="tv.html" class="active">TV</a>
+                        <a href="../internet/">Internet</a>
+                        <a href="../mesh/">WiFi Mesh</a>
+                        <a href="../tv/" class="active">TV</a>
                     </div>
                 </div>
-                <a href="empresas.html">Empresas</a>
-                <a href="contacto.html">Contáctanos</a>
-                <a href="centro-de-ayuda.html" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank"
-                    rel="noopener">Autogestión</a>
+                <a href="../empresas/">Empresas</a>
+                <a href="../contacto/">Contáctanos</a>
+                <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+                    target="_blank" rel="noopener">Autogestión</a>
             </div>
         </nav>
     </header>
@@ -564,7 +566,7 @@
     <main>
         <!-- Hero Section -->
         <section class="hero-tv text-white flex items-center py-24 md:py-40 min-h-[calc(100vh-64px)]"
-            style="background-image: linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.18)), url('../assets/img/tv/background_image_tv.png'); background-size: cover; background-position: center top;">
+            style="background-image: linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.18)), url('/assets/img/tv/background_image_tv.png'); background-size: cover; background-position: center top;">
             <div class="container mx-auto text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">La tele que va con vos.</h1>
                 <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Disfrutá de más de 100 canales en
@@ -581,7 +583,7 @@
                     min-height: calc(100vh - 64px);
                     background-size: cover !important;
                     background-position: center top !important;
-                    background-image: linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.38)), url('../assets/img/tv/background_movie2.png') !important;
+                    background-image: linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.38)), url('/assets/img/tv/background_movie2.png') !important;
                 }
             }
         </style>
@@ -602,17 +604,19 @@
                             PRINCIPAL</span>
                         <h3 class="text-3xl font-bold text-gray-800">USITTEL TV</h3>
                         <ul class="space-y-2 text-gray-600 mb-2">
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Más de 100 canales en vivo</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Series y películas On-Demand</li>
-                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Acceso a la app de TV multidispositivo</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Más de
+                                100 canales en vivo</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Series
+                                y películas On-Demand</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i>Acceso
+                                a la app de TV multidispositivo</li>
                             <li class="flex items-center gap-2"><i
                                     class="fas fa-check-circle text-green-500"></i>Funciones de grabar, pausar y
                                 retroceder.</li>
                         </ul>
                         <div class="my-2"><span class="text-5xl font-extrabold text-gray-900">$15.999</span><span
                                 class="text-gray-500">/mes</span></div>
-                        <a href="https://wa.me/5492494060345"
-                            target="_blank" rel="noopener"
+                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
                             class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button flex items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>
@@ -631,8 +635,8 @@
                         </div>
                         <div class="bg-white rounded-xl p-6 flex items-center gap-6 interactive-card">
                             <picture>
-                                <source srcset="../assets/img/logos/max-logo-black.webp" type="image/webp">
-                                <img src="../assets/img/logos/max-logo-black.webp" alt="HBO Pack Logo"
+                                <source srcset="/assets/img/logos/max-logo-black.webp" type="image/webp">
+                                <img src="/assets/img/logos/max-logo-black.webp" alt="HBO Pack Logo"
                                     class="h-16 w-16 rounded-lg object-contain flex-shrink-0" />
                             </picture>
                             <div>
@@ -644,8 +648,9 @@
                         </div>
                         <div class="bg-white rounded-xl p-6 flex items-center gap-6 interactive-card">
                             <picture>
-                                <source srcset="../assets/img/logos/Universal-Logo-removebg-preview.webp" type="image/webp">
-                                <img src="../assets/img/logos/Universal-Logo-removebg-preview.webp" alt="Universal+ Logo"
+                                <source srcset="/assets/img/logos/Universal-Logo-removebg-preview.webp"
+                                    type="image/webp">
+                                <img src="/assets/img/logos/Universal-Logo-removebg-preview.webp" alt="Universal+ Logo"
                                     class="h-16 w-16 rounded-lg object-contain flex-shrink-0" />
                             </picture>
                             <div>
@@ -667,22 +672,38 @@
                     <div class="text-center stb-interactive cursor-pointer hidden lg:block">
                         <div class="relative inline-block">
                             <div class="absolute inset-0 stb-glow"></div>
-                            <img id="stb-img" src="../assets/img/tv/zte1.png" alt="Set Top Box ZTE" class="stb-img relative z-10 w-full max-w-sm mx-auto drop-shadow-2xl rounded-2xl">
+                            <img id="stb-img" src="/assets/img/tv/zte1.png" alt="Set Top Box ZTE"
+                                class="stb-img relative z-10 w-full max-w-sm mx-auto drop-shadow-2xl rounded-2xl">
                         </div>
                     </div>
                     <div class="text-center lg:text-left">
-                        <span class="inline-block bg-blue-500 text-white text-sm font-bold px-3 py-1 rounded-full mb-4">OPCIONAL</span>
-                        <h2 class="text-3xl md:text-4xl font-bold mb-4">¿No tenés Smart TV? <br>¡Tenemos la solución!</h2>
-                        <p class="text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">Sumá un <strong>Set Top Box</strong> y convertí cualquier TV en un Smart TV de última generación. Disfrutá de la app Sensa y tus plataformas favoritas como YouTube y Netflix.</p>
+                        <span
+                            class="inline-block bg-blue-500 text-white text-sm font-bold px-3 py-1 rounded-full mb-4">OPCIONAL</span>
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">¿No tenés Smart TV? <br>¡Tenemos la solución!
+                        </h2>
+                        <p class="text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">Sumá un <strong>Set Top Box</strong> y
+                            convertí cualquier TV en un Smart TV de última generación. Disfrutá de la app Sensa y tus
+                            plataformas favoritas como YouTube y Netflix.</p>
                         <ul class="space-y-3 mt-6 text-left inline-block">
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>App Sensa TV preinstalada</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Acceso a YouTube, Netflix y más</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Control remoto con comando de voz</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-400"></i><span>Soporta resolución 4K Ultra HD</span></li>
+                            <li class="flex items-center gap-3"><i
+                                    class="fas fa-check-circle text-green-400"></i><span>App Sensa TV
+                                    preinstalada</span></li>
+                            <li class="flex items-center gap-3"><i
+                                    class="fas fa-check-circle text-green-400"></i><span>Acceso a YouTube, Netflix y
+                                    más</span></li>
+                            <li class="flex items-center gap-3"><i
+                                    class="fas fa-check-circle text-green-400"></i><span>Control remoto con comando de
+                                    voz</span></li>
+                            <li class="flex items-center gap-3"><i
+                                    class="fas fa-check-circle text-green-400"></i><span>Soporta resolución 4K Ultra
+                                    HD</span></li>
                         </ul>
                         <div class="mt-8 flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
-                             <div class="text-3xl font-extrabold">$4.999<span class="text-lg font-normal text-gray-400">/mes</span></div>
-                             <a href="https://wa.me/5492494060345?text=Hola%2C%20estoy%20interesado%20en%20el%20Set%20Top%20Box." target="_blank" rel="noopener" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button inline-flex items-center gap-2">
+                            <div class="text-3xl font-extrabold">$4.999<span
+                                    class="text-lg font-normal text-gray-400">/mes</span></div>
+                            <a href="https://wa.me/5492494060345?text=Hola%2C%20estoy%20interesado%20en%20el%20Set%20Top%20Box."
+                                target="_blank" rel="noopener"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button inline-flex items-center gap-2">
                                 <i class="fab fa-whatsapp"></i> Lo quiero
                             </a>
                         </div>
@@ -741,7 +762,7 @@
                         <video loop autoplay muted playsinline
                             poster="https://placehold.co/800x450/222/fff?text=Vista+previa+Sensa+TV"
                             class="w-full h-full object-cover">
-                            <source src="../assets/video/sensa_tv.mp4" type="video/mp4">
+                            <source src="/assets/video/sensa_tv.mp4" type="video/mp4">
                             Tu navegador no soporta la reproducción de video.
                         </video>
                     </div>
@@ -846,22 +867,22 @@
                     </p>
                     <br>
                     <div class="flex justify-center flex-wrap gap-4">
-                        <a href="instructivos/Instructivo_android.html" target="_blank" rel="noopener"
+                        <a href="../instructivos/Instructivo_android.html" target="_blank" rel="noopener"
                             class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
                             <i class="fab fa-android text-4xl text-green-500"></i>
                             <span class="mt-2 font-semibold">Android TV</span>
                         </a>
-                        <a href="instructivos/Instructivo_amazon.html" target="_blank" rel="noopener"
+                        <a href="../instructivos/Instructivo_amazon.html" target="_blank" rel="noopener"
                             class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
                             <i class="fab fa-amazon text-4xl text-yellow-500"></i>
                             <span class="mt-2 font-semibold">Amazon Fire TV</span>
                         </a>
-                        <a href="instructivos/Instructivo_apple.html" target="_blank" rel="noopener"
+                        <a href="../instructivos/Instructivo_apple.html" target="_blank" rel="noopener"
                             class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
                             <i class="fab fa-apple text-4xl text-gray-700"></i>
                             <span class="mt-2 font-semibold">Apple TV</span>
                         </a>
-                        <a href="instructivos/Instructivo_celulares.html" target="_blank" rel="noopener"
+                        <a href="../instructivos/Instructivo_celulares.html" target="_blank" rel="noopener"
                             class="p-4 bg-white rounded-lg interactive-card flex-grow md:flex-grow-0 flex flex-col items-center justify-center w-32 h-32">
                             <i class="fas fa-mobile-alt text-4xl text-blue-500"></i>
                             <span class="mt-2 font-semibold">Móviles</span>
@@ -957,80 +978,88 @@
     </main>
 
     <!-- Footer -->
-  <footer class="bg-gray-800 text-white pt-16 pb-8">
-    <div class="container mx-auto px-6 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Columna de Contacto y Horarios -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                <div class="space-y-3 text-gray-300">
-                    <p class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                        <span>Nigro 575, Tandil</span>
-                    </p>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span>+54 9 249 406-0345</span>
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <!-- Columna de Contacto y Horarios -->
+                <div class="space-y-4">
+                    <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
+                    <div class="space-y-3 text-gray-300">
+                        <p class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+                            <span>Nigro 575, Tandil</span>
                         </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                        <div class="space-y-2">
+                            <p class="flex items-center gap-3">
+                                <i class="fab fa-whatsapp text-green-400"></i>
+                                <span>+54 9 249 406-0345</span>
+                            </p>
+                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="flex items-center gap-3">
+                                <i class="fas fa-phone text-blue-400"></i>
+                                <span>0800-199-4545</span>
+                            </p>
+                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+                        </div>
                     </div>
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <span>0800-199-4545</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+                </div>
+
+                <!-- Columna de Servicios -->
+                <div>
+                    <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                        <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna de Soporte -->
+                <div>
+                    <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+                        </li>
+                        <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                                class="text-gray-300 hover:text-white">Autogestión</a></li>
+                        <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna de Legal y Logo -->
+                <div class="space-y-4">
+                    <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                                condiciones</a></li>
+                        <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
+                        <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
+                    </ul>
+                    <div class="pt-4">
+                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
+                            alt="Logo Usina de Tandil" class="rounded-md w-36" />
                     </div>
                 </div>
             </div>
 
-            <!-- Columna de Servicios -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="internet.html" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                    <li><a href="tv.html" class="text-gray-300 hover:text-white">Televisión</a></li>
-                    <li><a href="mesh.html" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                    <li><a href="alcances_de_servicios.html" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Soporte -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="centro de ayuda.html" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                    <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="baja.html" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Legal y Logo -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                <ul class="space-y-2">
-                    <li><a href="terminos_y_condiciones.html" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-                </ul>
-                <div class="pt-4">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+                            class="fab fa-instagram fa-lg"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
                 </div>
             </div>
         </div>
-
-        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-            </div>
-        </div>
-    </div>
-  </footer>
-d
+    </footer>
 
     <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
     <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
@@ -1114,9 +1143,9 @@ d
         // Carrusel automático para la imagen del Set Top Box
         document.addEventListener("DOMContentLoaded", function () {
             const images = [
-                { src: "../assets/img/tv/zte1.webp", alt: "Set Top Box ZTE 1" },
-                { src: "../assets/img/tv/zte4.webp", alt: "Set Top Box ZTE 2" },
-                { src: "../assets/img/tv/zte3.webp", alt: "Set Top Box ZTE 3" }
+                { src: "/assets/img/tv/zte1.webp", alt: "Set Top Box ZTE 1" },
+                { src: "/assets/img/tv/zte4.webp", alt: "Set Top Box ZTE 2" },
+                { src: "/assets/img/tv/zte3.webp", alt: "Set Top Box ZTE 3" }
             ];
             let current = 0;
             const img = document.getElementById("stb-img");

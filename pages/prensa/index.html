@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usittel - Prensa y Novedades</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Meta Description -->
+    <meta name="description"
+        content="Descubrí las últimas novedades, anuncios y cobertura de prensa sobre Usittel. Conocé nuestros avances, acuerdos y presencia en medios locales." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Usittel - Prensa y Novedades" />
+    <meta property="og:description"
+        content="Descubrí las últimas novedades, anuncios y cobertura de prensa sobre Usittel. Conocé nuestros avances, acuerdos y presencia en medios locales." />
+    <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Usittel - Prensa y Novedades" />
+    <meta name="twitter:description"
+        content="Descubrí las últimas novedades, anuncios y cobertura de prensa sobre Usittel. Conocé nuestros avances, acuerdos y presencia en medios locales." />
+    <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
+
+    <style>
+        /* NAVIGATION STYLES */
+        .navbar-section *,
+        .navbar-section *::before,
+        .navbar-section *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header.navbar-section {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+        }
+
+        .navbar-section {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #3c4043;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            height: 64px;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .logo:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+        }
+
+        .logo img {
+            height: 36px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #60666b;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-links li a:hover {
+            background-color: rgba(60, 64, 67, 0.06);
+            color: #202020;
+        }
+
+        .nav-links li a.active {
+            color: #1a73e8;
+            font-weight: 600;
+        }
+
+        .nav-links .dropdown {
+            position: relative;
+        }
+
+        .nav-links .dropdown>a.active-parent {
+            background-color: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
+
+        .nav-links .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: white;
+            padding: 8px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            list-style: none;
+            min-width: 180px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .nav-links .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #3c4043;
+            font-size: 15px;
+            border-radius: 4px;
+        }
+
+        .nav-links .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-button,
+        .nav-button2,
+        .nav-button-green {
+            font-size: 15px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-button-green {
+            background-color: #30a172;
+            color: white;
+        }
+
+        .nav-button-green:hover {
+            background-color: #2d8a63;
+            box-shadow: 0 2px 4px rgba(48, 161, 114, 0.2);
+        }
+
+        .nav-button {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .nav-button:hover {
+            background-color: #1557b0;
+            box-shadow: 0 2px 4px rgba(26, 115, 232, 0.2);
+        }
+
+        .nav-button2 {
+            background-color: transparent;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+        }
+
+        .nav-button2:hover {
+            background-color: rgba(60, 64, 67, 0.04);
+            border-color: #bdc1c6;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .hamburger:hover {
+            background-color: rgba(60, 64, 67, 0.08);
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background-color: #3c4043;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px 32px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mobile-links li {
+            margin: 12px 0;
+        }
+
+        .mobile-links li a {
+            color: #3c4043;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            padding: 8px 0;
+        }
+
+        .mobile-actions {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar-container {
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-container {
+                padding: 0 16px;
+            }
+
+            .nav-actions .nav-button2 {
+                display: none;
+            }
+
+            .mobile-actions {
+                flex-direction: row;
+            }
+        }
+
+        /* Body Styles */
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .hero-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .news-card {
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .coming-soon-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+    <!-- Navigation -->
+    <header class="navbar-section">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="nav-left">
+                    <a href="../../" class="logo">
+                        <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="../../">Inicio</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle">Servicios</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="../internet/">Internet</a></li>
+                                <li><a href="../tv/">Televisión</a></li>
+                                <li><a href="../mesh/">WiFi Mesh</a></li>
+                                <li><a href="../empresas/">Empresas</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="../nosotros/">Nosotros</a></li>
+                        <li><a href="../centro_de_ayuda/">Centro de Ayuda</a></li>
+                        <li><a href="#" class="active">Prensa</a></li>
+                    </ul>
+                </div>
+                <div class="nav-actions">
+                    <a href="../contacto/" class="nav-button2">Contacto</a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        target="_blank" class="nav-button-green">
+                        <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                    </a>
+                </div>
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="mobile-menu" id="mobile-menu">
+                <ul class="mobile-links">
+                    <li><a href="../../">Inicio</a></li>
+                    <li><a href="../internet/">Internet</a></li>
+                    <li><a href="../tv/">Televisión</a></li>
+                    <li><a href="../mesh/">WiFi Mesh</a></li>
+                    <li><a href="../empresas/">Empresas</a></li>
+                    <li><a href="../nosotros/">Nosotros</a></li>
+                    <li><a href="../centro_de_ayuda/">Centro de Ayuda</a></li>
+                    <li><a href="#" class="active">Prensa</a></li>
+                </ul>
+                <div class="mobile-actions">
+                    <a href="../contacto/" class="nav-button2">Contacto</a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        target="_blank" class="nav-button-green">
+                        <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20 md:py-28 overflow-hidden">
+            <div class="absolute inset-0 hero-pattern opacity-20"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-800/50 to-transparent"></div>
+            
+            <div class="relative container mx-auto px-6 max-w-6xl">
+                <div class="text-center max-w-4xl mx-auto">
+                    <div class="mb-6">
+                        <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-sm font-medium">
+                            <i class="fas fa-newspaper mr-2"></i>
+                            Prensa y Novedades
+                        </span>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                        Últimas <span class="text-blue-200">Noticias</span> y Novedades
+                    </h1>
+                    
+                    <p class="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+                        Mantenete informado sobre nuestros avances, acuerdos estratégicos y cobertura en medios locales
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#noticias" class="inline-flex items-center px-8 py-4 bg-white text-blue-700 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg">
+                            <i class="fas fa-arrow-down mr-2"></i>
+                            Ver Noticias
+                        </a>
+                        <a href="../contacto/" class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-blue-700 transition-all duration-300">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Contacto de Prensa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Noticias Section -->
+        <section id="noticias" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                        Sala de Prensa
+                    </h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                        Descubrí las últimas novedades, anuncios y cobertura mediática sobre el crecimiento y desarrollo de Usittel en Tandil
+                    </p>
+                </div>
+
+                <!-- Coming Soon Content -->
+                <div class="text-center py-20">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="coming-soon-animation mb-8">
+                            <i class="fas fa-newspaper text-6xl text-blue-500 mb-6"></i>
+                        </div>
+                        
+                        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+                            Contenido en Desarrollo
+                        </h3>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            Estamos preparando una completa sección de prensa con todas nuestras novedades, 
+                            acuerdos institucionales, cobertura mediática y anuncios importantes.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                            <div class="bg-white rounded-lg p-6 shadow-md">
+                                <div class="text-blue-500 mb-4">
+                                    <i class="fas fa-rocket text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-gray-800 mb-2">Lanzamientos</h4>
+                                <p class="text-gray-600 text-sm">Anuncios de nuevos servicios y tecnologías</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-6 shadow-md">
+                                <div class="text-green-500 mb-4">
+                                    <i class="fas fa-handshake text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-gray-800 mb-2">Acuerdos</h4>
+                                <p class="text-gray-600 text-sm">Alianzas estratégicas y convenios institucionales</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-6 shadow-md">
+                                <div class="text-purple-500 mb-4">
+                                    <i class="fas fa-microphone text-3xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-gray-800 mb-2">Medios</h4>
+                                <p class="text-gray-600 text-sm">Cobertura en medios locales y entrevistas</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12">
+                            <p class="text-gray-500 mb-4">¿Sos periodista o medio de comunicación?</p>
+                            <a href="../contacto/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-all duration-300">
+                                <i class="fas fa-phone mr-2"></i>
+                                Contactanos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="py-16 bg-blue-600 text-white">
+            <div class="container mx-auto px-6 max-w-4xl text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    ¿Querés recibir nuestras novedades?
+                </h2>
+                <p class="text-xl text-blue-100 mb-8">
+                    Seguinos en nuestras redes sociales para estar al día con todas las noticias de Usittel
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center px-6 py-3 bg-blue-800 hover:bg-blue-900 rounded-full transition-all duration-300">
+                        <i class="fab fa-facebook-f mr-2"></i>
+                        Facebook
+                    </a>
+                    <a href="https://www.instagram.com/usittel.tandil/" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-full transition-all duration-300">
+                        <i class="fab fa-instagram mr-2"></i>
+                        Instagram
+                    </a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 rounded-full transition-all duration-300">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <!-- Columna de Contacto y Horarios -->
+                <div class="space-y-4">
+                    <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
+                    <div class="space-y-3 text-gray-300">
+                        <p class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+                            <span>Nigro 575, Tandil</span>
+                        </p>
+                        <div class="space-y-2">
+                            <p class="flex items-center gap-3">
+                                <i class="fab fa-whatsapp text-green-400"></i>
+                                <span>+54 9 249 406-0345</span>
+                            </p>
+                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="flex items-center gap-3">
+                                <i class="fas fa-phone text-blue-400"></i>
+                                <span>0800-199-4545</span>
+                            </p>
+                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna de Servicios -->
+                <div>
+                    <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
+                        <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
+                        <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
+                        <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna de Soporte -->
+                <div>
+                    <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
+                        <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a></li>
+                        <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Prensa y Novedades</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna de Legal y Logo -->
+                <div class="space-y-4">
+                    <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
+                        <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Defensa del consumidor</a></li>
+                        <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Ley 24240</a></li>
+                    </ul>
+                    <div class="pt-4">
+                        <img src="../../assets/img/logos/usina_tandil.png"
+                            alt="Logo Usina de Tandil" class="rounded-md w-36" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/people/Usittel/100093569816699/" target="_blank" rel="noopener"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="https://www.instagram.com/usittel.tandil/" target="_blank" rel="noopener"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" target="_blank" rel="noopener"
+                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            mobileMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburger = document.querySelector('.hamburger');
+            const navbar = document.querySelector('.navbar');
+            
+            if (!navbar.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -276,14 +276,20 @@
         .faq-answer {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out;
+            opacity: 0;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            padding: 0;
+        }
+
+        .faq-question.open+.faq-answer {
+            opacity: 1;
         }
 
         .faq-icon {
             transition: transform 0.3s ease-in-out;
         }
 
-        .faq-item.open .faq-icon {
+        .faq-question.open .faq-icon {
             transform: rotate(45deg);
         }
 
@@ -904,70 +910,276 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre TV</h2>
                 </div>
-                <div id="faq-accordion" class="space-y-4">
-                    <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿En qué dispositivos puedo usar Sensa?</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                <div id="faq-accordion" class="space-y-6">
+                    <!-- FAQ 1 -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-tv text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿En qué dispositivos puedo usar Sensa?</h3>
+                            </div>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Podés usar Sensa en dispositivos Android, iOS, PC, Android TV, Chromecast y Amazon
-                                    Fire TV.</p>
+                            <div class="ml-16 mt-4 space-y-4">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-100">
+                                    <p class="text-gray-700 leading-relaxed mb-4">
+                                        Sensa está disponible en <strong class="text-blue-600">múltiples dispositivos</strong> para que puedas disfrutar tu contenido donde quieras.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                    <h4 class="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-check-circle text-green-600"></i>
+                                        Dispositivos compatibles:
+                                    </h4>
+                                    <div class="grid md:grid-cols-3 gap-3">
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-android text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">Android</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-apple text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">iOS</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-desktop text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">PC</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-tv text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">Android TV</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-chromecast text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">Chromecast</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                                                <i class="fab fa-amazon text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700 text-sm">Fire TV</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Necesito conexión a internet para usar Sensa?</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <!-- FAQ 2 -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-wifi text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Necesito conexión a internet para usar Sensa?</h3>
+                            </div>
+                            <span class="faq-icon text-green-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Sí. Se recomienda una conexión a internet estable.</p>
+                            <div class="ml-16 mt-4 space-y-4">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-xs"></i>
+                                        </div>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            <strong class="text-green-600">Sí, necesitás conexión a internet</strong> para disfrutar de Sensa en todos sus dispositivos.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-bolt text-yellow-500"></i>
+                                        Recomendación para mejor experiencia:
+                                    </h4>
+                                    <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-signal text-white text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium text-gray-800">Conexión estable y de buena velocidad</span>
+                                            <p class="text-xs text-gray-600 mt-1">Para streaming sin interrupciones y máxima calidad</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Cuántos canales y contenidos ofrece Sensa?</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <!-- FAQ 3 -->
+                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-list text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Cuántos canales y contenidos ofrece Sensa?</h3>
+                            </div>
+                            <span class="faq-icon text-purple-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Sensa ofrece más de 100 canales en vivo y aproximadamente 6000 horas de contenido On
-                                    Demand, con estrenos diarios.</p>
+                            <div class="ml-16 mt-4 space-y-4">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Sensa te ofrece una <strong class="text-purple-600">amplia variedad de contenido</strong> para toda la familia.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-star text-yellow-500"></i>
+                                        Lo que incluye Sensa:
+                                    </h4>
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="flex items-center gap-3 p-4 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-broadcast-tower text-white"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-semibold text-gray-800 text-lg">+100</span>
+                                                <p class="text-sm text-gray-600">Canales en vivo</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-3 p-4 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-play-circle text-white"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-semibold text-gray-800 text-lg">~6000</span>
+                                                <p class="text-sm text-gray-600">Horas On Demand</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4 border border-amber-200">
+                                    <div class="flex items-center gap-2 justify-center">
+                                        <i class="fas fa-calendar-plus text-amber-600"></i>
+                                        <span class="font-semibold text-amber-800">Estrenos diarios de contenido nuevo</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Puedo retroceder o pausar programas en vivo?</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <!-- FAQ 4 -->
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-pause text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Puedo retroceder o pausar programas en vivo?</h3>
+                            </div>
+                            <span class="faq-icon text-red-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Sí, podés pausar, retroceder hasta 24 horas en la grilla y reiniciar programas en
-                                    vivo.</p>
+                            <div class="ml-16 mt-4 space-y-4">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-red-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-xs"></i>
+                                        </div>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            <strong class="text-red-600">¡Sí!</strong> Tenés control total sobre la programación en vivo.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-magic text-purple-500"></i>
+                                        Funciones de control disponibles:
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-pause text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700">Pausar programas en vivo</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-backward text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700">Retroceder hasta 24 horas en la grilla</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-redo text-white text-xs"></i>
+                                            </div>
+                                            <span class="text-gray-700">Reiniciar programas desde el principio</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="faq-item bg-white rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>¿Qué hago si olvidé mi usuario o contraseña?</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <!-- FAQ 5 -->
+                    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-key text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué hago si olvidé mi usuario o contraseña?</h3>
+                            </div>
+                            <span class="faq-icon text-amber-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>Apretando el botón "olvidé mi contraseña" en la app hará que te llegue un mail a tu
-                                    cuenta de correo que nos brindaste al momento de contratar el servicio y podrás
-                                    cambiar la contraseña. Si tenés problemas podés contactarnos y te ayudaremos
-                                    rápidamente.</p>
+                            <div class="ml-16 mt-4 space-y-4">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-amber-100">
+                                    <p class="text-gray-700 leading-relaxed">
+                                        <strong class="text-amber-600">¡Tranquilo!</strong> Podés recuperar tu acceso fácilmente desde la app de Sensa.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-list-ol text-blue-600"></i>
+                                        Pasos para recuperar tu contraseña:
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                                            <span class="text-gray-700">Tocá "Olvidé mi contraseña" en la app</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                                            <span class="text-gray-700">Te llegará un email a tu cuenta registrada</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                                            <span class="text-gray-700">Seguí las instrucciones para cambiar tu contraseña</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-headset text-green-600"></i>
+                                        <span class="font-semibold text-green-800">¿Seguís con problemas?</span>
+                                    </div>
+                                    <p class="text-sm text-gray-700 mt-2">
+                                        <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
+                                           target="_blank" rel="noopener noreferrer"
+                                           class="text-blue-600 hover:underline font-semibold">Contactanos</a> 
+                                        y te ayudamos rápidamente
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1083,35 +1295,31 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             // --- FAQ Accordion Logic ---
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach((item) => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
+            const faqContainer = document.getElementById("faq-accordion");
+            if (faqContainer) {
+                const questions = faqContainer.querySelectorAll(".faq-question");
+                questions.forEach((question) => {
+                    question.addEventListener("click", () => {
+                        const answer = question.nextElementSibling;
+                        const isOpen = question.classList.contains("open");
 
-                if (question) {
-                    question.addEventListener('click', () => {
-                        const isOpen = item.classList.contains('open');
-
-                        faqItems.forEach(i => {
-                            if (i !== item) {
-                                i.classList.remove('open');
-                                const ans = i.querySelector('.faq-answer');
-                                if (ans) {
-                                    ans.style.maxHeight = null;
-                                }
+                        questions.forEach((q) => {
+                            if (q !== question) {
+                                q.classList.remove("open");
+                                q.nextElementSibling.style.maxHeight = null;
                             }
                         });
 
                         if (isOpen) {
-                            item.classList.remove('open');
+                            question.classList.remove("open");
                             answer.style.maxHeight = null;
                         } else {
-                            item.classList.add('open');
-                            answer.style.maxHeight = answer.scrollHeight + 'px';
+                            question.classList.add("open");
+                            answer.style.maxHeight = answer.scrollHeight + "px";
                         }
                     });
-                }
-            });
+                });
+            }
         });
     </script>
     <script>

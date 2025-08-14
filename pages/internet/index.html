@@ -289,14 +289,20 @@
         .faq-answer {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out;
+            opacity: 0;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            padding: 0;
+        }
+
+        .faq-question.open+.faq-answer {
+            opacity: 1;
         }
 
         .faq-icon {
             transition: transform 0.3s ease-in-out;
         }
 
-        .faq-item.open .faq-icon {
+        .faq-question.open .faq-icon {
             transform: rotate(45deg);
         }
 
@@ -1013,94 +1019,265 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
                 </div>
-                <div id="faq-accordion" class="space-y-4">
+                <div id="faq-accordion" class="space-y-6">
                     <!-- FAQ Item 1 -->
-                    <div class="faq-item bg-gray-100 rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>Cobertura Amplia y Uniforme</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-wifi text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Cobertura Amplia y Uniforme</h3>
+                            </div>
+                            <span class="faq-icon text-blue-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>
-                                    La fibra óptica ofrece una cobertura más amplia y uniforme en comparación con las
-                                    conexiones tradicionales. Al transmitir datos a través de luz en lugar de señales
-                                    eléctricas, se eliminan las interferencias y las pérdidas de señal, garantizando una
-                                    conexión estable en toda tu casa, incluso en las áreas más alejadas del router.
-                                </p>
+                            <div class="ml-16 mt-4 space-y-3">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                            <i class="fas fa-check text-green-600 text-xs"></i>
+                                        </div>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            La <strong class="text-blue-600">fibra óptica</strong> ofrece una cobertura más amplia y uniforme que las conexiones tradicionales.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                    <h4 class="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                                        <i class="fas fa-lightbulb text-yellow-500"></i>
+                                        Cómo funciona:
+                                    </h4>
+                                    <div class="space-y-2 text-sm text-gray-700">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-arrow-right text-blue-500"></i>
+                                            <span>Transmite datos a través de <strong>luz</strong> en lugar de señales eléctricas</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-shield-alt text-green-500"></i>
+                                            <span>Elimina interferencias y pérdidas de señal</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-home text-purple-500"></i>
+                                            <span>Conexión estable en toda la casa, hasta en áreas alejadas</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- FAQ Item 2 -->
-                    <div class="faq-item bg-gray-100 rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>Alta Velocidad y Ancho de Banda</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-tachometer-alt text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Alta Velocidad y Ancho de Banda</h3>
+                            </div>
+                            <span class="faq-icon text-green-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>
-                                    La fibra óptica proporciona velocidades de internet mucho mayores que las conexiones
-                                    por cobre o cable coaxial. Esto permite realizar múltiples actividades en línea
-                                    simultáneamente, como streaming en alta definición, videoconferencias y gaming, sin
-                                    experimentar lentitud o interrupciones.
-                                </p>
+                            <div class="ml-16 mt-4 space-y-3">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                                    <p class="text-gray-700 leading-relaxed">
+                                        La <strong class="text-green-600">fibra óptica</strong> proporciona velocidades mucho mayores que las conexiones por cobre o cable coaxial.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-star text-yellow-500"></i>
+                                        Actividades que podés hacer simultáneamente:
+                                    </h4>
+                                    <div class="grid md:grid-cols-2 gap-3">
+                                        <div class="flex items-center gap-2 text-sm text-gray-700">
+                                            <i class="fas fa-play-circle text-red-500"></i>
+                                            <span>Streaming en 4K/HD</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm text-gray-700">
+                                            <i class="fas fa-video text-blue-500"></i>
+                                            <span>Videoconferencias</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm text-gray-700">
+                                            <i class="fas fa-gamepad text-purple-500"></i>
+                                            <span>Gaming online</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm text-gray-700">
+                                            <i class="fas fa-cloud-download-alt text-green-500"></i>
+                                            <span>Descargas masivas</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 p-2 bg-white rounded-lg border border-blue-100">
+                                        <p class="text-xs text-gray-600 text-center">
+                                            <strong>Sin lentitud ni interrupciones</strong> ⚡
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- FAQ Item 3 -->
-                    <div class="faq-item bg-gray-100 rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>Conexión Estable y Fiable</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-shield-alt text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Conexión Estable y Fiable</h3>
+                            </div>
+                            <span class="faq-icon text-purple-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>
-                                    A diferencia de las conexiones tradicionales que pueden verse afectadas por
-                                    interferencias eléctricas o condiciones climáticas, la fibra óptica garantiza una
-                                    conexión estable y fiable. Esto significa menos caídas de conexión y una mayor
-                                    consistencia en la calidad del servicio.
-                                </p>
+                            <div class="ml-16 mt-4 space-y-3">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+                                    <p class="text-gray-700 leading-relaxed mb-3">
+                                        A diferencia de las conexiones tradicionales, la <strong class="text-purple-600">fibra óptica garantiza</strong> una conexión estable y fiable.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-4 border border-red-200">
+                                    <h4 class="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-amber-500"></i>
+                                        Problemas que NO tendrás:
+                                    </h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
+                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                            </div>
+                                            <span class="text-sm text-gray-700">Interferencias eléctricas</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
+                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                            </div>
+                                            <span class="text-sm text-gray-700">Afectaciones por clima</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
+                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                            </div>
+                                            <span class="text-sm text-gray-700">Caídas frecuentes de conexión</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                    <div class="flex items-center gap-2 justify-center">
+                                        <i class="fas fa-medal text-yellow-500"></i>
+                                        <span class="font-semibold text-green-800">Resultado: Mayor consistencia en la calidad del servicio</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- FAQ Item 4 -->
-                    <div class="faq-item bg-gray-100 rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>Seguridad Mejorada</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-lock text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Seguridad Mejorada</h3>
+                            </div>
+                            <span class="faq-icon text-red-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>
-                                    La fibra óptica ofrece una mayor seguridad en la transmisión de datos. A diferencia
-                                    del cableado de cobre, la fibra óptica es menos susceptible a las intercepciones y
-                                    al hackeo, lo que proporciona una capa adicional de protección para tu red y tus
-                                    datos personales.
-                                </p>
+                            <div class="ml-16 mt-4 space-y-3">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-red-100">
+                                    <p class="text-gray-700 leading-relaxed">
+                                        La <strong class="text-red-600">fibra óptica ofrece mayor seguridad</strong> en la transmisión de datos comparada con el cableado de cobre.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-shield-alt text-green-500"></i>
+                                        Ventajas de seguridad:
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <i class="fas fa-check text-green-600 text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-gray-800 text-sm">Menos susceptible a intercepciones</span>
+                                                <p class="text-xs text-gray-600 mt-1">Es muy difícil "pinchar" una fibra óptica sin detectarlo</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <i class="fas fa-check text-green-600 text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-gray-800 text-sm">Protección contra hackeo</span>
+                                                <p class="text-xs text-gray-600 mt-1">Capa adicional de protección para tu red y datos</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- FAQ Item 5 -->
-                    <div class="faq-item bg-gray-100 rounded-lg interactive-card">
-                        <button
-                            class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg cursor-pointer">
-                            <span>Durabilidad y Menor Mantenimiento</span>
-                            <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
+                    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+                        <button class="faq-question w-full flex items-start gap-4 text-left">
+                            <div class="flex-shrink-0 w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white shadow-md">
+                                <i class="fas fa-tools text-lg"></i>
+                            </div>
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Durabilidad y Menor Mantenimiento</h3>
+                            </div>
+                            <span class="faq-icon text-amber-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
                         <div class="faq-answer">
-                            <div class="px-6 pb-4 text-gray-600">
-                                <p>
-                                    Las fibras ópticas son más resistentes a las condiciones ambientales y a la
-                                    degradación con el tiempo en comparación con los cables de cobre. Esto significa que
-                                    requieren menos mantenimiento y tienen una vida útil más larga, lo que reduce los
-                                    costos y las molestias a largo plazo.
-                                </p>
+                            <div class="ml-16 mt-4 space-y-3">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-amber-100">
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Las <strong class="text-amber-600">fibras ópticas son más resistentes</strong> a las condiciones ambientales y degradación comparadas con los cables de cobre.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                    <h4 class="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-chart-line text-green-600"></i>
+                                        Beneficios a largo plazo:
+                                    </h4>
+                                    <div class="grid md:grid-cols-2 gap-3">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <i class="fas fa-wrench text-green-600 text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-gray-800 text-sm">Menos mantenimiento</span>
+                                                <p class="text-xs text-gray-600">Menor frecuencia de reparaciones</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <i class="fas fa-hourglass text-green-600 text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-gray-800 text-sm">Vida útil más larga</span>
+                                                <p class="text-xs text-gray-600">Mayor durabilidad del sistema</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100 md:col-span-2">
+                                            <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                                                <i class="fas fa-dollar-sign text-blue-600 text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-gray-800 text-sm">Reduce costos y molestias a largo plazo</span>
+                                                <p class="text-xs text-gray-600">Inversión inteligente para el futuro</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1341,29 +1518,31 @@
             }
 
             // --- FAQ Accordion Logic ---
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach((item) => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
+            const faqContainer = document.getElementById("faq-accordion");
+            if (faqContainer) {
+                const questions = faqContainer.querySelectorAll(".faq-question");
+                questions.forEach((question) => {
+                    question.addEventListener("click", () => {
+                        const answer = question.nextElementSibling;
+                        const isOpen = question.classList.contains("open");
 
-                question.addEventListener('click', () => {
-                    const isOpen = item.classList.contains('open');
-                    faqItems.forEach(i => {
-                        if (i !== item) {
-                            i.classList.remove('open');
-                            i.querySelector('.faq-answer').style.maxHeight = null;
+                        questions.forEach((q) => {
+                            if (q !== question) {
+                                q.classList.remove("open");
+                                q.nextElementSibling.style.maxHeight = null;
+                            }
+                        });
+
+                        if (isOpen) {
+                            question.classList.remove("open");
+                            answer.style.maxHeight = null;
+                        } else {
+                            question.classList.add("open");
+                            answer.style.maxHeight = answer.scrollHeight + "px";
                         }
                     });
-
-                    if (isOpen) {
-                        item.classList.remove('open');
-                        answer.style.maxHeight = null;
-                    } else {
-                        item.classList.add('open');
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                    }
                 });
-            });
+            }
         });
     </script>
 

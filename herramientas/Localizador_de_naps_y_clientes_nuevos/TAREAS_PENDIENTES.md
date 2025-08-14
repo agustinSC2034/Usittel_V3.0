@@ -18,15 +18,13 @@ Generar un Excel final con TODOS los ~3300 clientes (Zona 1 + Zona 2) que incluy
 - Debe ser: "ALSINA 405, Tandil, Buenos Aires, Argentina"
 
 ### 4. ❌ Filtrado de texto en direcciones
-- Limpiar palabras como "dpto", "casa", "piso", etc. SOLO para geocodificar
+- Limpiar palabras como "dpto", "casa", "piso", etc. antes de geocodificar
 - Usar solo calle y número para geocodificación
-- **IMPORTANTE**: En el Excel final, mostrar la dirección ORIGINAL completa (con "dpto", "casa", etc.)
 
 ### 5. ❌ Excel final incompleto
 - TODOS los 3300 clientes deben aparecer en el Excel final
 - Si se pudo geolocalizar: mostrar NAP más cercana (ocupación ≤30%), distancia
 - Si NO se pudo geolocalizar: poner "Error al geolocalizar" en columna NAP
-- **CRÍTICO**: Mantener dirección original en Excel (no la limpia usada para geocodificar)
 
 ## Estructura del Excel Final (OBLIGATORIA)
 

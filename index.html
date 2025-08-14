@@ -455,13 +455,12 @@
       opacity: 0;
       transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out,
         padding 0.5s ease-in-out;
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding: 0;
     }
 
     .faq-question.open+.faq-answer {
-      padding-top: 0.5rem;
-      padding-bottom: 1.5rem;
+      padding-top: 0;
+      padding-bottom: 0;
       opacity: 1;
     }
 
@@ -1082,70 +1081,215 @@
               Preguntas Frecuentes
             </h2>
           </div>
-          <div id="faq-accordion" class="divide-y divide-gray-200">
+          <div id="faq-accordion" class="space-y-6">
             <!-- Pregunta 1 -->
-            <div class="py-2">
-              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                <span>¿Qué significa que la velocidad sea "simétrica"?</span>
-                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+              <button class="faq-question w-full flex items-start gap-4 text-left">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
+                  <i class="fas fa-tachometer-alt text-lg"></i>
+                </div>
+                <div class="flex-1 pr-4">
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué significa que la velocidad sea "simétrica"?</h3>
+                </div>
+                <span class="faq-icon text-blue-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">
-                  Significa que tenés la misma velocidad de subida que de
-                  bajada. Esto es ideal para videollamadas, subir contenido a
-                  redes sociales, jugar online y trabajar con archivos en la
-                  nube, ya que la conexión es igual de rápida en ambas
-                  direcciones.
-                </p>
-                <br />
+                <div class="ml-16 mt-4 space-y-3">
+                  <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-100">
+                    <div class="flex items-start gap-3">
+                      <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                        <i class="fas fa-arrows-up-down text-green-600 text-xs"></i>
+                      </div>
+                      <p class="text-gray-700 leading-relaxed">
+                        Significa que tenés la misma velocidad de <strong class="text-blue-600">subida</strong> que de <strong class="text-blue-600">bajada</strong>.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                      <i class="fas fa-star text-yellow-500"></i>
+                      Beneficios de la velocidad simétrica:
+                    </h4>
+                    <div class="grid md:grid-cols-2 gap-3">
+                      <div class="flex items-center gap-2 text-sm text-gray-700">
+                        <i class="fas fa-video text-blue-500"></i>
+                        <span>Videollamadas en HD</span>
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-gray-700">
+                        <i class="fas fa-gamepad text-purple-500"></i>
+                        <span>Gaming online fluido</span>
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-gray-700">
+                        <i class="fas fa-cloud-upload text-green-500"></i>
+                        <span>Subir archivos rápido</span>
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-gray-700">
+                        <i class="fas fa-share-alt text-red-500"></i>
+                        <span>Redes sociales fluidas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- Pregunta 2 -->
-            <div class="py-2">
-              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                <span>¿Cómo es el proceso de instalación?</span>
-                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+              <button class="faq-question w-full flex items-start gap-4 text-left">
+                <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md">
+                  <i class="fas fa-tools text-lg"></i>
+                </div>
+                <div class="flex-1 pr-4">
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Cómo es el proceso de instalación?</h3>
+                </div>
+                <span class="faq-icon text-green-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">
-                  Una vez que contratás el servicio y confirmamos la
-                  disponibilidad en tu domicilio, un técnico especializado
-                  coordinará una visita para realizar la instalación del cable
-                  de fibra óptica y dejar el módem configurado y funcionando.
-                </p>
-                <br />
+                <div class="ml-16 mt-4 space-y-4">
+                  <div class="bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                      Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico especializado coordinará una visita para realizar la instalación.
+                    </p>
+                  </div>
+                  
+                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                      <i class="fas fa-list-ol text-blue-600"></i>
+                      Pasos del proceso:
+                    </h4>
+                    <div class="space-y-3">
+                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                        <span class="text-gray-700">Instalación del cable de fibra óptica</span>
+                      </div>
+                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                        <span class="text-gray-700">Configuración del módem ONT</span>
+                      </div>
+                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                          <i class="fas fa-check text-xs"></i>
+                        </div>
+                        <span class="text-gray-700">Pruebas de funcionamiento y entrega</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- Pregunta 3 -->
-            <div class="py-2">
-              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                <span>¿Puedo usar mi propio router?</span>
-                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+            <div class="bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+              <button class="faq-question w-full flex items-start gap-4 text-left">
+                <div class="flex-shrink-0 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white shadow-md">
+                  <i class="fas fa-wifi text-lg"></i>
+                </div>
+                <div class="flex-1 pr-4">
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Puedo usar mi propio router?</h3>
+                </div>
+                <span class="faq-icon text-purple-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">
-                  Sí, podés conectar tu propio router a nuestro módem (ONT).
-                  Sin embargo, para garantizar la mejor experiencia y
-                  cobertura, recomendamos nuestros equipos y la solución WiFi
-                  Mesh.
-                </p>
-                <br />
+                <div class="ml-16 mt-4 space-y-4">
+                  <div class="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+                    <div class="flex items-start gap-3">
+                      <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                        <i class="fas fa-check text-green-600 text-xs"></i>
+                      </div>
+                      <p class="text-gray-700 leading-relaxed">
+                        <strong class="text-green-600">Sí, podés conectar tu propio router</strong> a nuestro módem (ONT) sin ningún problema. Es completamente compatible.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4 border border-amber-200">
+                    <h4 class="font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                      <i class="fas fa-star text-yellow-500"></i>
+                      Sin embargo, nuestra recomendación:
+                    </h4>
+                    <div class="space-y-3">
+                      <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                          <i class="fas fa-shield-alt text-blue-600 text-xs"></i>
+                        </div>
+                        <p class="text-gray-700 text-sm">
+                          Para <strong>garantizar la mejor experiencia y cobertura</strong> en tu hogar, recomendamos usar nuestros equipos certificados
+                        </p>
+                      </div>
+                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-amber-100">
+                        <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                          <i class="fas fa-network-wired text-white text-xs"></i>
+                        </div>
+                        <div>
+                          <span class="font-medium text-gray-800">Solución WiFi Mesh</span>
+                          <p class="text-xs text-gray-600">Cobertura completa y uniforme en toda tu casa</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- Pregunta 4 -->
-            <div class="py-2">
-              <button class="faq-question w-full flex justify-between items-center text-left p-4 font-semibold text-lg">
-                <span>¿Qué hago si tengo problemas con el servicio?</span>
-                <span class="faq-icon text-blue-500 font-bold text-2xl transform">+</span>
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+              <button class="faq-question w-full flex items-start gap-4 text-left">
+                <div class="flex-shrink-0 w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md">
+                  <i class="fas fa-headset text-lg"></i>
+                </div>
+                <div class="flex-1 pr-4">
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué hago si tengo problemas con el servicio?</h3>
+                </div>
+                <span class="faq-icon text-red-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
               <div class="faq-answer">
-                <p class="pt-2">
-                  Podés comunicarte con nuestro centro de atención al cliente
-                  por teléfono, WhatsApp o a través de nuestra área de
-                  autogestión. Nuestro equipo de soporte técnico local te
-                  ayudará a resolver cualquier inconveniente.
-                </p>
-                <br />
+                <div class="ml-16 mt-4 space-y-4">
+                  <div class="bg-white rounded-lg p-4 shadow-sm border border-red-100">
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                      Podés comunicarte con nuestro <strong class="text-red-600">centro de atención al cliente</strong> por múltiples canales. Nuestro <strong class="text-red-600">equipo de soporte técnico local</strong> te ayudará a resolver cualquier inconveniente rápidamente.
+                    </p>
+                  </div>
+                  
+                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                      <i class="fas fa-phone-alt text-blue-600"></i>
+                      Canales de atención disponibles:
+                    </h4>
+                    <div class="grid md:grid-cols-2 gap-3">
+                      <a href="tel:08001994545" 
+                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                        <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <i class="fas fa-phone text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="font-medium text-gray-800">Teléfono</span>
+                          <p class="text-xs text-gray-600">0800-199-4545</p>
+                        </div>
+                      </a>
+                      
+                      <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
+                         target="_blank" rel="noopener noreferrer"
+                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-100 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                        <div class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <i class="fab fa-whatsapp text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="font-medium text-gray-800">WhatsApp</span>
+                          <p class="text-xs text-gray-600">Atención inmediata</p>
+                        </div>
+                      </a>
+                      
+                      <a href="pages/centro_de_ayuda/index.html" 
+                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-purple-100 hover:border-purple-300 hover:shadow-md transition-all duration-200 cursor-pointer group md:col-span-2">
+                        <div class="w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <i class="fas fa-user-cog text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="font-medium text-gray-800">Centro de Ayuda</span>
+                          <p class="text-xs text-gray-600">Resolvé problemas básicos y consultá nuestras guías</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

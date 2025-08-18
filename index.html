@@ -2143,10 +2143,6 @@
           addressInput.style.border = "1px solid red";
           addressInput.classList.add('input-shake');
           displayMessage("Por favor, ingresá una dirección.", "warning");
-          coverageResultContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
           // Restaurar botón
           coverageButton.innerHTML = originalText;
           coverageButton.disabled = false;
@@ -2161,10 +2157,6 @@
             "Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).",
             "error"
           );
-          coverageResultContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
           // Restaurar botón
           coverageButton.innerHTML = originalText;
           coverageButton.disabled = false;
@@ -2773,11 +2765,6 @@
 
       // Agregar animación al resultado
       coverageResultContainer.classList.add('result-animate');
-
-      coverageResultContainer.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
     }
 
     function normalizeString(str) {

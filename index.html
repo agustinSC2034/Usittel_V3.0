@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -1959,7 +1959,7 @@
         createMeshDots();
       }
 
-      // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (NUEVO Y ACTUALIZADO) ---
+      // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (ACTUALIZADO CON 3 ZONAS) ---
       const map = L.map("coverage-map").setView([-37.321, -59.135], 13);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -1968,8 +1968,8 @@
           '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
-      // Coordenadas actualizadas para reflejar los nuevos límites
-      const coverageAreaCoords = [
+      // ZONA ACTUAL (A) - Cobertura disponible
+      const currentCoverageCoords = [
         [-37.30705, -59.12641],
         [-37.30645, -59.12603],
         [-37.3063, -59.12617],
@@ -1977,9 +1977,8 @@
         [-37.30691, -59.12062],
         [-37.31248, -59.11372],
         [-37.31923, -59.10502],
-        [-37.32689, -59.11346],
-        [-37.32753, -59.11416],
-        [-37.33293, -59.12844],
+        [-37.32703, -59.11453],
+        [-37.3323, -59.12859],
         [-37.32188, -59.135],
         [-37.32228, -59.13636],
         [-37.31302, -59.14202],
@@ -1989,17 +1988,71 @@
         [-37.30813, -59.12942],
       ];
 
-      const polygon = L.polygon(coverageAreaCoords, {
-        color: "#2563EB", // Color del borde (azul oscuro)
-        weight: 3, // Grosor del borde
-        fillColor: "#3B82F6", // Color de relleno (azul)
-        fillOpacity: 0.45, // Opacidad del relleno
+      // ZONA B - Próxima a abrir
+      const zonaBCoords = [
+        [-37.3192, -59.10498],
+        [-37.3269, -59.11453],
+        [-37.33287, -59.11096],
+        [-37.33202, -59.10898],
+        [-37.32942, -59.10566],
+        [-37.33012, -59.10465],
+        [-37.32468, -59.098]
+      ];
+
+      // ZONA C - Siguiente a abrir
+      const zonaCCoords = [
+        [-37.32699, -59.11453],
+        [-37.3314, -59.12641],
+        [-37.34082, -59.12076],
+        [-37.33628, -59.10885]
+      ];
+
+      // Crear polígonos con diferentes estilos
+      const currentPolygon = L.polygon(currentCoverageCoords, {
+        color: "#2563EB", // Azul oscuro para el borde
+        weight: 3,
+        fillColor: "#3B82F6", // Azul para relleno
+        fillOpacity: 0.5
       }).addTo(map);
 
-      // El mapa se ajusta automáticamente para mostrar toda la zona de cobertura.
-      map.fitBounds(polygon.getBounds());
+      const zonaBPolygon = L.polygon(zonaBCoords, {
+        color: "#CA8A04", // Amarillo oscuro para el borde
+        weight: 3,
+        fillColor: "#FDE047", // Amarillo para relleno
+        fillOpacity: 0.4
+      }).addTo(map);
 
-      polygon.bindPopup("<b>¡Estás dentro de la zona de cobertura!</b>");
+      const zonaCPolygon = L.polygon(zonaCCoords, {
+        color: "#EA580C", // Naranja oscuro para el borde
+        weight: 3,
+        fillColor: "#FB923C", // Naranja para relleno
+        fillOpacity: 0.3
+      }).addTo(map);
+
+      // Popups informativos
+      currentPolygon.bindPopup("<b>✅ Zona de Cobertura Actual</b><br>¡Tenemos servicio disponible!");
+      zonaBPolygon.bindPopup("<b>🟡 Próxima Expansión</b><br>Próximamente disponible!");
+      zonaCPolygon.bindPopup("<b>🟠 Futura Expansión</b><br>Próximamente disponible!");
+
+      // Crear grupo de todas las zonas para ajustar el zoom
+      const allZones = L.featureGroup([currentPolygon, zonaBPolygon, zonaCPolygon]);
+      map.fitBounds(allZones.getBounds());
+
+      // Agregar leyenda
+      const legend = L.control({position: 'bottomright'});
+      legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'coverage-legend');
+        div.innerHTML = `
+          <div style="background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 12px;">
+            <div style="margin-bottom: 8px; font-weight: bold; color: #374151;">Zonas de Cobertura</div>
+            <div style="margin-bottom: 4px;"><span style="display: inline-block; width: 12px; height: 12px; background: #3B82F6; margin-right: 6px; border-radius: 2px;"></span>Disponible!</div>
+            <div style="margin-bottom: 4px;"><span style="display: inline-block; width: 12px; height: 12px; background: #FDE047; margin-right: 6px; border-radius: 2px;"></span>Próximamente</div>
+            <div><span style="display: inline-block; width: 12px; height: 12px; background: #FB923C; margin-right: 6px; border-radius: 2px;"></span>Próximamente</div>
+          </div>
+        `;
+        return div;
+      };
+      legend.addTo(map);
       // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
     });
   </script>

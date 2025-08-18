@@ -373,6 +373,42 @@
       .mobile-header-bar {
         display: flex;
       }
+
+      /* Mejoras para botones CTA en móviles */
+      .hero-content .cta-button {
+        font-size: 16px;
+        padding: 14px 24px !important;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        border-radius: 25px;
+      }
+
+      .hero-content .flex {
+        gap: 12px;
+        padding: 0 16px;
+      }
+
+      /* Asegurar que los botones no se rompan en pantallas muy pequeñas */
+      @media (max-width: 480px) {
+        .hero-content .cta-button {
+          font-size: 15px;
+          padding: 12px 20px !important;
+          min-height: 48px;
+        }
+
+        .hero-content h1 {
+          font-size: 2rem !important;
+          line-height: 1.2;
+        }
+
+        .hero-content p {
+          font-size: 1rem !important;
+          margin-bottom: 2rem !important;
+        }
+      }
     }
 
     /* ================================== */
@@ -626,12 +662,12 @@
 
   <main>
     <!-- =========== HERO SECTION =========== -->
-    <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-6"
+    <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-4 sm:px-6"
       style="background-size: cover; min-height: calc(100vh - 0px)">
       <canvas id="hero-canvas"></canvas>
       <!-- Ajuste: Menos opacidad para ver más la imagen de fondo -->
       <div class="absolute inset-0 bg-black" style="opacity:0.32"></div>
-      <div class="hero-content relative z-10">
+      <div class="hero-content relative z-10 max-w-4xl mx-auto">
       <picture><source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
         class="h-16 md:h-20 mx-auto mb-5" /></picture>
       <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
@@ -641,9 +677,9 @@
         Velocidad y confiabilidad para streaming, gaming y trabajo sin
         interrupciones.
       </p>
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-4"></div>
-        <a href="#plans" class="nav-button-green cta-button px-8 py-3 text-white"><b>Nuestros planes</b></a>
-        <a href="#coverage" class="nav-button2 cta-button px-8 py-3 text-white"><b>Verificar Cobertura</b></a>
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <a href="#plans" class="nav-button-green cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Nuestros planes</b></a>
+        <a href="#coverage" class="nav-button2 cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Verificar Cobertura</b></a>
       </div>
       </div>
     </section>

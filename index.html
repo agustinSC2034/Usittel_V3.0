@@ -586,6 +586,66 @@
       height: 500px;
       width: 100%;
     }
+
+    /* ANIMACIONES PARA EL VALIDADOR DE COBERTURA */
+    @keyframes buttonPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    @keyframes inputShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @keyframes resultFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes spinnerRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .button-animate {
+      animation: buttonPulse 0.6s ease-out;
+    }
+
+    .input-shake {
+      animation: inputShake 0.5s ease-in-out;
+    }
+
+    .result-animate {
+      animation: resultFadeIn 0.8s ease-out;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spinnerRotate 1s ease-in-out infinite;
+    }
   </style>
 
   <!-- Meta Tags -->
@@ -1966,34 +2026,64 @@
     }
 
     function checkCoverage() {
-      const address = addressInput.value.trim();
-      addressInput.style.border = "1px solid #d1d5db"; // Reset border color
-      coverageResultContainer.innerHTML = ""; // Limpiar resultados anteriores
+      // Animación del botón siempre que se presione
+      coverageButton.classList.remove('button-animate');
+      void coverageButton.offsetWidth; // Forzar reflow para reiniciar animación
+      coverageButton.classList.add('button-animate');
 
-      if (address === "") {
-        addressInput.style.border = "1px solid red";
-        displayMessage("Por favor, ingresá una dirección.", "warning");
-        coverageResultContainer.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-        return;
-      }
+      // Cambiar texto del botón temporalmente
+      const originalText = coverageButton.innerHTML;
+      coverageButton.innerHTML = '<span class="loading-spinner"></span> Consultando...';
+      coverageButton.disabled = true;
 
-      const match = address.match(/^(.*?)\s+(\d+)/);
+      // Simular un pequeño delay para mostrar la animación de carga
+      setTimeout(() => {
+        const address = addressInput.value.trim();
+        addressInput.style.border = "1px solid #d1d5db"; // Reset border color
+        coverageResultContainer.innerHTML = ""; // Limpiar resultados anteriores
+        
+        // Remover clases de animación previas
+        addressInput.classList.remove('input-shake');
+        coverageResultContainer.classList.remove('result-animate');
 
-      if (!match) {
-        displayMessage(
-          "Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).",
-          "error"
-        );
-        coverageResultContainer.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-        return;
-      }
+        if (address === "") {
+          addressInput.style.border = "1px solid red";
+          addressInput.classList.add('input-shake');
+          displayMessage("Por favor, ingresá una dirección.", "warning");
+          coverageResultContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          // Restaurar botón
+          coverageButton.innerHTML = originalText;
+          coverageButton.disabled = false;
+          return;
+        }
 
+        const match = address.match(/^(.*?)\s+(\d+)/);
+
+        if (!match) {
+          addressInput.classList.add('input-shake');
+          displayMessage(
+            "Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).",
+            "error"
+          );
+          coverageResultContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          // Restaurar botón
+          coverageButton.innerHTML = originalText;
+          coverageButton.disabled = false;
+          return;
+        }
+
+        // Continuar con la validación normal...
+        processAddressValidation(match, originalText);
+      }, 800); // 800ms de delay para mostrar la animación de carga
+    }
+
+    function processAddressValidation(match, originalText) {
       const streetName = match[1];
       const streetNumber = parseInt(match[2], 10);
 
@@ -2349,9 +2439,170 @@
         { calle: "pontaut", desde: 0, hasta: 1800 },
       ];
 
+      // NUEVAS ZONAS DE COBERTURA - ZONA C Y D
+      const nuevasZonasDeCobertura = [
+        // ZONA C
+        { calle: "colectora sur j c pugliese", desde: 0, hasta: 400 },
+        { calle: "colectora sur j.c pugliese", desde: 0, hasta: 400 },
+        { calle: "colectora sur j.c. pugliese", desde: 0, hasta: 400 },
+        { calle: "colectora sur jc pugliese", desde: 0, hasta: 400 },
+        { calle: "colectora sur pugliese", desde: 0, hasta: 400 },
+        { calle: "colectora pugliese", desde: 0, hasta: 400 },
+        { calle: "pugliese", desde: 0, hasta: 400 },
+        { calle: "piedrabuena", desde: 0, hasta: 200 },
+        { calle: "primera junta", desde: 0, hasta: 200 },
+        { calle: "franklin", desde: 0, hasta: 200 },
+        { calle: "liniers", desde: 0, hasta: 200 },
+        { calle: "pasaje fort", desde: 0, hasta: 100 },
+        { calle: "pje fort", desde: 0, hasta: 100 },
+        { calle: "pje. fort", desde: 0, hasta: 100 },
+        { calle: "fort", desde: 0, hasta: 100 },
+        { calle: "colombia", desde: 0, hasta: 200 },
+        { calle: "venezuela", desde: 0, hasta: 200 },
+        { calle: "costa rica", desde: 0, hasta: 200 },
+        { calle: "panama", desde: 0, hasta: 200 },
+        { calle: "panamá", desde: 0, hasta: 200 },
+        { calle: "nicaragua", desde: 0, hasta: 200 },
+        { calle: "av brasil", desde: 0, hasta: 500 },
+        { calle: "av. brasil", desde: 0, hasta: 500 },
+        { calle: "avenida brasil", desde: 0, hasta: 500 },
+        { calle: "brasil", desde: 0, hasta: 500 },
+        { calle: "massini", desde: 200, hasta: 400 },
+        { calle: "carlos linstow", desde: 0, hasta: 400 },
+        { calle: "linstow", desde: 0, hasta: 400 },
+        { calle: "galileo", desde: 0, hasta: 100 },
+        { calle: "c la pesqueria", desde: 0, hasta: 2000 },
+        { calle: "la pesqueria", desde: 0, hasta: 2000 },
+        { calle: "pesqueria", desde: 0, hasta: 2000 },
+        { calle: "tandileofu", desde: 0, hasta: 300 },
+        { calle: "quequén", desde: 0, hasta: 300 },
+        { calle: "quequen", desde: 0, hasta: 300 },
+        { calle: "las chilcas", desde: 100, hasta: 300 },
+        { calle: "chilcas", desde: 100, hasta: 300 },
+        { calle: "barrientos", desde: 0, hasta: 2000 },
+        { calle: "baarrientos", desde: 0, hasta: 2000 },
+        { calle: "pasaje jose barrientos", desde: 0, hasta: 2000 },
+        { calle: "pje jose barrientos", desde: 0, hasta: 2000 },
+        { calle: "pje. jose barrientos", desde: 0, hasta: 2000 },
+        { calle: "jose barrientos", desde: 0, hasta: 2000 },
+        { calle: "rivas", desde: 500, hasta: 1400 },
+        { calle: "pozos", desde: 500, hasta: 1400 },
+        { calle: "renis", desde: 1100, hasta: 1200 },
+        { calle: "tilcara", desde: 0, hasta: 2000 },
+        { calle: "fulton", desde: 0, hasta: 2000 },
+        { calle: "holmberg", desde: 400, hasta: 1400 },
+        { calle: "avenida fidanza", desde: 400, hasta: 1400 },
+        { calle: "av fidanza", desde: 400, hasta: 1400 },
+        { calle: "av. fidanza", desde: 400, hasta: 1400 },
+        { calle: "fidanza", desde: 400, hasta: 1400 },
+        { calle: "hudson", desde: 0, hasta: 2000 },
+        { calle: "grothe", desde: 1100, hasta: 1400 },
+        
+        // ZONA D
+        { calle: "hermano crisostomo", desde: 0, hasta: 2000 },
+        { calle: "crisostomo", desde: 0, hasta: 2000 },
+        { calle: "carriego", desde: 0, hasta: 600 },
+        { calle: "tacuari", desde: 0, hasta: 700 },
+        { calle: "jose hernandez", desde: 0, hasta: 400 },
+        { calle: "josé hernandez", desde: 0, hasta: 400 },
+        { calle: "hernandez", desde: 0, hasta: 400 },
+        { calle: "santos vega", desde: 0, hasta: 300 },
+        { calle: "martin fierro", desde: 0, hasta: 200 },
+        { calle: "martín fierro", desde: 0, hasta: 200 },
+        { calle: "jose marti", desde: 0, hasta: 100 },
+        { calle: "josé marti", desde: 0, hasta: 100 },
+        { calle: "josé martí", desde: 0, hasta: 100 },
+        { calle: "jose martí", desde: 0, hasta: 100 },
+        { calle: "marti", desde: 0, hasta: 100 },
+        { calle: "martí", desde: 0, hasta: 100 },
+        { calle: "cerrito", desde: 0, hasta: 300 },
+        { calle: "ruben diario", desde: 0, hasta: 300 },
+        { calle: "rubén diario", desde: 0, hasta: 300 },
+        { calle: "ruben dario", desde: 0, hasta: 800 },
+        { calle: "rubén dario", desde: 0, hasta: 800 },
+        { calle: "rubén darío", desde: 0, hasta: 800 },
+        { calle: "ruben darío", desde: 0, hasta: 800 },
+        { calle: "avenida simon bolivar", desde: 0, hasta: 800 },
+        { calle: "av simon bolivar", desde: 0, hasta: 800 },
+        { calle: "av. simon bolivar", desde: 0, hasta: 800 },
+        { calle: "avenida simón bolivar", desde: 0, hasta: 800 },
+        { calle: "av simón bolivar", desde: 0, hasta: 800 },
+        { calle: "av. simón bolivar", desde: 0, hasta: 800 },
+        { calle: "simon bolivar", desde: 0, hasta: 800 },
+        { calle: "simón bolivar", desde: 0, hasta: 800 },
+        { calle: "bolivar", desde: 0, hasta: 800 },
+        { calle: "bolívar", desde: 0, hasta: 800 },
+        { calle: "los lapachos", desde: 0, hasta: 2000 },
+        { calle: "lapachos", desde: 0, hasta: 2000 },
+        { calle: "sargento primero luis a barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "sargento primero luis barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "sargento luis a barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "sargento luis barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "luis a barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "luis barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "barrufaldi", desde: 0, hasta: 2000 },
+        { calle: "guido dinelli", desde: 0, hasta: 2000 },
+        { calle: "dinelli", desde: 0, hasta: 2000 },
+        { calle: "carola lorenzini", desde: 200, hasta: 400 },
+        { calle: "lorenzini", desde: 200, hasta: 400 },
+        { calle: "eduardo olivero", desde: 0, hasta: 2000 },
+        { calle: "olivero", desde: 0, hasta: 2000 },
+        { calle: "c. fels", desde: 0, hasta: 2000 },
+        { calle: "c fels", desde: 0, hasta: 2000 },
+        { calle: "fels", desde: 0, hasta: 2000 },
+        { calle: "pedro hansen", desde: 300, hasta: 400 },
+        { calle: "hansen", desde: 300, hasta: 400 },
+        { calle: "martin fierro", desde: 400, hasta: 800 },
+        { calle: "martín fierro", desde: 400, hasta: 800 },
+        { calle: "f de la cruz", desde: 1000, hasta: 1200 },
+        { calle: "f. de la cruz", desde: 1000, hasta: 1200 },
+        { calle: "de la cruz", desde: 1000, hasta: 1200 },
+        { calle: "c santos vega", desde: 0, hasta: 2000 },
+        { calle: "c. santos vega", desde: 0, hasta: 2000 },
+        { calle: "av fleming", desde: 0, hasta: 2000 },
+        { calle: "av. fleming", desde: 0, hasta: 2000 },
+        { calle: "avenida fleming", desde: 0, hasta: 2000 },
+        { calle: "fleming", desde: 0, hasta: 2000 },
+        { calle: "roser", desde: 1100, hasta: 1800 },
+        { calle: "rosser", desde: 1100, hasta: 1800 },
+        { calle: "pasaje uruguay", desde: 0, hasta: 2000 },
+        { calle: "pje uruguay", desde: 0, hasta: 2000 },
+        { calle: "pje. uruguay", desde: 0, hasta: 2000 },
+        { calle: "uruguay", desde: 0, hasta: 2000 },
+        { calle: "carlos gardel", desde: 1000, hasta: 1800 },
+        { calle: "gardel", desde: 1000, hasta: 1800 },
+        { calle: "av s serrano", desde: 1400, hasta: 1800 },
+        { calle: "av. s serrano", desde: 1400, hasta: 1800 },
+        { calle: "av s. serrano", desde: 1400, hasta: 1800 },
+        { calle: "av. s. serrano", desde: 1400, hasta: 1800 },
+        { calle: "avenida s serrano", desde: 1400, hasta: 1800 },
+        { calle: "avenida s. serrano", desde: 1400, hasta: 1800 },
+        { calle: "serrano", desde: 1400, hasta: 1800 },
+        { calle: "s serrano", desde: 1400, hasta: 1800 },
+        { calle: "s. serrano", desde: 1400, hasta: 1800 },
+        { calle: "fugl", desde: 1000, hasta: 1800 },
+        { calle: "loberia", desde: 1100, hasta: 1500 },
+        { calle: "lobería", desde: 1100, hasta: 1500 },
+        { calle: "larrea", desde: 1000, hasta: 1600 },
+        { calle: "avenida lopez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "av lopez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "av. lopez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "avenida lópez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "av lópez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "av. lópez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "lopez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "lópez de osornio", desde: 1000, hasta: 1300 },
+        { calle: "general de la cruz", desde: 0, hasta: 2000 },
+        { calle: "gral de la cruz", desde: 0, hasta: 2000 },
+        { calle: "gral. de la cruz", desde: 0, hasta: 2000 },
+        { calle: "de la cruz", desde: 0, hasta: 2000 },
+      ];
+
       const normalizedStreet = normalizeString(streetName);
       let isInCoverage = false;
+      let isInNewCoverage = false;
 
+      // Verificar zonas de cobertura actual
       for (const zona of zonasDeCobertura) {
         const normalizedZonaCalle = normalizeString(zona.calle);
         if (
@@ -2361,6 +2612,21 @@
         ) {
           isInCoverage = true;
           break;
+        }
+      }
+
+      // Verificar nuevas zonas de cobertura (solo si no está en cobertura actual)
+      if (!isInCoverage) {
+        for (const zona of nuevasZonasDeCobertura) {
+          const normalizedZonaCalle = normalizeString(zona.calle);
+          if (
+            normalizedStreet.includes(normalizedZonaCalle) &&
+            streetNumber >= zona.desde &&
+            streetNumber <= zona.hasta
+          ) {
+            isInNewCoverage = true;
+            break;
+          }
         }
       }
 
@@ -2379,6 +2645,22 @@
                 <a href="#contact" class="font-bold text-blue-600 hover:text-blue-800">dejanos tu consulta</a> y te contactaremos.
             </p>`;
         displayMessage(successMessage, "success");
+      } else if (isInNewCoverage) {
+        const newCoverageMessage = `
+            <h3 class="text-2xl font-bold text-blue-600">¡Estás dentro de nuestra próxima zona de cobertura!</h3>
+            <p class="mt-3 text-gray-600">
+                Escribinos a nuestro WhatsApp haciendo click aquí: 
+                <a href="https://wa.me/5492494060345"
+                   target="_blank" class="font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp"></i> Chatear Ahora
+                </a>
+            </p>
+            <p class="mt-2 text-gray-600">
+                O escribinos a nuestro mail 
+                <a href="mailto:contacto@usittel.com.ar" class="font-bold text-blue-600 hover:text-blue-800">contacto@usittel.com.ar</a>
+                para dejarnos tus datos y te contactaremos apenas lleguemos a tu zona.
+            </p>`;
+        displayMessage(newCoverageMessage, "info");
       } else {
         const failureMessage = `
             <h3 class="text-2xl font-bold text-yellow-600">Aún no llegamos a tu domicilio</h3>
@@ -2391,6 +2673,13 @@
             </p>`;
         displayMessage(failureMessage, "warning");
       }
+
+      // Restaurar botón
+      coverageButton.innerHTML = originalText;
+      coverageButton.disabled = false;
+
+      // Agregar animación al resultado
+      coverageResultContainer.classList.add('result-animate');
 
       coverageResultContainer.scrollIntoView({
         behavior: "smooth",
@@ -2416,6 +2705,11 @@
           iconHTML =
             '<i class="fas fa-check-circle fa-2x text-green-500 mb-3"></i>';
           colorClasses = "bg-green-50 border-green-200";
+          break;
+        case "info":
+          iconHTML =
+            '<i class="fas fa-info-circle fa-2x text-blue-500 mb-3"></i>';
+          colorClasses = "bg-blue-50 border-blue-200";
           break;
         case "warning":
           iconHTML =

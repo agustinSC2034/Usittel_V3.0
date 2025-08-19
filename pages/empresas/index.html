@@ -1631,50 +1631,7 @@
 
         });
     </script>
-    <script>
-        // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (NUEVO Y ACTUALIZADO) ---
-        const map = L.map('coverage-map').setView([-37.321, -59.135], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        // Coordenadas actualizadas para reflejar los nuevos límites
-        const coverageAreaCoords = [
-          [-37.30705, -59.12641],
-          [-37.30645, -59.12603],
-          [-37.3063, -59.12617],
-          [-37.30456, -59.12388],
-          [-37.30691, -59.12062],
-          [-37.31248, -59.11372],
-          [-37.3169, -59.11929],
-          [-37.32689, -59.11346],
-          [-37.32753, -59.11416],
-          [-37.33293, -59.12844],
-          [-37.32188, -59.135],
-          [-37.32228, -59.13636],
-          [-37.31302, -59.14202],
-          [-37.31163, -59.13815],
-          [-37.31196, -59.13788],
-          [-37.30854, -59.12915],
-          [-37.30813, -59.12942],
-        ];
-
-        const polygon = L.polygon(coverageAreaCoords, {
-            color: '#2563EB',      // Color del borde (azul oscuro)
-            weight: 3,             // Grosor del borde
-            fillColor: '#3B82F6',  // Color de relleno (azul)
-            fillOpacity: 0.45      // Opacidad del relleno
-        }).addTo(map);
-
-        // El mapa se ajusta automáticamente para mostrar toda la zona de cobertura.
-        map.fitBounds(polygon.getBounds());
-
-        polygon.bindPopup("<b>¡Estás dentro de la zona de cobertura!</b>");
-        // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
-
-    </script>
+ 
     <script>
             // COVERAGE CHECK LOGIC
         const coverageButton = document.getElementById('coverage-button');

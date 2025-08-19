@@ -2105,71 +2105,155 @@
     // Función global para buscar y marcar dirección en el mapa
     function searchAndMarkAddress(address) {
       // Verificar que el mapa esté inicializado
-      if (!map) return;
+      if (!map) return Promise.resolve(false);
       
-      // Construir la dirección completa
-      const fullAddress = `${address}, Tandil, Buenos Aires, Argentina`;
+      // Extraer calle y número de la dirección
+      const match = address.match(/^(.*?)\s+(\d+)$/);
+      if (!match) return Promise.resolve(false);
       
-      // Usar la API de Nominatim (OpenStreetMap) para geocodificación
-      const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=5&countrycodes=ar&addressdetails=1`;
+      const streetName = match[1].trim();
+      const originalNumber = parseInt(match[2], 10);
       
-      fetch(geocodeUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.length > 0) {
-            // Filtrar resultados para encontrar coincidencias precisas
-            const preciseMatch = data.find(result => {
-              // Verificar que tenga número de casa (house_number)
-              const hasHouseNumber = result.address && result.address.house_number;
+      // Función auxiliar para buscar una dirección específica
+      function searchSpecificAddress(street, number) {
+        const fullAddress = `${street} ${number}, Tandil, Buenos Aires, Argentina`;
+        const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=5&countrycodes=ar&addressdetails=1`;
+        
+        return fetch(geocodeUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.length > 0) {
+              // Filtrar resultados para encontrar coincidencias precisas
+              const preciseMatch = data.find(result => {
+                // Verificar que tenga número de casa (house_number)
+                const hasHouseNumber = result.address && result.address.house_number;
+                
+                // Verificar que el tipo de lugar sea específico (no solo una calle)
+                const isSpecificAddress = result.type === 'house' || 
+                                         result.type === 'building' || 
+                                         result.type === 'address' ||
+                                         (result.address && result.address.house_number);
+                
+                // Verificar que esté en Tandil
+                const isInTandil = result.address && 
+                                 (result.address.city === 'Tandil' || 
+                                  result.address.town === 'Tandil' ||
+                                  result.address.municipality === 'Tandil');
+                
+                return hasHouseNumber && isSpecificAddress && isInTandil;
+              });
               
-              // Verificar que el tipo de lugar sea específico (no solo una calle)
-              const isSpecificAddress = result.type === 'house' || 
-                                       result.type === 'building' || 
-                                       result.type === 'address' ||
-                                       (result.address && result.address.house_number);
-              
-              // Verificar que esté en Tandil
-              const isInTandil = result.address && 
-                               (result.address.city === 'Tandil' || 
-                                result.address.town === 'Tandil' ||
-                                result.address.municipality === 'Tandil');
-              
-              return hasHouseNumber && isSpecificAddress && isInTandil;
-            });
-            
-            if (preciseMatch) {
-              const lat = parseFloat(preciseMatch.lat);
-              const lon = parseFloat(preciseMatch.lon);
-              
-              // Crear nuevo marcador (el anterior ya fue removido en checkCoverage)
-              searchMarker = L.marker([lat, lon], {
-                icon: L.icon({
-                  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                  iconSize: [25, 41],
-                  iconAnchor: [12, 41],
-                  popupAnchor: [1, -34],
-                  shadowSize: [41, 41]
-                })
-              }).addTo(map);
-              
-              // Agregar popup al marcador
-              searchMarker.bindPopup(`<b>📍 ${address}</b><br>Tandil, Buenos Aires`).openPopup();
-              
-              // Centrar el mapa en la dirección encontrada
-              map.setView([lat, lon], 16);
-              
-              console.log('Dirección precisa encontrada y marcada en el mapa');
-            } else {
-              console.log('No se encontró una dirección precisa con ese número específico');
+              return preciseMatch;
             }
+            return null;
+          });
+      }
+      
+      // Intentar buscar la dirección original primero
+      return searchSpecificAddress(streetName, originalNumber)
+        .then(result => {
+          if (result) {
+            // Dirección original encontrada
+            return createMarkerAndView(result, `${streetName} ${originalNumber}`, true);
           } else {
-            console.log('Dirección no encontrada en el mapa');
+            // No se encontró la dirección original, buscar números cercanos
+            console.log(`No se encontró ${streetName} ${originalNumber}, buscando números cercanos...`);
+            
+            // Generar array de números cercanos (±1, ±2, ±3, ±5, ±10)
+            const nearbyNumbers = [
+              originalNumber + 1, originalNumber - 1,
+              originalNumber + 2, originalNumber - 2,
+              originalNumber + 3, originalNumber - 3,
+              originalNumber + 5, originalNumber - 5,
+              originalNumber + 10, originalNumber - 10
+            ].filter(num => num > 0); // Solo números positivos
+            
+            // Función para buscar secuencialmente los números cercanos
+            function searchNearbySequentially(index = 0) {
+              if (index >= nearbyNumbers.length) {
+                // No se encontró ningún número cercano
+                console.log('No se encontró ningún número cercano disponible');
+                resetMapToDefaultView();
+                return false;
+              }
+              
+              const nearbyNumber = nearbyNumbers[index];
+              return searchSpecificAddress(streetName, nearbyNumber)
+                .then(nearbyResult => {
+                  if (nearbyResult) {
+                    // Se encontró un número cercano
+                    console.log(`Dirección alternativa encontrada: ${streetName} ${nearbyNumber}`);
+                    return createMarkerAndView(nearbyResult, `${streetName} ${originalNumber}`, true);
+                  } else {
+                    // Intentar con el siguiente número
+                    return searchNearbySequentially(index + 1);
+                  }
+                });
+            }
+            
+            return searchNearbySequentially();
           }
         })
         .catch(error => {
           console.log('Error al buscar la dirección en el mapa:', error);
+          resetMapToDefaultView();
+          return false;
         });
+    }
+    
+    // Función auxiliar para crear marcador y centrar vista
+    function createMarkerAndView(result, originalAddress, success) {
+      const lat = parseFloat(result.lat);
+      const lon = parseFloat(result.lon);
+      
+      // Crear nuevo marcador (el anterior ya fue removido en checkCoverage)
+      searchMarker = L.marker([lat, lon], {
+        icon: L.icon({
+          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        })
+      }).addTo(map);
+      
+      // Agregar popup al marcador con la dirección original
+      searchMarker.bindPopup(`<b>📍 ${originalAddress}</b><br>Tandil, Buenos Aires`).openPopup();
+      
+      // Centrar el mapa en la dirección encontrada
+      map.setView([lat, lon], 16);
+      
+      console.log(`Dirección marcada en el mapa: ${originalAddress}`);
+      return success;
+    }
+
+    // Función para resetear el mapa a la vista por defecto
+    function resetMapToDefaultView() {
+      if (map) {
+        // Crear grupo de todas las zonas para ajustar el zoom a la vista por defecto
+        const currentPolygon = map.eachLayer(layer => {
+          if (layer instanceof L.Polygon && layer.options.fillColor === '#3B82F6') {
+            return layer;
+          }
+        });
+        
+        // Buscar todos los polígonos para crear el grupo
+        const allPolygons = [];
+        map.eachLayer(layer => {
+          if (layer instanceof L.Polygon) {
+            allPolygons.push(layer);
+          }
+        });
+        
+        if (allPolygons.length > 0) {
+          const allZones = L.featureGroup(allPolygons);
+          map.fitBounds(allZones.getBounds());
+        } else {
+          // Fallback a coordenadas fijas de Tandil
+          map.setView([-37.321, -59.135], 13);
+        }
+      }
     }
   </script>
   <script>
@@ -2245,18 +2329,23 @@
           return;
         }
 
-        // Continuar con la validación normal...
-        processAddressValidation(match, originalText);
-      }, 800); // 800ms de delay para mostrar la animación de carga
+        // Iniciar la georreferenciación y esperar su resultado
+        const fullAddress = `${match[1]} ${match[2]}`;
+        searchAndMarkAddress(fullAddress).then(wasGeolocated => {
+          // Determinar el delay basado en si se pudo georreferenciar
+          const additionalDelay = wasGeolocated ? 200 : 800; // Más tiempo si se georeferencia
+          
+          setTimeout(() => {
+            // Continuar con la validación normal...
+            processAddressValidation(match, originalText);
+          }, additionalDelay);
+        });
+      }, 800); // 800ms de delay inicial para mostrar la animación de carga
     }
 
     function processAddressValidation(match, originalText) {
       const streetName = match[1];
       const streetNumber = parseInt(match[2], 10);
-
-      // Marcar la dirección en el mapa
-      const fullAddress = `${streetName} ${streetNumber}`;
-      searchAndMarkAddress(fullAddress);
 
       const zonasDeCobertura = [
         { calle: "paz", desde: 1, hasta: 1599 },
@@ -2500,18 +2589,18 @@
         { calle: "mejico", desde: 1000, hasta: 1400 },
         { calle: "mexico", desde: 1000, hasta: 1400 },
         { calle: "gomez", desde: 1200, hasta: 1400 },
-        { calle: "colectora sur", desde: 1000, hasta: 1800 },
-        { calle: "colectora sur j.c pugliese", desde: 1000, hasta: 1800 },
-        { calle: "colectora j.c pugliese", desde: 1000, hasta: 1800 },
-        { calle: "colectora pugliese", desde: 1000, hasta: 1800 },
+        { calle: "colectora sur", desde: 200, hasta: 1800 },
+        { calle: "colectora sur j.c pugliese", desde: 200, hasta: 1800 },
+        { calle: "colectora j.c pugliese", desde: 200, hasta: 1800 },
+        { calle: "colectora pugliese", desde: 200, hasta: 1800 },
         { calle: "pugliese", desde: 1000, hasta: 1800 },
-        { calle: "piedrabuena", desde: 1000, hasta: 1800 },
+        { calle: "piedrabuena", desde: 200, hasta: 1800 },
         { calle: "piñero", desde: 1200, hasta: 1600 },
         { calle: "piñiero", desde: 1200, hasta: 1600 },
         { calle: "piñeiro", desde: 1200, hasta: 1600 },
-        { calle: "primera junta", desde: 1000, hasta: 1800 },
-        { calle: "franklin", desde: 1000, hasta: 1700 },
-        { calle: "colombia", desde: 1000, hasta: 1400 },
+        { calle: "primera junta", desde: 200, hasta: 1800 },
+        { calle: "franklin", desde: 200, hasta: 1700 },
+        { calle: "colombia", desde: 200, hasta: 1600 },
         { calle: "newton", desde: 900, hasta: 1400 },
         { calle: "edison", desde: 900, hasta: 1200 },
         { calle: "cuba", desde: 900, hasta: 1400 },
@@ -2548,7 +2637,7 @@
           desde: 1100,
           hasta: 1500,
         },
-        { calle: "liniers", desde: 1000, hasta: 1700 },
+        { calle: "liniers", desde: 200, hasta: 1700 },
         { calle: "pje castelli", desde: 1100, hasta: 1800 },
         { calle: "Pasaje castelli", desde: 1100, hasta: 1800 },
         { calle: "Castelli", desde: 1100, hasta: 1800 },

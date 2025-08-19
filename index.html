@@ -2028,6 +2028,7 @@
         [-37.30813, -59.12942],
       ];
 
+      /*
       // ZONA B - Próxima a abrir
       const zonaBCoords = [
         [-37.3192, -59.10498],
@@ -2038,7 +2039,9 @@
         [-37.33012, -59.10465],
         [-37.32468, -59.098]
       ];
+      */
 
+      /*
       // ZONA C - Siguiente a abrir
       const zonaCCoords = [
         [-37.32699, -59.11453],
@@ -2046,6 +2049,7 @@
         [-37.34082, -59.12076],
         [-37.33628, -59.10885]
       ];
+      */
 
       // Crear polígonos con diferentes estilos
       const currentPolygon = L.polygon(currentCoverageCoords, {
@@ -2055,6 +2059,7 @@
         fillOpacity: 0.5
       }).addTo(map);
 
+      /*
       const zonaBPolygon = L.polygon(zonaBCoords, {
         color: "#CA8A04", // Amarillo oscuro para el borde
         weight: 3,
@@ -2093,6 +2098,7 @@
         return div;
       };
       legend.addTo(map);
+      */
 
       // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
     });
@@ -2907,7 +2913,7 @@
         displayMessage(successMessage, "success");
       } else if (isInNewCoverage) {
         const newCoverageMessage = `
-            <h3 class="text-2xl font-bold text-blue-600">¡Estás dentro de nuestra próxima zona de cobertura!</h3>
+            <h3 class="text-2xl font-bold text-blue-600">¡Tu hogar estará proximamente en nuestra zona de cobertura!</h3>
             <p class="mt-3 text-gray-600">
                 Escribinos a nuestro WhatsApp haciendo click aquí: 
                 <a href="https://wa.me/5492494060345"

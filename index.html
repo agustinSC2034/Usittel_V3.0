@@ -2992,35 +2992,6 @@
     `;
     }
   </script>
-
-  <!-- Script simplificado para el formulario de contacto -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const contactForm = document.getElementById("contact-form");
-      const submitBtn = document.getElementById("submit-btn");
-
-      if (contactForm) {
-        contactForm.addEventListener("submit", function (e) {
-          // Verificar reCAPTCHA antes de enviar
-          const recaptchaResponse = grecaptcha.getResponse();
-          if (!recaptchaResponse) {
-            e.preventDefault();
-            alert("Por favor, completa el reCAPTCHA.");
-            return;
-          }
-
-          // Cambiar estado del botón
-          const originalText = submitBtn.innerHTML;
-          submitBtn.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-          submitBtn.disabled = true;
-
-          // El formulario se enviará normalmente (sin preventDefault)
-          // El PHP manejará la respuesta con alert() y redirección
-        });
-      }
-    });
-  </script>
 </body>
 
 </html>

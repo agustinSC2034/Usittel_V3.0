@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USITTEL - Base de Conocimiento de Precios para Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 5px;
+        }
+        .plan-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .plan-item {
+            background: white;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #1a73e8;
+        }
+        .price {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+        .promo-price {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 1.1em;
+        }
+        .final-price {
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .features {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .important {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .combo-section {
+            background-color: #e8f4fd;
+        }
+        .tv-section {
+            background-color: #f0f9e8;
+        }
+        .mesh-section {
+            background-color: #fdf2e9;
+        }
+        .addons-section {
+            background-color: #f8e8f8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>USITTEL - Base de Conocimiento de Precios</h1>
+        <p><strong>Documento para uso interno del Bot de Botmaker</strong></p>
+        <p><em>Última actualización: Agosto 2025</em></p>
+
+        <!-- PLANES DE INTERNET SOLO -->
+        <div class="plan-section">
+            <h2>1. PLANES DE INTERNET INDIVIDUALES (FIBRA ÓPTICA)</h2>
+            
+            <div class="plan-item">
+                <h3>Fibra 100 Mbps</h3>
+                <div class="promo-price">Precio promocional: $14.499/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 3 meses<br>
+                    <strong>Precio final:</strong> $22.988,79/mes a partir del 4to mes
+                </div>
+                <ul class="features">
+                    <li>100 Mbps SIMÉTRICOS (misma velocidad de subida y bajada)</li>
+                    <li>Instalación 100% bonificada</li>
+                    <li>Ideal para home office</li>
+                </ul>
+                <p><strong>Condiciones:</strong> Promoción válida para nuevos clientes personas físicas que contraten servicio residencial de USITTEL.</p>
+            </div>
+
+            <div class="plan-item">
+                <h3>Fibra 300 Mbps (MÁS ELEGIDO)</h3>
+                <div class="promo-price">Precio promocional: $15.999/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 6 meses<br>
+                    <strong>Precio final:</strong> $26.998/mes (precio fijo hasta el mes 9)
+                </div>
+                <ul class="features">
+                    <li>300 Mbps SIMÉTRICOS (misma velocidad de subida y bajada)</li>
+                    <li>Instalación 100% bonificada</li>
+                    <li>Perfecto para familias y gaming</li>
+                </ul>
+                <p><strong>Condiciones:</strong> Promoción válida para nuevos clientes personas físicas que contraten servicio residencial de USITTEL.</p>
+            </div>
+
+            <div class="plan-item">
+                <h3>Fibra 500 Mbps</h3>
+                <div class="promo-price">Precio promocional: $19.249,10/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 6 meses<br>
+                    <strong>Precio final:</strong> $34.999/mes (precio fijo hasta el mes 12)
+                </div>
+                <ul class="features">
+                    <li>500 Mbps SIMÉTRICOS (misma velocidad de subida y bajada)</li>
+                    <li>Instalación 100% bonificada</li>
+                    <li>La mejor experiencia online</li>
+                </ul>
+                <p><strong>Condiciones:</strong> Promoción válida para nuevos clientes personas físicas que contraten servicio residencial de USITTEL.</p>
+            </div>
+        </div>
+
+        <!-- PLAN DE TV SOLO -->
+        <div class="plan-section tv-section">
+            <h2>2. PLAN DE TELEVISIÓN INDIVIDUAL</h2>
+            
+            <div class="plan-item">
+                <h3>USITTEL TV Básico</h3>
+                <div class="price">Precio: $15.999/mes</div>
+                <ul class="features">
+                    <li>Más de 100 canales en vivo</li>
+                    <li>Series y películas On-Demand</li>
+                    <li>Acceso a la app Sensa TV multidispositivo</li>
+                    <li>Funciones de grabar, pausar y retroceder</li>
+                    <li>No requiere tener Internet de USITTEL</li>
+                    <li>Hasta 6 dispositivos en simultáneo (3 pantallas grandes + 3 móviles/PC)</li>
+                </ul>
+                <p><strong>Nota por si preguntan:</strong> Este servicio puede contratarse independientemente del servicio de Internet.</p>
+            </div>
+        </div>
+
+        <!-- COMBOS INTERNET + TV -->
+        <div class="plan-section combo-section">
+            <h2>3. COMBOS INTERNET + TV</h2>
+            
+            <div class="plan-item">
+                <h3>Fibra 100 + TV</h3>
+                <div class="promo-price">Precio promocional: $25.328/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 3 meses<br>
+                    <strong>Precio final:</strong> $38.987,79/mes a partir del 4to mes
+                </div>
+                <ul class="features">
+                    <li>100 Mbps SIMÉTRICOS de Internet</li>
+                    <li>Pack USITTEL TV incluido</li>
+                    <li>+100 canales en vivo</li>
+                    <li>Contenido On-Demand</li>
+                    <li>Instalación 100% bonificada</li>
+                </ul>
+            </div>
+
+            <div class="plan-item">
+                <h3>Fibra 300 + TV (MÁS POPULAR)</h3>
+                <div class="promo-price">Precio promocional: $26.295/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 6 meses<br>
+                    <strong>Precio final:</strong> $42.997/mes (precio fijo hasta el mes 9)
+                </div>
+                <ul class="features">
+                    <li>300 Mbps SIMÉTRICOS de Internet</li>
+                    <li>Pack USITTEL TV incluido</li>
+                    <li>Ideal para toda la familia</li>
+                    <li>Mirá en múltiples pantallas</li>
+                    <li>Instalación 100% bonificada</li>
+                </ul>
+            </div>
+
+            <div class="plan-item">
+                <h3>Fibra 500 + TV</h3>
+                <div class="promo-price">Precio promocional: $28.948/mes</div>
+                <div class="important">
+                    <strong>Promoción:</strong> Válida durante los primeros 6 meses<br>
+                    <strong>Precio final:</strong> $50.998/mes (precio fijo hasta el mes 12)
+                </div>
+                <ul class="features">
+                    <li>500 Mbps SIMÉTRICOS de Internet</li>
+                    <li>Pack USITTEL TV incluido</li>
+                    <li>La experiencia completa</li>
+                    <li>Velocidad y entretenimiento</li>
+                    <li>Instalación 100% bonificada</li>
+                </ul>
+            </div>
+
+            <div class="important">
+                <strong>Condiciones de combos:</strong> Se respetan los descuentos sobre la TV en la velocidad.
+            </div>
+        </div>
+
+        <!-- PACKS PREMIUM DE TV -->
+        <div class="plan-section addons-section">
+            <h2>4. PACKS PREMIUM DE TV (ADICIONALES)</h2>
+            
+            <div class="important">
+                <strong>IMPORTANTE:</strong> Los packs premium requieren contar con un abono básico de USITTEL TV activo. No pueden contratarse de forma individual.
+            </div>
+
+            <div class="plan-item">
+                <h3>Pack Fútbol</h3>
+                <div class="price">Precio: $18.999/mes</div>
+                <ul class="features">
+                    <li>Todo el fútbol de la Liga Profesional Argentina</li>
+                    <li>Todos los partidos en vivo</li>
+                </ul>
+            </div>
+
+            <div class="plan-item">
+                <h3>Pack HBO (MAX)</h3>
+                <div class="price">Precio: $6.999/mes</div>
+                <ul class="features">
+                    <li>Todos los canales premium de HBO</li>
+                    <li>Acceso a la app MAX incluido</li>
+                    <li>Series y películas exclusivas</li>
+                </ul>
+            </div>
+
+            <div class="plan-item">
+                <h3>Pack Universal+</h3>
+                <div class="price">Precio: $5.999/mes</div>
+                <ul class="features">
+                    <li>Acceso a todos los canales premium Universal</li>
+                    <li>Acceso a la app de streaming Universal+</li>
+                    <li>Contenido exclusivo de Universal</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WIFI MESH -->
+        <div class="plan-section mesh-section">
+            <h2>5. SERVICIO WIFI MESH</h2>
+            
+            <div class="plan-item">
+                <h3>WiFi Mesh Pack Inicial</h3>
+                <div class="price">Precio: $5.999/mes por equipo</div>
+                <ul class="features">
+                    <li>Incluye 1 equipo Mesh de última generación</li>
+                    <li>Ideal para eliminar zonas muertas de WiFi</li>
+                    <li>Perfecto para departamentos y casas con problemas de cobertura</li>
+                    <li>Se pueden agregar hasta 4 equipos Mesh adicionales a la red</li>
+                    <li>Navegación sin cortes en toda la casa</li>
+                    <li>Optimización automática de señal</li>
+                </ul>
+                <p><strong>Recomendado para:</strong></p>
+                <ul class="features">
+                    <li>Casas grandes o con múltiples plantas</li>
+                    <li>Hogares con muchos dispositivos conectados</li>
+                    <li>Problemas de cobertura WiFi en zonas específicas</li>
+                    <li>Necesidad de cobertura uniforme en toda la propiedad</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ADICIONALES Y SET TOP BOX -->
+        <div class="plan-section">
+            <h2>6. ADICIONALES Y EQUIPOS</h2>
+            
+            <div class="plan-item">
+                <h3>Set Top Box (OPCIONAL)</h3>
+                <div class="price">Precio: $4.999/mes</div>
+                <ul class="features">
+                    <li>Convierte cualquier TV en Smart TV</li>
+                    <li>App Sensa TV preinstalada</li>
+                    <li>Acceso a YouTube, Netflix y más</li>
+                    <li>Control remoto con comando de voz</li>
+                    <li>Soporta resolución 4K Ultra HD</li>
+                    <li>No requiere Smart TV para usar USITTEL TV</li>
+                </ul>
+                <p><strong>Ideal para:</strong> Clientes que no tienen Smart TV o quieren una experiencia optimizada.</p>
+            </div>
+        </div>
+
+        <!-- NOTAS IMPORTANTES -->
+        <div class="plan-section important">
+            <h2>7. NOTAS IMPORTANTES PARA EL BOT</h2>
+            
+            <h3>Promociones y Condiciones Generales:</h3>
+            <ul>
+                <li><strong>Nuevos Clientes:</strong> Las promociones son válidas solo para nuevos clientes personas físicas</li>
+                <li><strong>Servicio Residencial:</strong> Los precios son para contratación residencial de USITTEL</li>
+                <li><strong>Instalación:</strong> 100% bonificada en todos los planes de Internet y combos</li>
+                <li><strong>Precios Fijos:</strong> Los precios finales se mantienen fijos durante los períodos especificados</li>
+            </ul>
+
+            <h3>Reglas de Contratación:</h3>
+            <ul>
+                <li><strong>TV Solo:</strong> Puede contratarse sin necesidad de Internet USITTEL</li>
+                <li><strong>Packs Premium:</strong> Requieren abono básico de TV activo, no se pueden contratar solos</li>
+                <li><strong>WiFi Mesh:</strong> Servicio independiente, se puede agregar a cualquier plan</li>
+                <li><strong>Set Top Box:</strong> Opcional, recomendado para TVs no Smart</li>
+            </ul>
+
+            <h3>Períodos de Promoción:</h3>
+            <ul>
+                <li><strong>Fibra 100:</strong> 3 meses promoción, luego precio final</li>
+                <li><strong>Fibra 300:</strong> 6 meses promoción, precio fijo hasta mes 9</li>
+                <li><strong>Fibra 500:</strong> 6 meses promoción, precio fijo hasta mes 12</li>
+                <li><strong>Combos:</strong> Siguen la misma estructura que los planes individuales</li>
+            </ul>
+
+            <h3>Características Técnicas:</h3>
+            <ul>
+                <li><strong>Internet:</strong> Todos los planes son SIMÉTRICOS (misma velocidad de subida y bajada)</li>
+                <li><strong>TV:</strong> Hasta 6 dispositivos simultáneos (3 pantallas grandes + 3 móviles/PC)</li>
+                <li><strong>Cobertura:</strong> Fibra óptica hasta el hogar (FTTH)</li>
+            </ul>
+        </div>
+
+        <!-- CÁLCULO DE FACTURACIÓN -->
+        <div class="plan-section">
+            <h2>8. INFORMACIÓN DE FACTURACIÓN</h2>
+            
+            <div class="important">
+                <h3>Cálculo de Primera Factura:</h3>
+                <p>Si la instalación no es el día 1 del mes, se cobra proporcional + mes siguiente completo.</p>
+                <p><strong>Ejemplo:</strong> Instalación el 15 de enero con plan de $15.999:</p>
+                <ul>
+                    <li>Febrero completo: $15.999</li>
+                    <li>16 días de enero: $8.533 (del 15/01 al 31/01)</li>
+                    <li><strong>Total primera factura:</strong> $24.532</li>
+                </ul>
+                <p>A partir de la segunda factura, solo se paga el valor normal del plan.</p>
+            </div>
+        </div>
+
+        <hr>
+        <p><em>Esta información está estructurada para que el bot de Botmaker pueda interpretar y cotizar servicios de manera precisa y completa.</em></p>
+    </div>
+</body>
+</html>

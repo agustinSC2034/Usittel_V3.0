@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USITTEL - Base de Conocimiento Administrativo para Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 5px;
+        }
+        .admin-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .key-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #1a73e8;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        .important {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #dc3545;
+            margin: 15px 0;
+        }
+        .contact-info {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            margin: 15px 0;
+        }
+        .features-list {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .billing-section {
+            background-color: #e8f4fd;
+        }
+        .technical-section {
+            background-color: #f0f9e8;
+        }
+        .installation-section {
+            background-color: #fdf2e9;
+        }
+        .contact-section {
+            background-color: #f8e8f8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>USITTEL - Base de Conocimiento Administrativo</h1>
+        <p><strong>Documento para uso interno del Bot de Botmaker</strong></p>
+        <p><em>Información para consultas administrativas y de soporte - Última actualización: Agosto 2025</em></p>
+
+        <!-- FACTURACIÓN Y PAGOS -->
+        <div class="admin-section billing-section">
+            <h2>1. FACTURACIÓN Y PAGOS</h2>
+            
+            <h3>Cálculo de Primera Factura</h3>
+            <div class="key-info">
+                <h4>¿Por qué la primera factura es más alta?</h4>
+                <p>La primera factura incluye:</p>
+                <ul class="features-list">
+                    <li><strong>Mes adelantado:</strong> USITTEL factura a mes adelantado (se paga el servicio del mes que viene)</li>
+                    <li><strong>Días proporcionales:</strong> Los días ya utilizados desde la instalación hasta fin del mes actual</li>
+                </ul>
+            </div>
+
+            <div class="key-info">
+                <h4>Ejemplo de Cálculo:</h4>
+                <p><strong>Si se instala el servicio el 15 de enero con plan de $15.999:</strong></p>
+                <ul class="features-list">
+                    <li>Febrero completo: $15.999 (mes adelantado)</li>
+                    <li>16 días de enero: $8.533 (del 15/01 al 31/01 proporcional)</li>
+                    <li><strong>Total primera factura: $24.532</strong></li>
+                </ul>
+                <p><strong>A partir de la segunda factura:</strong> Solo se paga el valor normal del plan ($15.999 en este ejemplo)</p>
+            </div>
+
+            <h3>Medios de Pago Disponibles</h3>
+            <div class="contact-info">
+                <h4>Opciones de Pago:</h4>
+                <ul class="features-list">
+                    <li><strong>Rapipago, Pago Fácil, CobroExpress:</strong> Con código de barras de la factura</li>
+                    <li><strong>Pago mis Cuentas, Red Link:</strong> Con Código Electrónico de la factura</li>
+                    <li><strong>Mercado Pago:</strong> Botón en notificación o código QR de la factura</li>
+                    <li><strong>Débito automático:</strong> Desde cuenta bancaria o tarjeta de crédito</li>
+                </ul>
+            </div>
+
+            <h3>Cómo Obtener Facturas</h3>
+            <div class="key-info">
+                <h4>Métodos para Descargar Facturas:</h4>
+                <ul class="features-list">
+                    <li><strong>Email:</strong> Se envía automáticamente cada mes al correo registrado</li>
+                    <li><strong>Portal de Autogestión:</strong> Disponible 24/7 en phantom.usittel.com.ar</li>
+                    <li><strong>WhatsApp Bot:</strong> Escribir al +54 9 249 406-0345, elegir "Soy cliente" → "Última factura"</li>
+                </ul>
+            </div>
+
+            <h3>Consulta de Deuda</h3>
+            <div class="key-info">
+                <p><strong>Para consultar deuda actual:</strong> Usar el bot de WhatsApp → "Soy cliente" → "Consultar mi deuda"</p>
+            </div>
+        </div>
+
+        <!-- INSTALACIÓN Y CONFIGURACIÓN -->
+        <div class="admin-section installation-section">
+            <h2>2. INSTALACIÓN Y CONFIGURACIÓN</h2>
+            
+            <h3>Qué Incluye la Instalación</h3>
+            <div class="contact-info">
+                <h4>Instalación Completa (100% bonificada):</h4>
+                <ul class="features-list">
+                    <li><strong>Fibra Óptica:</strong> Cable desde la red hasta el hogar (FTTH)</li>
+                    <li><strong>Módem WiFi:</strong> Equipo de última generación preconfigurado</li>
+                    <li><strong>Cableado interno:</strong> Hasta el punto de conexión óptimo</li>
+                    <li><strong>Configuración completa:</strong> WiFi y ajustes del módem</li>
+                    <li><strong>Pruebas:</strong> Velocidad y cobertura</li>
+                    <li><strong>Capacitación:</strong> Uso básico del servicio</li>
+                </ul>
+            </div>
+
+            <h3>Ubicación del Módem</h3>
+            <div class="key-info">
+                <h4>Criterios de Instalación:</h4>
+                <p>Los técnicos validan la <strong>"zona de uso intensivo"</strong> del hogar (donde se reúne la familia) para instalar el módem en el lugar óptimo que proporcione:</p>
+                <ul class="features-list">
+                    <li>Máxima velocidad en la zona principal</li>
+                    <li>Mejor cobertura WiFi posible en todo el domicilio</li>
+                    <li>Ubicación estratégica según la estructura del hogar</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h4>¿Se puede mover el módem?</h4>
+                <p><strong>No recomendamos moverlo</strong> porque:</p>
+                <ul class="features-list">
+                    <li>Está instalado en la ubicación técnicamente óptima</li>
+                    <li>El cable de fibra óptica es extremadamente delicado</li>
+                    <li>Cualquier movimiento incorrecto puede afectar el servicio</li>
+                    <li>Los daños por manipulación indebida tienen costo asociado</li>
+                </ul>
+            </div>
+
+            <h3>Cuidados del Equipamiento</h3>
+            <div class="important">
+                <h4>Lo que NO se debe hacer:</h4>
+                <ul class="features-list">
+                    <li><strong>No doblar o enrollar:</strong> El cable de fibra óptica conectado al módem</li>
+                    <li><strong>No manipular:</strong> El dispositivo sin autorización técnica</li>
+                    <li><strong>No mover:</strong> El cable de fibra óptica de la roseta en la pared</li>
+                    <li><strong>Cuidado al reiniciar:</strong> Solo usar el botón trasero del módem</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOPORTE TÉCNICO -->
+        <div class="admin-section technical-section">
+            <h2>3. SOPORTE TÉCNICO Y RESOLUCIÓN DE PROBLEMAS</h2>
+            
+            <h3>Problemas de Velocidad</h3>
+            <div class="key-info">
+                <h4>Factores que afectan la velocidad WiFi:</h4>
+                <ul class="features-list">
+                    <li><strong>Distancia al módem:</strong> Mayor distancia = menor velocidad</li>
+                    <li><strong>Obstáculos:</strong> Paredes gruesas, pisos múltiples</li>
+                    <li><strong>Interferencias:</strong> Otras redes WiFi cercanas</li>
+                    <li><strong>Dispositivos conectados:</strong> Cantidad de equipos usando la red</li>
+                    <li><strong>Banda utilizada:</strong> 2.4GHz (más alcance) vs 5GHz (más velocidad)</li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h4>Solución recomendada para lentitud:</h4>
+                <ol>
+                    <li><strong>Reiniciar el módem:</strong> Apagar y encender desde el botón trasero</li>
+                    <li><strong>Verificar ubicación:</strong> Acercarse al módem para probar</li>
+                    <li><strong>Reducir dispositivos:</strong> Desconectar equipos no esenciales</li>
+                    <li><strong>Contactar soporte:</strong> Si persiste el problema</li>
+                </ol>
+            </div>
+
+            <h3>Cuándo Recomendar WiFi Mesh</h3>
+            <div class="key-info">
+                <h4>Indicadores para ofrecer Mesh:</h4>
+                <ul class="features-list">
+                    <li>Cliente reporta zonas sin señal WiFi</li>
+                    <li>Casa de múltiples plantas o muy grande (+100m²)</li>
+                    <li>Paredes gruesas que bloquean señal</li>
+                    <li>Muchos dispositivos conectados (+10 aparatos)</li>
+                    <li>Necesidad de trabajo en diferentes ambientes</li>
+                    <li>Problemas de cobertura en patios o exteriores</li>
+                </ul>
+            </div>
+
+            <h3>Test de Velocidad</h3>
+            <div class="key-info">
+                <h4>Instrucciones para el cliente:</h4>
+                <ul class="features-list">
+                    <li><strong>Conexión por cable:</strong> Conectar PC directamente al módem para velocidad real</li>
+                    <li><strong>WiFi:</strong> Realizar test cerca del módem primero</li>
+                    <li><strong>Múltiples pruebas:</strong> Hacer varias mediciones en diferentes horarios</li>
+                    <li><strong>Cerrar aplicaciones:</strong> Que consuman ancho de banda durante el test</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CANALES DE ATENCIÓN -->
+        <div class="admin-section contact-section">
+            <h2>4. CANALES DE ATENCIÓN AL CLIENTE</h2>
+            
+            <div class="contact-info">
+                <h4>WhatsApp (Canal Principal)</h4>
+                <ul class="features-list">
+                    <li><strong>Número:</strong> +54 9 249 406-0345</li>
+                    <li><strong>Disponibilidad:</strong> Lunes a Viernes de 8 a 20hs, Sábados, Domingos y feriados de 10 a 16hs</li>
+                    <li><strong>Bot Automático:</strong> Disponible 24 horas para consultas básicas</li>
+                    <li><strong>Funciones del Bot:</strong>
+                        <ul>
+                            <li>Descargar última factura</li>
+                            <li>Consultar deuda</li>
+                            <li>Información de servicios</li>
+                            <li>Derivar a atención humana</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h4>Teléfono</h4>
+                <ul class="features-list">
+                    <li><strong>Número:</strong> 0800-199-4545</li>
+                    <li><strong>Disponibilidad:</strong> Lunes a Viernes de 8 a 16hs</li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h4>Portal de Autogestión</h4>
+                <ul class="features-list">
+                    <li><strong>URL:</strong> phantom.usittel.com.ar</li>
+                    <li><strong>Disponibilidad:</strong> 24 horas</li>
+                    <li><strong>Funciones:</strong>
+                        <ul>
+                            <li>Ver balance de cuenta</li>
+                            <li>Consultar facturas pendientes</li>
+                            <li>Descargar facturas anteriores</li>
+                            <li>Revisar historial de pagos</li>
+                            <li>Configurar servicios</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h4>Recuperación de Acceso:</h4>
+                <p>Si el cliente no recuerda sus datos de acceso al portal, debe contactar por WhatsApp o teléfono con su email o celular registrado para recuperar el usuario.</p>
+            </div>
+        </div>
+
+        <!-- ZONA DE COBERTURA Y ALCANCES -->
+        <div class="admin-section">
+            <h2>5. ZONA DE COBERTURA Y ALCANCES DE SERVICIOS</h2>
+            
+            <h3>Cobertura Actual</h3>
+            <div class="key-info">
+                <h4>Área de Servicio:</h4>
+                <ul class="features-list">
+                    <li><strong>Ciudad:</strong> Tandil, Buenos Aires</li>
+                    <li><strong>Tecnología:</strong> Fibra óptica hasta el hogar (FTTH)</li>
+                    <li><strong>Crecimiento continuo:</strong> Expansión constante de la red</li>
+                    <li><strong>Nuevos desarrollos:</strong> Parques industriales y zonas comerciales</li>
+                </ul>
+            </div>
+
+            <h3>Servicios Disponibles</h3>
+            <div class="key-info">
+                <h4>Para Hogares:</h4>
+                <ul class="features-list">
+                    <li><strong>Internet Residencial:</strong> 100, 300, 500 Mbps simétricos</li>
+                    <li><strong>TV Digital:</strong> Sensa TV con app multidispositivo</li>
+                    <li><strong>WiFi Mesh:</strong> Extensión de cobertura WiFi</li>
+                    <li><strong>Set Top Box:</strong> Para TVs no inteligentes</li>
+                </ul>
+            </div>
+
+            <div class="key-info">
+                <h4>Para Empresas:</h4>
+                <ul class="features-list">
+                    <li><strong>Internet Comercial:</strong> Planes específicos para empresas</li>
+                    <li><strong>Internet Dedicado:</strong> Desde 10 Mbps con SLA</li>
+                    <li><strong>IP Pública Fija:</strong> Incluida en planes dedicados</li>
+                    <li><strong>Soporte Técnico Preferencial:</strong> Atención especializada</li>
+                    <li><strong>Monitoreo Proactivo:</strong> Supervisión constante</li>
+                </ul>
+            </div>
+
+            <h3>Expansión de Red</h3>
+            <div class="contact-info">
+                <h4>Proyectos Especiales:</h4>
+                <p>Para ubicaciones fuera de cobertura actual, USITTEL evalúa la factibilidad de proyectos a medida, especialmente para:</p>
+                <ul class="features-list">
+                    <li>Nuevos desarrollos inmobiliarios</li>
+                    <li>Parques industriales</li>
+                    <li>Zonas comerciales</li>
+                    <li>Emprendimientos empresariales</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- DOCUMENTACIÓN TÉCNICA -->
+        <div class="admin-section">
+            <h2>6. DOCUMENTACIÓN TÉCNICA DISPONIBLE</h2>
+            
+            <div class="key-info">
+                <h4>Manuales y Guías:</h4>
+                <ul class="features-list">
+                    <li><strong>Internet Residencial:</strong> Alcance y condiciones del servicio</li>
+                    <li><strong>Internet Comercial:</strong> Especificaciones para empresas</li>
+                    <li><strong>Internet Dedicado:</strong> Términos técnicos y SLA</li>
+                    <li><strong>TV Digital Sensa:</strong> Descripción completa del servicio</li>
+                    <li><strong>WiFi Mesh:</strong> Instructivo de instalación y uso</li>
+                    <li><strong>Acuerdo de Nivel de Servicio:</strong> SLA para servicios dedicados</li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h4>Instructivos de Aplicaciones:</h4>
+                <ul class="features-list">
+                    <li><strong>Android TV:</strong> Instalación de Sensa TV</li>
+                    <li><strong>Amazon Fire TV:</strong> Configuración paso a paso</li>
+                    <li><strong>Apple TV:</strong> Proceso de instalación</li>
+                    <li><strong>Dispositivos Móviles:</strong> Celulares y tablets</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- GUÍA DE RESPUESTAS FRECUENTES PARA EL BOT -->
+        <div class="admin-section">
+            <h2>7. GUÍA DE RESPUESTAS FRECUENTES PARA EL BOT</h2>
+            
+            <div class="key-info">
+                <h4>Preguntas sobre Facturación:</h4>
+                <ul class="features-list">
+                    <li><strong>"¿Por qué mi primera factura es más cara?"</strong> → Explicar sistema de mes adelantado + días proporcionales</li>
+                    <li><strong>"¿Cómo descargo mi factura?"</strong> → Portal web, email automático o bot de WhatsApp</li>
+                    <li><strong>"¿Dónde puedo pagar?"</strong> → Listar todos los medios de pago disponibles</li>
+                    <li><strong>"¿Cuánto debo?"</strong> → Dirigir al bot de WhatsApp o portal de autogestión</li>
+                </ul>
+            </div>
+
+            <div class="key-info">
+                <h4>Preguntas Técnicas:</h4>
+                <ul class="features-list">
+                    <li><strong>"Internet lento"</strong> → Verificar ubicación, reiniciar módem, factores que afectan WiFi</li>
+                    <li><strong>"No hay señal en una zona"</strong> → Explicar factores que afectan WiFi, ofrecer Mesh</li>
+                    <li><strong>"¿Puedo mover el módem?"</strong> → Explicar por qué no es recomendable</li>
+                    <li><strong>"¿Cómo reiniciar el módem?"</strong> → Instrucciones del botón trasero</li>
+                </ul>
+            </div>
+
+            <div class="key-info">
+                <h4>Preguntas sobre Servicios:</h4>
+                <ul class="features-list">
+                    <li><strong>"¿Necesito Smart TV?"</strong> → Explicar compatibilidades y Set Top Box</li>
+                    <li><strong>"¿Qué incluye la instalación?"</strong> → Detallar proceso completo y gratuidad</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+        <p><em>Esta base de conocimiento administrativo permite al bot resolver consultas operativas y derivar adecuadamente casos complejos a atención humana.</em></p>
+    </div>
+</body>
+</html>

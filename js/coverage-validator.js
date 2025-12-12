@@ -7,6 +7,25 @@
 let map;
 let searchMarker = null;
 
+// Cache/estado para geocoding y validación
+let activeGeocodeController = null;
+const geocodeCache = new Map();
+
+let rawCurrentCoverageZones = null;
+let rawFutureCoverageZones = null;
+let compiledCurrentCoverage = null;
+let compiledFutureCoverage = null;
+
+function parseStreetAndNumber(input) {
+  if (!input) return null;
+  const match = String(input).trim().match(/^\s*(.*?)\s+(\d+)\b/);
+  if (!match) return null;
+  const street = match[1].trim();
+  const number = parseInt(match[2], 10);
+  if (!street || Number.isNaN(number)) return null;
+  return { street, number };
+}
+
 /**
  * Inicializa el mapa de cobertura
  */
@@ -15,6 +34,15 @@ function initializeCoverageMap() {
   const mapElement = document.getElementById("coverage-map");
   if (!mapElement) {
     console.log("Elemento coverage-map no encontrado");
+    return;
+  }
+
+  // Evitar doble inicialización
+  if (map) return;
+
+  // Leaflet requerido
+  if (typeof window.L === "undefined") {
+    console.log("Leaflet (L) no está disponible");
     return;
   }
 
@@ -70,102 +98,111 @@ function initializeCoverageMap() {
 /**
  * Función para buscar y marcar dirección en el mapa con fallback inteligente
  */
-function searchAndMarkAddress(address) {
-  // Verificar que el mapa esté inicializado
-  if (!map) return Promise.resolve(false);
-  
-  // Extraer calle y número de la dirección
-  const match = address.match(/^(.*?)\s+(\d+)$/);
-  if (!match) return Promise.resolve(false);
-  
-  const streetName = match[1].trim();
-  const originalNumber = parseInt(match[2], 10);
-  
-  // Función auxiliar para buscar una dirección específica
-  function searchSpecificAddress(street, number) {
-    const fullAddress = `${street} ${number}, Tandil, Buenos Aires, Argentina`;
-    const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=5&countrycodes=ar&addressdetails=1`;
-    
-    return fetch(geocodeUrl)
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          // Filtrar resultados para encontrar coincidencias precisas
-          const preciseMatch = data.find(result => {
-            // Verificar que tenga número de casa (house_number)
-            const hasHouseNumber = result.address && result.address.house_number;
-            
-            // Verificar que el tipo de lugar sea específico (no solo una calle)
-            const isSpecificAddress = result.type === 'house' || 
-                                     result.type === 'building' || 
-                                     result.type === 'address' ||
-                                     (result.address && result.address.house_number);
-            
-            // Verificar que esté en Tandil
-            const isInTandil = result.address && 
-                             (result.address.city === 'Tandil' || 
-                              result.address.town === 'Tandil' ||
-                              result.address.municipality === 'Tandil');
-            
-            return hasHouseNumber && isSpecificAddress && isInTandil;
-          });
-          
-          return preciseMatch;
-        }
-        return null;
-      });
+async function searchAndMarkAddress(address) {
+  if (!map) return false;
+
+  const parsed = parseStreetAndNumber(address);
+  if (!parsed) return false;
+
+  const streetName = parsed.street;
+  const originalNumber = parsed.number;
+
+  // Cancelar búsqueda anterior si existe
+  try {
+    if (activeGeocodeController) activeGeocodeController.abort();
+  } catch {
+    // no-op
   }
-  
-  // Intentar buscar la dirección original primero
-  return searchSpecificAddress(streetName, originalNumber)
-    .then(result => {
-      if (result) {
-        // Dirección original encontrada
-        return createMarkerAndView(result, `${streetName} ${originalNumber}`, true);
-      } else {
-        // No se encontró la dirección original, buscar números cercanos
-        console.log(`No se encontró ${streetName} ${originalNumber}, buscando números cercanos...`);
-        
-        // Generar array de números cercanos (±1, ±2, ±3, ±5, ±10)
-        const nearbyNumbers = [
-          originalNumber + 1, originalNumber - 1,
-          originalNumber + 2, originalNumber - 2,
-          originalNumber + 3, originalNumber - 3,
-          originalNumber + 5, originalNumber - 5,
-          originalNumber + 10, originalNumber - 10
-        ].filter(num => num > 0); // Solo números positivos
-        
-        // Función para buscar secuencialmente los números cercanos
-        function searchNearbySequentially(index = 0) {
-          if (index >= nearbyNumbers.length) {
-            // No se encontró ningún número cercano
-            console.log('No se encontró ningún número cercano disponible');
-            resetMapToDefaultView();
-            return false;
-          }
-          
-          const nearbyNumber = nearbyNumbers[index];
-          return searchSpecificAddress(streetName, nearbyNumber)
-            .then(nearbyResult => {
-              if (nearbyResult) {
-                // Se encontró un número cercano
-                console.log(`Dirección alternativa encontrada: ${streetName} ${nearbyNumber}`);
-                return createMarkerAndView(nearbyResult, `${streetName} ${originalNumber}`, true);
-              } else {
-                // Intentar con el siguiente número
-                return searchNearbySequentially(index + 1);
-              }
-            });
-        }
-        
-        return searchNearbySequentially();
-      }
-    })
-    .catch(error => {
-      console.log('Error al buscar la dirección en el mapa:', error);
-      resetMapToDefaultView();
-      return false;
+  activeGeocodeController = new AbortController();
+  const { signal } = activeGeocodeController;
+
+  const buildUrl = (street, number) => {
+    const fullAddress = `${street} ${number}, Tandil, Buenos Aires, Argentina`;
+    return `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=5&countrycodes=ar&addressdetails=1`;
+  };
+
+  const selectPreciseMatch = (data) => {
+    if (!data || data.length === 0) return null;
+    return (
+      data.find((result) => {
+        const hasHouseNumber = result.address && result.address.house_number;
+        const isSpecificAddress =
+          result.type === "house" ||
+          result.type === "building" ||
+          result.type === "address" ||
+          (result.address && result.address.house_number);
+        const isInTandil =
+          result.address &&
+          (result.address.city === "Tandil" ||
+            result.address.town === "Tandil" ||
+            result.address.municipality === "Tandil");
+        return hasHouseNumber && isSpecificAddress && isInTandil;
+      }) || null
+    );
+  };
+
+  const fetchGeocode = async (street, number) => {
+    const url = buildUrl(street, number);
+    const cacheKey = normalizeString(url);
+    if (geocodeCache.has(cacheKey)) return geocodeCache.get(cacheKey);
+
+    const response = await fetch(url, {
+      signal,
+      headers: {
+        "Accept": "application/json",
+        "Accept-Language": "es",
+      },
     });
+    const data = await response.json();
+    const match = selectPreciseMatch(data);
+    geocodeCache.set(cacheKey, match);
+    return match;
+  };
+
+  try {
+    // 1) Intentar dirección exacta
+    const exact = await fetchGeocode(streetName, originalNumber);
+    if (exact) {
+      createMarkerAndView(exact, `${streetName} ${originalNumber}`, true);
+      return true;
+    }
+
+    // 2) Fallback: probar números cercanos secuencialmente (evita rate-limit por paralelismo)
+    console.log(`No se encontró ${streetName} ${originalNumber}, buscando números cercanos...`);
+    const nearbyNumbers = [
+      originalNumber + 1,
+      originalNumber - 1,
+      originalNumber + 2,
+      originalNumber - 2,
+      originalNumber + 3,
+      originalNumber - 3,
+      originalNumber + 5,
+      originalNumber - 5,
+      originalNumber + 10,
+      originalNumber - 10,
+    ].filter((n) => n > 0);
+
+    for (const nearbyNumber of nearbyNumbers) {
+      if (signal.aborted) return false;
+      const candidate = await fetchGeocode(streetName, nearbyNumber);
+      if (candidate) {
+        console.log(`Dirección alternativa encontrada: ${streetName} ${nearbyNumber}`);
+        createMarkerAndView(candidate, `${streetName} ${originalNumber}`, true);
+        return true;
+      }
+    }
+
+    resetMapToDefaultView();
+    return false;
+  } catch (error) {
+    // Si fue abortado por una nueva búsqueda, no es un error real
+    if (error && (error.name === "AbortError" || String(error).includes("AbortError"))) {
+      return false;
+    }
+    console.log("Error al buscar la dirección en el mapa:", error);
+    resetMapToDefaultView();
+    return false;
+  }
 }
 
 /**
@@ -249,7 +286,7 @@ function initializeCoverageValidator() {
 /**
  * Función principal para verificar cobertura
  */
-function checkCoverage() {
+async function checkCoverage() {
   const coverageButton = document.getElementById("coverage-button");
   const addressInput = document.getElementById("address-input");
   const coverageResultContainer = document.getElementById("coverage-result");
@@ -264,72 +301,59 @@ function checkCoverage() {
   coverageButton.innerHTML = '<span class="loading-spinner"></span> Consultando...';
   coverageButton.disabled = true;
 
-  // Simular un pequeño delay para mostrar la animación de carga
-  setTimeout(() => {
+  try {
     const address = addressInput.value.trim();
-    addressInput.style.border = "1px solid #d1d5db"; // Reset border color
-    coverageResultContainer.innerHTML = ""; // Limpiar resultados anteriores
-    
+    addressInput.style.border = "1px solid #d1d5db";
+    coverageResultContainer.innerHTML = "";
+
     // Limpiar marcador anterior del mapa antes de cada nueva búsqueda
     if (searchMarker && map) {
       map.removeLayer(searchMarker);
       searchMarker = null;
     }
-    
-    // Remover clases de animación previas
-    addressInput.classList.remove('input-shake');
-    coverageResultContainer.classList.remove('result-animate');
 
-    if (address === "") {
+    addressInput.classList.remove("input-shake");
+    coverageResultContainer.classList.remove("result-animate");
+
+    if (!address) {
       addressInput.style.border = "1px solid red";
-      addressInput.classList.add('input-shake');
+      addressInput.classList.add("input-shake");
       displayMessage("Por favor, ingresá una dirección.", "warning");
-      // Restaurar botón
-      coverageButton.innerHTML = originalText;
-      coverageButton.disabled = false;
       return;
     }
 
-    const match = address.match(/^(.*?)\s+(\d+)/);
-
-    if (!match) {
-      addressInput.classList.add('input-shake');
+    const parsed = parseStreetAndNumber(address);
+    if (!parsed) {
+      addressInput.classList.add("input-shake");
       displayMessage(
         "Formato de dirección no válido. Asegurate de incluir calle y número (ej: Nigro 575).",
         "error"
       );
-      // Restaurar botón
-      coverageButton.innerHTML = originalText;
-      coverageButton.disabled = false;
       return;
     }
 
-    // Iniciar la georreferenciación y esperar su resultado
-    const fullAddress = `${match[1]} ${match[2]}`;
-    searchAndMarkAddress(fullAddress).then(wasGeolocated => {
-      // Determinar el delay basado en si se pudo georreferenciar
-      const additionalDelay = wasGeolocated ? 1100 : 800; // Más tiempo si se georeferencia
-      
-      setTimeout(() => {
-        // Continuar con la validación normal...
-        processAddressValidation(match, originalText);
-      }, additionalDelay);
-    });
-  }, 800); // 800ms de delay inicial para mostrar la animación de carga
+    const fullAddress = `${parsed.street} ${parsed.number}`;
+    await searchAndMarkAddress(fullAddress);
+    processAddressValidation(parsed.street, parsed.number);
+
+    coverageResultContainer.classList.add("result-animate");
+  } catch (error) {
+    console.log("Error en la validación de cobertura:", error);
+    displayMessage(
+      "Ocurrió un error al validar la dirección. Probá nuevamente en unos segundos.",
+      "error"
+    );
+  } finally {
+    coverageButton.innerHTML = originalText;
+    coverageButton.disabled = false;
+  }
 }
 
-/**
- * Procesa la validación de la dirección contra la base de datos de cobertura
- */
-function processAddressValidation(match, originalText) {
-  const coverageButton = document.getElementById("coverage-button");
-  const coverageResultContainer = document.getElementById("coverage-result");
-  
-  const streetName = match[1];
-  const streetNumber = parseInt(match[2], 10);
+function loadCoverageDatasetsIfNeeded() {
+  if (rawCurrentCoverageZones && rawFutureCoverageZones) return;
 
   // Base de datos de zonas de cobertura
-  const zonasDeCobertura = [
+  rawCurrentCoverageZones = rawCurrentCoverageZones || [
     { calle: "paz", desde: 1, hasta: 1599 },
     { calle: "general paz", desde: 1, hasta: 1599 },
     { calle: "gral paz", desde: 1, hasta: 1599 },
@@ -655,12 +679,7 @@ function processAddressValidation(match, originalText) {
     { calle: "pje pontaut", desde: 0, hasta: 1800 },
     { calle: "pje. pontaut", desde: 0, hasta: 1800 },
     { calle: "pontaut", desde: 0, hasta: 1800 },
-  ];
-
-  // NUEVAS ZONAS DE COBERTURA - ZONA C Y D
-  const nuevasZonasDeCobertura = [
-    // ZONA C
-        { calle: "colectora sur j c pugliese", desde: 0, hasta: 400 },
+    { calle: "colectora sur j c pugliese", desde: 0, hasta: 400 },
         { calle: "colectora sur j.c pugliese", desde: 0, hasta: 400 },
         { calle: "colectora sur j.c. pugliese", desde: 0, hasta: 400 },
         { calle: "colectora sur jc pugliese", desde: 0, hasta: 400 },
@@ -715,6 +734,12 @@ function processAddressValidation(match, originalText) {
         { calle: "fidanza", desde: 400, hasta: 1400 },
         { calle: "hudson", desde: 0, hasta: 2000 },
         { calle: "grothe", desde: 1100, hasta: 1400 },
+  ];
+
+  // NUEVAS ZONAS DE COBERTURA - ZONA C Y D
+  rawFutureCoverageZones = rawFutureCoverageZones || [
+    // ZONA C
+        
         
         // ZONA D
         { calle: "hermano crisostomo", desde: 0, hasta: 2000 },
@@ -815,38 +840,33 @@ function processAddressValidation(match, originalText) {
         { calle: "gral. de la cruz", desde: 0, hasta: 2000 },
         { calle: "de la cruz", desde: 0, hasta: 2000 },
   ];
+}
+
+function ensureCoverageCompiled() {
+  loadCoverageDatasetsIfNeeded();
+  if (!compiledCurrentCoverage) {
+    compiledCurrentCoverage = compileCoverageZones(rawCurrentCoverageZones);
+  }
+  if (!compiledFutureCoverage) {
+    compiledFutureCoverage = compileCoverageZones(rawFutureCoverageZones);
+  }
+}
+
+/**
+ * Procesa la validación de la dirección contra la base de datos de cobertura
+ */
+function processAddressValidation(streetName, streetNumber) {
+  ensureCoverageCompiled();
 
   const normalizedStreet = normalizeString(streetName);
-  let isInCoverage = false;
-  let isInNewCoverage = false;
-
-  // Verificar zonas de cobertura actual
-  for (const zona of zonasDeCobertura) {
-    const normalizedZonaCalle = normalizeString(zona.calle);
-    if (
-      normalizedStreet.includes(normalizedZonaCalle) &&
-      streetNumber >= zona.desde &&
-      streetNumber <= zona.hasta
-    ) {
-      isInCoverage = true;
-      break;
-    }
-  }
-
-  // Verificar nuevas zonas de cobertura (solo si no está en cobertura actual)
-  if (!isInCoverage) {
-    for (const zona of nuevasZonasDeCobertura) {
-      const normalizedZonaCalle = normalizeString(zona.calle);
-      if (
-        normalizedStreet.includes(normalizedZonaCalle) &&
-        streetNumber >= zona.desde &&
-        streetNumber <= zona.hasta
-      ) {
-        isInNewCoverage = true;
-        break;
-      }
-    }
-  }
+  const isInCoverage = isInCompiledCoverage(
+    compiledCurrentCoverage,
+    normalizedStreet,
+    streetNumber
+  );
+  const isInNewCoverage = !isInCoverage
+    ? isInCompiledCoverage(compiledFutureCoverage, normalizedStreet, streetNumber)
+    : false;
 
   // Mostrar resultados
   if (isInCoverage) {
@@ -893,12 +913,31 @@ function processAddressValidation(match, originalText) {
     displayMessage(failureMessage, "warning");
   }
 
-  // Restaurar botón
-  coverageButton.innerHTML = originalText;
-  coverageButton.disabled = false;
+  // (el botón/animación se manejan en checkCoverage)
+}
 
-  // Agregar animación al resultado
-  coverageResultContainer.classList.add('result-animate');
+function warmCoverageCompilation() {
+  // Solo precalentar si el validador está presente en la página
+  const hasValidator =
+    document.getElementById("coverage-button") &&
+    document.getElementById("address-input") &&
+    document.getElementById("coverage-result");
+  if (!hasValidator) return;
+
+  const warm = () => {
+    try {
+      ensureCoverageCompiled();
+    } catch (error) {
+      console.log("No se pudo precalentar la compilación de cobertura:", error);
+    }
+  };
+
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(warm, { timeout: 1200 });
+  } else {
+    // Fallback compatible
+    setTimeout(warm, 0);
+  }
 }
 
 /**
@@ -911,6 +950,111 @@ function normalizeString(str) {
     .toLowerCase()
     .replace(/[.,]/g, "") // Quita puntos y comas
     .trim();
+}
+
+function tokenizeNormalized(str) {
+  if (!str) return [];
+  return String(str)
+    .split(/\s+/g)
+    .map((t) => t.trim())
+    .filter((t) => t.length >= 2);
+}
+
+function mergeRanges(ranges) {
+  if (!ranges || ranges.length === 0) return [];
+  const sorted = ranges
+    .slice()
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const merged = [sorted[0]];
+  for (let i = 1; i < sorted.length; i++) {
+    const [start, end] = sorted[i];
+    const last = merged[merged.length - 1];
+    if (start <= last[1] + 1) {
+      last[1] = Math.max(last[1], end);
+    } else {
+      merged.push([start, end]);
+    }
+  }
+  return merged;
+}
+
+function compileCoverageZones(zones) {
+  const rangesByCalle = new Map();
+
+  for (const zone of zones || []) {
+    const normalizedCalle = normalizeString(zone.calle);
+    if (!normalizedCalle) continue;
+    const desde = Number(zone.desde);
+    const hasta = Number(zone.hasta);
+    if (!Number.isFinite(desde) || !Number.isFinite(hasta)) continue;
+
+    const key = normalizedCalle;
+    const list = rangesByCalle.get(key) || [];
+    list.push([desde, hasta]);
+    rangesByCalle.set(key, list);
+  }
+
+  const entries = [];
+  for (const [calle, ranges] of rangesByCalle.entries()) {
+    entries.push({
+      calle,
+      ranges: mergeRanges(ranges),
+      tokens: tokenizeNormalized(calle),
+    });
+  }
+
+  // Index por tokens para reducir comparaciones
+  const tokenIndex = new Map();
+  entries.forEach((entry, idx) => {
+    for (const token of entry.tokens) {
+      const arr = tokenIndex.get(token) || [];
+      arr.push(idx);
+      tokenIndex.set(token, arr);
+    }
+  });
+
+  return { entries, tokenIndex };
+}
+
+function numberInRanges(number, ranges) {
+  for (const [desde, hasta] of ranges) {
+    if (number >= desde && number <= hasta) return true;
+  }
+  return false;
+}
+
+function isInCompiledCoverage(compiled, normalizedStreet, streetNumber) {
+  if (!compiled || !compiled.entries) return false;
+  const entries = compiled.entries;
+  if (!entries.length) return false;
+
+  const tokens = tokenizeNormalized(normalizedStreet);
+  const candidates = new Set();
+  for (const token of tokens) {
+    const list = compiled.tokenIndex.get(token);
+    if (!list) continue;
+    for (const idx of list) candidates.add(idx);
+  }
+
+  // Si no hay candidatos (casos raros/typos), hacemos fallback al escaneo completo
+  const indices = candidates.size ? Array.from(candidates) : null;
+
+  if (indices) {
+    for (const idx of indices) {
+      const entry = entries[idx];
+      if (normalizedStreet.includes(entry.calle) && numberInRanges(streetNumber, entry.ranges)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  for (const entry of entries) {
+    if (normalizedStreet.includes(entry.calle) && numberInRanges(streetNumber, entry.ranges)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -958,6 +1102,9 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // Inicializar validador de cobertura
   initializeCoverageValidator();
+
+  // Precalentar compilación de cobertura para mejorar la primera consulta
+  warmCoverageCompilation();
   
   console.log("Sistema de validación de cobertura USITTEL cargado correctamente");
 });

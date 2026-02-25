@@ -736,13 +736,6 @@ function loadCoverageDatasetsIfNeeded() {
         { calle: "fidanza", desde: 400, hasta: 1400 },
         { calle: "hudson", desde: 0, hasta: 2000 },
         { calle: "grothe", desde: 1100, hasta: 1400 },
-  ];
-
-  // NUEVAS ZONAS DE COBERTURA - ZONA C Y D
-  rawFutureCoverageZones = rawFutureCoverageZones || [
-    // ZONA C
-        
-        
         // ZONA D
         { calle: "hermano crisostomo", desde: 0, hasta: 2000 },
         { calle: "crisostomo", desde: 0, hasta: 2000 },
@@ -841,6 +834,10 @@ function loadCoverageDatasetsIfNeeded() {
         { calle: "gral de la cruz", desde: 0, hasta: 2000 },
         { calle: "gral. de la cruz", desde: 0, hasta: 2000 },
         { calle: "de la cruz", desde: 0, hasta: 2000 },
+  ];
+
+  // NUEVAS ZONAS DE COBERTURA - PROXIMAMENTE
+  rawFutureCoverageZones = rawFutureCoverageZones || [ 
   ];
 }
 

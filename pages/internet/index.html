@@ -769,7 +769,7 @@
                           <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0"></i><span class="text-gray-200">Latencia ultra baja, ideal para <strong>Gaming competitivo y Streaming 4K/8K</strong>.</span></li>
                         </ul>
                         
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_20px_rgba(34,197,94,0.6)]">
+                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)]">
                           <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan Giga
                         </a>
                       </div>
@@ -816,7 +816,7 @@
                             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
                         </div>
                         <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>
                     </div>
@@ -858,7 +858,7 @@
                             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
                         </div>
                         <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>
                     </div>
@@ -896,7 +896,7 @@
                             El precio de lista del servicio se mantiene fijo hasta el mes 12.
                         </div>
                         <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-green-600 cta-button flex items-center justify-center gap-2">
+                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i> Consultar
                         </a>
                     </div>
@@ -1105,17 +1105,18 @@
                 window.addEventListener('resize', resizeCanvas);
 
                 const ctx = canvas.getContext('2d');
-                const PARTICLE_COUNT = 60;
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const PARTICLE_COUNT = prefersReducedMotion ? 0 : 25;
                 const particles = [];
 
                 for (let i = 0; i < PARTICLE_COUNT; i++) {
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        r: 1.5 + Math.random() * 2.5,
-                        dx: (Math.random() - 0.5) * 0.7,
-                        dy: (Math.random() - 0.5) * 0.7,
-                        color: Math.random() > 0.5 ? 'rgba(59,130,246,0.7)' : 'rgba(16,185,129,0.5)'
+                        r: 1.5 + Math.random() * 2,
+                        dx: (Math.random() - 0.5) * 0.5,
+                        dy: (Math.random() - 0.5) * 0.5,
+                        color: Math.random() > 0.5 ? 'rgba(59,130,246,0.45)' : 'rgba(16,185,129,0.3)'
                     });
                 }
 
@@ -1193,9 +1194,9 @@
                                     </div>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
-                                    <h4 class="font-semibold text-green-800 mb-2 flex items-center gap-2">
-                                        <i class="fas fa-lightbulb text-yellow-500"></i>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                        <i class="fas fa-lightbulb text-blue-500"></i>
                                         Cómo funciona:
                                     </h4>
                                     <div class="space-y-2 text-sm text-gray-700">
@@ -1208,7 +1209,7 @@
                                             <span>Elimina interferencias y pérdidas de señal</span>
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-home text-purple-500"></i>
+                                            <i class="fas fa-home text-blue-500"></i>
                                             <span>Conexión estable en toda la casa, hasta en áreas alejadas</span>
                                         </div>
                                     </div>
@@ -1229,20 +1230,20 @@
                         </button>
                         <div class="faq-answer">
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed">
-                                        La <strong class="text-green-600">fibra óptica</strong> proporciona velocidades mucho mayores que las conexiones por cobre o cable coaxial.
+                                        La <strong class="text-blue-600">fibra óptica</strong> proporciona velocidades mucho mayores que las conexiones por cobre o cable coaxial.
                                     </p>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
-                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-star text-yellow-500"></i>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-star text-blue-500"></i>
                                         Actividades que podés hacer simultáneamente:
                                     </h4>
                                     <div class="grid md:grid-cols-2 gap-3">
                                         <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-play-circle text-red-500"></i>
+                                            <i class="fas fa-play-circle text-blue-500"></i>
                                             <span>Streaming en 4K/HD</span>
                                         </div>
                                         <div class="flex items-center gap-2 text-sm text-gray-700">
@@ -1250,7 +1251,7 @@
                                             <span>Videoconferencias</span>
                                         </div>
                                         <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-gamepad text-purple-500"></i>
+                                            <i class="fas fa-gamepad text-blue-500"></i>
                                             <span>Gaming online</span>
                                         </div>
                                         <div class="flex items-center gap-2 text-sm text-gray-700">
@@ -1280,43 +1281,43 @@
                         </button>
                         <div class="faq-answer">
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed mb-3">
-                                        A diferencia de las conexiones tradicionales, la <strong class="text-purple-600">fibra óptica garantiza</strong> una conexión estable y fiable.
+                                        A diferencia de las conexiones tradicionales, la <strong class="text-blue-600">fibra óptica garantiza</strong> una conexión estable y fiable.
                                     </p>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-4 border border-red-200">
-                                    <h4 class="font-semibold text-red-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-exclamation-triangle text-amber-500"></i>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-blue-500"></i>
                                         Problemas que NO tendrás:
                                     </h4>
                                     <div class="space-y-2">
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
-                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Interferencias eléctricas</span>
                                         </div>
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
-                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Afectaciones por clima</span>
                                         </div>
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-red-100">
-                                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-red-500 text-xs"></i>
+                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Caídas frecuentes de conexión</span>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <div class="flex items-center gap-2 justify-center">
-                                        <i class="fas fa-medal text-yellow-500"></i>
-                                        <span class="font-semibold text-green-800">Resultado: Mayor consistencia en la calidad del servicio</span>
+                                        <i class="fas fa-medal text-blue-500"></i>
+                                        <span class="font-semibold text-gray-800">Resultado: Mayor consistencia en la calidad del servicio</span>
                                     </div>
                                 </div>
                             </div>
@@ -1335,19 +1336,19 @@
                         </button>
                         <div class="faq-answer">
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-red-100">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relajadas">
-                                        La <strong class="text-red-600">fibra óptica ofrece mayor seguridad</strong> en la transmisión de datos comparada con el cableado de cobre.
+                                        La <strong class="text-blue-600">fibra óptica ofrece mayor seguridad</strong> en la transmisión de datos comparada con el cableado de cobre.
                                     </p>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
-                                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-shield-alt text-green-500"></i>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-shield-alt text-blue-500"></i>
                                         Ventajas de seguridad:
                                     </h4>
                                     <div class="space-y-3">
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
                                             <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-check text-green-600 text-xs"></i>
                                             </div>
@@ -1357,7 +1358,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
                                             <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-check text-green-600 text-xs"></i>
                                             </div>
@@ -1384,19 +1385,19 @@
                         </button>
                         <div class="faq-answer">
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-amber-100">
+                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed">
-                                        Las <strong class="text-amber-600">fibras ópticas son más resistentes</strong> a las condiciones ambientales y degradación comparadas con los cables de cobre.
+                                        Las <strong class="text-blue-600">fibras ópticas son más resistentes</strong> a las condiciones ambientales y degradación comparadas con los cables de cobre.
                                     </p>
                                 </div>
                                 
-                                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
-                                    <h4 class="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-chart-line text-green-600"></i>
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-chart-line text-blue-600"></i>
                                         Beneficios a largo plazo:
                                     </h4>
                                     <div class="grid md:grid-cols-2 gap-3">
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
                                             <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-wrench text-green-600 text-xs"></i>
                                             </div>
@@ -1406,7 +1407,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
                                             <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-hourglass text-green-600 text-xs"></i>
                                             </div>
@@ -1416,7 +1417,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100 md:col-span-2">
+                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100 md:col-span-2">
                                             <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-dollar-sign text-blue-600 text-xs"></i>
                                             </div>

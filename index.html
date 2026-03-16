@@ -921,7 +921,7 @@
     </section>
 
     <section id="plans" class="py-12 md:py-20 bg-gray-100 text-[0.9rem] md:text-[0.95rem]">
-      <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px">
+      <div class="container mx-auto px-4 md:px-5" style="max-width: 1200px">
         <div class="text-center mb-10 md:mb-10">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
             Nuestros Planes
@@ -944,7 +944,7 @@
         <!-- Contenedor para la vista por defecto (Internet y Combos) -->
         <div id="default-plans-view">
           
-          <div id="premium-giga-container" class="max-w-5xl mx-auto mb-12 px-4 md:px-0">
+          <div id="premium-giga-container" class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
             <div class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
                 <i class="fas fa-rocket"></i> NUEVA VELOCIDAD
@@ -985,7 +985,7 @@
           </div>
 
           <div id="plan-cards-container"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-5xl mx-auto"></div>
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-7 max-w-6xl mx-auto"></div>
 
         </div>
         <!-- Contenedor para la vista especial "Solo TV" -->
@@ -1065,50 +1065,20 @@
     <!-- =========== WiFi Mesh Section (ORDEN 3) =========== -->
     <section class="py-12 md:py-20 bg-white text-[0.9rem] md:text-[0.95rem]" id="mesh">
       <div class="container mx-auto px-4 md:px-5" style="max-width: 1100px">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <!-- 1. Título + descripción (mobile: primero | desktop: col-1 fila-1) -->
           <div>
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
               ¿Problemas de cobertura WiFi en tu casa?
             </h2>
-            <p class="text-base md:text-lg text-gray-600 mt-3 mb-5">
+            <p class="text-base md:text-lg text-gray-600 mt-3">
               Con la tecnología de <span class="font-bold">USITTEL MESH</span>, 
               podés disfrutar de una conexión estable y rápida en cada rincón de tu hogar, 
               eliminando las zonas sin señal y mejorando la experiencia de navegación.
             </p>
-
-            <div
-              class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
-              style="
-                  border-color: #30a172;
-                  box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
-                    0 8px 10px -6px rgba(48, 161, 114, 0.15);
-                ">
-              <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
-              <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">
-                $6.999
-                <span class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span>
-              </p>
-              <ul class="space-y-2 text-gray-600 mb-5">
-                <li class="flex items-center">
-                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última
-                  generación.
-                </li>
-                <li class="flex items-center">
-                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4
-                  equipos).
-                </li>
-                <li class="flex items-center">
-                  <i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos
-                  dispositivos.
-                </li>
-              </ul>
-              <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                <i class="fab fa-whatsapp"></i> Consultar
-              </a>
-            </div>
           </div>
-          <div class="w-full max-w-sm md:max-w-md mx-auto">
+          <!-- 2. Carrusel (mobile: segundo | desktop: col-2, abarca 2 filas) -->
+          <div class="w-full max-w-sm md:max-w-md mx-auto lg:row-span-2">
             <div class="mesh-carousel-container rounded-large">
               <div class="mesh-slide active">
                 <picture><source srcset="assets/img/mesh/mesh1.webp" type="image/webp"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 1" /></picture>
@@ -1124,6 +1094,38 @@
               </div>
             </div>
             <div class="mesh-dots-container" id="mesh-dots-container"></div>
+          </div>
+          <!-- 3. Card de precio (mobile: tercero | desktop: col-1 fila-2) -->
+          <div
+            class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
+            style="
+                border-color: #30a172;
+                box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
+                  0 8px 10px -6px rgba(48, 161, 114, 0.15);
+              ">
+            <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
+            <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">
+              $6.999
+              <span class="text-base md:text-lg font-normal text-gray-500">/mes por equipo</span>
+            </p>
+            <ul class="space-y-2 text-gray-600 mb-5">
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última
+                generación.
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4
+                equipos).
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos
+                dispositivos.
+              </li>
+            </ul>
+            <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+              class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+              <i class="fab fa-whatsapp"></i> Consultar
+            </a>
           </div>
         </div>
         <!-- Enlace agregado debajo de la sección Mesh -->

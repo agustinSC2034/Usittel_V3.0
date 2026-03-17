@@ -381,10 +381,12 @@
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
             }
+
             50% {
                 transform: scale(1.05);
                 box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
             }
+
             100% {
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
@@ -396,9 +398,19 @@
         }
 
         @keyframes inputShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         .input-shake {
@@ -406,13 +418,14 @@
         }
 
         @keyframes resultFadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px); 
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -431,7 +444,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
     <style>
@@ -632,16 +647,14 @@
                 <div class="mobile-header-bar mobile-only">
                     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                     <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo.png"
-                            alt="Usittel Logo" />
+                        <img src="../../assets/img/logos/usittel-logo.png" alt="Usittel Logo" />
                     </a>
                 </div>
 
                 <!-- Encabezado desktop -->
                 <div class="nav-left desktop-only">
                     <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo_and_name.webp"
-                            alt="Usittel Logo" />
+                        <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
                     </a>
                     <ul class="nav-links">
                         <li><a href="../../">Home</a></li>
@@ -669,8 +682,7 @@
             <div class="overlay" id="overlay"></div>
             <div class="mobile-menu-slide" id="mobileMenu">
                 <div class="mobile-menu-header">
-                    <img src="../../assets/img/logos/usittel-logo_and_name.webp"
-                        alt="Usittel Logo" />
+                    <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
                     <button class="close-menu" id="closeMenu">&times;</button>
                 </div>
                 <hr />
@@ -735,200 +747,264 @@
         </style>
 
         <!-- Internet Plans Section -->
-       <section id="internet-plans" class="py-16 md:py-24 bg-gray-100">
+        <section id="internet-plans" class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes de Fibra Óptica para tu Hogar</h2>
                     <p class="text-lg text-gray-600 mt-2">Elegí la velocidad perfecta para vos. Sin sorpresas, con la
                         mejor estabilidad.</p>
-                   <div class="max-w-6xl mx-auto mb-12">
-                  <style>
-                    @keyframes slideFadePromo {
-                      0%, 25% { opacity: 1; transform: scale(1.05) translateY(2%); }
-                      33%, 92% { opacity: 0; transform: scale(1.1) translateY(2%); }
-                      100% { opacity: 1; transform: scale(1.05) translateY(2%); }
-                    }
-                    .promo-slideshow {
-                      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                      -webkit-mask-composite: source-in;
-                      mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                      mask-composite: intersect;
-                    }
-                    .promo-slideshow img {
-                      position: absolute;
-                      inset: 0;
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
-                      object-position: center 20%;
-                    }
-                    .promo-slideshow img:nth-child(1) { animation: slideFadePromo 9s infinite 0s; }
-                    .promo-slideshow img:nth-child(2) { animation: slideFadePromo 9s infinite 3s; opacity: 0; }
-                    .promo-slideshow img:nth-child(3) { animation: slideFadePromo 9s infinite 6s; opacity: 0; }
-                  </style>
-                  <div class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                    <div class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
-                      NUEVA VELOCIDAD
-                    </div>
-                    
-                    <div class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
-                      <div class="flex-1 w-full text-left relative z-20">
-                        <div class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
-                          TECNOLOGÍA WI-FI 6
-                        </div>
-                        <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">1000 MEGAS</h3>
-                        <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.</p>
-                        
-                        <div class="my-6">
-                          <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$49.999</span>
-                          <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
-                          <p class="text-sm text-gray-300 mt-1 drop-shadow-md">Precio de lista final y único disponible.</p>
-                          <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Precio fijo por 9 meses.</p>
-                        </div>
-                        
-                        <ul class="space-y-3 mb-8 relative z-20">
-                          <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md">Incluye módem premium <strong>Huawei OptiXstar X6</strong></span></li>
-                          <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6 (802.11ax):</strong> Mayor alcance y capacidad para múltiples dispositivos sin lag.</span></li>
-                          <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para <strong>Gaming competitivo y Streaming 4K/8K</strong>.</span></li>
-                          <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md"><strong>Soporte prioritario:</strong> Atención por WhatsApp y técnica exclusiva.</span></li>
-                        </ul>
-                        
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
-                          <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
-                        </a>
-                      </div>
-                      
-                      <div class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
-                        <div class="promo-slideshow absolute inset-0">
-                          <img src="../../assets/img/imagen1000_nuevo.JPG" alt="1000 Megas" />
-                          <img src="../../assets/img/nueva_imagen1000_2.JPG" alt="1000 Megas" />
-                          <img src="../../assets/img/Nueva_imagen1000_3.JPG" alt="1000 Megas" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
-                        <h3 class="text-2xl font-bold text-gray-800">Fibra 100</h3>
-                        <p class="text-gray-500 mb-2">100 Mbps Simétricos</p>
-                        <div class="my-2">
-                            <span class="text-4xl font-extrabold text-gray-900">17.999</span>
-                            <span class="text-gray-500"> $/mes</span>
+
+                <div class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
+                        <style>
+                            @keyframes slideFadePromo {
+
+                                0%,
+                                25% {
+                                    opacity: 1;
+                                    transform: scale(1.05) translateY(2%);
+                                }
+
+                                33%,
+                                92% {
+                                    opacity: 0;
+                                    transform: scale(1.1) translateY(2%);
+                                }
+
+                                100% {
+                                    opacity: 1;
+                                    transform: scale(1.05) translateY(2%);
+                                }
+                            }
+
+                            .promo-slideshow {
+                                -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
+                                -webkit-mask-composite: source-in;
+                                mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
+                                mask-composite: intersect;
+                            }
+
+                            .promo-slideshow img {
+                                position: absolute;
+                                inset: 0;
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                object-position: center 20%;
+                            }
+
+                            .promo-slideshow img:nth-child(1) {
+                                animation: slideFadePromo 9s infinite 0s;
+                            }
+
+                            .promo-slideshow img:nth-child(2) {
+                                animation: slideFadePromo 9s infinite 3s;
+                                opacity: 0;
+                            }
+
+                            .promo-slideshow img:nth-child(3) {
+                                animation: slideFadePromo 9s infinite 6s;
+                                opacity: 0;
+                            }
+                        </style>
+                        <div
+                            class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                            <div
+                                class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
+                                NUEVA VELOCIDAD
+                            </div>
+
+                            <div
+                                class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
+                                <div class="flex-1 w-full text-left relative z-20">
+                                    <div
+                                        class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
+                                        TECNOLOGÍA WI-FI 6
+                                    </div>
+                                    <h3
+                                        class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">
+                                        1000 MEGAS</h3>
+                                    <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y
+                                        disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.
+                                    </p>
+
+                                    <div class="my-6">
+                                        <span
+                                            class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$49.999</span>
+                                        <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
+                                        <p class="text-sm text-gray-300 mt-1 drop-shadow-md">Precio de lista final y
+                                            único disponible.</p>
+                                        <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274;
+                                            Precio fijo por 9 meses.</p>
+                                    </div>
+
+                                    <ul class="space-y-3 mb-8 relative z-20">
+                                        <li class="flex items-start"><i
+                                                class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                                                class="text-gray-100 drop-shadow-md">Incluye módem premium
+                                                <strong>Huawei OptiXstar X6</strong></span></li>
+                                        <li class="flex items-start"><i
+                                                class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                                                class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6
+                                                    (802.11ax):</strong> Mayor alcance y capacidad para múltiples
+                                                dispositivos sin lag.</span></li>
+                                        <li class="flex items-start"><i
+                                                class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                                                class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para
+                                                <strong>Gaming competitivo y Streaming 4K/8K</strong>.</span></li>
+                                        <li class="flex items-start"><i
+                                                class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                                                class="text-gray-100 drop-shadow-md"><strong>Soporte
+                                                    prioritario:</strong> Atención por WhatsApp y técnica
+                                                exclusiva.</span></li>
+                                    </ul>
+
+                                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                                        class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
+                                        <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
+                                    </a>
+                                </div>
+
+                                <div
+                                    class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
+                                    <div class="promo-slideshow absolute inset-0">
+                                        <img src="../../assets/img/imagen1000_nuevo.JPG" alt="1000 Megas" />
+                                        <img src="../../assets/img/nueva_imagen1000_2.JPG" alt="1000 Megas" />
+                                        <img src="../../assets/img/Nueva_imagen1000_3.JPG" alt="1000 Megas" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
-                                    100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>100 Mbps
-                                    SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal para
-                                    home office</span></li>
-                        </ul>
-                        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $17.999 por 3 meses</div>
-                        <div class="text-xs text-gray-500 mb-2">Precio final: $31.500 a partir del 4to mes.</div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-100"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
-                            Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial
-                            de USITTEL.<br><br>
-                            El precio promocional de $17.999 es válido durante los primeros 3 meses. A partir del mes
-                            cuatro (4), el precio será de $31.500.<br><br>
-                            La adhesión al débito automático es requisito para acceder a la bonificación en la
-                            instalación y a los precios promocionales.<br><br>
-                            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
-                        </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
                     </div>
-                    <div class="rounded-xl p-8 flex flex-col relative interactive-card border-blue-500 border-2">
-                        <span
-                            class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS
-                            ELEGIDO</span>
-                        <h3 class="text-2xl font-bold text-gray-800">Fibra 300</h3>
-                        <p class="text-gray-500 mb-2">300 Mbps Simétricos</p>
-                        <div class="my-2">
-                            <span class="text-4xl font-extrabold text-gray-900">19.999</span>
-                            <span class="text-gray-500"> $/mes</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
+                            <h3 class="text-2xl font-bold text-gray-800">Fibra 100</h3>
+                            <p class="text-gray-500 mb-2">100 Mbps Simétricos</p>
+                            <div class="my-2">
+                                <span class="text-4xl font-extrabold text-gray-900">17.999</span>
+                                <span class="text-gray-500"> $/mes</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                                        100% bonificada</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>100 Mbps
+                                        SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal
+                                        para
+                                        home office</span></li>
+                            </ul>
+                            <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $17.999 por 3 meses</div>
+                            <div class="text-xs text-gray-500 mb-2">Precio final: $31.500 a partir del 4to mes.</div>
+                            <a href="#"
+                                class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
+                                de la promoción</a>
+                            <div id="condiciones-100"
+                                class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                                Promoción válida para nuevos clientes personas físicas que contraten el servicio
+                                residencial
+                                de USITTEL.<br><br>
+                                El precio promocional de $17.999 es válido durante los primeros 3 meses. A partir del
+                                mes
+                                cuatro (4), el precio será de $31.500.<br><br>
+                                La adhesión al débito automático es requisito para acceder a la bonificación en la
+                                instalación y a los precios promocionales.<br><br>
+                                El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
+                            </div>
+                            <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                                class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                                <i class="fab fa-whatsapp"></i> Consultar
+                            </a>
                         </div>
-                        <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
-                                    100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>300 Mbps
-                                    SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto
-                                    para familias y gaming</span></li>
-                        </ul>
-                        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $19.999 por 3 meses</div>
-                        <div class="text-xs text-gray-500 mb-2">Precio final: $34.999 a partir del 4to mes.
+                        <div class="rounded-xl p-8 flex flex-col relative interactive-card border-blue-500 border-2">
+                            <span
+                                class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS
+                                ELEGIDO</span>
+                            <h3 class="text-2xl font-bold text-gray-800">Fibra 300</h3>
+                            <p class="text-gray-500 mb-2">300 Mbps Simétricos</p>
+                            <div class="my-2">
+                                <span class="text-4xl font-extrabold text-gray-900">19.999</span>
+                                <span class="text-gray-500"> $/mes</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                                        100% bonificada</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>300 Mbps
+                                        SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto
+                                        para familias y gaming</span></li>
+                            </ul>
+                            <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $19.999 por 3 meses</div>
+                            <div class="text-xs text-gray-500 mb-2">Precio final: $34.999 a partir del 4to mes.
+                            </div>
+                            <a href="#"
+                                class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
+                                de la promoción</a>
+                            <div id="condiciones-300"
+                                class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                                Promoción válida para nuevos clientes personas físicas que contraten el servicio
+                                residencial
+                                de USITTEL.<br><br>
+                                El precio promocional de $19.999 es válido durante los primeros 3 meses. A partir del
+                                mes
+                                cuatro (4), el precio será de $34.999.<br><br>
+                                La adhesión al débito automático es requisito para acceder a la bonificación en la
+                                instalación y a los precios promocionales.<br><br>
+                                El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
+                            </div>
+                            <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                                class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                                <i class="fab fa-whatsapp"></i> Consultar
+                            </a>
                         </div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-300"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
-                            Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial
-                            de USITTEL.<br><br>
-                            El precio promocional de $19.999 es válido durante los primeros 3 meses. A partir del mes
-                            cuatro (4), el precio será de $34.999.<br><br>
-                            La adhesión al débito automático es requisito para acceder a la bonificación en la
-                            instalación y a los precios promocionales.<br><br>
-                            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
+                        <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
+                            <h3 class="text-2xl font-bold text-gray-800">Fibra 500</h3>
+                            <p class="text-gray-500 mb-2">500 Mbps Simétricos</p>
+                            <div class="my-2">
+                                <span class="text-4xl font-extrabold text-gray-900">22.499</span>
+                                <span class="text-gray-500"> $/mes</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                                        100% bonificada</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>500 Mbps
+                                        SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
+                                <li class="flex items-start"><i
+                                        class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>La mejor
+                                        experiencia online</span></li>
+                            </ul>
+                            <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $22.499 por 6 meses</div>
+                            <div class="text-xs text-gray-500 mb-2">Precio final: $39.999 a partir del 7mo mes. Precio
+                                fijo hasta el mes 6.</div>
+                            <a href="#"
+                                class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
+                                de la promoción</a>
+                            <div id="condiciones-500"
+                                class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                                Promoción válida para nuevos clientes personas físicas que contraten el servicio
+                                residencial
+                                de USITTEL.<br><br>
+                                El precio promocional de $22.499 es válido durante los primeros 6 meses. A partir del
+                                mes
+                                siete (7), el precio será de $39.999.<br><br>
+                                La adhesión al débito automático es requisito para acceder a la bonificación en la
+                                instalación y a los precios promocionales.<br><br>
+                                El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.
+                            </div>
+                            <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                                class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                                <i class="fab fa-whatsapp"></i> Consultar
+                            </a>
                         </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
-                    </div>
-                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
-                        <h3 class="text-2xl font-bold text-gray-800">Fibra 500</h3>
-                        <p class="text-gray-500 mb-2">500 Mbps Simétricos</p>
-                        <div class="my-2">
-                            <span class="text-4xl font-extrabold text-gray-900">22.499</span>
-                            <span class="text-gray-500"> $/mes</span>
-                        </div>
-                        <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
-                                    100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>500 Mbps
-                                    SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>La mejor
-                                    experiencia online</span></li>
-                        </ul>
-                        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $22.499 por 6 meses</div>
-                        <div class="text-xs text-gray-500 mb-2">Precio final: $39.999 a partir del 7mo mes. Precio fijo hasta el mes 6.</div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-500"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
-                            Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial
-                            de USITTEL.<br><br>
-                            El precio promocional de $22.499 es válido durante los primeros 6 meses. A partir del mes
-                            siete (7), el precio será de $39.999.<br><br>
-                            La adhesión al débito automático es requisito para acceder a la bonificación en la
-                            instalación y a los precios promocionales.<br><br>
-                            El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.
-                        </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
-                        </a>
                     </div>
                 </div>
-            </div>
         </section>
 
         <script>
@@ -960,24 +1036,27 @@
                         Zona de cobertura actual
                     </h2>
                     <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
-                        Explorá nuestro mapa interactivo y verificá si nuestra red de fibra óptica ya está disponible en tu domicilio.
+                        Explorá nuestro mapa interactivo y verificá si nuestra red de fibra óptica ya está disponible en
+                        tu domicilio.
                     </p>
-                    
+
                     <!-- Contenedor responsive con mapa y validador lado a lado -->
                     <div class="coverage-container">
                         <!-- Contenedor del mapa -->
                         <div class="coverage-map-container">
                             <div id="coverage-map"></div>
                         </div>
-                        
+
                         <!-- Contenedor del validador -->
                         <div class="coverage-validator">
                             <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Llegamos a tu casa?</h3>
                             <p class="text-gray-600 mb-6">
-                                Ingresa tu dirección y su numero (No hace falta ingresar Tandil, Buenos Aires.) Ejemplo: San Martin 550
+                                Ingresa tu dirección y su numero (No hace falta ingresar Tandil, Buenos Aires.) Ejemplo:
+                                San Martin 550
                             </p>
                             <div class="space-y-4">
-                                <input type="text" id="address-input" placeholder="Ingresá tu dirección, ej: San Martín 550"
+                                <input type="text" id="address-input"
+                                    placeholder="Ingresá tu dirección, ej: San Martín 550"
                                     class="w-full px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
                                 <button id="coverage-button"
                                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button transition-all duration-200">
@@ -1198,9 +1277,11 @@
                 </div>
                 <div id="faq-accordion" class="space-y-6">
                     <!-- FAQ Item 1 -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                         <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                            <div
+                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                                 <i class="fas fa-wifi text-lg"></i>
                             </div>
                             <div class="flex-1 pr-4">
@@ -1212,15 +1293,17 @@
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
                                     <div class="flex items-start gap-3">
-                                        <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                        <div
+                                            class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                             <i class="fas fa-check text-green-600 text-xs"></i>
                                         </div>
                                         <p class="text-gray-700 leading-relaxed">
-                                            La <strong class="text-blue-600">fibra óptica</strong> ofrece una cobertura más amplia y uniforme que las conexiones tradicionales.
+                                            La <strong class="text-blue-600">fibra óptica</strong> ofrece una cobertura
+                                            más amplia y uniforme que las conexiones tradicionales.
                                         </p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                                         <i class="fas fa-lightbulb text-blue-500"></i>
@@ -1229,7 +1312,8 @@
                                     <div class="space-y-2 text-sm text-gray-700">
                                         <div class="flex items-center gap-2">
                                             <i class="fas fa-arrow-right text-blue-500"></i>
-                                            <span>Transmite datos a través de <strong>luz</strong> en lugar de señales eléctricas</span>
+                                            <span>Transmite datos a través de <strong>luz</strong> en lugar de señales
+                                                eléctricas</span>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <i class="fas fa-shield-alt text-green-500"></i>
@@ -1245,13 +1329,16 @@
                         </div>
                     </div>
                     <!-- FAQ Item 2 -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                         <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                            <div
+                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                                 <i class="fas fa-tachometer-alt text-lg"></i>
                             </div>
                             <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Alta Velocidad y Ancho de Banda</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Alta Velocidad y Ancho de Banda
+                                </h3>
                             </div>
                             <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
@@ -1259,10 +1346,11 @@
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
                                 <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed">
-                                        La <strong class="text-blue-600">fibra óptica</strong> proporciona velocidades mucho mayores que las conexiones por cobre o cable coaxial.
+                                        La <strong class="text-blue-600">fibra óptica</strong> proporciona velocidades
+                                        mucho mayores que las conexiones por cobre o cable coaxial.
                                     </p>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                         <i class="fas fa-star text-blue-500"></i>
@@ -1296,9 +1384,11 @@
                         </div>
                     </div>
                     <!-- FAQ Item 3 -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                         <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                            <div
+                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                                 <i class="fas fa-shield-alt text-lg"></i>
                             </div>
                             <div class="flex-1 pr-4">
@@ -1310,50 +1400,61 @@
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
                                 <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed mb-3">
-                                        A diferencia de las conexiones tradicionales, la <strong class="text-blue-600">fibra óptica garantiza</strong> una conexión estable y fiable.
+                                        A diferencia de las conexiones tradicionales, la <strong
+                                            class="text-blue-600">fibra óptica garantiza</strong> una conexión estable y
+                                        fiable.
                                     </p>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                         <i class="fas fa-exclamation-triangle text-blue-500"></i>
                                         Problemas que NO tendrás:
                                     </h4>
                                     <div class="space-y-2">
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
                                                 <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Interferencias eléctricas</span>
                                         </div>
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
                                                 <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Afectaciones por clima</span>
                                         </div>
-                                        <div class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
                                                 <i class="fas fa-times text-gray-400 text-xs"></i>
                                             </div>
                                             <span class="text-sm text-gray-700">Caídas frecuentes de conexión</span>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <div class="flex items-center gap-2 justify-center">
                                         <i class="fas fa-medal text-blue-500"></i>
-                                        <span class="font-semibold text-gray-800">Resultado: Mayor consistencia en la calidad del servicio</span>
+                                        <span class="font-semibold text-gray-800">Resultado: Mayor consistencia en la
+                                            calidad del servicio</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- FAQ Item 4 -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                         <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                            <div
+                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                                 <i class="fas fa-lock text-lg"></i>
                             </div>
                             <div class="flex-1 pr-4">
@@ -1365,33 +1466,42 @@
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
                                 <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relajadas">
-                                        La <strong class="text-blue-600">fibra óptica ofrece mayor seguridad</strong> en la transmisión de datos comparada con el cableado de cobre.
+                                        La <strong class="text-blue-600">fibra óptica ofrece mayor seguridad</strong> en
+                                        la transmisión de datos comparada con el cableado de cobre.
                                     </p>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                         <i class="fas fa-shield-alt text-blue-500"></i>
                                         Ventajas de seguridad:
                                     </h4>
                                     <div class="space-y-3">
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                        <div
+                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-check text-green-600 text-xs"></i>
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Menos susceptible a intercepciones</span>
-                                                <p class="text-xs text-gray-600 mt-1">Es muy difícil "pinchar" una fibra óptica sin detectarlo</p>
+                                                <span class="font-medium text-gray-800 text-sm">Menos susceptible a
+                                                    intercepciones</span>
+                                                <p class="text-xs text-gray-600 mt-1">Es muy difícil "pinchar" una fibra
+                                                    óptica sin detectarlo</p>
                                             </div>
                                         </div>
-                                        
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+
+                                        <div
+                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-check text-green-600 text-xs"></i>
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Protección contra hackeo</span>
-                                                <p class="text-xs text-gray-600 mt-1">Capa adicional de protección para tu red y datos</p>
+                                                <span class="font-medium text-gray-800 text-sm">Protección contra
+                                                    hackeo</span>
+                                                <p class="text-xs text-gray-600 mt-1">Capa adicional de protección para
+                                                    tu red y datos</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1400,13 +1510,16 @@
                         </div>
                     </div>
                     <!-- FAQ Item 5 -->
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div
+                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
                         <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                            <div
+                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                                 <i class="fas fa-tools text-lg"></i>
                             </div>
                             <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Durabilidad y Menor Mantenimiento</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Durabilidad y Menor Mantenimiento
+                                </h3>
                             </div>
                             <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
                         </button>
@@ -1414,43 +1527,54 @@
                             <div class="ml-0 md:ml-16 mt-4 space-y-3">
                                 <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                                     <p class="text-gray-700 leading-relaxed">
-                                        Las <strong class="text-blue-600">fibras ópticas son más resistentes</strong> a las condiciones ambientales y degradación comparadas con los cables de cobre.
+                                        Las <strong class="text-blue-600">fibras ópticas son más resistentes</strong> a
+                                        las condiciones ambientales y degradación comparadas con los cables de cobre.
                                     </p>
                                 </div>
-                                
+
                                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                         <i class="fas fa-chart-line text-blue-600"></i>
                                         Beneficios a largo plazo:
                                     </h4>
                                     <div class="grid md:grid-cols-2 gap-3">
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                                        <div
+                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-wrench text-green-600 text-xs"></i>
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Menos mantenimiento</span>
+                                                <span class="font-medium text-gray-800 text-sm">Menos
+                                                    mantenimiento</span>
                                                 <p class="text-xs text-gray-600">Menor frecuencia de reparaciones</p>
                                             </div>
                                         </div>
-                                        
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+
+                                        <div
+                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                                            <div
+                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-hourglass text-green-600 text-xs"></i>
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Vida útil más larga</span>
+                                                <span class="font-medium text-gray-800 text-sm">Vida útil más
+                                                    larga</span>
                                                 <p class="text-xs text-gray-600">Mayor durabilidad del sistema</p>
                                             </div>
                                         </div>
-                                        
-                                        <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100 md:col-span-2">
-                                            <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+
+                                        <div
+                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100 md:col-span-2">
+                                            <div
+                                                class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
                                                 <i class="fas fa-dollar-sign text-blue-600 text-xs"></i>
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Reduce costos y molestias a largo plazo</span>
-                                                <p class="text-xs text-gray-600">Inversión inteligente para el futuro</p>
+                                                <span class="font-medium text-gray-800 text-sm">Reduce costos y
+                                                    molestias a largo plazo</span>
+                                                <p class="text-xs text-gray-600">Inversión inteligente para el futuro
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -1552,31 +1676,33 @@
                             <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
                             <span>Nigro 575, Tandil</span>
                         </p>
-                        
+
                         <!-- Números oficiales de WhatsApp -->
                         <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                          <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                            <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
-                          </p>
-                          <div class="space-y-2">
-                            <div>
-                              <p class="flex items-center gap-2 text-sm">
-                                <i class="fab fa-whatsapp text-green-400"></i>
-                                <span class="font-medium">+54 9 249 406-0345</span>
-                              </p>
-                              <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                              <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
+                            <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                                <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5">
+                                Números Oficiales
+                            </p>
+                            <div class="space-y-2">
+                                <div>
+                                    <p class="flex items-center gap-2 text-sm">
+                                        <i class="fab fa-whatsapp text-green-400"></i>
+                                        <span class="font-medium">+54 9 249 406-0345</span>
+                                    </p>
+                                    <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                                    <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="flex items-center gap-2 text-sm">
+                                        <i class="fab fa-whatsapp text-green-400"></i>
+                                        <span class="font-medium">+54 9 249 450-4522</span>
+                                    </p>
+                                    <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
+                                </div>
                             </div>
-                            <div>
-                              <p class="flex items-center gap-2 text-sm">
-                                <i class="fab fa-whatsapp text-green-400"></i>
-                                <span class="font-medium">+54 9 249 450-4522</span>
-                              </p>
-                              <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                            </div>
-                          </div>
                         </div>
-                        
+
                         <div class="space-y-2">
                             <p class="flex items-center gap-3">
                                 <i class="fas fa-phone text-blue-400"></i>

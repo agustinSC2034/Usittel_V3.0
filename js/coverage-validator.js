@@ -834,6 +834,245 @@ function loadCoverageDatasetsIfNeeded() {
         { calle: "gral de la cruz", desde: 0, hasta: 2000 },
         { calle: "gral. de la cruz", desde: 0, hasta: 2000 },
         { calle: "de la cruz", desde: 0, hasta: 2000 },
+
+        // direcciones nuevas:
+        { calle: "4 de abril", desde: 0, hasta: 1499 }, // 
+    { calle: "25 de mayo", desde: 849, hasta: 1799 }, // 
+    { calle: "11 de septiembre", desde: 0, hasta: 1499 }, // 
+    
+    { calle: "agote l.", desde: 0, hasta: 1799 }, // 
+    { calle: "agote l", desde: 0, hasta: 1799 },
+    { calle: "agote", desde: 0, hasta: 1799 },
+    
+    { calle: "alem", desde: 899, hasta: 1499 }, // 
+    { calle: "alsina", desde: 0, hasta: 1499 }, // 
+    
+    { calle: "ant. argentina", desde: 799, hasta: 1099 }, // 
+    { calle: "antartida argentina", desde: 799, hasta: 1099 },
+    
+    { calle: "arana", desde: 749, hasta: 1799 }, // 
+    { calle: "avellaneda", desde: 849, hasta: 1799 }, // 
+    { calle: "balbin", desde: 899, hasta: 1699 }, // 
+    { calle: "belgrano", desde: 849, hasta: 1799 }, // 
+    { calle: "bolivar", desde: 0, hasta: 799 }, // 
+    { calle: "brasil", desde: 0, hasta: 599 }, // 
+    { calle: "buzon", desde: 0, hasta: 1099 }, // 
+    { calle: "feels", desde: 0, hasta: 1999 }, // 
+    { calle: "canada", desde: 600, hasta: 1399 }, // 
+    { calle: "canadá", desde: 600, hasta: 1399 },
+    
+    { calle: "carlos gardel", desde: 1000, hasta: 1799 }, // 
+    { calle: "gardel", desde: 1000, hasta: 1799 },
+    
+    { calle: "carriego", desde: 0, hasta: 699 }, // 
+    { calle: "caseros", desde: 600, hasta: 1399 }, // 
+    
+    { calle: "castex m.", desde: 0, hasta: 1799 }, // 
+    { calle: "castex", desde: 0, hasta: 1799 },
+    
+    { calle: "pje. nervo a.", desde: 0, hasta: 299 }, // 
+    { calle: "pje nervo a", desde: 0, hasta: 299 },
+    { calle: "pasaje nervo a.", desde: 0, hasta: 299 },
+    { calle: "pasaje nervo a", desde: 0, hasta: 299 },
+    { calle: "pasaje nervo", desde: 0, hasta: 299 },
+    { calle: "nervo", desde: 0, hasta: 299 },
+    
+    { calle: "colombia", desde: 1, hasta: 1399 }, // 
+    { calle: "colon", desde: 899, hasta: 1499 }, // 
+    
+    { calle: "combate de obligado", desde: 0, hasta: 1799 }, // 
+    { calle: "constitucion", desde: 849, hasta: 1799 }, // 
+    { calle: "costa rica", desde: 1, hasta: 599 }, // 
+    
+    { calle: "crucero gral. belgrano", desde: 0, hasta: 1799 }, // 
+    { calle: "crucero general belgrano", desde: 0, hasta: 1799 },
+    { calle: "crucero gral belgrano", desde: 0, hasta: 1799 },
+    
+    { calle: "cruz roja argentina", desde: 0, hasta: 1799 }, // 
+    { calle: "cruz roja", desde: 0, hasta: 1799 },
+    
+    { calle: "dinelli", desde: 0, hasta: 1999 }, // 
+    { calle: "españa", desde: 849, hasta: 1799 }, // 
+    { calle: "falucho", desde: 500, hasta: 1399 }, // 
+    
+    { calle: "fernandez de la cruz", desde: 1000, hasta: 1999 }, // 
+    { calle: "de la cruz", desde: 1000, hasta: 1999 },
+    
+    { calle: "fernandez moreno baldomero", desde: 0, hasta: 1799 }, // 
+    { calle: "baldomero fernandez moreno", desde: 0, hasta: 1799 },
+    { calle: "fernandez moreno", desde: 0, hasta: 1799 },
+    
+    { calle: "fidanza", desde: 399, hasta: 1399 }, // 
+    { calle: "franklin", desde: 1, hasta: 1669 }, // 
+    { calle: "fugl", desde: 1000, hasta: 1799 }, // 
+    { calle: "fulton", desde: 299, hasta: 899 }, // 
+    
+    { calle: "galileo galilei", desde: 1, hasta: 99 }, // 
+    { calle: "galileo", desde: 1, hasta: 99 },
+    
+    { calle: "garibaldi", desde: 749, hasta: 1799 }, // 
+    { calle: "grothe", desde: 1199, hasta: 1399 }, // 
+    { calle: "guernica", desde: 1600, hasta: 1799 }, // 
+    { calle: "guernica", desde: 1699, hasta: 1669 }, // 
+    
+    { calle: "gutierrez r.", desde: 0, hasta: 1799 }, // 
+    { calle: "gutierrez", desde: 0, hasta: 1799 },
+    
+    { calle: "hansen", desde: 0, hasta: 1999 }, // 
+    { calle: "hernandez", desde: 0, hasta: 399 }, // 
+    
+    { calle: "hno. crisostomo", desde: 600, hasta: 1799 }, // 
+    { calle: "hermano crisostomo", desde: 600, hasta: 1799 },
+    { calle: "crisostomo", desde: 600, hasta: 1799 },
+    
+    { calle: "holmberg", desde: 399, hasta: 1399 }, // 
+    { calle: "hudson", desde: 1, hasta: 1000 }, // 
+    { calle: "italia", desde: 699, hasta: 1399 }, // 
+    
+    { calle: "la pesqueria", desde: 1, hasta: 399 }, // 
+    { calle: "pesqueria", desde: 1, hasta: 399 },
+    
+    { calle: "larrea", desde: 1000, hasta: 1799 }, // 
+    
+    { calle: "las chilcas", desde: 99, hasta: 299 }, // 
+    { calle: "chilcas", desde: 99, hasta: 299 },
+    
+    { calle: "las heras", desde: 749, hasta: 1799 }, // 
+    { calle: "las malvinas", desde: 699, hasta: 1399 }, // 
+    { calle: "malvinas", desde: 699, hasta: 1399 },
+    
+    { calle: "liniers", desde: 1, hasta: 1699 }, // 
+    { calle: "linstow", desde: 1, hasta: 399 }, // 
+    { calle: "loberia", desde: 1000, hasta: 1799 }, // 
+    { calle: "lopez de osornio", desde: 1000, hasta: 1700 }, // 
+    { calle: "lorenzini", desde: 0, hasta: 1999 }, // 
+    { calle: "machado", desde: 749, hasta: 1799 }, // 
+    { calle: "maipu", desde: 849, hasta: 1799 }, // 
+    { calle: "marconi", desde: 849, hasta: 1799 }, // 
+    { calle: "marti", desde: 0, hasta: 799 }, // 
+    
+    { calle: "martignoni d.", desde: 0, hasta: 1799 }, // 
+    { calle: "martignoni", desde: 0, hasta: 1799 },
+    
+    { calle: "martin fierro", desde: 0, hasta: 799 }, // 
+    { calle: "massini", desde: 199, hasta: 399 }, // 
+    
+    { calle: "mayor novoa marcelo", desde: 849, hasta: 699 }, // 
+    { calle: "mayor novoa", desde: 849, hasta: 699 },
+    { calle: "novoa", desde: 849, hasta: 699 },
+    
+    { calle: "mitre", desde: 849, hasta: 1799 }, // 
+    { calle: "montevideo", desde: 749, hasta: 1799 }, // 
+    { calle: "montiel", desde: 0, hasta: 1499 }, // 
+    { calle: "moreno", desde: 0, hasta: 1499 }, // 
+    { calle: "nicaragua", desde: 1, hasta: 299 }, // 
+    { calle: "olivero", desde: 0, hasta: 1999 }, // 
+    { calle: "panama", desde: 1, hasta: 599 }, // 
+    
+    { calle: "paroissiend dr.", desde: 0, hasta: 1799 }, // 
+    { calle: "dr paroissien", desde: 0, hasta: 1799 },
+    { calle: "paroissien", desde: 0, hasta: 1799 },
+    
+    { calle: "paz", desde: 0, hasta: 1499 }, // 
+    { calle: "pellegrini", desde: 749, hasta: 1799 }, // 
+    { calle: "piedrabuena", desde: 1, hasta: 1799 }, // 
+    { calle: "pinto", desde: 849, hasta: 1799 }, // 
+    
+    { calle: "pje. alicia moreau de justo", desde: 600, hasta: 799 }, // 
+    { calle: "pasaje alicia moreau de justo", desde: 600, hasta: 799 },
+    { calle: "alicia moreau de justo", desde: 600, hasta: 799 },
+    
+    { calle: "junco a.", desde: 0, hasta: 1999 }, // 
+    { calle: "junco", desde: 0, hasta: 1999 },
+    
+    { calle: "pje. barrientos", desde: 999, hasta: 1199 }, // 
+    { calle: "pasaje barrientos", desde: 999, hasta: 1199 },
+    { calle: "barrientos", desde: 999, hasta: 1199 },
+    
+    { calle: "pje. castelli", desde: 1199, hasta: 1299 }, // 
+    { calle: "pasaje castelli", desde: 1199, hasta: 1299 },
+    { calle: "castelli", desde: 1199, hasta: 1299 },
+    
+    { calle: "pje. disney", desde: 1699, hasta: 1799 }, // 
+    { calle: "pasaje disney", desde: 1699, hasta: 1799 },
+    { calle: "disney", desde: 1699, hasta: 1799 },
+    
+    { calle: "pje. dr. salceda", desde: 600, hasta: 799 }, // 
+    { calle: "pasaje dr. salceda", desde: 600, hasta: 799 },
+    { calle: "pasaje dr salceda", desde: 600, hasta: 799 },
+    { calle: "dr salceda", desde: 600, hasta: 799 },
+    { calle: "salceda", desde: 600, hasta: 799 },
+    
+    { calle: "pje. fort", desde: 1, hasta: 99 }, // 
+    { calle: "pasaje fort", desde: 1, hasta: 99 },
+    { calle: "fort", desde: 1, hasta: 99 },
+    
+    { calle: "pje. gavazzi", desde: 400, hasta: 499 }, // 
+    { calle: "pasaje gavazzi", desde: 400, hasta: 499 },
+    { calle: "gavazzi", desde: 400, hasta: 499 },
+    
+    { calle: "pje. orbe", desde: 1699, hasta: 1799 }, // 
+    { calle: "pasaje orbe", desde: 1699, hasta: 1799 },
+    { calle: "orbe", desde: 1699, hasta: 1799 },
+    
+    { calle: "pje. piñero", desde: 1599, hasta: 1199 }, // 
+    { calle: "pasaje piñero", desde: 1599, hasta: 1199 },
+    { calle: "piñero", desde: 1599, hasta: 1199 },
+    
+    { calle: "pje. primero de mayo", desde: 1099, hasta: 1499 }, // 
+    { calle: "pasaje primero de mayo", desde: 1099, hasta: 1499 },
+    { calle: "primero de mayo", desde: 1099, hasta: 1499 },
+    
+    { calle: "pje. renis", desde: 1099, hasta: 1199 }, // 
+    { calle: "pasaje renis", desde: 1099, hasta: 1199 },
+    { calle: "renis", desde: 1099, hasta: 1199 },
+    
+    { calle: "pje. santa ana", desde: 1399, hasta: 1499 }, // 
+    { calle: "pasaje santa ana", desde: 1399, hasta: 1499 },
+    { calle: "santa ana", desde: 1399, hasta: 1499 },
+    
+    { calle: "pje. uruguay", desde: 1000, hasta: 1150 }, // 
+    { calle: "pasaje uruguay", desde: 1000, hasta: 1150 },
+    { calle: "uruguay", desde: 1000, hasta: 1150 },
+    
+    { calle: "pje. varas", desde: 400, hasta: 499 }, // 
+    { calle: "pasaje varas", desde: 400, hasta: 499 },
+    { calle: "varas", desde: 400, hasta: 499 },
+    
+    { calle: "portugal", desde: 700, hasta: 1399 }, // 
+    { calle: "pozos", desde: 499, hasta: 1399 }, // 
+    { calle: "primera junta", desde: 1, hasta: 1799 }, // 
+    { calle: "puerto argentino", desde: 0, hasta: 1799 }, // 
+    { calle: "pugliese este", desde: 0, hasta: 1799 }, // 
+    { calle: "pugliese oeste", desde: 0, hasta: 1799 }, // 
+    { calle: "quequen", desde: 1, hasta: 299 }, // 
+    { calle: "roca", desde: 0, hasta: 1499 }, // 
+    { calle: "rosalia de castro", desde: 600, hasta: 1399 }, // 
+    { calle: "rosser", desde: 1000, hasta: 1799 }, // 
+    
+    { calle: "ruben dario", desde: 0, hasta: 799 }, // 
+    { calle: "saavedra", desde: 0, hasta: 1499 }, // 
+    
+    { calle: "salustiano rivas", desde: 499, hasta: 1399 }, // 
+    { calle: "rivas", desde: 499, hasta: 1399 },
+    
+    { calle: "san martin", desde: 849, hasta: 1799 }, // 
+    { calle: "santamarina", desde: 0, hasta: 899 }, // 
+    { calle: "santos vega", desde: 0, hasta: 299 }, // 
+    { calle: "sarmiento", desde: 849, hasta: 1799 }, // 
+    { calle: "serrano", desde: 1000, hasta: 1799 }, // 
+    { calle: "soberania austral", desde: 0, hasta: 1799 }, // 
+    { calle: "tacuari", desde: 0, hasta: 799 }, // 
+    { calle: "tandileofu", desde: 1, hasta: 299 }, // 
+    { calle: "tierra del fuego", desde: 699, hasta: 1399 }, // 
+    { calle: "tilcara", desde: 1, hasta: 1000 }, // 
+    { calle: "tweesdale", desde: 0, hasta: 1999 }, // 
+    { calle: "uriburu", desde: 749, hasta: 1799 }, // 
+    { calle: "venezuela", desde: 1, hasta: 1099 }, // 
+    
+    { calle: "vernet j.", desde: 0, hasta: 1799 }, // 
+    { calle: "vernet", desde: 0, hasta: 1799 },
+    { calle: "jose vernet", desde: 0, hasta: 1799 }
   ];
 
   // NUEVAS ZONAS DE COBERTURA - PROXIMAMENTE

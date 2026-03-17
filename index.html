@@ -808,65 +808,162 @@
       </div>
     </section>
     <script>
-      // HERO: Imagen aleatoria de fondo (diferente para mobile y desktop, nunca repite la última)
+      // HERO: Carrusel para web, fondo fijo aleatorio para mobile
       document.addEventListener("DOMContentLoaded", function () {
-      const heroImagesDesktop = [
-        "assets/img/hero/web/hero_final_1.webp",
-        "assets/img/hero/web/hero_final_2.webp",
-        "assets/img/hero/web/hero_final_4.webp",
-        "assets/img/hero/web/hero_final_5.webp",
-        "assets/img/hero/web/hero_final_6.webp",
-        "assets/img/hero/web/hero_final_8.webp",
-        "assets/img/hero/web/hero_final_10.webp",
-      ];
-      const heroImagesMobile = [
-        "assets/img/hero/mobile/hero_mobile.webp",
-        "assets/img/hero/mobile/hero_mobile.webp",
-        "assets/img/hero/mobile/hero_final_7.webp",
-        "assets/img/hero/mobile/hero_mobile_final_4.webp",
-      ];
+        const heroImagesDesktop = [
+          "assets/img/hero/web/hero_final_1.webp",
+          "assets/img/hero/web/hero_final_2.webp",
+          "assets/img/hero/web/hero_final_4.webp",
+          "assets/img/hero/web/hero_final_5.webp",
+          "assets/img/hero/web/hero_final_6.webp",
+          "assets/img/hero/web/hero_final_8.webp",
+          "assets/img/hero/web/hero_final_10.webp",
+        ];
+        const heroImagesMobile = [
+          "assets/img/hero/mobile/hero_mobile.webp",
+          "assets/img/hero/mobile/hero_mobile.webp",
+          "assets/img/hero/mobile/hero_final_7.webp",
+          "assets/img/hero/mobile/hero_mobile_final_4.webp",
+        ];
 
-      function isMobile() {
-        return window.innerWidth <= 900;
-      }
-
-      function getLastHeroImgKey() {
-        return isMobile() ? "lastHeroImgMobile" : "lastHeroImgDesktop";
-      }
-
-      function setHeroBackground() {
-        const heroContainer = document.getElementById("hero-container");
-        if (!heroContainer) return;
-        const images = isMobile() ? heroImagesMobile : heroImagesDesktop;
-        const lastImgKey = getLastHeroImgKey();
-        const lastImg = sessionStorage.getItem(lastImgKey);
-
-        // Filtrar la última imagen usada
-        const availableImages = images.filter((img) => img !== lastImg);
-        // Si solo queda una (o ninguna), usar la lista completa
-        const pool = availableImages.length > 0 ? availableImages : images;
-        const randomImg = pool[Math.floor(Math.random() * pool.length)];
-        heroContainer.style.backgroundImage = `url('${randomImg}')`;
-        sessionStorage.setItem(lastImgKey, randomImg);
-      }
-
-      // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
-      function setHeroHeight() {
-        const nav = document.querySelector(".navbar-section");
-        const hero = document.getElementById("hero-container");
-        if (nav && hero) {
-        const navHeight = nav.offsetHeight;
-        hero.style.minHeight = `calc(100vh - ${navHeight}px)`;
+        function isMobile() {
+          return window.innerWidth <= 900;
         }
-      }
 
-      setHeroBackground();
-      setHeroHeight();
+        const heroContainer = document.getElementById("hero-container");
+        let carouselInterval;
+        let currentSlide = 0;
 
-      window.addEventListener("resize", function () {
-        setHeroBackground();
+        function initHero() {
+          if (!heroContainer) return;
+
+          // Limpiar todo lo anterior
+          const existingBgs = document.getElementById('hero-carousel-container');
+          if (existingBgs) existingBgs.remove();
+          const existingControls = document.querySelectorAll('.hero-carousel-control');
+          existingControls.forEach(el => el.remove());
+          clearInterval(carouselInterval);
+          heroContainer.style.backgroundImage = 'none';
+
+          if (isMobile()) {
+            // Lógica original para mobile
+            const lastImgKey = "lastHeroImgMobile";
+            const lastImg = sessionStorage.getItem(lastImgKey);
+            const availableImages = heroImagesMobile.filter((img) => img !== lastImg);
+            const pool = availableImages.length > 0 ? availableImages : heroImagesMobile;
+            const randomImg = pool[Math.floor(Math.random() * pool.length)];
+            heroContainer.style.backgroundImage = `url('${randomImg}')`;
+            sessionStorage.setItem(lastImgKey, randomImg);
+            
+            heroContainer.classList.remove('group');
+          } else {
+            // Lógica de carrusel para desktop
+            const startIdx = Math.floor(Math.random() * heroImagesDesktop.length);
+            currentSlide = startIdx;
+
+            const carouselContainer = document.createElement('div');
+            carouselContainer.id = 'hero-carousel-container';
+            carouselContainer.className = 'absolute inset-0 z-0 overflow-hidden rounded-[inherit]';
+
+            // Contenedor de fondos
+            heroImagesDesktop.forEach((img, index) => {
+              const bgDiv = document.createElement('div');
+              bgDiv.className = `hero-carousel-bg absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`;
+              bgDiv.style.backgroundImage = `url('${img}')`;
+              carouselContainer.appendChild(bgDiv);
+            });
+
+            // Contenedor de controles (indicadores) se saca del carouselContainer 
+            // para evitar que queden detras de las capas de oscurecimiento
+            const controlsContainer = document.createElement('div');
+            controlsContainer.className = 'hero-carousel-control absolute bottom-12 left-0 right-0 flex justify-center gap-3 z-30 pointer-events-auto';
+            heroImagesDesktop.forEach((_, index) => {
+              const dot = document.createElement('div');
+              dot.className = `carousel-dot w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${index === currentSlide ? 'bg-white' : 'bg-white/50 hover:bg-white/80'} shadow-md`;
+              dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToSlide(index);
+              });
+              controlsContainer.appendChild(dot);
+            });
+
+            // Flechas
+            const createArrow = (isPrev) => {
+              const arrow = document.createElement('button');
+              arrow.className = `hero-carousel-control absolute top-1/2 -translate-y-1/2 ${isPrev ? 'left-4 sm:left-10' : 'right-4 sm:right-10'} w-12 h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center z-30 transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-lg border-none pointer-events-auto`;
+              arrow.innerHTML = `<i class="fas fa-chevron-${isPrev ? 'left' : 'right'} text-xl"></i>`;
+              arrow.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evitar problemas de click con capas subyacentes
+                if (isPrev) goToSlide(currentSlide === 0 ? heroImagesDesktop.length - 1 : currentSlide - 1);
+                else goToSlide((currentSlide + 1) % heroImagesDesktop.length);
+              });
+              return arrow;
+            };
+
+            heroContainer.classList.add('group');
+            
+            // Insertar carrusel al principio del contenedor hero
+            heroContainer.insertBefore(carouselContainer, heroContainer.firstChild);
+
+            // Los controles y flechas van al final del heroContainer para asegurar que están por encima de todos los elementos oscuros
+            heroContainer.appendChild(controlsContainer);
+            heroContainer.appendChild(createArrow(true));
+            heroContainer.appendChild(createArrow(false));
+
+            // Iniciar intervalo más rápido
+            carouselInterval = setInterval(() => {
+              goToSlide((currentSlide + 1) % heroImagesDesktop.length);
+            }, 4500); // 4.5 segundos
+          }
+        }
+
+        function goToSlide(index) {
+          if (isMobile()) return;
+          const container = document.getElementById('hero-carousel-container');
+          if (!container) return;
+          
+          const bgs = container.querySelectorAll('.hero-carousel-bg');
+          
+          // Buscar en document ya que los controles ya no están dentro de container
+          const dots = document.querySelectorAll('.carousel-dot');
+          
+          if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-100', 'opacity-0');
+          if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white', 'bg-white/50');
+          
+          currentSlide = index;
+          
+          if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-0', 'opacity-100');
+          if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white/50', 'bg-white');
+
+          // Reiniciar intervalo
+          clearInterval(carouselInterval);
+          carouselInterval = setInterval(() => {
+            goToSlide((currentSlide + 1) % heroImagesDesktop.length);
+          }, 4500);
+        }
+
+        let wasMobile = isMobile();
+
+        // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
+        function setHeroHeight() {
+          const nav = document.querySelector(".navbar-section");
+          if (nav && heroContainer) {
+            const navHeight = nav.offsetHeight;
+            heroContainer.style.minHeight = `calc(100vh - ${navHeight}px)`;
+          }
+        }
+
+        initHero();
         setHeroHeight();
-      });
+
+        window.addEventListener("resize", function () {
+          const isNowMobile = isMobile();
+          if (isNowMobile !== wasMobile) {
+            wasMobile = isNowMobile;
+            initHero();
+          }
+          setHeroHeight();
+        });
       });
     </script>
 

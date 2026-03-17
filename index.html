@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Usittel - Internet por Fibra Óptica en Tandil</title>
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/icons/usittel-logo.png">
 
@@ -53,6 +53,7 @@
         transform: translateY(-100%);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -645,10 +646,12 @@
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
       }
+
       50% {
         transform: scale(1.05);
         box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
       }
+
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
@@ -656,9 +659,19 @@
     }
 
     @keyframes inputShake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      75% {
+        transform: translateX(5px);
+      }
     }
 
     @keyframes resultFadeIn {
@@ -666,6 +679,7 @@
         opacity: 0;
         transform: translateY(20px) scale(0.95);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -673,8 +687,13 @@
     }
 
     @keyframes spinnerRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .button-animate {
@@ -701,16 +720,19 @@
   </style>
 
   <!-- Meta Tags -->
-  <meta name="description" content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local. Descubrí Usittel." />
+  <meta name="description"
+    content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local. Descubrí Usittel." />
   <!-- Open Graph -->
   <meta property="og:title" content="Usittel - Internet por Fibra Óptica en Tandil" />
-  <meta property="og:description" content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local." />
+  <meta property="og:description"
+    content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local." />
   <meta property="og:image" content="/assets/img/logos/usittel-logo_and_name.png" />
   <meta property="og:type" content="website" />
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Usittel - Internet por Fibra Óptica en Tandil" />
-  <meta name="twitter:description" content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local." />
+  <meta name="twitter:description"
+    content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local." />
   <meta name="twitter:image" content="/assets/img/logos/usittel-logo_and_name.png" />
 </head>
 
@@ -728,7 +750,12 @@
           </a>
         </div>
         <div class="nav-left desktop-only">
-          <a href="#" class="logo"><picture><source srcset="assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" /></picture></a>
+          <a href="#" class="logo">
+            <picture>
+              <source srcset="assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
           <ul class="nav-links">
             <li><a href="#" class="active">Home</a></li>
             <li class="dropdown">
@@ -745,7 +772,8 @@
         </div>
         <div class="nav-actions desktop-only">
           <a href="pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
         </div>
       </div>
       <div class="overlay" id="overlay"></div>
@@ -761,24 +789,26 @@
             Productos ▾
           </button>
           <div class="submenu" id="productsSubmenu">
-            <a href="pages/internet/">Internet</a><a href="pages/mesh/">WiFi Mesh</a><a
-              href="pages/tv/">TV</a>
+            <a href="pages/internet/">Internet</a><a href="pages/mesh/">WiFi Mesh</a><a href="pages/tv/">TV</a>
           </div>
         </div>
-        <a href="pages/empresas/">Empresas</a><a href="pages/contacto/">Contáctanos</a><a
-          href="pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a><a
-          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+        <a href="pages/empresas/">Empresas</a><a href="pages/contacto/">Contáctanos</a><a href="pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
       </div>
     </nav>
   </header>
 
   <!-- Barra de Promociones -->
-  <div class="promo-bar bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 text-white py-2.5 text-center relative overflow-hidden">
+  <div
+    class="promo-bar bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 text-white py-2.5 text-center relative overflow-hidden">
     <div class="container mx-auto px-4 flex items-center justify-center gap-3 text-sm md:text-base">
       <i class="fas fa-gift animate-bounce hidden sm:inline"></i>
       <span class="font-semibold">NUEVO LANZAMIENTO:</span>
-<span class="font-medium">¡Llegaron los 1000 MEGAS a Tandil! Simétricos y con Wi-Fi 6.</span>
-      <a href="#plans" class="ml-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-gray-100 transition-colors hidden md:inline-block">
+      <span class="font-medium">¡Llegaron los 1000 MEGAS a Tandil! Simétricos y con Wi-Fi 6.</span>
+      <a href="#plans"
+        class="ml-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-gray-100 transition-colors hidden md:inline-block">
         Ver planes
       </a>
     </div>
@@ -791,19 +821,26 @@
       <!-- Ajuste: Menos opacidad para ver más la imagen de fondo -->
       <div class="absolute inset-0 bg-black" style="opacity:0.32"></div>
       <div class="hero-content relative z-10 max-w-4xl mx-auto">
-      <picture><source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
-        class="h-16 md:h-20 mx-auto mb-5" /></picture>
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
-        La fibra óptica más rápida de Tandil.
-      </h1>
-      <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">
-        Velocidad y confiabilidad para streaming, gaming y trabajo sin
-        interrupciones.
-      </p>
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-        <a href="#plans" class="nav-button-green cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Nuestros planes</b></a>
-        <a href="#coverage" class="nav-button2 cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Verificar Cobertura</b></a>
-      </div>
+        <picture>
+          <source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img
+            src="assets/img/logos/USITTEL_BLACK-removebg-preview.png" alt="Usittel Logo"
+            class="h-16 md:h-20 mx-auto mb-5" />
+        </picture>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
+          La fibra óptica más rápida de Tandil.
+        </h1>
+        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10">
+          Velocidad y confiabilidad para streaming, gaming y trabajo sin
+          interrupciones.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="#plans"
+            class="nav-button-green cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Nuestros
+              planes</b></a>
+          <a href="#coverage"
+            class="nav-button2 cta-button px-6 sm:px-8 py-3 text-white w-full sm:w-auto text-center"><b>Verificar
+              Cobertura</b></a>
+        </div>
       </div>
     </section>
     <script>
@@ -853,7 +890,7 @@
             const randomImg = pool[Math.floor(Math.random() * pool.length)];
             heroContainer.style.backgroundImage = `url('${randomImg}')`;
             sessionStorage.setItem(lastImgKey, randomImg);
-            
+
             heroContainer.classList.remove('group');
           } else {
             // Lógica de carrusel para desktop
@@ -900,7 +937,7 @@
             };
 
             heroContainer.classList.add('group');
-            
+
             // Insertar carrusel al principio del contenedor hero
             heroContainer.insertBefore(carouselContainer, heroContainer.firstChild);
 
@@ -920,17 +957,17 @@
           if (isMobile()) return;
           const container = document.getElementById('hero-carousel-container');
           if (!container) return;
-          
+
           const bgs = container.querySelectorAll('.hero-carousel-bg');
-          
+
           // Buscar en document ya que los controles ya no están dentro de container
           const dots = document.querySelectorAll('.carousel-dot');
-          
+
           if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-100', 'opacity-0');
           if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white', 'bg-white/50');
-          
+
           currentSlide = index;
-          
+
           if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-0', 'opacity-100');
           if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white/50', 'bg-white');
 
@@ -1039,20 +1076,36 @@
 
         <!-- Contenedor para la vista por defecto (Internet y Combos) -->
         <div id="default-plans-view">
-          
+
           <div id="premium-giga-container" class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
             <style>
               @keyframes slideFadePromo {
-                0%, 25% { opacity: 1; transform: scale(1.05) translateY(2%); }
-                33%, 92% { opacity: 0; transform: scale(1.1) translateY(2%); }
-                100% { opacity: 1; transform: scale(1.05) translateY(2%); }
+
+                0%,
+                25% {
+                  opacity: 1;
+                  transform: scale(1.05) translateY(2%);
+                }
+
+                33%,
+                92% {
+                  opacity: 0;
+                  transform: scale(1.1) translateY(2%);
+                }
+
+                100% {
+                  opacity: 1;
+                  transform: scale(1.05) translateY(2%);
+                }
               }
+
               .promo-slideshow {
                 -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
                 -webkit-mask-composite: source-in;
                 mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
                 mask-composite: intersect;
               }
+
               .promo-slideshow img {
                 position: absolute;
                 inset: 0;
@@ -1061,43 +1114,71 @@
                 object-fit: cover;
                 object-position: center 20%;
               }
-              .promo-slideshow img:nth-child(1) { animation: slideFadePromo 9s infinite 0s; }
-              .promo-slideshow img:nth-child(2) { animation: slideFadePromo 9s infinite 3s; opacity: 0; }
-              .promo-slideshow img:nth-child(3) { animation: slideFadePromo 9s infinite 6s; opacity: 0; }
+
+              .promo-slideshow img:nth-child(1) {
+                animation: slideFadePromo 9s infinite 0s;
+              }
+
+              .promo-slideshow img:nth-child(2) {
+                animation: slideFadePromo 9s infinite 3s;
+                opacity: 0;
+              }
+
+              .promo-slideshow img:nth-child(3) {
+                animation: slideFadePromo 9s infinite 6s;
+                opacity: 0;
+              }
             </style>
-            <div class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-              <div class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
+            <div
+              class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+              <div
+                class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
                 NUEVA VELOCIDAD
               </div>
-              
-              <div class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
+
+              <div
+                class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
                 <div class="flex-1 w-full text-left relative z-20">
-                  <div class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
+                  <div
+                    class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
                     TECNOLOGÍA WI-FI 6
                   </div>
-                  <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">1000 MEGAS</h3>
-                  <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.</p>
-                  
+                  <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">1000
+                    MEGAS</h3>
+                  <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y disfrutá sin
+                    interrupciones. La máxima experiencia de conectividad en Tandil.</p>
+
                   <div class="my-6">
                     <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$49.999</span>
                     <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
                     <p class="text-sm text-gray-300 mt-1 drop-shadow-md">Precio de lista final y único disponible.</p>
-                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Precio fijo por 9 meses.</p>
+                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Precio fijo por 9
+                      meses.</p>
                   </div>
-                  
+
                   <ul class="space-y-3 mb-8 relative z-20">
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md">Incluye módem premium <strong>Huawei OptiXstar X6</strong></span></li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6 (802.11ax):</strong> Mayor alcance y capacidad para múltiples dispositivos sin lag.</span></li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para <strong>Gaming competitivo y Streaming 4K/8K</strong>.</span></li>
-                    <li class="flex items-start"><i class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span class="text-gray-100 drop-shadow-md"><strong>Soporte prioritario:</strong> Atención por WhatsApp y técnica exclusiva.</span></li>
+                    <li class="flex items-start"><i
+                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                        class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6 (802.11ax):</strong> Mayor alcance y
+                        capacidad para múltiples dispositivos sin lag.</span></li>
+                    <li class="flex items-start"><i
+                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                        class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para <strong>Gaming competitivo
+                          y Streaming 4K/8K</strong>.</span></li>
+                    <li class="flex items-start"><i
+                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
+                        class="text-gray-100 drop-shadow-md"><strong>Soporte prioritario:</strong> Atención por WhatsApp
+                        y técnica exclusiva.</span></li>
                   </ul>
-                  
-                  <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
+
+                  <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
+                    class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
                     <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
                   </a>
                 </div>
-                
-                <div class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
+
+                <div
+                  class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
                   <div class="promo-slideshow absolute inset-0">
                     <img src="assets/img/imagen1000_nuevo.JPG" alt="1000 Megas" />
                     <img src="assets/img/nueva_imagen1000_2.JPG" alt="1000 Megas" />
@@ -1141,8 +1222,11 @@
                 </div>
                 <!-- Card HBO Max -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
-                  <picture><source srcset="assets/img/logos/max-logo-black.webp" type="image/webp"><img src="assets/img/logos/max-logo-black.png" alt="Logo HBO"
-                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0" /></picture>
+                  <picture>
+                    <source srcset="assets/img/logos/max-logo-black.webp" type="image/webp"><img
+                      src="assets/img/logos/max-logo-black.png" alt="Logo HBO"
+                      class="h-20 w-20 rounded-lg object-contain flex-shrink-0" />
+                  </picture>
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Pack HBO</h4>
                     <p class="text-sm text-gray-600">
@@ -1155,8 +1239,11 @@
                 </div>
                 <!-- Card Universal+ -->
                 <div class="bg-white rounded-xl p-4 flex items-center gap-6 hover-glow-card">
-                  <picture><source srcset="assets/img/logos/Universal-Logo-removebg-preview.webp" type="image/webp"><img src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
-                    class="h-20 w-20 rounded-lg object-contain flex-shrink-0" /></picture>
+                  <picture>
+                    <source srcset="assets/img/logos/Universal-Logo-removebg-preview.webp" type="image/webp"><img
+                      src="assets/img/logos/Universal-Logo-removebg-preview.png" alt="Logo Universal+"
+                      class="h-20 w-20 rounded-lg object-contain flex-shrink-0" />
+                  </picture>
                   <div class="text-left">
                     <h4 class="font-bold text-gray-900">Universal+</h4>
                     <p class="text-sm text-gray-600">
@@ -1196,8 +1283,8 @@
               ¿Problemas de cobertura WiFi en tu casa?
             </h2>
             <p class="text-base md:text-lg text-gray-600 mt-3">
-              Con la tecnología de <span class="font-bold">USITTEL MESH</span>, 
-              podés disfrutar de una conexión estable y rápida en cada rincón de tu hogar, 
+              Con la tecnología de <span class="font-bold">USITTEL MESH</span>,
+              podés disfrutar de una conexión estable y rápida en cada rincón de tu hogar,
               eliminando las zonas sin señal y mejorando la experiencia de navegación.
             </p>
           </div>
@@ -1205,16 +1292,28 @@
           <div class="w-full max-w-sm md:max-w-md mx-auto lg:row-span-2">
             <div class="mesh-carousel-container rounded-large">
               <div class="mesh-slide active">
-                <picture><source srcset="assets/img/mesh/mesh1.webp" type="image/webp"><img src="assets/img/mesh/mesh1.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 1" /></picture>
+                <picture>
+                  <source srcset="assets/img/mesh/mesh1.webp" type="image/webp"><img src="assets/img/mesh/mesh1.png"
+                    class="rounded-xl w-full" alt="Equipo WiFi Mesh 1" />
+                </picture>
               </div>
               <div class="mesh-slide">
-                <picture><source srcset="assets/img/mesh/mesh2.webp" type="image/webp"><img src="assets/img/mesh/mesh2.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 2" /></picture>
+                <picture>
+                  <source srcset="assets/img/mesh/mesh2.webp" type="image/webp"><img src="assets/img/mesh/mesh2.png"
+                    class="rounded-xl w-full" alt="Equipo WiFi Mesh 2" />
+                </picture>
               </div>
               <div class="mesh-slide">
-                <picture><source srcset="assets/img/mesh/mesh3.webp" type="image/webp"><img src="assets/img/mesh/mesh3.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 3" /></picture>
+                <picture>
+                  <source srcset="assets/img/mesh/mesh3.webp" type="image/webp"><img src="assets/img/mesh/mesh3.png"
+                    class="rounded-xl w-full" alt="Equipo WiFi Mesh 3" />
+                </picture>
               </div>
               <div class="mesh-slide">
-                <picture><source srcset="assets/img/mesh/mesh4.webp" type="image/webp"><img src="assets/img/mesh/mesh4.png" class="rounded-xl w-full" alt="Equipo WiFi Mesh 4" /></picture>
+                <picture>
+                  <source srcset="assets/img/mesh/mesh4.webp" type="image/webp"><img src="assets/img/mesh/mesh4.png"
+                    class="rounded-xl w-full" alt="Equipo WiFi Mesh 4" />
+                </picture>
               </div>
             </div>
             <div class="mesh-dots-container" id="mesh-dots-container"></div>
@@ -1324,16 +1423,17 @@
             Zona de cobertura actual
           </h2>
           <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
-            Explorá nuestro mapa interactivo y verificá si nuestra red de fibra óptica ya está disponible en tu domicilio.
+            Explorá nuestro mapa interactivo y verificá si nuestra red de fibra óptica ya está disponible en tu
+            domicilio.
           </p>
-          
+
           <!-- Contenedor responsive con mapa y validador lado a lado -->
           <div class="coverage-container">
             <!-- Contenedor del mapa -->
             <div class="coverage-map-container">
               <div id="coverage-map"></div>
             </div>
-            
+
             <!-- Contenedor del validador -->
             <div class="coverage-validator">
               <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Llegamos a tu casa?</h3>
@@ -1366,13 +1466,16 @@
           </div>
           <div id="faq-accordion" class="space-y-6">
             <!-- Pregunta 1 -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <div
+              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
               <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                <div
+                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                   <i class="fas fa-tachometer-alt text-lg"></i>
                 </div>
                 <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué significa que la velocidad sea "simétrica"?</h3>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué significa que la velocidad sea "simétrica"?
+                  </h3>
                 </div>
                 <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
@@ -1380,15 +1483,17 @@
                 <div class="ml-0 md:ml-16 mt-4 space-y-3">
                   <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                     <div class="flex items-start gap-3">
-                      <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                      <div
+                        class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
                         <i class="fas fa-arrows-up-down text-blue-600 text-xs"></i>
                       </div>
                       <p class="text-gray-700 leading-relaxed">
-                        Significa que tenés la misma velocidad de <strong class="text-blue-600">subida</strong> que de <strong class="text-blue-600">bajada</strong>.
+                        Significa que tenés la misma velocidad de <strong class="text-blue-600">subida</strong> que de
+                        <strong class="text-blue-600">bajada</strong>.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <h4 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <i class="fas fa-star text-blue-500"></i>
@@ -1417,9 +1522,11 @@
               </div>
             </div>
             <!-- Pregunta 2 -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <div
+              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
               <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                <div
+                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                   <i class="fas fa-tools text-lg"></i>
                 </div>
                 <div class="flex-1 pr-4">
@@ -1431,10 +1538,11 @@
                 <div class="ml-0 md:ml-16 mt-4 space-y-4">
                   <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                     <p class="text-gray-700 leading-relaxed mb-4">
-                      Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico especializado coordinará una visita para realizar la instalación.
+                      Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico
+                      especializado coordinará una visita para realizar la instalación.
                     </p>
                   </div>
-                  
+
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                       <i class="fas fa-list-ol text-blue-600"></i>
@@ -1442,15 +1550,20 @@
                     </h4>
                     <div class="space-y-3">
                       <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                        <div
+                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                          1</div>
                         <span class="text-gray-700">Instalación del cable de fibra óptica</span>
                       </div>
                       <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                        <div
+                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                          2</div>
                         <span class="text-gray-700">Configuración del módem ONT</span>
                       </div>
                       <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        <div
+                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
                           <i class="fas fa-check text-xs"></i>
                         </div>
                         <span class="text-gray-700">Pruebas de funcionamiento y entrega</span>
@@ -1461,9 +1574,11 @@
               </div>
             </div>
             <!-- Pregunta 3 -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <div
+              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
               <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                <div
+                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                   <i class="fas fa-wifi text-lg"></i>
                 </div>
                 <div class="flex-1 pr-4">
@@ -1475,15 +1590,17 @@
                 <div class="ml-0 md:ml-16 mt-4 space-y-4">
                   <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                     <div class="flex items-start gap-3">
-                      <div class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                      <div
+                        class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                         <i class="fas fa-check text-green-600 text-xs"></i>
                       </div>
                       <p class="text-gray-700 leading-relaxed">
-                        <strong class="text-green-600">Sí, podés conectar tu propio router</strong> a nuestro módem (ONT) sin ningún problema. Es completamente compatible.
+                        <strong class="text-green-600">Sí, podés conectar tu propio router</strong> a nuestro módem
+                        (ONT) sin ningún problema. Es completamente compatible.
                       </p>
                     </div>
                   </div>
-                  
+
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                       <i class="fas fa-star text-blue-500"></i>
@@ -1491,11 +1608,13 @@
                     </h4>
                     <div class="space-y-3">
                       <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                        <div
+                          class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
                           <i class="fas fa-shield-alt text-blue-600 text-xs"></i>
                         </div>
                         <p class="text-gray-700 text-sm">
-                          Para <strong>garantizar la mejor experiencia y cobertura</strong> en tu hogar, recomendamos usar nuestros equipos certificados
+                          Para <strong>garantizar la mejor experiencia y cobertura</strong> en tu hogar, recomendamos
+                          usar nuestros equipos certificados
                         </p>
                       </div>
                       <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
@@ -1513,13 +1632,16 @@
               </div>
             </div>
             <!-- Pregunta 4 -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <div
+              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
               <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
+                <div
+                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
                   <i class="fas fa-headset text-lg"></i>
                 </div>
                 <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué hago si tengo problemas con el servicio?</h3>
+                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué hago si tengo problemas con el servicio?
+                  </h3>
                 </div>
                 <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
               </button>
@@ -1527,19 +1649,22 @@
                 <div class="ml-0 md:ml-16 mt-4 space-y-4">
                   <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                     <p class="text-gray-700 leading-relaxed mb-4">
-                      Podés comunicarte con nuestro <strong class="text-blue-600">centro de atención al cliente</strong> por múltiples canales. Nuestro <strong class="text-blue-600">equipo de soporte técnico local</strong> te ayudará a resolver cualquier inconveniente rápidamente.
+                      Podés comunicarte con nuestro <strong class="text-blue-600">centro de atención al cliente</strong>
+                      por múltiples canales. Nuestro <strong class="text-blue-600">equipo de soporte técnico
+                        local</strong> te ayudará a resolver cualquier inconveniente rápidamente.
                     </p>
                   </div>
-                  
+
                   <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                       <i class="fas fa-phone-alt text-blue-600"></i>
                       Canales de atención disponibles:
                     </h4>
                     <div class="grid md:grid-cols-2 gap-3">
-                      <a href="tel:08001994545" 
-                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <a href="tel:08001994545"
+                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                        <div
+                          class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                           <i class="fas fa-phone text-sm"></i>
                         </div>
                         <div>
@@ -1547,11 +1672,12 @@
                           <p class="text-xs text-gray-600">0800-199-4545</p>
                         </div>
                       </a>
-                      
-                      <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
-                         target="_blank" rel="noopener noreferrer"
-                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <div class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+
+                      <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+                        target="_blank" rel="noopener noreferrer"
+                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                        <div
+                          class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                           <i class="fab fa-whatsapp text-sm"></i>
                         </div>
                         <div>
@@ -1559,10 +1685,11 @@
                           <p class="text-xs text-gray-600">Atención inmediata</p>
                         </div>
                       </a>
-                      
-                      <a href="pages/centro_de_ayuda/index.html" 
-                         class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group md:col-span-2">
-                        <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+
+                      <a href="pages/centro_de_ayuda/index.html"
+                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group md:col-span-2">
+                        <div
+                          class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                           <i class="fas fa-user-cog text-sm"></i>
                         </div>
                         <div>
@@ -1605,7 +1732,8 @@
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">WhatsApp</h4>
-                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
+                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer"
+                      class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
                     <p class="text-sm text-gray-500">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a 16hs.</p>
                   </div>
                 </div>
@@ -1616,7 +1744,8 @@
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">Email</h4>
-                    <a href="mailto:contacto@usittel.com.ar" class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
+                    <a href="mailto:contacto@usittel.com.ar"
+                      class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
                   </div>
                 </div>
 
@@ -1626,7 +1755,8 @@
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">Oficina</h4>
-                    <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
+                    <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer"
+                      class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
                   </div>
                 </div>
               </div>
@@ -1660,7 +1790,7 @@
               <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
               <span>Nigro 575, Tandil</span>
             </p>
-            
+
             <!-- Números oficiales de WhatsApp -->
             <div class="bg-gray-700 p-3 rounded-lg space-y-2">
               <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
@@ -1684,7 +1814,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="space-y-2">
               <p class="flex items-center gap-3">
                 <i class="fas fa-phone text-blue-400"></i>
@@ -1722,7 +1852,8 @@
               <a href="pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
             </li>
             <li>
-              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
             </li>
             <li>
               <a href="pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
@@ -2008,8 +2139,8 @@
         }
 
         return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular
-            ? "border-blue-500 border-2 relative bg-white"
-            : "border-gray-200 bg-white"
+          ? "border-blue-500 border-2 relative bg-white"
+          : "border-gray-200 bg-white"
           }">
         <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
         ${speedLine}
@@ -2036,7 +2167,7 @@
 
       function displayPlans(type) {
         const premiumGigaContainer = document.getElementById("premium-giga-container"); // NUEVA LINEA
-        
+
         if (internetBtn) internetBtn.classList.remove("active");
         if (internetTvBtn) internetTvBtn.classList.remove("active");
         if (tvOnlyBtn) tvOnlyBtn.classList.remove("active");
@@ -2044,8 +2175,8 @@
         if (type === "soloTv") {
           defaultPlansView.classList.add("hidden");
           soloTvView.classList.remove("hidden");
-          if(premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA
-          
+          if (premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA
+
           soloTvCardContainer.innerHTML = createPlanCard(
             plansData.soloTv[0],
             "soloTv"
@@ -2064,12 +2195,12 @@
 
           if (type === "internet") {
             if (internetBtn) internetBtn.classList.add("active");
-            if(premiumPacksDefault) premiumPacksDefault.classList.add("hidden");
-            if(premiumGigaContainer) premiumGigaContainer.classList.remove("hidden"); // NUEVA LINEA
+            if (premiumPacksDefault) premiumPacksDefault.classList.add("hidden");
+            if (premiumGigaContainer) premiumGigaContainer.classList.remove("hidden"); // NUEVA LINEA
           } else if (type === "internetTv") {
             if (internetTvBtn) internetTvBtn.classList.add("active");
-            if(premiumPacksDefault) premiumPacksDefault.classList.remove("hidden");
-            if(premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA (No lo mostramos en combos por ahora)
+            if (premiumPacksDefault) premiumPacksDefault.classList.remove("hidden");
+            if (premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA (No lo mostramos en combos por ahora)
           }
         }
 
@@ -2175,7 +2306,7 @@
       // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
     });
   </script>
-  
+
   <!-- Validador de Cobertura -->
   <script src="js/coverage-validator.js"></script>
 

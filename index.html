@@ -777,7 +777,7 @@
     <div class="container mx-auto px-4 flex items-center justify-center gap-3 text-sm md:text-base">
       <i class="fas fa-gift animate-bounce hidden sm:inline"></i>
       <span class="font-semibold">NUEVO LANZAMIENTO:</span>
-<span class="font-medium">¡Llegó el Giga a Tandil! 1000 Mbps simetricos con Wi-Fi 6.</span>
+<span class="font-medium">¡Llegaron los 1000 MEGAS a Tandil! Simétricos y con Wi-Fi 6.</span>
       <a href="#plans" class="ml-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-gray-100 transition-colors hidden md:inline-block">
         Ver planes
       </a>
@@ -1042,6 +1042,23 @@
         <div id="default-plans-view">
           
           <div id="premium-giga-container" class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
+            <style>
+              @keyframes slideFadePromo {
+                0%, 25% { opacity: 1; transform: scale(1); }
+                33%, 92% { opacity: 0; transform: scale(1.05); }
+                100% { opacity: 1; transform: scale(1); }
+              }
+              .promo-slideshow img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+              .promo-slideshow img:nth-child(1) { animation: slideFadePromo 12s infinite 0s; }
+              .promo-slideshow img:nth-child(2) { animation: slideFadePromo 12s infinite 4s; opacity: 0; }
+              .promo-slideshow img:nth-child(3) { animation: slideFadePromo 12s infinite 8s; opacity: 0; }
+            </style>
             <div class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
                 <i class="fas fa-rocket"></i> NUEVA VELOCIDAD
@@ -1052,8 +1069,8 @@
                   <div class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
                     TECNOLOGÍA WI-FI 6
                   </div>
-                  <h3 class="text-3xl md:text-5xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">GIGA FIBRA 1000</h3>
-                  <p class="text-gray-300 text-base md:text-lg mb-4">1000 Mbps Simétricos. La máxima experiencia de conectividad en Tandil.</p>
+                  <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight">1000 MEGAS</h3>
+                  <p class="text-gray-300 text-base md:text-lg mb-4">Jugá, creá y disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.</p>
                   
                   <div class="my-6">
                     <span class="text-5xl md:text-6xl font-extrabold text-white">$49.999</span>
@@ -1070,13 +1087,16 @@
                   </ul>
                   
                   <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)]">
-                    <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan Giga
+                    <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
                   </a>
                 </div>
                 
-                <div class="hidden md:flex flex-1 justify-center relative w-full">
-                  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500 rounded-full blur-[80px] opacity-40"></div>
-                  <img src="assets/img/X6_MODEM.png" alt="Módem Huawei OptiXstar X6" class="w-full max-w-[380px] object-contain relative z-20 drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-500" />
+                <div class="hidden md:flex flex-1 justify-center relative w-full h-[300px] md:h-auto md:min-h-[480px]">
+                  <div class="promo-slideshow absolute inset-0 rounded-xl overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.5)] border border-gray-700/50">
+                    <img src="assets/img/imagen1000.jpeg" alt="1000 Megas" />
+                    <img src="assets/img/imagen1000_2.jpeg" alt="1000 Megas" />
+                    <img src="assets/img/imagen1000_3.jpeg" alt="1000 Megas" />
+                  </div>
                 </div>
               </div>
             </div>

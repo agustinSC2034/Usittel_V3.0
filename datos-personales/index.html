@@ -58,6 +58,12 @@
     }
   </style>
 </head>
+<script>
+  // En móvil, el embed de PDF no funciona — redirigir directo al PDF
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    window.location.replace("Politica_de_privacidad_y_protección_de_datos_personales.pdf");
+  }
+</script>
 <body>
   <div class="topbar">
     <a href="../">

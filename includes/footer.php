@@ -78,6 +78,9 @@
                 class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
             </li>
             <li>
+              <a href="<?= $base ?>pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
               <a href="<?= $base ?>pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
             </li>
           </ul>

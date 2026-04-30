@@ -2,6 +2,9 @@
 # USITTEL — Configuración Apache
 # ============================================================
 
+# ── Redirección Autogestión → Phantom ─────────────────────
+Redirect 302 /autogestion https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php
+
 # ── 1. Desactivar listado de directorios ──────────────────
 Options -Indexes
 

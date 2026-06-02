@@ -29,13 +29,15 @@
 
   function wireWhatsappCtas() {
     const url = buildWhatsappUrl();
-    document.querySelectorAll("[data-whatsapp-cta]").forEach((link) => {
+    document.querySelectorAll("[data-whatsapp-cta], a[href^='https://wa.me/5492494060345']").forEach((link) => {
+      if (link.dataset.whatsappWired === "true") return;
       link.setAttribute("href", url);
       link.setAttribute("target", "_blank");
       link.setAttribute("rel", "noopener");
       link.addEventListener("click", () => {
-        trackWhatsappClick(link.getAttribute("data-whatsapp-source"));
+        trackWhatsappClick(link.getAttribute("data-whatsapp-source") || "dynamic-whatsapp-link");
       });
+      link.dataset.whatsappWired = "true";
     });
   }
 
@@ -49,5 +51,10 @@
     document.addEventListener("DOMContentLoaded", wireWhatsappCtas);
   } else {
     wireWhatsappCtas();
+  }
+
+  if (typeof MutationObserver !== "undefined") {
+    const observer = new MutationObserver(wireWhatsappCtas);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
   }
 })();

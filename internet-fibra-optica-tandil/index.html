@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Internet por fibra óptica en Tandil | USITTEL</title>
   <meta name="description"
-    content="Contratá internet por fibra óptica en Tandil con USITTEL. Planes simétricos, WiFi Mesh, soporte local y consulta de cobertura por WhatsApp." />
+    content="Contratá internet por fibra óptica en Tandil con USITTEL. Planes simétricos, hasta 1000 megas, consulta de cobertura online y atención local." />
   <meta property="og:title" content="Internet por fibra óptica en Tandil | USITTEL" />
   <meta property="og:description"
     content="Consultá cobertura y contratá internet por fibra óptica en Tandil con atención local de USITTEL." />
@@ -23,9 +23,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="preload" as="image" href="../assets/img/internet/familia_internet_2.webp" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="preload" as="image" href="../assets/img/hero/web/hero_final_10.webp" />
   <link rel="stylesheet" href="../assets/css/google-ads-landing.css" />
 </head>
 
@@ -41,12 +44,8 @@
       <span class="landing-header__support">Atención local en Tandil</span>
       <a class="landing-btn landing-btn--primary"
         href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-        data-whatsapp-cta data-whatsapp-source="header"
-        aria-label="Consultar cobertura por WhatsApp">
-        <svg class="landing-wa-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="currentColor"
-            d="M12.04 2a9.9 9.9 0 0 0-8.52 14.95L2.34 22l5.18-1.36A9.93 9.93 0 1 0 12.04 2Zm0 1.78a8.15 8.15 0 0 1 6.96 12.4 8.14 8.14 0 0 1-10.93 2.92l-.37-.2-3.07.81.82-2.99-.24-.39A8.13 8.13 0 0 1 12.04 3.78Zm-3.5 4.42c-.18 0-.47.07-.72.35-.25.27-.94.92-.94 2.23 0 1.32.96 2.59 1.09 2.77.14.18 1.87 2.99 4.63 4.06 2.3.9 2.77.72 3.27.68.5-.05 1.62-.66 1.85-1.3.23-.64.23-1.2.16-1.31-.07-.12-.25-.18-.52-.32-.28-.13-1.62-.8-1.87-.89-.25-.09-.43-.13-.61.14-.18.27-.7.89-.86 1.07-.16.18-.32.2-.6.07-.27-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.9-.16-.28-.02-.43.12-.57.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.62-1.54-.87-2.1-.23-.54-.46-.47-.62-.48h-.44Z" />
-        </svg>
+        data-whatsapp-cta data-whatsapp-source="header" aria-label="Consultar por WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
         WhatsApp
       </a>
     </div>
@@ -55,229 +54,231 @@
   <main>
     <section class="landing-hero" aria-labelledby="landing-title">
       <div class="landing-container landing-hero__inner">
-        <div class="landing-hero__content">
+        <div class="landing-hero__copy">
+          <p class="hero-location">Tandil conectado por fibra óptica</p>
           <h1 id="landing-title">Internet por fibra óptica en Tandil</h1>
           <p class="landing-hero__lead">
-            Navegá, trabajá, jugá y mirá contenido con una conexión de fibra óptica estable, simétrica y con soporte
-            local de USITTEL.
+            Planes simétricos para trabajar, jugar y mirar contenido sin interrupciones. Consultá cobertura online o
+            hablá directo por WhatsApp con atención local de USITTEL.
           </p>
           <div class="landing-hero__actions">
-            <a class="landing-btn landing-btn--primary"
+            <a class="landing-btn landing-btn--primary landing-btn--large"
               href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
               data-whatsapp-cta data-whatsapp-source="hero">
-              <svg class="landing-wa-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor"
-                  d="M12.04 2a9.9 9.9 0 0 0-8.52 14.95L2.34 22l5.18-1.36A9.93 9.93 0 1 0 12.04 2Zm0 1.78a8.15 8.15 0 0 1 6.96 12.4 8.14 8.14 0 0 1-10.93 2.92l-.37-.2-3.07.81.82-2.99-.24-.39A8.13 8.13 0 0 1 12.04 3.78Z" />
-              </svg>
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
               Consultar cobertura
             </a>
-            <a class="landing-btn landing-btn--secondary" href="#planes">Ver planes destacados</a>
-          </div>
-          <div class="landing-hero__proof" aria-label="Beneficios destacados">
-            <div class="proof-item">
-              <strong>Fibra simétrica</strong>
-              <span>Buena velocidad de subida y bajada.</span>
-            </div>
-            <div class="proof-item">
-              <strong>Instalación bonificada</strong>
-              <span>Según condiciones comerciales vigentes.</span>
-            </div>
-            <div class="proof-item">
-              <strong>Soporte local</strong>
-              <span>Atención cercana en Tandil.</span>
-            </div>
+            <a class="landing-btn landing-btn--secondary landing-btn--large" href="#coverage">Validar mi dirección</a>
           </div>
         </div>
-        <aside class="landing-hero__panel" aria-label="Servicios incluidos">
-          <picture>
-            <source srcset="../assets/img/mesh/mesh0.webp" type="image/webp" />
-            <img src="../assets/img/mesh/mesh0.png" alt="Equipo WiFi Mesh para mejorar la cobertura del hogar"
-              width="520" height="360" />
-          </picture>
-          <p>Sumá WiFi Mesh para mejorar la experiencia de internet por fibra óptica en distintos ambientes del hogar.
+
+        <div class="speed-stage" aria-label="Velocidades disponibles">
+          <div class="speed-stage__halo"></div>
+          <div class="speed-stage__content">
+            <span>Hasta</span>
+            <strong>1000</strong>
+            <span>megas simétricos</span>
+          </div>
+          <div class="speed-rail" aria-hidden="true">
+            <span>100</span>
+            <span>300</span>
+            <span>500</span>
+            <span>1000</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-strip" aria-label="Diferenciales USITTEL">
+        <div class="landing-container hero-strip__inner">
+          <span>Fibra óptica</span>
+          <span>Velocidad simétrica</span>
+          <span>Wi-Fi 6 disponible</span>
+          <span>Soporte local</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--white" aria-labelledby="beneficios-title">
+      <div class="landing-container editorial-grid">
+        <div>
+          <h2 class="section-title" id="beneficios-title">La conexión que necesitás para tu casa en Tandil</h2>
+        </div>
+        <div class="benefit-lines">
+          <article>
+            <span>01</span>
+            <h3>Subida y bajada parejas</h3>
+            <p>La fibra simétrica ayuda cuando hay videollamadas, archivos, juegos y streaming al mismo tiempo.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Planes para distintos usos</h3>
+            <p>Desde navegación cotidiana hasta hogares con muchos dispositivos y consumo intensivo.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Atención cerca tuyo</h3>
+            <p>USITTEL atiende en Tandil, valida cobertura y acompaña la contratación por canales oficiales.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plans-section" id="planes" aria-labelledby="planes-title">
+      <div class="landing-container">
+        <div class="section-header section-header--left">
+          <h2 class="section-title" id="planes-title">Planes de internet por fibra óptica</h2>
+          <p class="section-lead">Mismas referencias comerciales de la web principal, presentadas para comparar rápido.</p>
+        </div>
+
+        <div class="plans-table" role="table" aria-label="Planes destacados de internet por fibra óptica">
+          <div class="plans-row plans-row--head" role="row">
+            <span role="columnheader">Plan</span>
+            <span role="columnheader">Uso recomendado</span>
+            <span role="columnheader">Promoción</span>
+            <span role="columnheader">Acción</span>
+          </div>
+          <article class="plans-row" role="row">
+            <div role="cell">
+              <strong>Fibra 100</strong>
+              <small>100 Mbps simétricos</small>
+            </div>
+            <p role="cell">Home office, navegación diaria y streaming.</p>
+            <p role="cell">$17.999 por 3 meses. Precio final: $31.500.</p>
+            <a class="landing-btn landing-btn--primary"
+              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+              data-whatsapp-cta data-whatsapp-source="plan-fibra-100" role="cell">Consultar</a>
+          </article>
+          <article class="plans-row plans-row--selected" role="row">
+            <div role="cell">
+              <strong>Fibra 300</strong>
+              <small>300 Mbps simétricos</small>
+            </div>
+            <p role="cell">Familias, gaming y varios dispositivos conectados.</p>
+            <p role="cell">$19.999 por 3 meses. Precio final: $34.999.</p>
+            <a class="landing-btn landing-btn--primary"
+              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+              data-whatsapp-cta data-whatsapp-source="plan-fibra-300" role="cell">Más elegido</a>
+          </article>
+          <article class="plans-row" role="row">
+            <div role="cell">
+              <strong>Fibra 500</strong>
+              <small>500 Mbps simétricos</small>
+            </div>
+            <p role="cell">Alto consumo, streaming en calidad alta y multitarea.</p>
+            <p role="cell">$22.499 por 6 meses. Precio final: $39.999.</p>
+            <a class="landing-btn landing-btn--primary"
+              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+              data-whatsapp-cta data-whatsapp-source="plan-fibra-500" role="cell">Consultar</a>
+          </article>
+          <article class="plans-row plans-row--giga" role="row">
+            <div role="cell">
+              <strong>1000 MEGAS</strong>
+              <small>Wi-Fi 6 disponible</small>
+            </div>
+            <p role="cell">Máxima experiencia para gaming, creación, streaming 4K/8K y muchos equipos.</p>
+            <p role="cell">$49.999 final. Precio fijo por 9 meses.</p>
+            <a class="landing-btn landing-btn--primary"
+              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+              data-whatsapp-cta data-whatsapp-source="plan-1000-megas" role="cell">Solicitar 1000</a>
+          </article>
+        </div>
+        <p class="plan-note">La disponibilidad, precios y promociones se confirman por los canales oficiales de atención.</p>
+      </div>
+    </section>
+
+    <section class="section coverage-section" id="coverage" aria-labelledby="cobertura-title">
+      <div class="landing-container">
+        <div class="section-header">
+          <h2 class="section-title" id="cobertura-title">Validá cobertura en tu domicilio</h2>
+          <p class="section-lead">
+            Reutilizamos el validador de cobertura de la web principal para que puedas consultar si la red de fibra
+            óptica de USITTEL llega a tu dirección.
           </p>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="beneficios-title">
-      <div class="landing-container">
-        <div class="section-header">
-          <h2 class="section-title" id="beneficios-title">Beneficios principales</h2>
-          <p class="section-lead">Una página directa para contratar internet de fibra óptica en Tandil sin vueltas.</p>
         </div>
-        <div class="benefit-grid">
-          <article class="benefit-card">
-            <span class="benefit-icon">01</span>
-            <h3>Velocidad simétrica</h3>
-            <p>Ideal para videollamadas, gaming, streaming, clases online y trabajo remoto.</p>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-icon">02</span>
-            <h3>Red de fibra óptica</h3>
-            <p>Conexión estable para hogares que necesitan varios dispositivos conectados al mismo tiempo.</p>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-icon">03</span>
-            <h3>Atención en Tandil</h3>
-            <p>Un equipo local para acompañarte antes, durante y después de la instalación.</p>
-          </article>
+        <div class="coverage-shell">
+          <div class="coverage-map-container">
+            <div id="coverage-map"></div>
+          </div>
+          <div class="coverage-validator">
+            <h3>¿Llegamos a tu casa?</h3>
+            <p>Ingresá calle y número. No hace falta escribir Tandil, Buenos Aires.</p>
+            <div class="coverage-form">
+              <input type="text" id="address-input" placeholder="Ej: San Martín 550" autocomplete="street-address" />
+              <button id="coverage-button" type="button">Consultar cobertura</button>
+            </div>
+            <div id="coverage-result"></div>
+            <a class="coverage-whatsapp"
+              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+              data-whatsapp-cta data-whatsapp-source="coverage-fallback">
+              Prefiero consultar por WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--soft" id="planes" aria-labelledby="planes-title">
-      <div class="landing-container">
-        <div class="section-header">
-          <h2 class="section-title" id="planes-title">Planes destacados de internet</h2>
-          <p class="section-lead">Opciones pensadas para casas, familias y usuarios que necesitan una conexión confiable.</p>
-        </div>
-        <div class="plans-wrap">
-          <article class="plan-card">
-            <h3>Fibra 100</h3>
-            <p class="plan-speed">100 Mbps simétricos</p>
-            <p class="plan-price">Consultar <span>por WhatsApp</span></p>
-            <ul>
-              <li>Buen rendimiento para uso diario y home office.</li>
-              <li>Instalación bonificada según promoción vigente.</li>
-              <li>Soporte técnico local.</li>
-            </ul>
-            <a class="landing-btn landing-btn--primary"
-              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-              data-whatsapp-cta data-whatsapp-source="plan-fibra-100">
-              Consultar este plan
-            </a>
-          </article>
-          <article class="plan-card plan-card--featured">
-            <h3>Fibra 300</h3>
-            <p class="plan-speed">300 Mbps simétricos</p>
-            <p class="plan-price">Más elegido <span>para familias</span></p>
-            <ul>
-              <li>Streaming, gaming y trabajo remoto en simultáneo.</li>
-              <li>Compatible con WiFi Mesh para ampliar cobertura.</li>
-              <li>Atención por WhatsApp para contratar más rápido.</li>
-            </ul>
-            <a class="landing-btn landing-btn--primary"
-              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-              data-whatsapp-cta data-whatsapp-source="plan-fibra-300">
-              Quiero consultar cobertura
-            </a>
-          </article>
-          <article class="plan-card">
-            <h3>Fibra 500</h3>
-            <p class="plan-speed">500 Mbps simétricos</p>
-            <p class="plan-price">Alto uso <span>y muchos equipos</span></p>
-            <ul>
-              <li>Más margen para hogares con múltiples dispositivos.</li>
-              <li>Buena experiencia para contenido en alta calidad.</li>
-              <li>Consulta de cobertura rápida por WhatsApp.</li>
-            </ul>
-            <a class="landing-btn landing-btn--primary"
-              href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-              data-whatsapp-cta data-whatsapp-source="plan-fibra-500">
-              Consultar este plan
-            </a>
-          </article>
-        </div>
-        <p class="plan-note">Los precios y promociones pueden cambiar. La consulta comercial se confirma por WhatsApp con los canales oficiales de atención.</p>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="contratar-title">
-      <div class="landing-container">
-        <div class="section-header">
+    <section class="section process-section" aria-labelledby="contratar-title">
+      <div class="landing-container process-layout">
+        <div>
           <h2 class="section-title" id="contratar-title">Cómo contratar</h2>
-          <p class="section-lead">El recorrido está pensado para cerrar la consulta desde el celular.</p>
+          <p class="section-lead">Un recorrido simple para pasar de la consulta a la instalación.</p>
         </div>
-        <div class="steps-grid">
-          <article class="step-card">
-            <span class="step-number">1</span>
-            <h3>Escribinos por WhatsApp</h3>
-            <p>El mensaje ya viene preparado para consultar cobertura de fibra óptica en tu domicilio.</p>
+        <ol class="process-list">
+          <li>
+            <strong>Consultá cobertura</strong>
+            <span>Validá tu dirección o escribinos por WhatsApp.</span>
+          </li>
+          <li>
+            <strong>Elegí velocidad</strong>
+            <span>Te orientamos entre 100, 300, 500 o 1000 megas según tu uso.</span>
+          </li>
+          <li>
+            <strong>Coordiná instalación</strong>
+            <span>Si hay disponibilidad, avanzamos con los datos de contratación.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section add-ons-section" aria-labelledby="addons-title">
+      <div class="landing-container add-ons-layout">
+        <div>
+          <h2 class="section-title" id="addons-title">También podés sumar servicios para tu hogar</h2>
+        </div>
+        <div class="add-ons-list">
+          <article>
+            <h3>WiFi Mesh</h3>
+            <p>Para mejorar la cobertura dentro de casa cuando hay varios ambientes o zonas alejadas del módem.</p>
           </article>
-          <article class="step-card">
-            <span class="step-number">2</span>
-            <h3>Validamos cobertura</h3>
-            <p>Te pedimos la dirección para confirmar si la red de USITTEL llega a tu zona.</p>
-          </article>
-          <article class="step-card">
-            <span class="step-number">3</span>
-            <h3>Coordinamos la instalación</h3>
-            <p>Si hay cobertura, avanzamos con el plan elegido y los datos necesarios para contratar.</p>
+          <article>
+            <h3>USITTEL TV</h3>
+            <p>Consultá opciones de TV digital junto con tu servicio de internet por fibra óptica.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section--soft" aria-labelledby="cobertura-title">
-      <div class="landing-container coverage-layout">
-        <div class="coverage-card">
-          <h2 class="section-title" id="cobertura-title">Cobertura en Tandil</h2>
-          <p class="section-lead">USITTEL despliega internet por fibra óptica en Tandil. La disponibilidad depende de tu dirección exacta.</p>
-          <ul class="coverage-list">
-            <li>Consultá por WhatsApp y recibí una respuesta orientada a tu domicilio.</li>
-            <li>Te indicamos qué plan conviene según el uso y la cantidad de dispositivos.</li>
-            <li>También podés preguntar por WiFi Mesh y USITTEL TV.</li>
-          </ul>
-          <a class="landing-btn landing-btn--primary"
-            href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-            data-whatsapp-cta data-whatsapp-source="coverage">
-            Consultar cobertura ahora
-          </a>
-        </div>
-        <div class="coverage-visual" role="img" aria-label="Imagen de cobertura e internet en Tandil"></div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="confianza-title">
-      <div class="landing-container">
-        <div class="section-header">
-          <h2 class="section-title" id="confianza-title">Confianza y atención local</h2>
-          <p class="section-lead">Internet para Tandil, con presencia local y canales claros de atención.</p>
-        </div>
-        <div class="trust-grid">
-          <article class="trust-card">
-            <strong>Local</strong>
-            <h3>Equipo en Tandil</h3>
-            <p>La consulta no queda perdida en un call center genérico: hablás con USITTEL.</p>
-          </article>
-          <article class="trust-card">
-            <strong>Fibra</strong>
-            <h3>Conexión preparada</h3>
-            <p>Planes pensados para el consumo actual de hogares conectados.</p>
-          </article>
-          <article class="trust-card">
-            <strong>Mesh</strong>
-            <h3>Mejor WiFi en casa</h3>
-            <p>Podés complementar la fibra con WiFi Mesh para mejorar cobertura interna.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--soft" aria-labelledby="faq-title">
+    <section class="section faq-section" aria-labelledby="faq-title">
       <div class="landing-container">
         <div class="section-header">
           <h2 class="section-title" id="faq-title">Preguntas frecuentes</h2>
-          <p class="section-lead">Respuestas rápidas antes de consultar cobertura.</p>
         </div>
-        <div class="faq-grid">
-          <article class="faq-item">
-            <h3>¿Cómo sé si tengo cobertura?</h3>
-            <p>Escribinos por WhatsApp con tu dirección en Tandil y verificamos disponibilidad de fibra óptica.</p>
-          </article>
-          <article class="faq-item">
-            <h3>¿La velocidad es simétrica?</h3>
-            <p>Los planes de fibra comunicados por USITTEL destacan velocidad simétrica para subida y bajada.</p>
-          </article>
-          <article class="faq-item">
-            <h3>¿Puedo sumar WiFi Mesh?</h3>
-            <p>Sí. Si necesitás mejorar la cobertura interna del hogar, consultá por el servicio USITTEL Mesh.</p>
-          </article>
-          <article class="faq-item">
-            <h3>¿También ofrecen TV?</h3>
-            <p>USITTEL TV se puede consultar junto con el servicio de internet, según disponibilidad y oferta vigente.</p>
-          </article>
+        <div class="faq-list">
+          <details>
+            <summary>¿Qué significa velocidad simétrica?</summary>
+            <p>Significa que la conexión ofrece una experiencia equilibrada para subir y bajar datos, algo útil para videollamadas, trabajo remoto y archivos pesados.</p>
+          </details>
+          <details>
+            <summary>¿Cómo sé si tengo cobertura?</summary>
+            <p>Podés usar el validador de esta página o escribir por WhatsApp con tu dirección exacta en Tandil.</p>
+          </details>
+          <details>
+            <summary>¿El plan de 1000 megas está disponible para todos?</summary>
+            <p>La disponibilidad depende de la cobertura y condiciones técnicas de tu domicilio. Confirmalo por los canales oficiales.</p>
+          </details>
+          <details>
+            <summary>¿Puedo contratar internet y después sumar Mesh o TV?</summary>
+            <p>Sí, podés consultar servicios complementarios con el equipo de atención de USITTEL.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -286,16 +287,14 @@
       <div class="landing-container landing-final__inner">
         <div>
           <h2 id="cta-final-title">Consultá hoy tu internet por fibra óptica en Tandil</h2>
-          <p>Un asesor de USITTEL puede revisar cobertura y ayudarte a elegir el plan para tu casa.</p>
+          <p>Validá cobertura y elegí el plan que mejor acompaña tu uso diario.</p>
         </div>
-        <div class="landing-final__actions">
-          <a class="landing-btn landing-btn--primary"
-            href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-            data-whatsapp-cta data-whatsapp-source="final-cta">
-            Hablar por WhatsApp
-          </a>
-          <a class="landing-btn landing-btn--secondary" href="../pages/internet/">Ver página de internet</a>
-        </div>
+        <a class="landing-btn landing-btn--primary landing-btn--large"
+          href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
+          data-whatsapp-cta data-whatsapp-source="final-cta">
+          <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          Hablar por WhatsApp
+        </a>
       </div>
     </section>
   </main>
@@ -309,11 +308,14 @@
 
   <a class="landing-btn landing-btn--primary sticky-whatsapp"
     href="https://wa.me/5492494060345?text=Hola%20USITTEL%2C%20quiero%20consultar%20cobertura%20para%20internet%20por%20fibra%20%C3%B3ptica%20en%20Tandil."
-    data-whatsapp-cta data-whatsapp-source="sticky-mobile"
-    aria-label="Consultar cobertura por WhatsApp">
-    Consultar cobertura por WhatsApp
+    data-whatsapp-cta data-whatsapp-source="sticky-mobile" aria-label="Consultar cobertura por WhatsApp">
+    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    Consultar cobertura
   </a>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="../js/coverage-validator.js" defer></script>
   <script src="../assets/js/whatsapp-ads-tracking.js" defer></script>
 </body>
 

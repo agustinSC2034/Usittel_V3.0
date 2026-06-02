@@ -33,12 +33,13 @@ Ruta publica:
 
 Funcion:
 
-- Landing responsive y mobile-first para campanas de Google Ads.
+- Pagina responsive y mobile-first para campanas pagas.
 - Enfocada en conversion por WhatsApp para consultar cobertura o contratar internet por fibra optica en Tandil.
 - No usa la navegacion pesada de la home. Tiene header minimo con logo, texto de atencion local y CTA a WhatsApp.
 - Mantiene secciones solicitadas: hero, beneficios, planes destacados, como contratar, cobertura en Tandil, confianza/atencion local, preguntas frecuentes y CTA final.
 - Usa un unico `h1`: "Internet por fibra optica en Tandil".
 - Incluye SEO basico con `title`, `meta description`, Open Graph y Twitter Card.
+- Incluye canonical publico: `https://usittel.com.ar/internet-fibra-optica-tandil/`.
 
 ## Archivos nuevos de soporte
 
@@ -75,6 +76,8 @@ Todos los CTAs de WhatsApp de `internet-fibra-optica-tandil/index.html` usan el 
 
 - `data-whatsapp-cta`
 
+Todos los CTAs tambien tienen un `href` real de WhatsApp como fallback HTML. Si JavaScript falla, los botones siguen abriendo WhatsApp con el texto precargado.
+
 Cada boton indica su origen con:
 
 - `data-whatsapp-source`
@@ -95,7 +98,13 @@ Actualmente empuja un evento a `window.dataLayer`:
 
 - `whatsapp_google_ads_click`
 
-Cuando se instale Google Tag Manager o Google Ads conversion tracking, conectar el disparador en esa funcion o desde GTM escuchando el evento `whatsapp_google_ads_click`.
+Esto no mide conversiones reales por si solo. Para medir conversiones reales hay que instalar Google Tag Manager o `gtag` en el sitio y conectar el disparador en esa funcion o desde GTM escuchando el evento `whatsapp_google_ads_click`.
+
+## Texto publico
+
+- No mostrar al usuario final textos internos como "Google Ads", "landing" o "Landing para campanas".
+- El texto publico debe hablar de consulta de cobertura, contratacion, canales oficiales y atencion local.
+- Si se necesita atribucion de campana, resolverla por parametros, GTM, analytics o texto no invasivo como "publicidad", evitando lenguaje interno visible.
 
 ## Advertencias para futuras IAs
 

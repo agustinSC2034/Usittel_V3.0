@@ -2,7 +2,7 @@
   const whatsappConfig = {
     phone: "5492494060345",
     text:
-      "Hola USITTEL, vengo de Google Ads y quiero consultar cobertura para internet por fibra óptica en Tandil.",
+      "Hola USITTEL, quiero consultar cobertura para internet por fibra óptica en Tandil.",
   };
 
   function buildWhatsappUrl() {
@@ -19,8 +19,10 @@
       whatsapp_phone: whatsappConfig.phone,
     });
 
-    // Google Ads / GTM:
-    // Conectar aca el disparador de conversion si se implementa gtag directo.
+    // Tracking real:
+    // Hoy este archivo solo empuja un evento a dataLayer.
+    // Para medir conversiones reales hay que instalar GTM o gtag en el sitio
+    // y conectar el evento whatsapp_google_ads_click con Google Ads.
     // Ejemplo futuro:
     // gtag("event", "conversion", { send_to: "AW-CONVERSION_ID/LABEL" });
   }

@@ -4,6 +4,11 @@
 
 # ── Redirección Autogestión → Phantom ─────────────────────
 Redirect 302 /autogestion https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php
+# Servir HTML y assets de texto como UTF-8 para respetar los acentos del sitio.
+AddDefaultCharset UTF-8
+AddType "text/html; charset=UTF-8" .html .htm
+AddType "text/css; charset=UTF-8" .css
+AddType "application/javascript; charset=UTF-8" .js
 
 # ── 1. Desactivar listado de directorios ──────────────────
 Options -Indexes

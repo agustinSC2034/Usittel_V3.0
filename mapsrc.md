@@ -17,7 +17,7 @@ Este repositorio contiene una web institucional estatica/PHP de USITTEL. La home
 - `assets/css/main.css`: estilos globales existentes del sitio.
 - `assets/css/tailwind.output.css`: CSS generado de Tailwind usado por paginas existentes.
 - `assets/js/main.js`: interacciones generales de la home, menu mobile y planes.
-- `js/coverage-validator.js`: logica existente del mapa y validador de cobertura reutilizada por la landing.
+- `js/coverage-validator.js`: logica existente del mapa y validador de cobertura usada por paginas con consulta embebida.
 - `assets/img/`: imagenes, logos y recursos visuales del sitio.
 - `assets/icons/usittel-logo.png`: icono/logo usado como favicon y marca.
 
@@ -36,17 +36,17 @@ Funcion:
 - Pagina responsive y mobile-first para campanas pagas.
 - Enfocada en conversion por WhatsApp para consultar cobertura o contratar internet por fibra optica en Tandil.
 - No usa la navegacion pesada de la home. Tiene header minimo con logo, texto de atencion local y CTA a WhatsApp.
-- Mantiene secciones solicitadas con un diseno mas editorial y menos anidado: hero, beneficios, planes destacados, validador de cobertura, como contratar, servicios complementarios, preguntas frecuentes y CTA final.
+- Recrea el diseno promocional de referencia: header blanco, franja de 1000 megas, hero fotografico, beneficios en tarjetas, planes en cards, bloque destacado de 1000 megas, pasos de contratacion, consulta de cobertura por WhatsApp, bloque USITTEL TV, preguntas frecuentes, CTA final y footer oscuro.
 - Usa un unico `h1`: "Internet por fibra optica en Tandil".
 - Incluye SEO basico con `title`, `meta description`, Open Graph y Twitter Card.
 - Incluye canonical publico: `https://usittel.com.ar/internet-fibra-optica-tandil/`.
 - El primer impacto debe priorizar Tandil, fibra optica, velocidad simetrica y hasta 1000 megas. WiFi Mesh y USITTEL TV quedan como servicios complementarios secundarios.
-- Reutiliza el mapa/validador de cobertura existente mediante `../js/coverage-validator.js`, Leaflet y los IDs `coverage-map`, `address-input`, `coverage-button` y `coverage-result`.
-- Carga Leaflet desde CDN igual que las paginas existentes que usan mapa. Carga Font Awesome para que los iconos generados por el validador se vean correctamente.
+- La consulta de cobertura de esta landing se resuelve por WhatsApp para mantener la composicion de la pieza promocional. No carga Leaflet ni `js/coverage-validator.js` en esta pagina.
+- Carga Font Awesome para iconos de beneficios, pasos, preguntas frecuentes, contacto y botones.
 
 ## Archivos nuevos de soporte
 
-- `assets/css/google-ads-landing.css`: estilos especificos de la landing. Reutiliza paleta azul/verde, tipografias Poppins/Inter y assets existentes. Incluye estilos compatibles para los mensajes generados por `js/coverage-validator.js`.
+- `assets/css/google-ads-landing.css`: estilos especificos de la landing. Reutiliza paleta azul/verde, tipografias Poppins/Inter y assets existentes para recrear la pieza promocional.
 - `assets/js/whatsapp-ads-tracking.js`: utilitario central para configurar el link de WhatsApp, aplicar el texto precargado a todos los botones con `data-whatsapp-cta`, normalizar enlaces dinamicos de WhatsApp generados por el validador y registrar clicks de conversion.
 
 ## Componentes usados en la landing
@@ -54,15 +54,18 @@ Funcion:
 La landing esta hecha con HTML semantico y CSS propio:
 
 - `header.landing-header`: header minimo.
+- `.promo-bar`: franja superior con el aviso de 1000 megas.
 - `section.landing-hero`: hero principal.
-- `.speed-stage`: modulo visual de velocidad del hero.
-- `.benefit-lines`: beneficios en lineas editoriales, evitando tarjetas anidadas.
-- `.plans-table` y `.plans-row`: comparativa de planes 100, 300, 500 y 1000 megas.
-- `.coverage-shell`, `.coverage-map-container` y `.coverage-validator`: bloque de cobertura reutilizando el validador existente.
-- `.process-list`: pasos de contratacion.
-- `.add-ons-list`: servicios complementarios Mesh y TV.
-- `.faq-list`: preguntas frecuentes con `details/summary`.
+- `.hero-proof`: diferenciales del hero.
+- `.feature-grid` y `.feature-card`: beneficios principales en tarjetas.
+- `.plans-grid` y `.plan-card`: cards de planes 100, 300 y 500 megas.
+- `.mega-card`: promocion visual de 1000 megas.
+- `.process-steps`: pasos de contratacion.
+- `.coverage-card`: tarjeta de consulta de cobertura por WhatsApp.
+- `.tv-card`: bloque de USITTEL TV con producto ZTE.
+- `.faq-grid`: preguntas frecuentes con `details/summary`.
 - `.landing-final`: CTA final.
+- `.landing-footer`: footer oscuro con marca, contacto, servicios e informacion.
 - `.sticky-whatsapp`: boton sticky mobile.
 
 ## WhatsApp

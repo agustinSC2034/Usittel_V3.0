@@ -36,7 +36,7 @@ Funcion:
 - Pagina responsive y mobile-first para campanas pagas.
 - Enfocada en conversion por WhatsApp para consultar cobertura o contratar internet por fibra optica en Tandil.
 - No usa la navegacion pesada de la home. Tiene header minimo con logo, texto de atencion local y CTA a WhatsApp.
-- Recrea el diseno promocional de referencia con un tratamiento mas minimalista: header blanco, franja de 1000 megas, hero fotografico limpio, beneficios en tarjetas, planes en cards, bloque destacado de 1000 megas, pasos de contratacion, consulta de cobertura por WhatsApp, bloque USITTEL TV, preguntas frecuentes en formato lista, CTA final y footer oscuro simplificado.
+- Recrea el diseno promocional de referencia con un tratamiento mas minimalista: header blanco, hero fotografico limpio, beneficios en tarjetas, planes en cards, bloque destacado de 1000 megas, pasos de contratacion, consulta de cobertura por WhatsApp, bloque USITTEL TV, preguntas frecuentes en formato lista, CTA final y footer oscuro simplificado.
 - Usa un unico `h1`: "Internet por fibra optica en Tandil".
 - Incluye SEO basico con `title`, `meta description`, Open Graph y Twitter Card.
 - Incluye canonical publico: `https://usittel.com.ar/internet-fibra-optica-tandil/`.
@@ -54,7 +54,6 @@ Funcion:
 La landing esta hecha con HTML semantico y CSS propio:
 
 - `header.landing-header`: header minimo.
-- `.promo-bar`: franja superior con el aviso de 1000 megas.
 - `section.landing-hero`: hero principal.
 - `.feature-grid` y `.feature-card`: beneficios principales en tarjetas.
 - `.plans-grid` y `.plan-card`: cards de planes 100, 300 y 500 megas.

@@ -1,8 +1,7 @@
 (function () {
   const whatsappConfig = {
     phone: "5492494060345",
-    text:
-      "Hola USITTEL, quiero consultar cobertura para internet por fibra óptica en Tandil.",
+    text: "Hola!",
   };
 
   function buildWhatsappUrl() {

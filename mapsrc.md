@@ -36,7 +36,7 @@ Funcion:
 - Pagina responsive y mobile-first para campanas pagas.
 - Enfocada en conversion por WhatsApp para consultar cobertura o contratar internet por fibra optica en Tandil.
 - No usa la navegacion pesada de la home. Tiene header minimo con logo, texto de atencion local y CTA a WhatsApp.
-- Recrea el diseno promocional de referencia: header blanco, franja de 1000 megas, hero fotografico, beneficios en tarjetas, planes en cards, bloque destacado de 1000 megas, pasos de contratacion, consulta de cobertura por WhatsApp, bloque USITTEL TV, preguntas frecuentes, CTA final y footer oscuro.
+- Recrea el diseno promocional de referencia con un tratamiento mas minimalista: header blanco, franja de 1000 megas, hero fotografico limpio, beneficios en tarjetas, planes en cards, bloque destacado de 1000 megas, pasos de contratacion, consulta de cobertura por WhatsApp, bloque USITTEL TV, preguntas frecuentes en formato lista, CTA final y footer oscuro simplificado.
 - Usa un unico `h1`: "Internet por fibra optica en Tandil".
 - Incluye SEO basico con `title`, `meta description`, Open Graph y Twitter Card.
 - Incluye canonical publico: `https://usittel.com.ar/internet-fibra-optica-tandil/`.
@@ -56,16 +56,15 @@ La landing esta hecha con HTML semantico y CSS propio:
 - `header.landing-header`: header minimo.
 - `.promo-bar`: franja superior con el aviso de 1000 megas.
 - `section.landing-hero`: hero principal.
-- `.hero-proof`: diferenciales del hero.
 - `.feature-grid` y `.feature-card`: beneficios principales en tarjetas.
 - `.plans-grid` y `.plan-card`: cards de planes 100, 300 y 500 megas.
 - `.mega-card`: promocion visual de 1000 megas.
 - `.process-steps`: pasos de contratacion.
 - `.coverage-card`: tarjeta de consulta de cobertura por WhatsApp.
 - `.tv-card`: bloque de USITTEL TV con producto ZTE.
-- `.faq-grid`: preguntas frecuentes con `details/summary`.
+- `.faq-layout`, `.faq-copy` y `.faq-list`: bloque de preguntas frecuentes en dos columnas con `details/summary`.
 - `.landing-final`: CTA final.
-- `.landing-footer`: footer oscuro con marca, contacto, servicios e informacion.
+- `.landing-footer`: footer oscuro con marca, texto institucional, redes, contacto y legales.
 - `.sticky-whatsapp`: boton sticky mobile.
 
 ## WhatsApp
@@ -89,7 +88,7 @@ Cada boton indica su origen con:
 
 - `data-whatsapp-source`
 
-No duplicar el link completo de WhatsApp en el HTML. Si cambia el numero o el texto precargado, modificar solo `assets/js/whatsapp-ads-tracking.js`.
+El texto precargado actual para WhatsApp es `Hola!`. Si cambia el numero o el texto precargado, modificar `assets/js/whatsapp-ads-tracking.js` y mantener los `href` fallback del HTML alineados.
 
 El HTML mantiene `href` real como fallback por resiliencia, pero la fuente operativa del numero/texto sigue siendo `assets/js/whatsapp-ads-tracking.js`. Ese JS tambien observa enlaces de WhatsApp agregados dinamicamente por el validador de cobertura.
 

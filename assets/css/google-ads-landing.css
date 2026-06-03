@@ -1065,16 +1065,28 @@ body.landing-body a {
   }
 
   .landing-btn--header {
-    width: 42px;
+    width: auto;
+    min-width: 112px;
     height: 42px;
     min-height: 42px;
-    padding: 0;
-    overflow: hidden;
-    color: transparent;
+    flex: 0 0 auto;
+    gap: 7px;
+    padding: 0 13px;
+    overflow: visible;
+    font-size: 0;
+    white-space: nowrap;
+  }
+
+  .landing-btn--header::after {
+    content: "WhatsApp";
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1;
   }
 
   .landing-btn--header i {
-    color: #fff;
+    color: #fff !important;
     font-size: 1.1rem;
   }
 

@@ -201,11 +201,21 @@ body.landing-body a {
   font-weight: 600;
 }
 
-.landing-hero__actions {
+.landing-hero__cta-panel {
   display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-btn--hero {
+  min-height: 58px;
+  padding: 16px 36px;
+  font-size: 1.02rem;
+  box-shadow: 0 16px 40px rgba(24, 187, 102, 0.38);
+}
+
+.landing-btn--hero:hover {
+  box-shadow: 0 22px 50px rgba(24, 187, 102, 0.48);
 }
 
 .features-section {
@@ -997,6 +1007,18 @@ body.landing-body a {
 
   .landing-hero__inner {
     min-height: 500px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .landing-hero__cta-panel {
+    justify-content: center;
+  }
+
+  .landing-btn--hero {
+    min-height: 60px;
+    padding: 18px 38px;
+    font-size: 1.05rem;
   }
 
   .feature-grid {
@@ -1122,9 +1144,8 @@ body.landing-body a {
     margin-inline: auto;
   }
 
-  .landing-hero__actions .landing-btn {
-    flex: 1 1 150px;
-    min-width: 0;
+  .landing-hero__cta-panel .landing-btn {
+    width: 100%;
   }
 
   .features-section {

@@ -54,7 +54,7 @@ Funcion:
 La landing esta hecha con HTML semantico y CSS propio:
 
 - `header.landing-header`: header minimo.
-- `section.landing-hero`: hero principal.
+- `section.landing-hero`: hero principal. Usa un layout de dos columnas en desktop (texto a la izquierda, CTA principal de WhatsApp a la derecha sobre la imagen). En mobile el CTA queda debajo del texto, a ancho completo.
 - `.feature-grid` y `.feature-card`: beneficios principales en tarjetas.
 - `.plans-grid` y `.plan-card`: cards de planes 100, 300 y 500 megas.
 - `.mega-card`: promocion visual de 1000 megas.
@@ -64,7 +64,8 @@ La landing esta hecha con HTML semantico y CSS propio:
 - `.faq-layout`, `.faq-copy` y `.faq-list`: bloque de preguntas frecuentes en dos columnas con `details/summary`.
 - `.landing-final`: CTA final.
 - `.landing-footer`: footer oscuro con marca, texto institucional, redes, contacto y legales.
-- `.sticky-whatsapp`: boton sticky mobile.
+- `.landing-hero__cta-panel`: panel contenedor del CTA principal de WhatsApp en el hero. En desktop se posiciona como columna derecha sobre la zona de la imagen. En mobile fluye debajo del texto.
+- `.landing-btn--hero`: modificador de botón para el CTA principal del hero. Botón verde más grande (~60px de alto) con sombra destacada.
 
 ## WhatsApp
 
@@ -80,6 +81,8 @@ Constantes principales:
 Todos los CTAs de WhatsApp de `internet-fibra-optica-tandil/index.html` usan el atributo:
 
 - `data-whatsapp-cta`
+
+El hero usa un único CTA principal de WhatsApp con source `hero`, posicionado como botón destacado sobre la imagen en desktop.
 
 Todos los CTAs tambien tienen un `href` real de WhatsApp como fallback HTML. Si JavaScript falla, los botones siguen abriendo WhatsApp con el texto precargado.
 

@@ -212,10 +212,21 @@ body.landing-body a {
   padding: 16px 36px;
   font-size: 1.02rem;
   box-shadow: 0 16px 40px rgba(24, 187, 102, 0.38);
+  animation: hero-cta-glow 3s ease-in-out infinite;
 }
 
 .landing-btn--hero:hover {
+  animation: none;
   box-shadow: 0 22px 50px rgba(24, 187, 102, 0.48);
+}
+
+@keyframes hero-cta-glow {
+  0%, 100% {
+    box-shadow: 0 16px 40px rgba(24, 187, 102, 0.38);
+  }
+  50% {
+    box-shadow: 0 16px 50px rgba(24, 187, 102, 0.58), 0 0 70px rgba(24, 187, 102, 0.14);
+  }
 }
 
 .features-section {

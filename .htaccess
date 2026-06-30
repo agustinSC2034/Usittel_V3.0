@@ -42,12 +42,20 @@ ErrorDocument 404 /pages/index.html
 # ── 6. Cache para assets estáticos ───────────────────────
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType text/css                  "access plus 1 month"
-    ExpiresByType application/javascript    "access plus 1 month"
+    # CSS y JS se revalidan siempre para evitar conservar precios o estilos viejos.
+    ExpiresByType text/css                  "access plus 0 seconds"
+    ExpiresByType application/javascript    "access plus 0 seconds"
+    ExpiresByType text/javascript           "access plus 0 seconds"
     ExpiresByType image/png                 "access plus 6 months"
     ExpiresByType image/webp                "access plus 6 months"
     ExpiresByType image/jpeg                "access plus 6 months"
     ExpiresByType image/svg+xml             "access plus 6 months"
     ExpiresByType font/woff2                "access plus 1 year"
 </IfModule>
-
+# CSS y JS deben revalidarse en cada carga: los precios del home dependen de main.js.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+</IfModule>

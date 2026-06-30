@@ -338,11 +338,10 @@ include __DIR__ . '/includes/header.php';
                     interrupciones. La máxima experiencia de conectividad en Tandil.</p>
 
                   <div class="my-6">
-                    <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$49.999</span>
+                    <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$54.999</span>
                     <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
                     <p class="text-sm text-gray-300 mt-1 drop-shadow-md">Precio de lista final y único disponible.</p>
-                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Precio fijo por 9
-                      meses.</p>
+                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Sin promoción temporal.</p>
                   </div>
 
                   <ul class="space-y-3 mb-8 relative z-20">

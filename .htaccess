@@ -57,5 +57,6 @@ ErrorDocument 404 /pages/index.html
     <FilesMatch "\.(css|js)$">
         Header set Cache-Control "no-cache, must-revalidate"
         Header set Pragma "no-cache"
+        Header set Expires "0"
     </FilesMatch>
 </IfModule>

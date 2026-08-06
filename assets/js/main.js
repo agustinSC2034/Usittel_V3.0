@@ -99,7 +99,7 @@
             promoFinal:
               "Precio final: $54.998 a partir del 4to mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $31.426,41 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $54.998.<br><br>
+            El precio promocional de $31.426 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $54.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
@@ -118,7 +118,7 @@
             promoMonths: "3",
             promoFinal: "Precio final: $58.498 a partir del 4to mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $33.426,71 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
+            El precio promocional de $33.426 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
@@ -138,7 +138,7 @@
             promoFinal:
               "Precio final: $63.998 a partir del 7mo mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $35.748,21 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
+            El precio promocional de $35.748 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.`,
           },
@@ -181,6 +181,9 @@
       function createPlanCard(plan, type) {
         const isSoloTvPlan = type === "soloTv";
         const paddingClass = isSoloTvPlan ? "p-8 md:p-10" : "p-8";
+        const formattedPrice = new Intl.NumberFormat("es-AR").format(
+          Math.trunc(Number(plan.price))
+        );
         const speedLine = plan.speed.includes("Mbps")
           ? `<p class="text-gray-500 mb-2">${plan.speed} ${plan.symmetric ? "Simétricos" : ""
           }</p>`
@@ -202,9 +205,7 @@
         let promoHtml = "";
         if (type === "internet" || type === "internetTv") {
           promoHtml = `
-        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${new Intl.NumberFormat(
-            "es-AR"
-          ).format(plan.price)} por ${plan.promoMonths || "3"} meses</div>
+        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${formattedPrice} por ${plan.promoMonths || "3"} meses</div>
         <div class="text-xs text-gray-500 mb-2">${plan.promoFinal || ""}</div>
         <a href="#" class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 promo-toggle-link">Condiciones de la promoción</a>
         <div class="promo-details hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
@@ -220,9 +221,7 @@
         <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
         ${speedLine}
         <div class="my-2">
-          <span class="text-4xl font-extrabold text-gray-900">${new Intl.NumberFormat(
-            "es-AR"
-          ).format(plan.price)}</span>
+          <span class="text-4xl font-extrabold text-gray-900">${formattedPrice}</span>
           <span class="text-gray-500"> $/mes</span>
         </div>
         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">${featuresHtml}</ul>

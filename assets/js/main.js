@@ -107,7 +107,7 @@
             name: "Fibra 300 + TV",
             speed: "300 Mbps",
             symmetric: true,
-            price: "33426.93",
+            price: "33426.71",
             features: [
               "Instalación 100% bonificada",
               "Pack TV incluido",
@@ -118,7 +118,7 @@
             promoMonths: "3",
             promoFinal: "Precio final: $58.498 a partir del 4to mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $33.426,93 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
+            El precio promocional de $33.426,71 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
@@ -126,7 +126,7 @@
             name: "Fibra 500 + TV",
             speed: "500 Mbps",
             symmetric: true,
-            price: "35998.24",
+            price: "35748.21",
             features: [
               "Instalación 100% bonificada",
               "Pack TV incluido",
@@ -138,7 +138,7 @@
             promoFinal:
               "Precio final: $63.998 a partir del 7mo mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $35.998,24 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
+            El precio promocional de $35.748,21 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.`,
           },

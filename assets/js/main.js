@@ -87,7 +87,7 @@
             name: "Fibra 100 + TV",
             speed: "100 Mbps",
             symmetric: true,
-            price: "29140",
+            price: "31426.41",
             features: [
               "Instalación 100% bonificada",
               "Pack TV incluido",
@@ -97,9 +97,9 @@
             popular: false,
             promoMonths: "3",
             promoFinal:
-              "Precio de lista: $50.999 a partir del 4to mes en combo.",
+              "Precio final: $54.998 a partir del 4to mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $29.140 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio de lista será de $50.999.<br><br>
+            El precio promocional de $31.426,41 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $54.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
@@ -107,7 +107,7 @@
             name: "Fibra 300 + TV",
             speed: "300 Mbps",
             symmetric: true,
-            price: "31141",
+            price: "33426.93",
             features: [
               "Instalación 100% bonificada",
               "Pack TV incluido",
@@ -116,9 +116,9 @@
             ],
             popular: true,
             promoMonths: "3",
-            promoFinal: "Precio de lista: $54.498 a partir del 4to mes en combo.",
+            promoFinal: "Precio final: $58.498 a partir del 4to mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $31.141 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio de lista será de $54.498.<br><br>
+            El precio promocional de $33.426,93 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
           },
@@ -126,7 +126,7 @@
             name: "Fibra 500 + TV",
             speed: "500 Mbps",
             symmetric: true,
-            price: "33647",
+            price: "35998.24",
             features: [
               "Instalación 100% bonificada",
               "Pack TV incluido",
@@ -136,9 +136,9 @@
             popular: false,
             promoMonths: "6",
             promoFinal:
-              "Precio de lista: $59.498 a partir del 7mo mes. Precio fijo hasta el mes 6.",
+              "Precio final: $63.998 a partir del 7mo mes.",
             promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $33.646,99 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio de lista será de $59.498.<br><br>
+            El precio promocional de $35.998,24 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
             La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
             El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.`,
           },
@@ -148,7 +148,7 @@
             name: " USITTEL TV",
             speed: "Televisión Digital mediante la plataforma SENSA",
             symmetric: false,
-            price: "19499",
+            price: "19999",
             features: [
               "Más de 100 canales en vivo",
               "Series y películas On-Demand",

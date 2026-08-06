@@ -340,7 +340,7 @@ include __DIR__ . '/includes/header.php';
                   <div class="my-6">
                     <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$54.999</span>
                     <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
-                    <p class="text-sm text-gray-300 mt-1 drop-shadow-md">Precio de lista final y único disponible.</p>
+                    <p class="text-sm text-gray-300 mt-1 drop-shadow-md">A partir del 1er mes.</p>
                     <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Sin promoción temporal.</p>
                   </div>
 
@@ -404,7 +404,7 @@ include __DIR__ . '/includes/header.php';
                       Viví todos los partidos de la liga argentina.
                     </p>
                     <p class="text-lg font-bold text-black-600 mt-1">
-                      $21.999<span class="text-sm font-normal text-gray-500">/mes</span>
+                      $24.999<span class="text-sm font-normal text-gray-500">/mes</span>
                     </p>
                   </div>
                 </div>

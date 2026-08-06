@@ -1,0 +1,429 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from pypdf import PdfReader
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+
+import generate_chediack_proposals as base
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = ROOT / "output" / "pdf"
+W, H = A4
+M = 18 * mm
+ORANGE = colors.HexColor("#E65A24")
+ORANGE_DARK = colors.HexColor("#B83D16")
+ORANGE_LIGHT = colors.HexColor("#FFF2E9")
+NAVY = colors.HexColor("#183A5A")
+PURPLE = colors.HexColor("#6C35D7")
+PURPLE_LIGHT = colors.HexColor("#F6F2FC")
+INK = colors.HexColor("#28323C")
+MUTED = colors.HexColor("#65717C")
+LINE = colors.HexColor("#D5DCE2")
+
+
+def t(c, value, x, y, width, **kwargs):
+    return base.text(c, value, x, y, width, **kwargs)
+
+
+def bullets(c, items, x, y, width, **kwargs):
+    return base.bullet_list(c, items, x, y, width, **kwargs)
+
+
+def logo(c, p, x, y, width, height, centered=False):
+    return base.logo(c, p, x, y, width, height, centered)
+
+
+def table(c, p, headers, rows, widths, x, y, **kwargs):
+    return base.draw_table(c, p, headers, rows, widths, x, y, **kwargs)
+
+
+def footer(c, p, page, total, color):
+    c.setStrokeColor(color)
+    c.setLineWidth(0.55)
+    c.line(M, 15 * mm, W - M, 15 * mm)
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica", 5.7)
+    c.drawString(M, 9.7 * mm, f"{p.name} | CUIT {p.cuit} | {p.web}")
+    c.drawRightString(W - M, 9.7 * mm, f"{page} / {total}")
+
+
+def fiber_header(c, p, page, total, title):
+    c.setFillColor(ORANGE)
+    c.rect(0, H - 14 * mm, W, 14 * mm, fill=1, stroke=0)
+    c.setFillColor(colors.white)
+    c.setFont("Helvetica-Bold", 7.2)
+    c.drawString(M, H - 9 * mm, title.upper())
+    c.setFont("Helvetica", 6.2)
+    c.drawRightString(W - M, H - 9 * mm, p.reference)
+    footer(c, p, page, total, ORANGE)
+    return H - 24 * mm
+
+
+def bibop_header(c, p, page, total, title):
+    logo(c, p, M, H - 7 * mm, 35 * mm, 11 * mm)
+    c.setFillColor(PURPLE)
+    c.setFont("Helvetica-Bold", 7.3)
+    c.drawRightString(W - M, H - 10 * mm, title.upper())
+    c.setStrokeColor(colors.HexColor("#D9D2E5"))
+    c.line(M, H - 16 * mm, W - M, H - 16 * mm)
+    footer(c, p, page, total, PURPLE)
+    return H - 25 * mm
+
+
+def fiber_title(c, title, subtitle, y):
+    c.setFillColor(NAVY)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(M, y, title)
+    y -= 16
+    return t(c, subtitle, M, y, W - 2 * M, size=7.6, leading=10, color=MUTED) - 10
+
+
+def basic_title(c, title, subtitle, y):
+    c.setFillColor(PURPLE)
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(M, y, title)
+    y -= 15
+    return t(c, subtitle, M, y, W - 2 * M, size=7.5, leading=9.5, color=MUTED) - 9
+
+
+def card(c, x, y, width, height, *, fill, stroke, title, body, title_color=INK, body_color=INK, value=None):
+    c.setFillColor(fill)
+    c.setStrokeColor(stroke)
+    c.roundRect(x, y - height, width, height, 4, fill=1, stroke=1)
+    c.setFillColor(title_color)
+    c.setFont("Helvetica-Bold", 8)
+    c.drawString(x + 8, y - 14, title)
+    if value:
+        c.setFont("Helvetica-Bold", 17)
+        c.drawRightString(x + width - 8, y - 17, value)
+        body_y = y - 38
+    else:
+        body_y = y - 29
+    t(c, body, x + 8, body_y, width - 16, size=6.8, leading=8.5, color=body_color)
+
+
+def fiber_cover(c, p):
+    c.setFillColor(colors.HexColor("#FFF8F4"))
+    c.rect(0, 0, W, H, fill=1, stroke=0)
+    c.setFillColor(ORANGE)
+    c.rect(0, 0, 56 * mm, H, fill=1, stroke=0)
+    c.setFillColor(NAVY)
+    c.rect(0, 0, 7 * mm, H, fill=1, stroke=0)
+    c.setFillColor(colors.white)
+    c.setFont("Helvetica-Bold", 54)
+    c.drawString(14 * mm, H - 68 * mm, "02")
+    c.setFont("Helvetica-Bold", 13)
+    c.drawString(14 * mm, H - 79 * mm, "SITIOS")
+    t(c, "CLARO + MOVISTAR", 14 * mm, H - 88 * mm, 35 * mm, font="Helvetica-Bold", size=7, leading=9, color=colors.white)
+    x = 70 * mm
+    logo(c, p, x, H - 22 * mm, 105 * mm, 26 * mm)
+    y = H - 70 * mm
+    y = t(c, "PROPUESTA TÉCNICO-COMERCIAL", x, y, 112 * mm, font="Helvetica-Bold", size=8, leading=10, color=ORANGE) - 14
+    y = t(c, "MUDANZA INTEGRAL\nDE SITIOS MÓVILES", x, y, 112 * mm, font="Helvetica-Bold", size=23, leading=27, color=NAVY) - 13
+    y = t(c, "Ingeniería, obra civil, estructura, electrónica, integración y puesta en servicio.", x, y, 112 * mm, size=9, leading=13, color=MUTED) - 28
+    c.setStrokeColor(ORANGE)
+    c.setLineWidth(2)
+    c.line(x, y, W - M, y)
+    y -= 24
+    meta = [
+        ("CLIENTE", "José J. Chediack S.A.I.C.A."),
+        ("PROYECTO", "PBN y Anillo Peatonal Av. Pampa"),
+        ("MODALIDAD", "Llave en mano"),
+        ("PLAZO", "60 días corridos"),
+        ("EMISIÓN", "5 de agosto de 2026"),
+    ]
+    for label, value in meta:
+        c.setFillColor(ORANGE_LIGHT)
+        c.roundRect(x, y - 24, 112 * mm, 22, 3, fill=1, stroke=0)
+        c.setFillColor(ORANGE_DARK)
+        c.setFont("Helvetica-Bold", 6.5)
+        c.drawString(x + 7, y - 9, label)
+        t(c, value, x + 37 * mm, y - 9, 72 * mm, font="Helvetica-Bold", size=7, leading=8.5, color=INK)
+        y -= 30
+    t(c, f"{p.name}\n{p.address}\nCUIT {p.cuit}", x, 39 * mm, 112 * mm, font="Helvetica-Bold", size=7, leading=10, color=NAVY)
+    c.showPage()
+
+
+def fiber_snapshot(c, p):
+    y = fiber_header(c, p, 2, 8, "Ficha del proyecto")
+    y = fiber_title(c, "El proyecto, en una página", "Datos principales, localización y resultado comprometido.", y)
+    metrics = [("SITIOS", "2", "Claro y Movistar"), ("PLAZO", "60", "días corridos"), ("ESTRUCTURA", "18 m", "altura máxima"), ("MODALIDAD", "100%", "llave en mano")]
+    gap = 4 * mm
+    cw = (W - 2 * M - 3 * gap) / 4
+    for index, (label, value, note) in enumerate(metrics):
+        x = M + index * (cw + gap)
+        c.setFillColor(ORANGE_LIGHT); c.setStrokeColor(colors.HexColor("#F0C4AE")); c.roundRect(x, y - 61, cw, 61, 4, fill=1, stroke=1)
+        c.setFillColor(ORANGE_DARK); c.setFont("Helvetica-Bold", 6.5); c.drawString(x + 8, y - 13, label)
+        c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 18); c.drawString(x + 8, y - 35, value)
+        c.setFillColor(MUTED); c.setFont("Helvetica", 6.5); c.drawString(x + 8, y - 49, note)
+    y -= 82
+    c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 10); c.drawString(M, y, "Objeto")
+    y -= 16
+    y = t(c, "Reubicar los dos sitios existentes fuera del área de afectación de la obra, recuperando sus monopostes y equipamiento activo, y entregándolos nuevamente operativos e integrados a la red de cada operador.", M, y, W - 2 * M, size=8.1, leading=11.5, color=INK) - 18
+    c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 10); c.drawString(M, y, "Posiciones de intervención")
+    y -= 14
+    rows = [("CLARO", "Actual", "6.176.190,11", "6.368.454,26", "154,77 m"), ("CLARO", "Proyectada", "6.176.274,96", "6.368.321,08", ""), ("MOVISTAR", "Actual", "6.176.173,26", "6.368.480,60", "170,75 m"), ("MOVISTAR", "Proyectada", "6.176.266,58", "6.368.333,46", "")]
+    y = table(c, p, ["SITIO", "POSICIÓN", "NORTE", "ESTE", "TRASLADO"], rows, [24 * mm, 43 * mm, 36 * mm, 36 * mm, 28 * mm], M, y, size=6.6) - 19
+    c.setFillColor(ORANGE); c.roundRect(M, y - 68, W - 2 * M, 68, 5, fill=1, stroke=0)
+    c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 10); c.drawString(M + 12, y - 17, "RESULTADO COMPROMETIDO")
+    t(c, "Dos sitios liberados, trasladados, configurados, visibles en OSS/NOC y aceptados por Claro y Movistar, con documentación as-built y protocolos de ensayo.", M + 12, y - 34, W - 2 * M - 24, font="Helvetica-Bold", size=8.2, leading=11, color=colors.white)
+    c.showPage()
+
+
+def fiber_workstreams(c, p, page, title, subtitle, groups):
+    y = fiber_header(c, p, page, 8, title)
+    y = fiber_title(c, title, subtitle, y)
+    gap = 7 * mm
+    cw = (W - 2 * M - gap) / 2
+    ch = 91 * mm
+    for index, (number, name, items) in enumerate(groups):
+        col, row = index % 2, index // 2
+        x = M + col * (cw + gap)
+        top = y - row * (ch + 8 * mm)
+        c.setFillColor(colors.white); c.setStrokeColor(colors.HexColor("#E3C6B7")); c.roundRect(x, top - ch, cw, ch, 5, fill=1, stroke=1)
+        c.setFillColor(ORANGE); c.roundRect(x, top - 25, cw, 25, 5, fill=1, stroke=0)
+        c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 11); c.drawString(x + 9, top - 17, number)
+        c.setFont("Helvetica-Bold", 8); c.drawString(x + 31, top - 17, name.upper())
+        bullets(c, items, x + 9, top - 39, cw - 18, size=7, leading=9.2)
+    c.showPage()
+
+
+def fiber_method(c, p):
+    y = fiber_header(c, p, 5, 8, "Método y secuencia")
+    y = fiber_title(c, "Una secuencia coordinada de 60 días", "Ocho etapas con ingeniería, obra civil y electrónica ejecutadas en paralelo cuando resulta posible.", y)
+    stages = [("01", "Relevamiento", "7 d"), ("02", "Aprobaciones", "12 d"), ("03", "Fundaciones", "18 d"), ("04", "Desmontaje", "6 d"), ("05", "Izaje", "5 d"), ("06", "Montaje activo", "6 d"), ("07", "Integración", "4 d"), ("08", "Cierre", "2 d")]
+    bw, bh, gap = 37 * mm, 35 * mm, 5 * mm
+    for index, (num, name, duration) in enumerate(stages):
+        col, row = index % 4, index // 4
+        x = M + col * (bw + gap)
+        top = y - row * (bh + 19 * mm)
+        c.setFillColor(ORANGE_LIGHT); c.setStrokeColor(ORANGE); c.roundRect(x, top - bh, bw, bh, 5, fill=1, stroke=1)
+        c.setFillColor(ORANGE); c.circle(x + 12, top - 12, 8, fill=1, stroke=0)
+        c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 6.5); c.drawCentredString(x + 12, top - 14, num)
+        c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 7.2); c.drawString(x + 24, top - 14, name)
+        c.setFillColor(ORANGE_DARK); c.setFont("Helvetica-Bold", 15); c.drawString(x + 10, top - 37, duration)
+        if col < 3:
+            c.setStrokeColor(ORANGE); c.setLineWidth(1.2); c.line(x + bw + 3, top - bh / 2, x + bw + gap - 3, top - bh / 2)
+    y -= 2 * (bh + 19 * mm) + 8
+    c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 10); c.drawString(M, y, "Hitos de coordinación")
+    y -= 18
+    y = bullets(c, ["MOP y ventanas de trabajo aprobadas antes del corte programado.", "Fundaciones liberadas después del curado y control de nivelación.", "Una ventana de swap por operador, con rollback definido.", "Soporte dedicado durante las 72 horas posteriores a la puesta en servicio."], M, y, W - 2 * M, size=7.6, leading=10) - 14
+    c.setFillColor(ORANGE_LIGHT); c.setStrokeColor(colors.HexColor("#F0C4AE")); c.roundRect(M, y - 58, W - 2 * M, 58, 4, fill=1, stroke=1)
+    t(c, "DEPENDENCIAS EXTERNAS", M + 10, y - 16, 48 * mm, font="Helvetica-Bold", size=7, leading=9, color=ORANGE_DARK)
+    t(c, "El plazo no incluye demoras de aprobación de terceros ni la asignación de ventanas por los operadores. Fiberquil realizará la gestión y coordinación correspondientes.", M + 51 * mm, y - 16, W - 2 * M - 58 * mm, size=7.2, leading=9.5, color=INK)
+    c.showPage()
+
+
+def fiber_controls(c, p):
+    y = fiber_header(c, p, 6, 8, "Controles y entregables")
+    y = fiber_title(c, "Seguridad, ensayos y cierre documental", "Controles transversales desde la apertura del frente hasta la aceptación final.", y)
+    gap = 7 * mm; cw = (W - 2 * M - gap) / 2
+    left = ["Programa de Seguridad aprobado por ART.", "Personal registrado, ART con cláusula de no repetición y seguros.", "Permisos y análisis de riesgo para izaje, altura y tensión.", "Bloqueo y control de exposición a radiofrecuencia.", "Vallado, señalización, desvíos y gestión de residuos."]
+    right = ["Sweep test y DTF con verificación de VSWR.", "Ensayo de PIM y mediciones de potencia.", "Alineación GPS de azimut y tilt.", "Certificación OTDR bidireccional y entrega de trazas.", "Dossier as-built, inventario, protocolos y registro fotográfico."]
+    card(c, M, y, cw, 108 * mm, fill=ORANGE_LIGHT, stroke=colors.HexColor("#F0C4AE"), title="SEGURIDAD Y AMBIENTE", body="\n".join(f"- {v}" for v in left), title_color=ORANGE_DARK)
+    card(c, M + cw + gap, y, cw, 108 * mm, fill=colors.HexColor("#F4F7FA"), stroke=colors.HexColor("#CFD9E1"), title="ENSAYOS Y DOCUMENTACIÓN", body="\n".join(f"- {v}" for v in right), title_color=NAVY)
+    y -= 121 * mm
+    c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 10); c.drawString(M, y, "Criterio de aceptación")
+    y -= 18
+    y = t(c, "Cada sitio se considera terminado con integración confirmada en la red, alarmas verificadas, protocolos aprobados, limpieza del sector y acta de aceptación emitida junto con el operador.", M, y, W - 2 * M, size=8, leading=11.2, color=INK) - 18
+    c.setFillColor(ORANGE); c.roundRect(M, y - 50, W - 2 * M, 50, 5, fill=1, stroke=0)
+    t(c, "72 HORAS DE SOPORTE POSTERIOR", M + 12, y - 17, 60 * mm, font="Helvetica-Bold", size=9, leading=11, color=colors.white)
+    t(c, "Guardia técnica dedicada para atención de eventos luego de la puesta en servicio.", M + 72 * mm, y - 17, W - 2 * M - 84 * mm, size=7.4, leading=9.5, color=colors.white)
+    c.showPage()
+
+
+def fiber_price(c, p):
+    y = fiber_header(c, p, 7, 8, "Oferta económica")
+    y = fiber_title(c, "Inversión llave en mano", "Valores para los dos sitios, expresados en dólares estadounidenses. IVA no incluido.", y)
+    gap = 7 * mm; cw = (W - 2 * M - gap) / 2; ch = 107 * mm
+    a = ["Ingeniería y memorias", "Fundaciones hasta 10 m3", "Desmontaje de monopostes", "Traslado, izaje y montaje", "Logística inversa y residuos"]
+    b = ["Desmontaje y resguardo activo", "Sistema radiante y transmisión", "Energía, climatización y PAT", "Fibra y certificación OTDR", "Integración, swap y ensayos"]
+    for index, (title, price, unit, items) in enumerate((("BLOQUE A", p.block_a, p.block_a_unit, a), ("BLOQUE B", p.block_b, p.block_b_unit, b))):
+        x = M + index * (cw + gap)
+        c.setFillColor(colors.white); c.setStrokeColor(ORANGE); c.roundRect(x, y - ch, cw, ch, 6, fill=1, stroke=1)
+        c.setFillColor(ORANGE); c.roundRect(x, y - 34, cw, 34, 6, fill=1, stroke=0)
+        c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 9); c.drawString(x + 10, y - 15, title)
+        c.setFont("Helvetica-Bold", 14); c.drawRightString(x + cw - 10, y - 18, price)
+        t(c, unit, x + 10, y - 48, cw - 20, font="Helvetica-Bold", size=6.8, leading=8.5, color=ORANGE_DARK)
+        bullets(c, items, x + 10, y - 72, cw - 20, size=7.1, leading=9.2)
+    y -= ch + 17
+    c.setFillColor(NAVY); c.roundRect(M, y - 58, W - 2 * M, 58, 5, fill=1, stroke=0)
+    c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 9); c.drawString(M + 12, y - 18, "TOTAL GENERAL")
+    c.setFont("Helvetica-Bold", 22); c.drawRightString(W - M - 12, y - 23, p.total)
+    t(c, "Llave en mano | IVA no incluido", M + 12, y - 37, 75 * mm, size=6.7, leading=8, color=colors.white)
+    y -= 74
+    c.setFillColor(ORANGE_LIGHT); c.setStrokeColor(ORANGE); c.roundRect(M, y - 43, W - 2 * M, 43, 4, fill=1, stroke=1)
+    t(c, "FUNDACIONES A CARGO DEL COMITENTE", M + 10, y - 14, 68 * mm, font="Helvetica-Bold", size=7, leading=9, color=ORANGE_DARK)
+    t(c, f"Se descontarán {p.foundation} por cada fundación ejecutada integralmente por el comitente.", M + 75 * mm, y - 14, W - 2 * M - 85 * mm, font="Helvetica-Bold", size=7.3, leading=9.5, color=INK)
+    c.showPage()
+
+
+def fiber_terms(c, p):
+    y = fiber_header(c, p, 8, 8, "Condiciones")
+    y = fiber_title(c, "Condiciones comerciales y alcance contractual", "Cierre de la propuesta técnico-comercial.", y)
+    rows = [("MONEDA", "USD, IVA y demás impuestos no incluidos."), ("PAGO EN ARS", "Tipo vendedor BNA dólar billete del día de pago."), ("ANTICIPO", "40% contra orden de compra."), ("SALDO", "Certificaciones mensuales a 30 días; 10% final contra aceptación."), ("VALIDEZ", "30 días corridos desde la emisión."), ("PLAZO", "60 días desde anticipo y liberación de frentes.")]
+    y = table(c, p, [], rows, [35 * mm, 132 * mm], M, y, size=6.8, header=False, first_col_fill=True) - 17
+    c.setFillColor(NAVY); c.setFont("Helvetica-Bold", 10); c.drawString(M, y, "Exclusiones")
+    y -= 18
+    exclusions = ["Estructuras portantes y hardware nuevos.", "Licencias o ampliaciones no asociadas a la mudanza.", "Refuerzos no detectables en el relevamiento.", "Acometida eléctrica definitiva y medidor.", "Tasas, derechos, aranceles y sellados.", "Suelos masivos, entibados o fundaciones profundas.", "Interferencias de terceros no documentadas.", "Vigilancia permanente fuera del predio."]
+    half = len(exclusions) // 2
+    bullets(c, exclusions[:half], M, y, 78 * mm, size=7, leading=9.2)
+    bullets(c, exclusions[half:], M + 88 * mm, y, 78 * mm, size=7, leading=9.2)
+    y -= 65
+    c.setFillColor(ORANGE_LIGHT); c.setStrokeColor(colors.HexColor("#F0C4AE")); c.roundRect(M, y - 58, W - 2 * M, 58, 4, fill=1, stroke=1)
+    t(c, "La propuesta se basa en la documentación suministrada. Cambios de alcance, ubicación, configuración o condiciones de ejecución podrán modificar valores y plazo.", M + 10, y - 18, W - 2 * M - 20, font="Helvetica-Bold", size=7.3, leading=10, color=INK)
+    y -= 84
+    c.setStrokeColor(LINE); c.line(M, y, M + 70 * mm, y); c.line(W - M - 70 * mm, y, W - M, y)
+    t(c, p.name, M, y - 14, 70 * mm, font="Helvetica-Bold", size=7, leading=9, align="center")
+    t(c, "José J. Chediack S.A.I.C.A.", W - M - 70 * mm, y - 14, 70 * mm, font="Helvetica-Bold", size=7, leading=9, align="center")
+    c.showPage()
+
+
+def bibop_cover(c, p):
+    c.setFillColor(colors.white); c.rect(0, 0, W, H, fill=1, stroke=0)
+    c.setStrokeColor(PURPLE); c.setLineWidth(1); c.rect(16 * mm, 16 * mm, W - 32 * mm, H - 32 * mm, fill=0, stroke=1)
+    logo(c, p, M, H - 24 * mm, 48 * mm, 24 * mm)
+    c.setFillColor(PURPLE); c.setFont("Helvetica-Bold", 7); c.drawRightString(W - M, H - 26 * mm, "PROPUESTA COMERCIAL")
+    y = H - 78 * mm
+    y = t(c, "MUDANZA INTEGRAL\nDE DOS SITIOS DE TELEFONÍA MÓVIL", M, y, W - 2 * M, font="Helvetica-Bold", size=21, leading=25, color=PURPLE) - 13
+    y = t(c, "Servicio llave en mano para Claro y Movistar", M, y, W - 2 * M, size=10, leading=13, color=MUTED) - 34
+    rows = [("Cliente", "José J. Chediack S.A.I.C.A."), ("Proyecto", "PBN y Anillo Peatonal Av. Pampa"), ("Referencia", p.reference), ("Fecha", "5 de agosto de 2026"), ("Validez", "30 días")]
+    y = table(c, p, [], rows, [34 * mm, 133 * mm], M, y, size=7.2, header=False, first_col_fill=True)
+    t(c, f"{p.name}\nCUIT {p.cuit}\n{p.address}", M, 49 * mm, W - 2 * M, font="Helvetica-Bold", size=7.2, leading=10, color=MUTED)
+    c.showPage()
+
+
+def bibop_summary(c, p):
+    y = bibop_header(c, p, 2, 6, "Resumen del servicio")
+    y = basic_title(c, "Resumen del servicio", "Objeto, sitios incluidos y responsabilidad del contratista.", y)
+    y = t(c, "Bibop presenta su propuesta llave en mano para desmontar, trasladar y reinstalar los sitios Claro y Movistar afectados por la obra. El servicio comprende ingeniería, obra civil, estructura, electrónica, energía, fibra, integración y aceptación final.", M, y, W - 2 * M, size=8.2, leading=11.5, color=INK) - 15
+    c.setFillColor(PURPLE_LIGHT); c.setStrokeColor(colors.HexColor("#D9CDED")); c.roundRect(M, y - 58, W - 2 * M, 58, 4, fill=1, stroke=1)
+    t(c, "RESULTADO", M + 10, y - 16, 30 * mm, font="Helvetica-Bold", size=7, leading=9, color=PURPLE)
+    t(c, "Dos sitios reubicados, operativos, visibles en la red y con acta de aceptación del operador.", M + 40 * mm, y - 16, W - 2 * M - 50 * mm, font="Helvetica-Bold", size=8, leading=10.5, color=INK)
+    y -= 78
+    rows = [("CLARO", "6.176.190,11 / 6.368.454,26", "6.176.274,96 / 6.368.321,08", "154,77 m"), ("MOVISTAR", "6.176.173,26 / 6.368.480,60", "6.176.266,58 / 6.368.333,46", "170,75 m")]
+    y = table(c, p, ["SITIO", "UBICACIÓN ACTUAL", "NUEVA UBICACIÓN", "DISTANCIA"], rows, [25 * mm, 58 * mm, 58 * mm, 26 * mm], M, y, size=6.5) - 21
+    c.setFillColor(PURPLE); c.setFont("Helvetica-Bold", 9); c.drawString(M, y, "Incluye")
+    y -= 18
+    items = ["Ingeniería y replanteo", "Fundaciones y canalizaciones", "Desmontaje estructural", "Traslado e izaje", "Sistema radiante", "Energía y protecciones", "Fibra y OTDR", "Integración y soporte 72 h"]
+    for index, item in enumerate(items):
+        col, row = index % 2, index // 2
+        x = M + col * 86 * mm; top = y - row * 28
+        c.setStrokeColor(LINE); c.rect(x, top - 21, 80 * mm, 21, fill=0, stroke=1)
+        c.setFillColor(PURPLE); c.setFont("Helvetica-Bold", 7); c.drawString(x + 8, top - 14, f"✓  {item}")
+    c.showPage()
+
+
+def bibop_scope(c, p):
+    y = bibop_header(c, p, 3, 6, "Alcance")
+    y = basic_title(c, "Alcance incluido", "Organizado por etapa y entregable principal.", y)
+    rows = [
+        ("1", "Ingeniería", "Relevamiento, topografía, suelos, memorias, MOP y planos.", "Proyecto aprobado"),
+        ("2", "Obra civil", "Excavación, fundación hasta 10 m3, armadura, anclajes y canalizaciones.", "Fundación liberada"),
+        ("3", "Desmontaje", "Etiquetado y bajada de electrónica, energía y monoposte hasta 18 m.", "Inventario firmado"),
+        ("4", "Traslado e izaje", "Transporte, montaje, aplomado, nivelación y torqueado.", "Estructura montada"),
+        ("5", "Sistema activo", "Antenas, RRU, MW, alimentadores, jumpers, sellado, gabinete, BBU, rectificadores, baterías y climatización.", "Equipos reinstalados"),
+        ("6", "Fibra y energía", "ODF, fusiones, OTDR, tableros AC/DC, PAT, puesta a tierra de línea, protección atmosférica, balizamiento y alarmas.", "Protocolos emitidos"),
+        ("7", "Integración", "Configuración, OSS/NOC, swap, rollback y soporte 72 horas.", "Sitio operativo"),
+        ("8", "Cierre", "Sweep, DTF, PIM, potencia, alineación GPS de azimut/tilt, logística inversa, limpieza y as-built.", "Acta de aceptación"),
+    ]
+    table(c, p, ["N°", "ETAPA", "TAREAS", "ENTREGABLE"], rows, [12 * mm, 34 * mm, 83 * mm, 38 * mm], M, y, size=6.25, leading=7.8)
+    c.showPage()
+
+
+def bibop_plan(c, p):
+    y = bibop_header(c, p, 4, 6, "Plan de trabajo")
+    y = basic_title(c, "Plan de 60 días", "Secuencia prevista desde el relevamiento hasta la entrega final.", y)
+    rows = [("E1", "Relevamiento e ingeniería", "7 días", "Día 7"), ("E2", "Memorias, MOP y ventanas", "12 días", "Día 19"), ("E3", "Fundaciones y curado", "18 días", "Día 37"), ("E4", "Desmontaje y traslado", "6 días", "Día 43"), ("E5", "Izaje y montaje", "5 días", "Día 48"), ("E6", "Radiante, energía y fibra", "6 días", "Día 54"), ("E7", "Integración y swap", "4 días", "Día 58"), ("E8", "Ensayos y dossier", "2 días", "Día 60")]
+    y = table(c, p, ["ETAPA", "ACTIVIDAD", "DURACIÓN", "ACUMULADO"], rows, [20 * mm, 94 * mm, 27 * mm, 26 * mm], M, y, size=6.7) - 20
+    card(c, M, y, 80 * mm, 92 * mm, fill=PURPLE_LIGHT, stroke=colors.HexColor("#D9CDED"), title="SEGURIDAD", body="Programa ART\nPersonal registrado y asegurado\nPermisos para altura, izaje y tensión\nControl de radiofrecuencia\nVallado, gestión y disposición de residuos", title_color=PURPLE)
+    card(c, M + 87 * mm, y, 80 * mm, 92 * mm, fill=colors.HexColor("#F7F7F7"), stroke=LINE, title="PRUEBAS Y CIERRE", body="Sweep test y DTF\nPIM y potencia\nAlineación GPS\nCertificación OTDR\nDossier as-built y acta", title_color=PURPLE)
+    c.showPage()
+
+
+def bibop_price(c, p):
+    y = bibop_header(c, p, 5, 6, "Presupuesto")
+    y = basic_title(c, "Presupuesto", "Valores expresados en dólares estadounidenses, IVA no incluido.", y)
+    rows = [("A", "Infraestructura civil y estructural", "2 sitios", p.block_a), ("B", "Electrónica, integración y puesta en servicio", "2 sitios", p.block_b)]
+    y = table(c, p, ["BLOQUE", "DESCRIPCIÓN", "CANTIDAD", "TOTAL"], rows, [20 * mm, 92 * mm, 24 * mm, 31 * mm], M, y, size=7.1) - 18
+    c.setFillColor(PURPLE); c.rect(M, y - 51, W - 2 * M, 51, fill=1, stroke=0)
+    c.setFillColor(colors.white); c.setFont("Helvetica-Bold", 9); c.drawString(M + 12, y - 19, "TOTAL LLAVE EN MANO")
+    c.setFont("Helvetica-Bold", 20); c.drawRightString(W - M - 12, y - 22, p.total)
+    y -= 70
+    rows2 = [("Precio", "No incluye IVA."), ("Pago", "40% de anticipo; saldo por certificaciones a 30 días; 10% final contra aceptación."), ("Pago en ARS", "Tipo vendedor BNA dólar billete del día de pago."), ("Fundaciones", f"Descuento de {p.foundation} por cada fundación ejecutada por el comitente."), ("Validez", "30 días desde la emisión.")]
+    y = table(c, p, [], rows2, [34 * mm, 133 * mm], M, y, size=6.8, header=False, first_col_fill=True) - 18
+    t(c, f"Monto en letras: {p.words}.", M, y, W - 2 * M, font="Helvetica-Oblique", size=7, leading=9, color=MUTED)
+    c.showPage()
+
+
+def bibop_terms(c, p):
+    y = bibop_header(c, p, 6, 6, "Condiciones generales")
+    y = basic_title(c, "Condiciones generales", "Validez, exclusiones y conformidad.", y)
+    y = t(c, "La propuesta es llave en mano y contempla los trabajos necesarios para entregar ambos sitios operativos. El plazo comienza con el pago del anticipo y la liberación de los frentes. Las aprobaciones y ventanas de terceros quedan fuera del control directo de Bibop.", M, y, W - 2 * M, size=8, leading=11.2, color=INK) - 18
+    c.setFillColor(PURPLE); c.setFont("Helvetica-Bold", 9); c.drawString(M, y, "No incluido")
+    y -= 18
+    exclusions = ["Estructuras y hardware nuevos.", "Licencias o ampliaciones de red.", "Refuerzos no detectados inicialmente.", "Acometida eléctrica y medidor.", "Tasas, derechos y sellados.", "Fundaciones profundas o entibados especiales.", "Interferencias no documentadas.", "Vigilancia fuera del predio."]
+    y = bullets(c, exclusions, M, y, W - 2 * M, size=7.3, leading=9.5) - 14
+    c.setFillColor(PURPLE_LIGHT); c.setStrokeColor(colors.HexColor("#D9CDED")); c.roundRect(M, y - 61, W - 2 * M, 61, 4, fill=1, stroke=1)
+    t(c, "Cualquier modificación de alcance, ubicación, configuración o condición de ejecución podrá dar lugar a una revisión del precio y del plazo.", M + 10, y - 20, W - 2 * M - 20, font="Helvetica-Bold", size=7.5, leading=10, color=INK)
+    y -= 100
+    c.setStrokeColor(LINE); c.line(M, y, M + 70 * mm, y); c.line(W - M - 70 * mm, y, W - M, y)
+    t(c, p.name, M, y - 14, 70 * mm, font="Helvetica-Bold", size=7, leading=9, align="center")
+    t(c, "José J. Chediack S.A.I.C.A.", W - M - 70 * mm, y - 14, 70 * mm, font="Helvetica-Bold", size=7, leading=9, align="center")
+    t(c, f"{p.address}\n{p.phone} | {p.email}", M, 41 * mm, W - 2 * M, size=6.8, leading=9, color=MUTED, align="center")
+    c.showPage()
+
+
+def build_fiberquil(p):
+    path = OUTPUT / "Propuesta_Fiberquil_Chediack_Mudanza.pdf"
+    c = canvas.Canvas(str(path), pagesize=A4, pageCompression=1)
+    c.setTitle("Propuesta Fiberquil - Chediack - Mudanza integral")
+    c.setAuthor(p.name)
+    fiber_cover(c, p)
+    fiber_snapshot(c, p)
+    fiber_workstreams(c, p, 3, "Infraestructura y estructura", "Frentes de trabajo vinculados al terreno y al monoposte.", [
+        ("01", "Ingeniería", ["Relevamiento del estado actual e inventario.", "Topografía georreferenciada.", "Estudio de suelos.", "Memorias de cálculo firmadas.", "MOP, ventanas y planos conforme a obra."]),
+        ("02", "Fundaciones", ["Excavación y retiro de suelo.", "Platea o monobloque hasta 10 m3.", "Armadura, anclajes y plantilla.", "Canalizaciones, cámaras y bases.", "Curado y liberación para izaje."]),
+        ("03", "Desmontaje", ["Corte programado con el operador.", "Bajada y etiquetado de equipos.", "Desmontaje de energía y gabinete.", "Inventario con trazabilidad.", "Retiro del monoposte hasta 18 m."]),
+        ("04", "Traslado y montaje", ["Transporte dentro del predio.", "Plan específico de izaje.", "Grúa y personal habilitado.", "Montaje en nueva fundación.", "Aplomado, nivelación y torqueado."]),
+    ])
+    fiber_workstreams(c, p, 4, "Sistemas activos e integración", "Frentes de trabajo vinculados con radio, energía, transmisión y puesta en servicio.", [
+        ("05", "Sistema radiante", ["Antenas, RRU y soportes.", "Enlaces de microondas.", "Azimuts y tilts según operador.", "Alimentadores, jumpers y sellado.", "Puestas a tierra de línea."]),
+        ("06", "Energía", ["Gabinete outdoor y BBU.", "Rectificadores y baterías.", "Tableros AC/DC y climatización.", "PAT y protección atmosférica.", "Balizamiento y alarmas si corresponde."]),
+        ("07", "Fibra y transmisión", ["Tendido y ordenamiento.", "Fusiones y conectorización.", "Armado de ODF y bandejas.", "Certificación OTDR bidireccional.", "Entrega de trazas y protocolos."]),
+        ("08", "Integración", ["Configuración de BBU y radios.", "Integración con OSS y NOC.", "Verificación de alarmas.", "Swap con rollback definido.", "Soporte 72 h y aceptación."]),
+    ])
+    fiber_method(c, p); fiber_controls(c, p); fiber_price(c, p); fiber_terms(c, p)
+    c.save()
+    if len(PdfReader(str(path)).pages) != 8:
+        raise RuntimeError("Fiberquil debe tener 8 páginas")
+    return path
+
+
+def build_bibop(p):
+    path = OUTPUT / "Propuesta_Bibop_Chediack_Mudanza.pdf"
+    c = canvas.Canvas(str(path), pagesize=A4, pageCompression=1)
+    c.setTitle("Propuesta Bibop - Chediack - Mudanza integral")
+    c.setAuthor(p.name)
+    bibop_cover(c, p); bibop_summary(c, p); bibop_scope(c, p); bibop_plan(c, p); bibop_price(c, p); bibop_terms(c, p)
+    c.save()
+    if len(PdfReader(str(path)).pages) != 6:
+        raise RuntimeError("Bibop debe tener 6 páginas")
+    return path
+
+
+def main():
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    fiber, bibop = base.PROPOSALS
+    outputs = (build_fiberquil(fiber), build_bibop(bibop))
+    for path in outputs:
+        print(f"OK {path.name}: {len(PdfReader(str(path)).pages)} páginas, {path.stat().st_size} bytes")
+
+
+if __name__ == "__main__":
+    main()

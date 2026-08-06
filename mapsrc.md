@@ -46,6 +46,7 @@ Funcion:
 
 ## Archivos nuevos de soporte
 
+- `06.0063 PJ CarteraComercial - copia editable.docx`: copia en formato Word moderno del formulario comercial original `.doc`; conserva su contenido y diagramacion, pero elimina la restriccion de edicion exclusiva de campos para permitir modificar texto e insertar imagenes libremente. El archivo original ubicado fuera del repositorio permanece intacto.
 - `assets/css/google-ads-landing.css`: estilos especificos de la landing. Reutiliza paleta azul/verde, tipografias Poppins/Inter y assets existentes para recrear la pieza promocional.
 - `assets/js/whatsapp-ads-tracking.js`: utilitario central para configurar el link de WhatsApp, aplicar el texto precargado a todos los botones con `data-whatsapp-cta`, normalizar enlaces dinamicos de WhatsApp generados por el validador y registrar clicks de conversion.
 
@@ -124,3 +125,46 @@ Esto no mide conversiones reales por si solo. Para medir conversiones reales hay
 - No cargar scripts pesados de la home en esta landing salvo necesidad real de conversion.
 - No reemplazar la web normal: la home sigue en `/` y las paginas institucionales siguen bajo `pages/`.
 - Si se crean archivos nuevos en el futuro, actualizar este `mapsrc.md` explicando que hacen y que funcion cumplen.
+
+## Propuestas comerciales Chediack - mudanza de sitios
+
+Archivos incorporados para preparar y entregar tres propuestas comparables por el mismo alcance de mudanza integral de los sitios Claro y Movistar del PBN Anillo Pampa:
+
+- `scripts/generate_chediack_proposals.py`: generador reproducible en ReportLab de las propuestas de Fiberquil y Bibop. Centraliza identidad visual, datos societarios, alcance tecnico, condiciones comerciales e importes, copia la propuesta original de iTTel y valida que cada PDF tenga diez paginas.
+- `scripts/run_chediack_proposals.py`: punto de ejecucion que toma la propuesta original desde `C:/Users/Aguus/OneDrive/Escritorio/Propuestas/` y lanza el generador.
+- `assets/img/propuestas/fiberquil-logo.png`: logo oficial de Fiberquil usado en su propuesta.
+- `assets/img/propuestas/bibop-logo.png`: logo oficial de Bibop usado en su propuesta.
+- `output/pdf/Propuesta_iTTel_Chediack_Mudanza.pdf`: copia de entrega de la propuesta original de Grupo iTTel, con total base de USD 85.754.
+- `output/pdf/Propuesta_Fiberquil_Chediack_Mudanza.pdf`: propuesta de Fiberquil con el mismo alcance y condiciones, identidad tecnica propia y valores incrementados un 5,2%.
+- `output/pdf/Propuesta_Bibop_Chediack_Mudanza.pdf`: propuesta de Bibop con el mismo alcance y condiciones, presentacion corporativa simple y valores incrementados un 12,24%.
+
+### Arquitectura documental diferenciada (version 2)
+
+- `scripts/generate_chediack_proposals_v2.py`: generador vigente de las propuestas alternativas. Reutiliza los datos e importes centralizados, pero produce estructuras editoriales independientes para evitar que las ofertas parezcan variantes de la propuesta iTTel.
+- Fiberquil se entrega como dossier tecnico de ocho paginas: portada asimetrica, ficha ejecutiva, frentes de trabajo por tarjetas, secuencia visual, controles y entregables, oferta economica por bloques y condiciones finales. El naranja es el color principal.
+- Bibop se entrega como propuesta administrativa compacta de seis paginas: portada simple, resumen, alcance por etapas, plan tabular, presupuesto y condiciones generales.
+- Los archivos finales conservan los nombres estables `output/pdf/Propuesta_Fiberquil_Chediack_Mudanza.pdf` y `output/pdf/Propuesta_Bibop_Chediack_Mudanza.pdf`.
+
+### Arquitectura documental sobria (version 3)
+
+- `scripts/generate_chediack_proposals_v3.py`: generador vigente para la revision solicitada. Reutiliza los datos, logos e importes de las versiones anteriores, pero reemplaza el dossier visual de Fiberquil por una propuesta corporativa convencional de nueve paginas y amplia Bibop a ocho paginas.
+- Fiberquil usa portada limpia, encabezados discretos, capitulos tecnicos, tablas de alcance, cronograma, controles, oferta economica, condiciones y exclusiones.
+- Bibop mantiene una presentacion administrativa simple y distribuye objeto, dos capitulos de alcance, cronograma, controles, presupuesto y condiciones en ocho paginas.
+- Los nombres de entrega permanecen estables dentro de `output/pdf/`.
+
+### Entrega divergente por formato (version 4)
+
+- `scripts/generate_fiberquil_plain_v4.py`: generador vigente de Fiberquil. Produce un PDF tamaño Carta de siete paginas, tipografia Times, texto corrido y secciones numeradas, sin tarjetas, recuadros ni tablas de diseño.
+- `scripts/build_bibop_quote_v4.mjs`: constructor reproducible de la cotizacion informal de Bibop con `@oai/artifact-tool`. Genera una sola hoja editable con detalle por renglon, subtotales y total calculados mediante formulas.
+- `output/pdf/Propuesta_Fiberquil_Chediack_Mudanza.pdf`: propuesta Fiberquil vigente, deliberadamente separada de la estructura editorial de iTTel.
+- `outputs/019fd83b-49ab-7f62-b271-ec2e8201db32/Cotizacion_Bibop_Chediack_Mudanza.xlsx`: cotizacion Bibop vigente en formato Excel. Reemplaza el PDF anterior de Bibop, que fue retirado para evitar confusiones.
+
+### Reescritura editorial Fiberquil (version 5)
+
+- `scripts/generate_fiberquil_memoria_v5.py`: generador intermedio de la propuesta Fiberquil. Reordena el contenido como memoria cronologica de intervencion, usa la familia Georgia embebida desde las fuentes de Windows y evita la estructura contractual y las frases del documento iTTel.
+- `output/pdf/Propuesta_Fiberquil_Chediack_Mudanza.pdf`: version de ocho paginas tamaño Carta con capitulos narrativos (punto de partida, preparacion, movimiento, reconexion, pruebas, cuenta y acuerdos), sin tablas ni paneles.
+
+### Fiberquil estilo documento de oficina (version 6)
+
+- `scripts/generate_fiberquil_word_v6.py`: generador vigente de Fiberquil. Recupera el aspecto simple de un archivo Word (Times, titulos basicos, texto corrido y lineas separadoras) y conserva la reescritura que evita frases y orden del documento iTTel.
+- `output/pdf/Propuesta_Fiberquil_Chediack_Mudanza.pdf`: entrega actual de siete paginas tamaño Carta, sin tablas, paneles ni recursos editoriales elaborados.

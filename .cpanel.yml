@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home4/usittel/public_html/
+    - /bin/cp .htaccess .user.ini php.ini index.html home.php "$DEPLOYPATH"
+    - /bin/cp -R assets datos-personales includes internet-fibra-optica-tandil js pages "$DEPLOYPATH"

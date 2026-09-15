@@ -107,7 +107,7 @@
             </li>
           </ul>
           <div class="pt-4">
-            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/usina_tandil.png"
+            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png"
               alt="Logo Usina de Tandil" class="rounded-md w-36" />
           </div>
         </div>

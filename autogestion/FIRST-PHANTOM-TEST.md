@@ -24,17 +24,25 @@ Esperamos orden descendente, overlap_count=0 y page_2_older=true cuando existan 
 
 La prueba ya fue completada; no es necesario repetirla.
 
-## Descarga: pendiente de identificar el recorrido nativo
+## Única prueba manual ahora: identificar el comprobante
 
-El manual explica Hash_Descarga, pero no documenta una URL inequívoca para esta instalación. El repositorio tampoco contiene esa implementación. No se construyó una URL por intuición y no se confundió con un enlace de pago.
+Botmaker confirma Comprobante_Factura.php?IDT=Hash_Descarga. Falta saber si responde PDF, HTML o redirección. Desde la raíz del proyecto, en la PowerShell con las variables ya configuradas:
 
-El backend tiene preparada autorización por sesión + IDA + IDT y validación PDF; la fuente real está cerrada con DOCUMENT_NOT_CONFIGURED. La descarga pública sigue deshabilitada. Las pruebas PDF actuales usan únicamente una fuente simulada, nunca un PDF ficticio mostrado como real.
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-invoice-document.php 1 --latest
+```
 
-Después de validar la paginación se indicará una única comprobación del flujo nativo de descarga. No compartir una URL completa con hash, cookies, token, capturas de datos privados, JSON crudo ni HAR sin sanear.
+--latest elige explícitamente la factura más reciente del historial JSON del IDA 1 y recupera su propio hash internamente. No tenés que escribir ni compartir el hash. El inspector también admite un IDT numérico concreto en lugar de --latest para una factura histórica; nunca usa el hash de la última para otra factura.
+
+Hace como máximo cuatro solicitudes de lectura: autenticación, hasta dos páginas del historial y un solo GET del comprobante. No sigue redirects, no guarda documento/cookies/token, no carga scripts ni pulsa opciones de pago. Mantiene tu CA y TLS; corta respuestas superiores a 10 MiB. No modificar config.php.
+
+Pegá únicamente la salida del inspector. Informa HTTP, MIME, tamaños, firma PDF, tipo detectado y redirect; no contiene valores del hash, token, URL completa ni datos personales. En una redirección, las rutas no reconocidas se omiten por seguridad. No enviar HTML, PDF, cookies, JSON crudo ni configuración privada.
+
+Esperar el análisis de esa salida antes de conectar Descargar. Su fuente real continúa deshabilitada con DOCUMENT_NOT_CONFIGURED.
 
 ## Recorrido de aceptación pendiente para Facturas
 
-Página 1 real → Cargar más → continuidad sin duplicados → abrir una factura conocida → descarga real cuando el recorrido esté confirmado → logout. Todavía no está aceptado este recorrido ampliado.
+Historial, Cargar más, continuidad y detalle ya aceptados. Pendiente: clasificar la respuesta documental, implementar la entrega segura según ese resultado, probar descarga conocida y logout del recorrido ampliado.
 
 El portal local sigue en http://127.0.0.1:4174/autogestion/, con `npm run dev:mi-usittel:php`. `npm run check:mi-usittel` y `npm run test:mi-usittel` no contactan Phantom. No modificar credenciales, ca_file, Apache, DNS, .htaccess ni producción.
 
@@ -51,6 +59,6 @@ Usar la ubicación real de PHP si cambió. No imprimir ni compartir la configura
 
 ## Validación real del historial y ajuste visual — 18/09/2026
 
-Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de identificar su endpoint.
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de clasificar la respuesta del endpoint encontrado en Botmaker.
 
 Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.

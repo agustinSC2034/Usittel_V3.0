@@ -30,6 +30,32 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const documentConfig=path.join(dir,'document-config.php');
+  const caFixture=path.join(dir,'fixture-ca.pem');fs.writeFileSync(caFixture,'fixture only');
+  fs.writeFileSync(documentConfig,settings().replace("'mode'=>'phantom'", "'ca_file'=>'"+caFixture.replaceAll('\\','/')+"','mode'=>'phantom'"));
+  const documentErrors={'not-found':'INVOICE_NOT_FOUND',foreign:'INVOICE_OWNERSHIP','missing-hash':'DOCUMENT_UNAVAILABLE','empty-hash':'DOCUMENT_UNAVAILABLE',size:'DOCUMENT_SIZE','header-size':'DOCUMENT_SIZE',timeout:'PHANTOM_TIMEOUT',runtime:'PHANTOM_CURL_RUNTIME',args:'INSPECTOR_ARGUMENTS','hash-argument':'INSPECTOR_ARGUMENTS',duplicate:'INVOICES_DUPLICATE'};
+  for(const name of ['pdf','latest','html','redirect','external','unsafe-path','relative','http-redirect','userinfo','no-location','mime','empty','http-error',...Object.keys(documentErrors)]) {
+    const before=fs.readdirSync(dir).sort();
+    const probe=spawnSync(php,[path.join(__dirname,'document-probe.php'),name],{env:{...fixtureEnv,MI_USITTEL_CONFIG:documentConfig},encoding:'utf8'});
+    check('inspector de documento '+name+': selección exacta, TLS y GET único sin secretos',()=>{
+      assert.equal(probe.status,documentErrors[name]?1:0,probe.stdout+probe.stderr);
+      assert.deepEqual(fs.readdirSync(dir).sort(),before);
+      assert.doesNotMatch(probe.stdout+probe.stderr,/private-|fixture-|https?:|IDT=|Hash_Descarga|Set-Cookie|<html/);
+      if(documentErrors[name]) assert.ok(probe.stderr.includes(documentErrors[name]),probe.stderr);
+      else {
+        assert.match(probe.stdout,/Endpoint: Comprobante_Factura.php/);
+        if(name==='pdf' || name==='latest') assert.match(probe.stdout,/Firma PDF: sí/);
+        if(name==='html') assert.match(probe.stdout,/Tipo detectado: HTML/);
+        if(name==='empty') assert.match(probe.stdout,/Tipo detectado: VACÍO/);
+        if(name==='mime') assert.match(probe.stdout,/Content-Type: no reconocido/);
+        if(name==='http-error') assert.match(probe.stdout,/HTTP: 500/);
+        if(['redirect','relative','unsafe-path'].includes(name)) assert.match(probe.stdout,/Destino host permitido: sí/);
+        if(['external','http-redirect','userinfo','no-location'].includes(name)) assert.match(probe.stdout,/Destino host permitido: no/);
+        if(name==='redirect') assert.match(probe.stdout,/Destino path: \/PHANTOM\/login.php/);
+        if(name==='unsafe-path') assert.match(probe.stdout,/Destino path: \[omitido/);
+      }
+    });
+  }
   for(const name of ['normal','empty','one','repeat','duplicate','html','http','args']) {
     const before=fs.readdirSync(dir).sort();
     const probe=spawnSync(php,[path.join(__dirname,'invoice-probe.php'),name],{env:fixtureEnv,encoding:'utf8'});

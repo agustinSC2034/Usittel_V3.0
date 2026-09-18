@@ -14,9 +14,9 @@ Autenticación técnica GET HTTPS, lecturas POST JSON con token en body y TLS/CA
 - Detalle reconsultado para una factura del historial autorizado en la sesión.
 - Perfil y saldo de cuenta separados del total de factura. No se inventan saldo pendiente, fecha/método de pago ni próximo vencimiento global.
 - Estados originales PAGADA/IMPAGA se presentan como Pagada/Pendiente; no se agregó una regla de vencida basada en fechas.
-- Descarga: backend autorizado y controles de PDF preparados y probados con fixtures. Falta el endpoint real, no documentado inequívocamente. Botón real deshabilitado, fuente real cerrada, sin URLs adivinadas ni documentos de ejemplo en Phantom.
+- Descarga: backend autorizado y controles de PDF preparados y probados con fixtures. El endpoint fue identificado en Botmaker; falta verificar qué responde (PDF/HTML/redirect). Botón real deshabilitado, fuente real cerrada, sin URLs adivinadas ni documentos de ejemplo en Phantom.
 
-El inspector y la navegación real confirmaron las dos páginas (10 + 1) y sus detalles. Ver FIRST-PHANTOM-TEST.md. La descarga real continúa pendiente de confirmar su endpoint.
+El inspector y la navegación real confirmaron las dos páginas (10 + 1) y sus detalles. Ver FIRST-PHANTOM-TEST.md. La descarga real continúa pendiente de clasificar la respuesta del endpoint.
 
 ## Conservado
 
@@ -30,6 +30,8 @@ Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gest
 
 ## Validación real del historial y ajuste visual — 18/09/2026
 
-Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de identificar su endpoint.
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de clasificar la respuesta del endpoint.
 
 Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
+
+Inspector CLI de documento preparado: IDA 1 + IDT numérico, o --latest explícito, resolución interna de Hash_Descarga desde JSON, GET único al path fijo encontrado en Botmaker, TLS/CA y sin redirects. La prueba manual solo produce metadatos seguros. No habilita Descargar, pagos ni escrituras.

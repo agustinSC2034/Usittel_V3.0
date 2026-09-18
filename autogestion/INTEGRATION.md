@@ -64,7 +64,7 @@ El detalle se consulta en `GET invoice?id=...`: exige que el IDT ya pertenezca a
 
 ### Descarga: PDF confirmado y backend conectado
 
-Botmaker aporta el path /PHANTOM/Includes/CRM/Comprobante_Factura.php y el contrato IDT=Hash_Descarga. Agustín confirmó con el inspector: HTTP 200, application/pdf, 512207 bytes, firma PDF, sin redirects, sin Content-Length. Esto prueba una factura reciente; la aceptación de la descarga reciente/histórica desde el portal sigue pendiente.
+Botmaker aporta el path /PHANTOM/Includes/CRM/Comprobante_Factura.php y el contrato IDT=Hash_Descarga. Agustín confirmó con el inspector: HTTP 200, application/pdf, 512207 bytes, firma PDF, sin redirects, sin Content-Length. Posteriormente Agustín aceptó también la descarga reciente/histórica desde el portal.
 
 GET invoice-document?id=... exige sesión activa IDA 1 y factura previamente cargada en esa sesión. Reconsulta su posición y comprueba exactamente el IDT; cambios de orden/propietario fallan cerrado. Resuelve el hash de ESA fila, no el último hash genérico. El navegador no puede enviar IDA, hash, URL ni token.
 
@@ -92,7 +92,7 @@ Seguir FIRST-PHANTOM-TEST.md. Mantener config.php, bundle CA y runtime fuera del
 
 `npm run test:mi-usittel` usa exclusivamente fixtures y un servidor local, nunca Phantom real. Cubre transporte GET/POST, encoding, BOM, TLS/errores seguros, lista e identidad, credenciales exactas, campos opcionales, saldo/facturas inválidos, whitelist pública, CSRF, sesión/logout/vencimientos, limitación de intentos, aislamiento demo y ausencia de secretos. Los dobles cURL no ejecutan red externa.
 
-Pendiente real de esta etapa: aceptación de descarga reciente/histórica desde el portal y logout del recorrido ampliado. Páginas 1/2, continuidad y detalle del historial ampliado fueron confirmados por Agustín. Identidad, login, Inicio/saldo/última factura/detalle, recarga y logout de la etapa básica ya fueron aceptados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
+Aceptación real de esta etapa completada por Agustín: descarga reciente/histórica desde el portal y logout del recorrido ampliado. Páginas 1/2, continuidad y detalle del historial ampliado fueron confirmados por Agustín. Identidad, login, Inicio/saldo/última factura/detalle, recarga y logout de la etapa básica ya fueron aceptados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
 
 ### QA local de esta entrega
 
@@ -100,7 +100,7 @@ QA de la etapa inicial del historial: 205 verificaciones con fixtures, chequeo l
 
 ## Validación real del historial y ajuste visual — 18/09/2026
 
-Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal espera la aceptación manual final.
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal fue aceptada manualmente.
 
 Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
 
@@ -116,12 +116,16 @@ El GET solo se construye sobre el origen HTTPS configurado y el path fijo. IDT e
 
 La salida es una lista cerrada de metadatos: endpoint fijo, HTTP, MIME reconocido, tamaño declarado numérico y bytes recibidos, firma PDF, tipo detectado y redirect. En redirects muestra coincidencia de origen HTTPS y solo paths estáticos conocidos; cualquier ruta no reconocida se omite porque también puede contener capabilities. Nunca muestra query, fragmento, host externo, valores de cookies ni cabeceras arbitrarias. HTTP 200 HTML se informa como tal y NO se considera descarga; un HTTP de error también se informa sin su contenido. Un error de transporte usa los códigos seguros existentes.
 
-El inspector sigue siendo CLI; tras el resultado real, se extrajo su transporte a DocumentTransport.php, compartido con PhantomInvoiceDocuments. Descargar ya está conectado y espera validación manual del recorrido. Fixtures cubren selección histórica exacta, más reciente explícita, otra cuenta, inexistente, hash ausente/vacío, duplicados, PDF, HTML, redirects internos/externos/HTTP/credenciales/path sensible, MIME desconocido, vacío, HTTP 500, tamaño de cuerpo/cabeceras, timeout y excepciones sin secretos. Ninguna prueba automatizada llama Phantom.
+El inspector sigue siendo CLI; tras el resultado real, se extrajo su transporte a DocumentTransport.php, compartido con PhantomInvoiceDocuments. Descargar está conectado y el recorrido fue validado manualmente por Agustín. Fixtures cubren selección histórica exacta, más reciente explícita, otra cuenta, inexistente, hash ausente/vacío, duplicados, PDF, HTML, redirects internos/externos/HTTP/credenciales/path sensible, MIME desconocido, vacío, HTTP 500, tamaño de cuerpo/cabeceras, timeout y excepciones sin secretos. Ninguna prueba automatizada llama Phantom.
 
 Validación de la etapa del inspector: 229 verificaciones con fixtures (24 nuevas del inspector documental), lint PHP y revisión de diff correctos. En la etapa del inspector no se ejecutaron consultas reales automáticas ni se habilitó el botón.
 
 ## Cierre de conexión documental
 
-Prueba real aportada por Agustín: endpoint PDF, HTTP 200, 512207 bytes, sin redirects. El flujo del portal y la fuente HTTP están probados con fixtures; no se hicieron llamadas reales automáticas. Pendiente una única aceptación manual: descargar y contrastar una factura reciente y otra histórica, cerrar sesión y recargar. Tras esa confirmación corresponde informar al chat principal.
+Prueba real aportada por Agustín: endpoint PDF, HTTP 200, 512207 bytes, sin redirects. El flujo del portal y la fuente HTTP están probados con fixtures; no se hicieron llamadas reales automáticas. Agustín confirmó el recorrido final: descarga y contraste de una factura reciente y otra histórica, cierre de sesión y recarga. Etapa de lectura de Facturas aceptada para IDA 1; corresponde informar al chat principal.
 
-Validación de la conexión PDF: 242 verificaciones con fixtures, lint PHP y recorrido de navegador local mobile/desktop con descarga simulada. Las pruebas no contactan Phantom. El endpoint real fue probado por Agustín; la descarga completa desde el portal espera su aceptación.
+Validación de la conexión PDF: 242 verificaciones con fixtures, lint PHP y recorrido de navegador local mobile/desktop con descarga simulada. Las pruebas no contactan Phantom. El endpoint real fue probado por Agustín; la descarga completa desde el portal fue aceptada por Agustín.
+
+## Cierre aceptado — 18/09/2026
+
+Agustín respondió “listo todo ok” a la comprobación final solicitada: descarga de factura reciente e histórica, correspondencia de período/número/importe y logout seguido de recarga al login. Es aceptación manual del laboratorio IDA 1, no validación de otros clientes ni de producción. No se habilitan SIRO, pagos ni escrituras.

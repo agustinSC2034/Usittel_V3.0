@@ -30,15 +30,15 @@ Agustín ejecutó inspect-invoice-document.php 1 --latest: HTTP 200, application
 
 La API del portal ahora reconsulta la factura seleccionada del IDA de sesión y obtiene su propio hash, incluso para facturas históricas. El navegador solo envía IDT. La descarga usa el transporte HTTPS compartido con el inspector, con CA, sin redirects, máximo 10 MiB y validación de MIME/firma/cierre PDF. Solo después entrega el archivo como adjunto sin cachear. No guarda el PDF en el servidor.
 
-## Única comprobación manual ahora
+## Comprobación manual completada
 
-Con el servidor local ya iniciado, recargar Mi USITTEL con Ctrl+F5, ingresar y entrar en Facturas. Descargar una factura reciente y luego, usando Cargar más, una histórica. Abrir ambos PDF y comprobar localmente período, número e importe contra cada factura seleccionada. Cerrar sesión y recargar para verificar que vuelve al login.
+Este recorrido fue confirmado por Agustín; no hace falta repetirlo. Referencia para futuras regresiones: con el servidor local ya iniciado, recargar Mi USITTEL con Ctrl+F5, ingresar y entrar en Facturas. Descargar una factura reciente y luego, usando Cargar más, una histórica. Abrir ambos PDF y comprobar localmente período, número e importe contra cada factura seleccionada. Cerrar sesión y recargar para verificar que vuelve al login.
 
-Informar únicamente si cada PDF corresponde a su factura y si el cierre de sesión funcionó, o el mensaje de error visible. No compartir PDFs, hash, tokens, cookies, URL completa ni configuración. Si funciona, la etapa está lista para informar al chat principal. SIRO/pagos siguen deshabilitados.
+Informar únicamente si cada PDF corresponde a su factura y si el cierre de sesión funcionó, o el mensaje de error visible. No compartir PDFs, hash, tokens, cookies, URL completa ni configuración. El resultado fue correcto: la etapa está lista para informar al chat principal. SIRO/pagos siguen deshabilitados.
 
-## Recorrido de aceptación pendiente para Facturas
+## Recorrido de Facturas aceptado
 
-Historial, Cargar más, continuidad y detalle ya aceptados. Endpoint PDF comprobado e implementación conectada. Pendiente: aceptar la descarga reciente/histórica desde el portal y logout del recorrido ampliado.
+Historial, Cargar más, continuidad y detalle ya aceptados. Endpoint PDF comprobado e implementación conectada. Descarga reciente/histórica desde el portal y logout del recorrido ampliado aceptados por Agustín.
 
 El portal local sigue en http://127.0.0.1:4174/autogestion/, con `npm run dev:mi-usittel:php`. `npm run check:mi-usittel` y `npm run test:mi-usittel` no contactan Phantom. No modificar credenciales, ca_file, Apache, DNS, .htaccess ni producción.
 
@@ -55,6 +55,10 @@ Usar la ubicación real de PHP si cambió. No imprimir ni compartir la configura
 
 ## Validación real del historial y ajuste visual — 18/09/2026
 
-Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal espera la aceptación manual final.
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal fue aceptada manualmente.
 
 Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
+
+## Cierre aceptado — 18/09/2026
+
+Agustín respondió “listo todo ok” a la comprobación final solicitada: descarga de factura reciente e histórica, correspondencia de período/número/importe y logout seguido de recarga al login. Es aceptación manual del laboratorio IDA 1, no validación de otros clientes ni de producción. No se habilitan SIRO, pagos ni escrituras.

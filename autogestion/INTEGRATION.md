@@ -2,6 +2,8 @@
 
 ## Evidencia y límites
 
+Próxima comprobación: `inspect-schema.php 1 --auth-get` usa la autenticación GET confirmada y tres consultas POST JSON (cliente, cuenta, una factura). CLI aislado, IDA 1 permitido, máximo cuatro llamadas sin reintentos, sin caché/sesiones. Conserva los envoltorios crudos y limita el esquema a 120 campos por sección. El cliente ya fue observado como lista; no se selecciona un registro para autorizar ni se configuran mapeos por nombre. Login y Dashboard permanecen sin conectar a este transporte. El modo histórico del inspector sigue disponible sin esta opción.
+
 Compatibilidad de respuesta confirmada por diagnóstico: la consulta de cliente devuelve un prefijo BOM UTF-8. El decoder compartido elimina solamente un BOM en el byte cero antes de validar JSON; mantiene los rechazos HTTP, límites, validación de estructura y errores funcionales. La presencia del prefijo no demuestra por sí sola que el resto sean datos válidos del cliente. No cambia métodos HTTP ni autenticación del portal.
 
 Actualización de laboratorio: el usuario confirmó `TOKEN_RECIBIDO` con GET por HTTPS y `JSON=1`; POST JSON y formulario devolvieron HTTP 400 en autenticación. El portal permanece sin cambios. `inspect-customer.php 1` permite ahora una autenticación GET y una única lectura POST JSON de cliente con token en el cuerpo, sin caché ni reintentos. Esta segunda operación todavía no está validada contra Phantom real. El esquema se filtra con el mismo helper acotado del inspector completo, sin inferir campos de perfil.

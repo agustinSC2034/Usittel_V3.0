@@ -30,6 +30,31 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const fullConfig=path.join(dir,'full-probe.php');
+  for(const [name,stage,code,http,format] of [['success'],['no-invoice'],
+    ...['autenticacion','cliente','estado_cuenta','factura'].map((s,i)=>[`fail-${i+1}`,s,'TOKEN_EXPIRED',401]),
+    ['malformed-account','estado_cuenta','PHANTOM_FORMAT',200,'APARIENCIA_HTML'],['other-invoice-error','factura','PHANTOM_FUNCTIONAL'],
+    ['warning-invoice','factura','PROBE_PHP'],['args','configuracion','INSPECTOR_ARGUMENTS'],
+    ['demo','configuracion','CONFIGURATION'],['forbidden','configuracion','CONFIGURATION']]) {
+    let content=settings(name==='demo'?'demo':'phantom');
+    if(name==='forbidden') content=content.replace("'allowed_idas'=>[1,5]","'allowed_idas'=>[5]");
+    fs.writeFileSync(fullConfig,content.replace('<?php return',"<?php echo 'private-config-output'; return"));
+    const before=fs.readdirSync(dir).sort();
+    const probe=spawnSync(php,[path.join(__dirname,'full-schema-probe.php'),name],{env:{...fixtureEnv,MI_USITTEL_CONFIG:fullConfig},encoding:'utf8'});
+    check(`esquema completo GET ${name}: IDA 1, cuatro llamadas máximas, sin persistencia`,()=>{
+      assert.equal(probe.status,code?1:0,probe.stderr);assert.deepEqual(fs.readdirSync(dir).sort(),before);
+      if(code) {assert.equal(probe.stdout,'');assert.equal(probe.stderr.replace(/\r\n/g,'\n'),`Etapa: ${stage}\nCódigo: ${code}\n${http?`HTTP: ${http}\n`:''}${format?`Formato: ${format}\n`:''}`);}
+      else {
+        assert.equal(probe.stderr,'');const shape=JSON.parse(probe.stdout);
+        assert.deepEqual(Object.keys(shape),['customer','account','invoice']);
+        assert.equal(shape.customer.type,'array');assert.deepEqual(shape.customer.items.fields,{Nombre:'string'});
+        assert.equal(shape.account.fields.Saldo,'string');assert.deepEqual(shape.account.fields.details.items.fields,{Monto:'int'});
+        if(name==='no-invoice') assert.deepEqual(shape.invoice,{type:'array',items:'unknown'});
+        else assert.deepEqual(shape.invoice.items.fields,{IDT:'string',Total:'string'});
+      }
+      assert.doesNotMatch(probe.stdout+probe.stderr,/private-|fixture-|https?:\/\//);
+    });
+  }
   const customerConfig=path.join(dir,'customer-probe.php');
   for(const [name,stage,code,http,format] of [['success'],['bom'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
     ['http','cliente','PHANTOM_HTTP',400],['expired','cliente','TOKEN_EXPIRED',401],['redirect','cliente','PHANTOM_HTTP',302],
@@ -94,7 +119,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.deepEqual(JSON.parse(formTest.stdout),{default_json:true,form_roundtrip:true,secure_post:true,reads_json:true,single_auth:true});
     assert.equal(formTest.stderr.replace(/\r\n/g,'\n'),'Etapa: autenticacion\nCódigo: PHANTOM_HTTP\nHTTP: 400\n');
   });
-  for(const args of [[],['1','--unknown'],['1','--auth-form','--auth-form'],['2','--auth-form']]) {
+  for(const args of [[],['1','--unknown'],['1','--auth-form','--auth-form'],['2','--auth-form'],['1','--auth-get','--auth-form'],['5','--auth-get']]) {
     const invalid=spawnSync(php,[path.join(root,'server/inspect-schema.php'),...args],{env:{...fixtureEnv,MI_USITTEL_CONFIG:path.join(dir,'does-not-exist.php')},encoding:'utf8'});
     check(`inspector rechaza argumentos inválidos antes de configuración/red: ${JSON.stringify(args)}`,()=>{
       assert.equal(invalid.status,1);assert.equal(invalid.stdout,'');

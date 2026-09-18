@@ -2,6 +2,20 @@
 
 Esta prueba es únicamente para laboratorio, en modo lectura y con **IDA 1**. No habilita pagos, escrituras ni producción. Las credenciales técnicas se escriben personalmente en un archivo privado y nunca se pegan en el chat.
 
+## Próxima prueba: esquema completo con autenticación confirmada
+
+La autenticación GET por HTTPS y la lectura POST JSON del cliente ya fueron comprobadas por el usuario. El cliente llega como lista y con un BOM UTF-8 inicial. Para inspeccionar ahora también estado de cuenta y una factura, desde la PC de desarrollo y con las variables privadas existentes, ejecutar una vez:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1 --auth-get
+```
+
+Este modo está limitado a IDA 1 y exige que esté permitido en el archivo privado. Hace como máximo cuatro solicitudes: autenticación GET y tres lecturas POST JSON con token en el cuerpo. No reintenta ni sigue redirecciones. El token queda solamente en memoria; no usa ni escribe caché o sesiones. Mantiene el riesgo de logs remotos de la autenticación GET aceptado previamente.
+
+La salida incluye `customer`, `account` e `invoice` con claves/tipos, máximo cuatro niveles, un elemento representativo por lista y 120 campos por sección. Conserva los envoltorios originales: mostrar la estructura de un elemento no selecciona un cliente para Login. No aplica `customer_path`, mapeos de perfil ni interpreta `Balance_CC` como deuda. La factura se solicita con `Limit=1` y `Offset=0`; únicamente el error funcional documentado de factura inexistente se representa como lista vacía.
+
+Copiar únicamente esa salida estructural, o el bloque `Etapa / Código / HTTP / Formato` si falla. Si una consulta falla, no se imprimen resultados parciales. No compartir valores, JSON crudo, URLs, tokens o archivos privados. Todavía no conecta Login/Dashboard ni consulta pagos/SIRO. Los comandos históricos sin `--auth-get` conservan su comportamiento anterior.
+
 ## Paso 1 — Crear y editar la configuración privada
 
 Abrir PowerShell en la raíz del proyecto y ejecutar:

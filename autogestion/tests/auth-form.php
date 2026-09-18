@@ -26,8 +26,9 @@ function curl_errno(\CurlHandle $handle): int {return 0;}
 function curl_error(\CurlHandle $handle): string {return '';}
 function ensure(bool $condition,string $label): void {if(!$condition) throw new \RuntimeException($label);}
 
-ensure(inspectorArguments(['inspect-schema.php','1'])===['ida'=>1,'authForm'=>false],'default CLI arguments');
-ensure(inspectorArguments(['inspect-schema.php','5','--auth-form'])===['ida'=>5,'authForm'=>true],'form CLI arguments');
+ensure(inspectorArguments(['inspect-schema.php','1'])===['ida'=>1,'authForm'=>false,'authGet'=>false],'default CLI arguments');
+ensure(inspectorArguments(['inspect-schema.php','5','--auth-form'])===['ida'=>5,'authForm'=>true,'authGet'=>false],'form CLI arguments');
+ensure(inspectorArguments(['inspect-schema.php','1','--auth-get'])===['ida'=>1,'authForm'=>false,'authGet'=>true],'GET CLI arguments');
 $config=config();$config['ca_file']=null;
 $url='https://fixture.invalid/API_Rest.php?action=autentificar&JSON=1';
 $credentials=['api_user'=>'fixture +&=%á','api_pass'=>'fixture %&=+#? /á'];

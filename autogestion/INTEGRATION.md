@@ -58,7 +58,7 @@ Con credenciales configuradas, esta herramienta CLI consulta nombres y tipos de 
 
 Hace autenticación técnica y lecturas de cliente, estado de cuenta y una factura. Muestra nombres/tipos y una estructura anidada acotada (máximo cuatro niveles, un elemento representativo por lista y hasta 120 campos), sin valores. Excluye claves asociadas a contraseñas, tokens, secretos, hashes, URLs, archivos/documentos, datos fiscales/bancarios y contratos vinculados. Sigue siendo un primer diagnóstico y no demuestra semántica. Si el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo. **No se ejecutó contra Phantom real en esta entrega.**
 
-Ante un fallo, el inspector informa la etapa (`autenticacion`, `cliente`, `estado_cuenta` o `factura`) y un código propio. TLS distingue archivo CA (`PHANTOM_CA_FILE`), validación del certificado (`PHANTOM_TLS_VERIFY`) y negociación (`PHANTOM_TLS_HANDSHAKE`) sin exponer el error crudo de cURL. Una excepción inesperada agrega únicamente clase, basename del archivo y línea; el mensaje se omite salvo que provenga del código local y pase un filtro estricto. Nunca imprime respuestas.
+Ante un fallo, el inspector informa la etapa (`autenticacion`, `cliente`, `estado_cuenta` o `factura`) y un código propio. TLS distingue archivo CA (`PHANTOM_CA_FILE`), validación general (`PHANTOM_TLS_VERIFY`), emisor/cadena (`PHANTOM_TLS_ISSUER`), hostname, vigencia, revocación, certificado autofirmado y negociación (`PHANTOM_TLS_HANDSHAKE`) sin exponer el error crudo de cURL. Una excepción inesperada agrega únicamente clase, basename del archivo y línea; el mensaje se omite salvo que provenga del código local y pase un filtro estricto. Nunca imprime respuestas.
 
 ## Contrato interno
 

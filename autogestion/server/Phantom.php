@@ -13,7 +13,7 @@ final class CurlTransport implements Transport {
         if($this->config['ca_file']!==null) {
             if(!is_string($this->config['ca_file']) || ($ca=realpath($this->config['ca_file']))===false || !is_file($ca) || !is_readable($ca)) throw new Failure('PHANTOM_CA_FILE');
         }
-        $ch=null;$response='';$ok=false;$code=0;$errno=0;
+        $ch=null;$response='';$ok=false;$code=0;$errno=0;$curlError='';
         try {
             $ch=curl_init($url);
             if($ch===false) throw new Failure('PHANTOM_CURL_INIT');
@@ -25,11 +25,11 @@ final class CurlTransport implements Transport {
                 CURLOPT_WRITEFUNCTION=>static function($handle,$chunk) use (&$response) { if(strlen($response)+strlen($chunk)>2097152) return 0; $response.=$chunk; return strlen($chunk); }];
             if(!curl_setopt_array($ch,$options)) throw new Failure('PHANTOM_CURL_SETUP');
             if($ca!==null && !curl_setopt($ch,CURLOPT_CAINFO,$ca)) throw new Failure('PHANTOM_CA_FILE');
-            $ok=curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$errno=curl_errno($ch);
+            $ok=curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$errno=curl_errno($ch);$curlError=curl_error($ch);
         } catch(Failure $e) { throw $e; }
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
         finally { if($ch instanceof \CurlHandle) curl_close($ch); }
-        if ($ok===false) throw new Failure(self::diagnosticCodeForCurlErrno($errno),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
+        if ($ok===false) throw new Failure(self::diagnosticCodeForCurlFailure($errno,$curlError),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
         if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED');
         if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP');
         try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT'); }
@@ -45,6 +45,20 @@ final class CurlTransport implements Transport {
         foreach([60,83,90] as $code) $map[$code]='PHANTOM_TLS_VERIFY';
         foreach([35,58,59,64] as $code) $map[$code]='PHANTOM_TLS_HANDSHAKE';
         return $map[$errno]??'PHANTOM_NETWORK';
+    }
+    public static function diagnosticCodeForCurlFailure(int $errno,string $error): string {
+        if(!in_array($errno,[60,83,90],true)) return self::diagnosticCodeForCurlErrno($errno);
+        $error=strtolower($error);
+        $details=[
+            'PHANTOM_TLS_ISSUER'=>['unable to get local issuer certificate','unable to get issuer certificate'],
+            'PHANTOM_TLS_HOSTNAME'=>['no alternative certificate subject name matches','does not match target host name','hostname mismatch'],
+            'PHANTOM_TLS_EXPIRED'=>['certificate has expired','certificate expired'],
+            'PHANTOM_TLS_NOT_YET_VALID'=>['certificate is not yet valid','certificate not yet valid'],
+            'PHANTOM_TLS_REVOKED'=>['certificate revoked','certificate has been revoked'],
+            'PHANTOM_TLS_SELF_SIGNED'=>['self-signed certificate','self signed certificate'],
+        ];
+        foreach($details as $code=>$fragments) foreach($fragments as $fragment) if(str_contains($error,$fragment)) return $code;
+        return 'PHANTOM_TLS_VERIFY';
     }
 }
 final class Phantom {

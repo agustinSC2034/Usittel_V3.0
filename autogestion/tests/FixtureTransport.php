@@ -10,6 +10,7 @@ final class FixtureTransport implements Transport {
         if(!in_array($action,['autentificar','Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new \RuntimeException('Non-read action');
         file_put_contents($this->dir.'/trace.txt',$action.':'.($query['IDA']??'-')."\n",FILE_APPEND);
         $scenario=trim(@file_get_contents($this->dir.'/scenario')?:'normal');
+        if($scenario==='auth-failure' && $action==='autentificar') throw new Failure('PHANTOM_AUTH_TEST');
         if($scenario==='timeout') throw new Failure('PHANTOM_TIMEOUT',504);
         if($scenario==='http') throw new Failure('PHANTOM_HTTP');
         if($action==='autentificar') return ['token'=>'fixture-technical-token'];
@@ -19,6 +20,7 @@ final class FixtureTransport implements Transport {
         if($scenario==='expired-once' && !file_exists($this->dir.'/expired')) {touch($this->dir.'/expired');throw new Failure('TOKEN_EXPIRED');}
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
         if($action==='Consulta_Cliente_Avanzada') {
+            if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
             if($scenario==='missing-credentials') return ['Estado_Servicio'=>'Activo'];
             return ['Autogestion_User'=>(int)$query['IDA']===1?'000001':'laboratorio', 'Autogestion_Pass'=>' 00Lab-fixture! ',
                 'Estado_Servicio'=>'Suspendido',
@@ -27,10 +29,13 @@ final class FixtureTransport implements Transport {
                 'Conexiones_Asociadas'=>[['IDA'=>999,'Autogestion_Pass'=>'do-not-expose']], 'DNI'=>'do-not-expose', 'Tarjeta'=>'do-not-expose'];
         }
         if($action==='Phantom_Mi_Estado_Cuenta') {
+            if($scenario==='account-failure') throw new Failure('PHANTOM_ACCOUNT_TEST');
             if($scenario==='balance-error') return ['code'=>500,'message'=>'Private balance failure'];
             return ['test_balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50',default=>'-12500.75'},
                 'breakdown'=>['charges'=>[['kind'=>'fixture','amount'=>'1.00']]]];
         }
+        if($scenario==='invoice-failure') throw new Failure('PHANTOM_INVOICE_TEST');
+        if($scenario==='unexpected-invoice') throw new \TypeError('sensitive-value-do-not-print');
         if($scenario==='empty') return ['code'=>400,'message'=>'Error: No se encontró factura para el cliente (400)'];
         if($scenario==='invoices-error') return ['code'=>400,'message'=>'Some other error'];
         if($scenario==='malformed-invoices') return ['unrecognized'=>[]];

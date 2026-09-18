@@ -1,0 +1,38 @@
+<?php
+declare(strict_types=1);
+namespace MiUsittel;
+
+function safeDiagnosticCode(\Throwable $e): string {
+    return $e instanceof Failure && preg_match('/^[A-Z][A-Z0-9_]{1,63}$/D',$e->kind) ? $e->kind : 'UNEXPECTED';
+}
+function safeDiagnosticMessage(\Throwable $e): ?string {
+    if(!$e instanceof \JsonException) return null;
+    $file=realpath($e->getFile());$root=realpath(__DIR__);
+    if(!$file || !$root || !str_starts_with(strtolower(str_replace('\\','/',$file)),strtolower(str_replace('\\','/',$root)).'/')) return null;
+    $message=$e->getMessage();
+    $safeMessages=['Syntax error','Malformed UTF-8 characters, possibly incorrectly encoded','Recursion detected',
+        'Inf and NaN cannot be JSON encoded','Maximum stack depth exceeded'];
+    return in_array($message,$safeMessages,true)?$message:null;
+}
+function writeInspectorFailure(string $stage,\Throwable $e): int {
+    $source=$e instanceof InspectionFailure?$e->getPrevious():$e;
+    $code=$e instanceof InspectionFailure && preg_match('/^[A-Z][A-Z0-9_]{1,63}$/D',$e->safeCode)?$e->safeCode:safeDiagnosticCode($source);
+    $safeStage=preg_match('/^[a-z_]{3,32}$/D',$stage)?$stage:'desconocida';
+    fwrite(STDERR,'Etapa: '.$safeStage.PHP_EOL.'Código: '.$code.PHP_EOL);
+    if(!($source instanceof Failure)) {
+        $class=preg_replace('/[^A-Za-z0-9_]/','',str_replace('\\','_',$source::class))?:'Throwable';
+        fwrite(STDERR,'Excepción: '.$class.PHP_EOL);
+        fwrite(STDERR,'Archivo: '.basename($source->getFile()).PHP_EOL);
+        fwrite(STDERR,'Línea: '.$source->getLine().PHP_EOL);
+        $message=safeDiagnosticMessage($source);
+        if($message!==null) fwrite(STDERR,'Mensaje: '.$message.PHP_EOL);
+    }
+    return 1;
+}
+function runInspector(Phantom $phantom,int $ida): int {
+    try {
+        echo json_encode($phantom->inspectSchema($ida),JSON_THROW_ON_ERROR|JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE).PHP_EOL;
+        return 0;
+    } catch(InspectionFailure $e) { return writeInspectorFailure($e->stage,$e); }
+    catch(\Throwable $e) { return writeInspectorFailure('procesamiento',$e); }
+}

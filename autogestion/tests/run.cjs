@@ -41,6 +41,14 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.equal(schema.invoice.items.fields.Hash_Descarga,undefined);assert.equal(schema.invoice.items.fields.URL_PAGO,undefined);
     assert.doesNotMatch(command.stdout,/Cliente de pruebas|Calle ficticia|00Lab-fixture|fixture-technical-token|do-not-expose|https:\/\//);
   });
+  for(const [fixture,stage,code] of [['auth-failure','autenticacion','PHANTOM_AUTH_TEST'],['customer-failure','cliente','PHANTOM_CUSTOMER_TEST'],['account-failure','estado_cuenta','PHANTOM_ACCOUNT_TEST'],['invoice-failure','factura','PHANTOM_INVOICE_TEST']]) {
+    scenario(fixture);command=spawnSync(php,[path.join(__dirname,'inspect-schema-fixture.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},encoding:'utf8'});
+    check(`inspector identifica etapa ${stage}`,()=>{assert.equal(command.status,1);assert.equal(command.stdout,'');assert.match(command.stderr,new RegExp(`Etapa: ${stage}\\r?\\nCódigo: ${code}`));assert.doesNotMatch(command.stderr,/fixture-api|fixture-technical-token|00Lab-fixture|do-not-expose/);});
+  }
+  scenario('unexpected-invoice');command=spawnSync(php,[path.join(__dirname,'inspect-schema-fixture.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},encoding:'utf8'});
+  check('inspector limita excepción inesperada a metadatos seguros',()=>{assert.equal(command.status,1);assert.match(command.stderr,/Etapa: factura\r?\nCódigo: UNEXPECTED\r?\nExcepción: TypeError\r?\nArchivo: FixtureTransport.php\r?\nLínea: \d+/);assert.doesNotMatch(command.stderr,/sensitive-value|Mensaje:|fixture-api|token|https?:\/\//i);});
+  scenario('normal');command=spawnSync(php,[path.join(__dirname,'curl-diagnostics.php')],{env:{...process.env,MI_USITTEL_TEST:'1'},encoding:'utf8'});
+  check('cURL convierte CA inválida en código propio sin red',()=>{assert.equal(command.status,0,command.stderr);assert.equal(command.stdout,'PHANTOM_CA_FILE');});
   const traceAfterSchema=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
   check('chequeo local pasa sin red ni secretos',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/PHP/);assert.match(command.stdout,/cURL/);assert.match(command.stdout,/no contactó Phantom/);assert.doesNotMatch(command.stdout,/fixture-api-secret|fixture-api\b/);assert.equal(fs.readFileSync(path.join(dir,'trace.txt'),'utf8'),traceAfterSchema);});

@@ -58,6 +58,8 @@ Con credenciales configuradas, esta herramienta CLI consulta nombres y tipos de 
 
 Hace autenticación técnica y lecturas de cliente, estado de cuenta y una factura. Muestra nombres/tipos y una estructura anidada acotada (máximo cuatro niveles, un elemento representativo por lista y hasta 120 campos), sin valores. Excluye claves asociadas a contraseñas, tokens, secretos, hashes, URLs, archivos/documentos, datos fiscales/bancarios y contratos vinculados. Sigue siendo un primer diagnóstico y no demuestra semántica. Si el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo. **No se ejecutó contra Phantom real en esta entrega.**
 
+Ante un fallo, el inspector informa la etapa (`autenticacion`, `cliente`, `estado_cuenta` o `factura`) y un código propio. Una excepción inesperada agrega únicamente clase, basename del archivo y línea; el mensaje se omite salvo que provenga del código local y pase un filtro estricto. Nunca imprime errores crudos de cURL ni respuestas.
+
 ## Contrato interno
 
 Base `/autogestion/api/`, mismo origen, JSON UTF-8, Cache-Control no-store, sin CORS. Errores: `{"error":{"code":"CODIGO","message":"Texto público"}}`. El IDA se obtiene de sesión; parámetros de IDA/modo/action/URL se rechazan. No hay proxy genérico.

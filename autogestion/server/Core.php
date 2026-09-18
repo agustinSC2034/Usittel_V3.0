@@ -5,6 +5,11 @@ namespace MiUsittel;
 final class Failure extends \RuntimeException {
     public function __construct(public string $kind, public int $http = 503) { parent::__construct($kind); }
 }
+final class InspectionFailure extends \RuntimeException {
+    public function __construct(public string $stage, public string $safeCode, \Throwable $previous) {
+        parent::__construct($safeCode,0,$previous);
+    }
+}
 function config(): array {
     $c = ['mode'=>'demo', 'allowed_idas'=>[], 'lab_users'=>[], 'idle_seconds'=>900, 'max_seconds'=>28800,
         'timeout_seconds'=>10, 'connect_timeout_seconds'=>4, 'customer_path'=>[], 'profile_fields'=>[],

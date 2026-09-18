@@ -7,21 +7,40 @@ final class CurlTransport implements Transport {
     public function __construct(private array $config) {}
     public function post(string $url, array $body): array {
         if (!extension_loaded('curl')) throw new Failure('CONFIGURATION');
-        $ch=curl_init($url); $response='';
-        curl_setopt_array($ch,[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>json_encode($body,JSON_THROW_ON_ERROR),
-            CURLOPT_HTTPHEADER=>['Content-Type: application/json','Accept: application/json'],
-            CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,
-            CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2,
-            CURLOPT_CONNECTTIMEOUT=>$this->config['connect_timeout_seconds'],CURLOPT_TIMEOUT=>$this->config['timeout_seconds'],
-            CURLOPT_WRITEFUNCTION=>static function($ch,$chunk) use (&$response) { if(strlen($response)+strlen($chunk)>2097152) return 0; $response.=$chunk; return strlen($chunk); }]);
-        if ($this->config['ca_file']) curl_setopt($ch,CURLOPT_CAINFO,$this->config['ca_file']);
-        $ok=curl_exec($ch); $code=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE); $errno=curl_errno($ch); curl_close($ch);
-        if ($ok===false) throw new Failure($errno===CURLE_OPERATION_TIMEDOUT?'PHANTOM_TIMEOUT':'PHANTOM_NETWORK', $errno===CURLE_OPERATION_TIMEDOUT?504:503);
+        try { $encoded=json_encode($body,JSON_THROW_ON_ERROR); }
+        catch(\JsonException) { throw new Failure('PHANTOM_REQUEST_FORMAT'); }
+        $ca=null;
+        if($this->config['ca_file']!==null) {
+            if(!is_string($this->config['ca_file']) || ($ca=realpath($this->config['ca_file']))===false || !is_file($ca) || !is_readable($ca)) throw new Failure('PHANTOM_CA_FILE');
+        }
+        $ch=null;$response='';$ok=false;$code=0;$errno=0;
+        try {
+            $ch=curl_init($url);
+            if($ch===false) throw new Failure('PHANTOM_CURL_INIT');
+            $options=[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$encoded,
+                CURLOPT_HTTPHEADER=>['Content-Type: application/json','Accept: application/json'],
+                CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,
+                CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2,
+                CURLOPT_CONNECTTIMEOUT=>$this->config['connect_timeout_seconds'],CURLOPT_TIMEOUT=>$this->config['timeout_seconds'],
+                CURLOPT_WRITEFUNCTION=>static function($handle,$chunk) use (&$response) { if(strlen($response)+strlen($chunk)>2097152) return 0; $response.=$chunk; return strlen($chunk); }];
+            if(!curl_setopt_array($ch,$options)) throw new Failure('PHANTOM_CURL_SETUP');
+            if($ca!==null && !curl_setopt($ch,CURLOPT_CAINFO,$ca)) throw new Failure('PHANTOM_CA_FILE');
+            $ok=curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$errno=curl_errno($ch);
+        } catch(Failure $e) { throw $e; }
+        catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
+        finally { if($ch instanceof \CurlHandle) curl_close($ch); }
+        if ($ok===false) throw new Failure($this->curlFailureCode($errno),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
         if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED');
         if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP');
         try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT'); }
         if (!is_array($json)) throw new Failure('PHANTOM_FORMAT');
         return $json;
+    }
+    private function curlFailureCode(int $errno): string {
+        $map=[CURLE_OPERATION_TIMEDOUT=>'PHANTOM_TIMEOUT',CURLE_COULDNT_RESOLVE_HOST=>'PHANTOM_DNS',
+            CURLE_COULDNT_CONNECT=>'PHANTOM_CONNECT',CURLE_SSL_CONNECT_ERROR=>'PHANTOM_TLS',CURLE_WRITE_ERROR=>'PHANTOM_RESPONSE_TOO_LARGE'];
+        foreach(['CURLE_PEER_FAILED_VERIFICATION','CURLE_SSL_CACERT','CURLE_SSL_CACERT_BADFILE'] as $name) if(defined($name)) $map[(int)constant($name)]='PHANTOM_TLS';
+        return $map[$errno]??'PHANTOM_NETWORK';
     }
 }
 final class Phantom {
@@ -101,10 +120,21 @@ final class Phantom {
             }
             return ['type'=>'object','fields'=>$fields];
         };
-        $customer=$this->customer($ida);
-        $account=$this->read('Phantom_Mi_Estado_Cuenta',$ida);
-        $invoice=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>1,'Offset'=>0]);
+        if(!in_array($ida,$this->config['allowed_idas'],true)) throw new InspectionFailure('configuracion','FORBIDDEN',new Failure('FORBIDDEN',403));
+        $token=$this->inspectionStep('autenticacion',fn()=>$this->token(true));
+        $customer=$this->inspectionStep('cliente',function() use ($ida,$token) {
+            $data=atPath($this->raw('Consulta_Cliente_Avanzada',['IDA'=>$ida],['token'=>$token]),$this->config['customer_path']);
+            if(!is_array($data) || array_is_list($data)) throw new Failure('PHANTOM_FORMAT');
+            return $data;
+        });
+        $account=$this->inspectionStep('estado_cuenta',fn()=>$this->raw('Phantom_Mi_Estado_Cuenta',['IDA'=>$ida],['token'=>$token]));
+        $invoice=$this->inspectionStep('factura',fn()=>$this->raw('Phantom_Ultima_Factura',['IDA'=>$ida,'Limit'=>1,'Offset'=>0],['token'=>$token]));
         return ['customer'=>$shape($customer),'account'=>$shape($account),'invoice'=>$shape($invoice)];
+    }
+    private function inspectionStep(string $stage,callable $callback): mixed {
+        try { return $callback(); }
+        catch(InspectionFailure $e) { throw $e; }
+        catch(\Throwable $e) { throw new InspectionFailure($stage,$e instanceof Failure?$e->kind:'UNEXPECTED',$e); }
     }
     public function invoices(int $ida,int $offset=0): array {
         $data=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>20,'Offset'=>$offset]);

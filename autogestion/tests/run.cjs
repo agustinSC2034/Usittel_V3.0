@@ -56,6 +56,14 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
       }
     });
   }
+  for(const [name,expected] of Object.entries({pdf:null,'no-length':null,truncated:'DOCUMENT_FORMAT',html:'DOCUMENT_MIME',mime:'DOCUMENT_MIME',empty:'DOCUMENT_MIME',redirect:'DOCUMENT_HTTP',external:'DOCUMENT_HTTP','http-error':'DOCUMENT_HTTP',size:'DOCUMENT_SIZE','header-size':'DOCUMENT_SIZE',timeout:'PHANTOM_TIMEOUT',runtime:'PHANTOM_CURL_RUNTIME'})) {
+    const result=spawnSync(php,[path.join(__dirname,'document-probe.php'),name,'source'],{env:{...fixtureEnv,MI_USITTEL_CONFIG:documentConfig},encoding:'utf8'});
+    check('fuente PDF real con transporte simulado: '+name,()=>{
+      assert.equal(result.status,expected?1:0,result.stdout+result.stderr);
+      assert.doesNotMatch(result.stdout+result.stderr,/private-|fixture-|https?:|IDT=|Hash_Descarga|<html/);
+      if(expected) assert.ok(result.stderr.includes(expected),result.stderr); else assert.equal(result.stdout,'VALIDATED_PDF');
+    });
+  }
   for(const name of ['normal','empty','one','repeat','duplicate','html','http','args']) {
     const before=fs.readdirSync(dir).sort();
     const probe=spawnSync(php,[path.join(__dirname,'invoice-probe.php'),name],{env:fixtureEnv,encoding:'utf8'});

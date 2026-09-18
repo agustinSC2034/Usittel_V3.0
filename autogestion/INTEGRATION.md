@@ -50,7 +50,7 @@ La prueba real del IDA 1 contradijo la interpretación inicial de crédito menos
 
 Factura: IDT como identificador validado y sin duplicados; Periodo, Tipo, Comp_ID y Detalle como texto; Total numérico estricto; Primer_Vto y Segundo_Vto solo fechas válidas YYYY-MM-DD. Adaptador de Estado para PAGADA/IMPAGA; otros valores quedan no disponibles hasta confirmar contrato. No se inventan fecha de pago, saldo pendiente ni vencimiento global de cuenta.
 
-### Historial paginado: contrato implementado, prueba real pendiente
+### Historial paginado: contrato y prueba real aceptados
 
 [Manual API de Phantom, páginas 23–26](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view) revisado en esta etapa: documenta Factura/Vto en orden descendente por ID, Limit y Offset conjuntos, y ausencia de total. Conservamos las lecturas POST JSON comprobadas en esta instalación aunque el manual ilustre GET.
 
@@ -62,17 +62,17 @@ El detalle se consulta en `GET invoice?id=...`: exige que el IDT ya pertenezca a
 
 `inspect-invoices.php 1` realiza una autenticación y dos lecturas (offsets 0/10), sin persistencia ni reintentos. Devuelve cantidades, orden/continuidad y metadatos de presencia/tipo del hash, nunca sus valores. Si no hay dos páginas con datos, la prueba no confirma continuidad entre páginas no vacías.
 
-### Descarga: contrato de autorización listo, fuente real bloqueada
+### Descarga: PDF confirmado y backend conectado
 
-El mismo manual define Hash_Descarga como insumo para enlaces internos dependientes de cada instalación; no da una URL de PDF inequívoca. Se revisaron además los manuales de [Cuentas Corrientes](https://drive.google.com/file/d/1FrCWG1YVO-HxdQRIhhOuq8N6YiJnHsnd/view) y [Facturación](https://drive.google.com/file/d/1DY3XtxB0I-VW9IihLVcidgYavzdvCFsZ/view), sin encontrar esa URL. El repositorio no incluye el código de descarga de la autogestión nativa. No se consultó ni modificó la VM de Phantom. Un enlace de pago no se considera un documento.
+Botmaker aporta el path /PHANTOM/Includes/CRM/Comprobante_Factura.php y el contrato IDT=Hash_Descarga. Agustín confirmó con el inspector: HTTP 200, application/pdf, 512207 bytes, firma PDF, sin redirects, sin Content-Length. Esto prueba una factura reciente; la aceptación de la descarga reciente/histórica desde el portal sigue pendiente.
 
-`GET invoice-document?id=...` exige sesión activa IDA 1 y factura previamente obtenida para esa sesión. Reconsulta exactamente esa factura antes de resolver el hash. El navegador no puede enviar IDA, hash, URL ni token. IDT no reconocido → 404 sin llamar a la fuente documental; sesión ausente/vencida → 401. Cambiar posición/propietario falla cerrado.
+GET invoice-document?id=... exige sesión activa IDA 1 y factura previamente cargada en esa sesión. Reconsulta su posición y comprueba exactamente el IDT; cambios de orden/propietario fallan cerrado. Resuelve el hash de ESA fila, no el último hash genérico. El navegador no puede enviar IDA, hash, URL ni token.
 
-InvoiceDocumentSource es el punto de integración pendiente. La implementación real actual, UnconfirmedInvoiceDocuments, siempre devuelve disponible=false y nunca realiza solicitudes: DOCUMENT_NOT_CONFIGURED. No existe una plantilla de URL configurable por navegador ni un endpoint inventado. La interfaz de descarga está preparada, pero los botones permanecen deshabilitados en el laboratorio real. El doble de pruebas está aislado en tests/router.php y no es accesible por el router de la aplicación.
+PhantomInvoiceDocuments es la fuente del portal. DocumentTransport.php comparte el GET con el inspector, TLS/hostname/CA, sin cookies ni token técnico en el GET documental, sin redirects y sin reintentos. Retiene el cuerpo en memoria solo en la descarga, con límite durante transferencia de 10 MiB y 32 KiB de headers. Solo acepta HTTP 200, MIME application/pdf, firma PDF y cierre EOF. HTML, vacío, contenido inválido, error o redirect no se entregan al navegador. La validación es de formato, no un análisis antimalware.
 
-El servicio valida MIME application/pdf, máximo 10 MiB, firma PDF y cierre EOF; rechaza HTML/error/tamaño excesivo. Responde attachment con nombre derivado del IDT validado, no-store/private, nosniff y CSP sandbox; no reenvía headers arbitrarios ni URLs de Phantom. El navegador solicita un Blob a nuestra API y no recibe hash/token. Estas comprobaciones son de formato, no un análisis antimalware. El futuro adaptador HTTP real debe además limitar bytes durante transferencia, validar status/MIME/redirects y conservar TLS/CA: esa transferencia no está implementada ni validada todavía.
+El PDF se entrega como attachment con nombre derivado del IDT validado, no-store/private, nosniff y CSP sandbox, sin reenviar headers externos. No se guarda en disco, no se exponen hashes/URLs al frontend. El navegador descarga mediante Blob con límite de tamaño. Si el hash falta o el archivo falla, se informa error sin documento ficticio. El listado indica disponibilidad del servicio de descarga; cada petición verifica el documento específico nuevamente.
 
-No hay descarga real confirmada, comprobantes de pago ni enlaces SIRO públicos.
+El doble FixtureDocuments solo se inyecta desde tests/router.php. UnconfirmedInvoiceDocuments queda como fuente cerrada alternativa, no como default del portal. No se habilitaron comprobantes de pago ni SIRO.
 
 ## API e interfaz
 
@@ -80,7 +80,7 @@ El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login,
 
 Inicio recibe perfil, estado administrativo, saldo y la primera página de facturas; muestra solo las tres más recientes. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
 
-Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, descarga real (tipo de respuesta pendiente), promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
+Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
 
 ## Configuración y ejecución
 
@@ -92,19 +92,19 @@ Seguir FIRST-PHANTOM-TEST.md. Mantener config.php, bundle CA y runtime fuera del
 
 `npm run test:mi-usittel` usa exclusivamente fixtures y un servidor local, nunca Phantom real. Cubre transporte GET/POST, encoding, BOM, TLS/errores seguros, lista e identidad, credenciales exactas, campos opcionales, saldo/facturas inválidos, whitelist pública, CSRF, sesión/logout/vencimientos, limitación de intentos, aislamiento demo y ausencia de secretos. Los dobles cURL no ejecutan red externa.
 
-Pendiente real de esta etapa: clasificación de respuesta del endpoint encontrado en Botmaker, descarga conocida y logout del recorrido ampliado. Páginas 1/2, continuidad y detalle del historial ampliado fueron confirmados por Agustín. Identidad, login, Inicio/saldo/última factura/detalle, recarga y logout de la etapa básica ya fueron aceptados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
+Pendiente real de esta etapa: aceptación de descarga reciente/histórica desde el portal y logout del recorrido ampliado. Páginas 1/2, continuidad y detalle del historial ampliado fueron confirmados por Agustín. Identidad, login, Inicio/saldo/última factura/detalle, recarga y logout de la etapa básica ya fueron aceptados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
 
 ### QA local de esta entrega
 
-Suite automatizada: 205 verificaciones con fixtures, chequeo local sin red y lint PHP. Navegador Chromium con respuestas sintéticas en modo Phantom: desktop 1365×900 y móvil 390×844. Se comprobó login exacto, recarga con sesión, Inicio, historial de 25 facturas en tres páginas (10/10/5), detalle reconsultado, Mi servicio, Soporte, Mi cuenta y logout. También se descargó un PDF simulado mediante la API local y la sesión propia; la fuente documental real permanece bloqueada. Sin errores JavaScript, desbordamiento horizontal, carga de demo-data ni solicitudes externas. Pagos deshabilitados. Esto no sustituye la aceptación real del historial y la descarga.
+QA de la etapa inicial del historial: 205 verificaciones con fixtures, chequeo local sin red y lint PHP. Navegador Chromium con respuestas sintéticas en modo Phantom: desktop 1365×900 y móvil 390×844. Se comprobó login exacto, recarga con sesión, Inicio, historial de 25 facturas en tres páginas (10/10/5), detalle reconsultado, Mi servicio, Soporte, Mi cuenta y logout. También se descargó un PDF simulado mediante la API local y la sesión propia; en aquella etapa la fuente documental real estaba bloqueada. Sin errores JavaScript, desbordamiento horizontal, carga de demo-data ni solicitudes externas. Pagos deshabilitados. Esto no sustituye la aceptación real del historial y la descarga.
 
 ## Validación real del historial y ajuste visual — 18/09/2026
 
-Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de clasificar la respuesta del endpoint encontrado en Botmaker.
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal espera la aceptación manual final.
 
 Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
 
-## Inspector del comprobante: evidencia Botmaker y prueba pendiente
+## Inspector del comprobante: evidencia Botmaker y prueba aceptada
 
 La copia local de agustinSC2034/botmaker_functions_USITTEL (HEAD d3b4897) confirma en ph_ver_ultima_factura.js y ph_datos_autogestión.js que el texto retornado sin JSON=1 se concatena en /PHANTOM/Includes/CRM/Comprobante_Factura.php?IDT=…. El manual Api_phantom_texto_completa.md identifica ese texto como Hash_Descarga. ph_obtener_idt.js guarda el mismo texto bajo un nombre IDT, lo cual NO demuestra que sea el ID numérico. Este código histórico sirve como evidencia del endpoint, no como implementación a copiar: se conservan HTTPS, hash codificado y lectura JSON por factura. Las etiquetas descargar / descargar y pagar no confirman el MIME ni habilitan pagos.
 
@@ -116,6 +116,12 @@ El GET solo se construye sobre el origen HTTPS configurado y el path fijo. IDT e
 
 La salida es una lista cerrada de metadatos: endpoint fijo, HTTP, MIME reconocido, tamaño declarado numérico y bytes recibidos, firma PDF, tipo detectado y redirect. En redirects muestra coincidencia de origen HTTPS y solo paths estáticos conocidos; cualquier ruta no reconocida se omite porque también puede contener capabilities. Nunca muestra query, fragmento, host externo, valores de cookies ni cabeceras arbitrarias. HTTP 200 HTML se informa como tal y NO se considera descarga; un HTTP de error también se informa sin su contenido. Un error de transporte usa los códigos seguros existentes.
 
-El inspector no está conectado a InvoiceDocumentSource ni a la API web. Descargar permanece deshabilitado hasta analizar la respuesta real. Fixtures cubren selección histórica exacta, más reciente explícita, otra cuenta, inexistente, hash ausente/vacío, duplicados, PDF, HTML, redirects internos/externos/HTTP/credenciales/path sensible, MIME desconocido, vacío, HTTP 500, tamaño de cuerpo/cabeceras, timeout y excepciones sin secretos. Ninguna prueba automatizada llama Phantom.
+El inspector sigue siendo CLI; tras el resultado real, se extrajo su transporte a DocumentTransport.php, compartido con PhantomInvoiceDocuments. Descargar ya está conectado y espera validación manual del recorrido. Fixtures cubren selección histórica exacta, más reciente explícita, otra cuenta, inexistente, hash ausente/vacío, duplicados, PDF, HTML, redirects internos/externos/HTTP/credenciales/path sensible, MIME desconocido, vacío, HTTP 500, tamaño de cuerpo/cabeceras, timeout y excepciones sin secretos. Ninguna prueba automatizada llama Phantom.
 
-Validación de esta entrega: 229 verificaciones con fixtures (24 nuevas del inspector documental), lint PHP y revisión de diff correctos. No se ejecutaron consultas reales ni se habilitó el botón de descarga.
+Validación de la etapa del inspector: 229 verificaciones con fixtures (24 nuevas del inspector documental), lint PHP y revisión de diff correctos. En la etapa del inspector no se ejecutaron consultas reales automáticas ni se habilitó el botón.
+
+## Cierre de conexión documental
+
+Prueba real aportada por Agustín: endpoint PDF, HTTP 200, 512207 bytes, sin redirects. El flujo del portal y la fuente HTTP están probados con fixtures; no se hicieron llamadas reales automáticas. Pendiente una única aceptación manual: descargar y contrastar una factura reciente y otra histórica, cerrar sesión y recargar. Tras esa confirmación corresponde informar al chat principal.
+
+Validación de la conexión PDF: 242 verificaciones con fixtures, lint PHP y recorrido de navegador local mobile/desktop con descarga simulada. Las pruebas no contactan Phantom. El endpoint real fue probado por Agustín; la descarga completa desde el portal espera su aceptación.

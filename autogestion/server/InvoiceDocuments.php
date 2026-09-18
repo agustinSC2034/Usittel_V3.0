@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 
 const INVOICE_PDF_MAX_BYTES=10485760;
+require_once __DIR__.'/DocumentTransport.php';
 
 interface InvoiceDocumentSource {
     public function available(): bool;
@@ -12,6 +13,18 @@ interface InvoiceDocumentSource {
 final class UnconfirmedInvoiceDocuments implements InvoiceDocumentSource {
     public function available(): bool {return false;}
     public function fetch(int $ida,string $idt,string $hash): array {throw new Failure('DOCUMENT_NOT_CONFIGURED',503);}
+}
+final class PhantomInvoiceDocuments implements InvoiceDocumentSource {
+    public function __construct(private array $config) {}
+    public function available(): bool {return $this->config['mode']==='phantom' && in_array(1,$this->config['allowed_idas'],true);}
+    public function fetch(int $ida,string $idt,string $hash): array {
+        if(!$this->available() || $ida!==1) throw new Failure('FORBIDDEN',403);
+        $response=requestInvoiceDocument($this->config,$hash,true);
+        if($response['http']!==200) throw new Failure('DOCUMENT_HTTP',503,$response['http']);
+        $document=['contentType'=>$response['headers']['content-type']??'', 'bytes'=>$response['bytes']];
+        validateInvoicePdf($document);
+        return $document;
+    }
 }
 function invoiceDocumentAvailability(array $page,InvoiceDocumentSource $source): array {
     foreach($page['items'] as &$item) $item['downloadAvailable']=$source->available();

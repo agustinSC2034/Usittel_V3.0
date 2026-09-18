@@ -82,7 +82,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
     $ida=$_SESSION['ida'];
     if($ida!==1 || !in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
-    $documents??=new UnconfirmedInvoiceDocuments();
+    $documents??=new PhantomInvoiceDocuments($c);
     if(in_array($route,['invoice','invoice-document'],true)) {
         $id=$_GET['id']??null;
         if(!is_string($id) || !preg_match('/^[1-9][0-9]{0,19}$/D',$id)) throw new Failure('BAD_REQUEST',400);

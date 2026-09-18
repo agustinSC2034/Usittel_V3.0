@@ -45,12 +45,13 @@ function curl_exec(\CurlHandle $ch): bool {
     if($s==='timeout') return false;
     if($s==='runtime') throw new \RuntimeException('private-hash https://fixture.invalid/?token=private-token');
     $mime=match($s){'html'=>'text/html; charset=UTF-8','mime'=>'application/private-token','empty'=>'text/plain',default=>'application/pdf'};
-    $body=match($s){'html'=>'<!doctype html><html>private-person</html>','empty'=>'','mime'=>'private-body',default=>"%PDF-1.7\nprivate-person\n%%EOF"};
+    $body=match($s){'html'=>'<!doctype html><html>private-person</html>','empty'=>'','mime'=>'private-body','truncated'=>"%PDF-1.7\nprivate-person",default=>"%PDF-1.7\nprivate-person\n%%EOF"};
     $location=match($s){'redirect'=>'/PHANTOM/login.php?token=private-token','external'=>'https://external.invalid/PHANTOM/login.php?token=private-token',
         'unsafe-path'=>'/private-hash/secret?token=private-token','relative'=>'Comprobante_Factura.php?IDT=private-hash',
         'http-redirect'=>'http://fixture.invalid/PHANTOM/login.php','userinfo'=>'https://private-user:private-pass@fixture.invalid/PHANTOM/login.php',default=>null};
     $redirect=$location!==null || $s==='no-location';
     $GLOBALS['headers']=['Content-Type: '.$mime,'Content-Length: '.strlen($body),'Set-Cookie: private-cookie','X-Private: private-token'];
+    if($s==='no-length') $GLOBALS['headers']=array_values(array_filter($GLOBALS['headers'],static fn($h)=>!str_starts_with($h,'Content-Length:')));
     if($location!==null) $GLOBALS['headers'][]='Location: '.$location;
     $status=$redirect?302:($s==='http-error'?500:200);
     $GLOBALS['status']=$status;
@@ -70,5 +71,16 @@ register_shutdown_function(static function(){
     $expected=match($GLOBALS['scenario']) {'args','hash-argument'=>0,'foreign','missing-hash','empty-hash','not-found','duplicate'=>3,default=>4};
     if($GLOBALS['calls']!==$expected) {fwrite(STDERR,'FIXTURE_CALL_COUNT_FAILED');exit(90);}
 });
+if(($argv[2]??null)==='source') {
+    require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Phantom.php';
+    require __DIR__.'/../server/InvoiceDocuments.php';require __DIR__.'/../server/Inspector.php';
+    $GLOBALS['calls']=3;
+    try {
+        $source=new PhantomInvoiceDocuments(config());
+        $pdf=$source->fetch(1,'990','private-hash-990+/=&?');
+        if(!str_starts_with($pdf['bytes'],'%PDF-')) throw new \RuntimeException('fixture result');
+        echo 'VALIDATED_PDF';exit;
+    } catch(\Throwable $e) {exit(writeInspectorFailure('documento',$e));}
+}
 $argv=['inspect-invoice-document.php',$scenario==='args'?'5':'1',match($scenario){'latest'=>'--latest','not-found'=>'989','hash-argument'=>'private-hash',default=>'990'}];
 require __DIR__.'/../server/inspect-invoice-document.php';

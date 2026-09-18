@@ -109,7 +109,9 @@ Usa el archivo privado existente y exige modo phantom e IDA 1 permitido. Autenti
 
 No consulta estado de cuenta ni facturas, no crea caché/sesiones ni cambia el Login o Dashboard. Éxito: solo sección `customer`, con claves/tipos y el filtro estructural compartido; preserva el envoltorio recibido sin inventar mapeos. Error: bloque técnico que distingue `autenticacion` de `cliente`. Compartir únicamente esa salida segura, nunca la respuesta cruda.
 
-Si devuelve `PHANTOM_FORMAT` con HTTP 200 en cliente, ahora agrega `Formato:` con una categoría cerrada: respuesta vacía, apariencia HTML, texto/JSON inválido, prefijo BOM, UTF-8 inválido, exceso de profundidad o JSON de tipo string/boolean/null/número. También distingue JSON de objeto/lista dentro de un string. No muestra fragmentos del contenido, no elimina prefijos ni acepta nuevos formatos automáticamente. HTTP 200 por sí solo no confirma datos del cliente. Volver a ejecutar el mismo comando una vez y compartir el bloque técnico completo, incluida `Formato:`.
+Si devuelve `PHANTOM_FORMAT` con HTTP 200 en cliente, agrega `Formato:` con una categoría cerrada: respuesta vacía, apariencia HTML, texto/JSON inválido, prefijo BOM residual, UTF-8 inválido, exceso de profundidad o JSON de tipo string/boolean/null/número. También distingue JSON de objeto/lista dentro de un string. No muestra fragmentos del contenido ni acepta envoltorios nuevos automáticamente. HTTP 200 por sí solo no confirma datos del cliente.
+
+Tras confirmar `PREFIJO_BOM_UTF8` en la respuesta real, el lector admite exclusivamente un BOM UTF-8 (tres bytes) en la posición inicial. Después aplica la misma validación JSON, de estructura y de errores funcionales. No elimina HTML, avisos PHP ni BOM repetidos/intermedios. Volver a ejecutar el mismo comando una vez: si el resto es JSON válido mostrará el esquema; de lo contrario, compartir el nuevo bloque técnico completo, incluida `Formato:`.
 
 ### Lectura de la salida estructural
 

@@ -2,6 +2,8 @@
 
 ## Evidencia y límites
 
+Compatibilidad de respuesta confirmada por diagnóstico: la consulta de cliente devuelve un prefijo BOM UTF-8. El decoder compartido elimina solamente un BOM en el byte cero antes de validar JSON; mantiene los rechazos HTTP, límites, validación de estructura y errores funcionales. La presencia del prefijo no demuestra por sí sola que el resto sean datos válidos del cliente. No cambia métodos HTTP ni autenticación del portal.
+
 Actualización de laboratorio: el usuario confirmó `TOKEN_RECIBIDO` con GET por HTTPS y `JSON=1`; POST JSON y formulario devolvieron HTTP 400 en autenticación. El portal permanece sin cambios. `inspect-customer.php 1` permite ahora una autenticación GET y una única lectura POST JSON de cliente con token en el cuerpo, sin caché ni reintentos. Esta segunda operación todavía no está validada contra Phantom real. El esquema se filtra con el mismo helper acotado del inspector completo, sin inferir campos de perfil.
 
 Fuente revisada: [documentación API REST de Phantom de la carpeta provista](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view), secciones de autenticación, cliente avanzado, estado de cuenta y facturas. Los ejemplos de autenticación incluyen variantes GET y POST; el ejemplo PHP también incluye credenciales en la URL, por lo que no demuestra soporte de POST JSON con credenciales exclusivamente en el cuerpo. La captura de Botmaker provista por el usuario muestra GET sobre HTTP con credenciales en la URL, en otro puerto. No se copió ese transporte ni sus secretos.

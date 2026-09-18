@@ -39,6 +39,8 @@ final class CurlTransport implements Transport {
     public static function decodeHttpResponse(int $code,string $response,bool $diagnoseFormat=false): array {
         if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED',503,$code);
         if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP',503,$code);
+        // Tolerate exactly one UTF-8 BOM at byte zero; never trim arbitrary output.
+        if(str_starts_with($response,"\xEF\xBB\xBF")) $response=substr($response,3);
         try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); }
         catch (\JsonException $e) { throw new Failure('PHANTOM_FORMAT',503,$code,$diagnoseFormat?self::invalidFormat($response,$e):null); }
         if (!is_array($json)) {

@@ -32,7 +32,11 @@ function curl_exec(\CurlHandle $handle): bool {
     if($GLOBALS['calls']===2) {
         $formats=['html'=>'<!doctype html><html>private URL token</html>','empty'=>" \r\n",'string'=>'"private-token"',
             'nested-json'=>json_encode('{"Nombre":"private-person"}'),'null'=>'null','boolean'=>'false','number'=>'12345',
-            'bom'=>"\xEF\xBB\xBF".'{"Nombre":"private-person"}','utf8'=>"\xFF",'deep'=>str_repeat('[',40).'0'.str_repeat(']',40)];
+            'bom'=>"\xEF\xBB\xBF".$body,'bom-html'=>"\xEF\xBB\xBF<html>private token</html>",
+            'bom-invalid'=>"\xEF\xBB\xBF{private",'bom-only'=>"\xEF\xBB\xBF",
+            'bom-double'=>"\xEF\xBB\xBF\xEF\xBB\xBF".$body,'bom-after-space'=>" \xEF\xBB\xBF".$body,
+            'bom-string'=>"\xEF\xBB\xBF\"private-token\"",'bom-functional'=>"\xEF\xBB\xBF".'{"code":400,"message":"private upstream"}',
+            'utf8'=>"\xFF",'deep'=>str_repeat('[',40).'0'.str_repeat(']',40)];
         $body=$formats[$GLOBALS['scenario']]??$body;
         if($GLOBALS['scenario']==='unsafe-format') throw new Failure('PHANTOM_FORMAT',503,200,'private-token');
     }

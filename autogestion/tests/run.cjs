@@ -31,13 +31,15 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
   const customerConfig=path.join(dir,'customer-probe.php');
-  for(const [name,stage,code,http,format] of [['success'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
+  for(const [name,stage,code,http,format] of [['success'],['bom'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
     ['http','cliente','PHANTOM_HTTP',400],['expired','cliente','TOKEN_EXPIRED',401],['redirect','cliente','PHANTOM_HTTP',302],
     ['malformed','cliente','PHANTOM_FORMAT',200,'TEXTO_O_JSON_INVALIDO'],
     ...Object.entries({html:'APARIENCIA_HTML',empty:'RESPUESTA_VACIA',string:'JSON_STRING','nested-json':'JSON_DENTRO_DE_STRING',
-      null:'JSON_NULL',boolean:'JSON_BOOLEAN',number:'JSON_NUMBER',bom:'PREFIJO_BOM_UTF8',utf8:'UTF8_INVALIDO',deep:'JSON_PROFUNDIDAD_EXCEDIDA'})
+      null:'JSON_NULL',boolean:'JSON_BOOLEAN',number:'JSON_NUMBER',utf8:'UTF8_INVALIDO',deep:'JSON_PROFUNDIDAD_EXCEDIDA',
+      'bom-html':'APARIENCIA_HTML','bom-invalid':'TEXTO_O_JSON_INVALIDO','bom-only':'RESPUESTA_VACIA',
+      'bom-double':'PREFIJO_BOM_UTF8','bom-after-space':'TEXTO_O_JSON_INVALIDO','bom-string':'JSON_STRING'})
       .map(([name,format])=>[name,'cliente','PHANTOM_FORMAT',200,format]),
-    ['unsafe-format','cliente','PHANTOM_FORMAT',200],['functional','cliente','PHANTOM_FUNCTIONAL'],['warning','cliente','PROBE_PHP'],
+    ['unsafe-format','cliente','PHANTOM_FORMAT',200],['functional','cliente','PHANTOM_FUNCTIONAL'],['bom-functional','cliente','PHANTOM_FUNCTIONAL'],['warning','cliente','PROBE_PHP'],
     ['args','configuracion','INSPECTOR_ARGUMENTS'],['forbidden','configuracion','CONFIGURATION'],['demo','configuracion','CONFIGURATION']]) {
     let content=settings(name==='demo'?'demo':'phantom');
     if(name==='forbidden') content=content.replace("'allowed_idas'=>[1,5]","'allowed_idas'=>[5]");

@@ -52,21 +52,31 @@ function locked(string $path, callable $callback): mixed {
 function writeFileHandle($f, array $value): void {
     rewind($f); ftruncate($f, 0); fwrite($f, json_encode($value, JSON_THROW_ON_ERROR)); fflush($f);
 }
-function rateLimit(string $dir, string $user, string $ip, ?int $candidate): void {
+function rateLimitKeys(string $user, string $ip, ?int $candidate): array {
+    return [['ip:'.$ip,30], ['user:'.($candidate === null ? $user : 'ida:'.$candidate),5]];
+}
+function rateLimitBegin(string $dir, string $user, string $ip, ?int $candidate): void {
     locked($dir.'/attempts.json', function($f) use ($user,$ip,$candidate) {
         $state = json_decode(stream_get_contents($f), true) ?: ['salt'=>bin2hex(random_bytes(32)), 'buckets'=>[]];
         $now = time();
         foreach ($state['buckets'] as $k=>$v) if ($v['until'] <= $now) unset($state['buckets'][$k]);
-        $keys = [['ip:'.$ip,30], ['user:'.($candidate === null ? $user : 'ida:'.$candidate),5]];
-        foreach ($keys as [$key,$max]) {
+        foreach (rateLimitKeys($user,$ip,$candidate) as [$key,$max]) {
             $hash = hash_hmac('sha256',$key,$state['salt']);
             $v = $state['buckets'][$hash] ?? ['count'=>0,'until'=>$now+900];
             if ($v['count'] >= $max) throw new Failure('RATE_LIMIT',429);
-        }
-        foreach ($keys as [$key,$max]) {
-            $hash = hash_hmac('sha256',$key,$state['salt']);
-            $v = $state['buckets'][$hash] ?? ['count'=>0,'until'=>$now+900];
             $v['count']++; $state['buckets'][$hash]=$v;
+        }
+        writeFileHandle($f,$state);
+    });
+}
+function rateLimitRelease(string $dir, string $user, string $ip, ?int $candidate): void {
+    locked($dir.'/attempts.json', function($f) use ($user,$ip,$candidate) {
+        $state = json_decode(stream_get_contents($f), true) ?: ['salt'=>bin2hex(random_bytes(32)), 'buckets'=>[]];
+        foreach (rateLimitKeys($user,$ip,$candidate) as [$key]) {
+            $hash = hash_hmac('sha256',$key,$state['salt']);
+            if(!isset($state['buckets'][$hash])) continue;
+            $state['buckets'][$hash]['count']--;
+            if($state['buckets'][$hash]['count']<=0) unset($state['buckets'][$hash]);
         }
         writeFileHandle($f,$state);
     });

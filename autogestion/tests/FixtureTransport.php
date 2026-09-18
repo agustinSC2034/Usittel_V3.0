@@ -23,16 +23,20 @@ final class FixtureTransport implements Transport {
             return ['Autogestion_User'=>(int)$query['IDA']===1?'000001':'laboratorio', 'Autogestion_Pass'=>' 00Lab-fixture! ',
                 'Estado_Servicio'=>'Suspendido',
                 'test_name'=>$scenario==='missing'?null:'Cliente de pruebas', 'test_address'=>'Calle ficticia 123', 'test_plan'=>'Plan de laboratorio',
+                'technical_meta'=>['connection'=>['state'=>'fixture-state','ports'=>[['kind'=>'ethernet','enabled'=>true]]]],
                 'Conexiones_Asociadas'=>[['IDA'=>999,'Autogestion_Pass'=>'do-not-expose']], 'DNI'=>'do-not-expose', 'Tarjeta'=>'do-not-expose'];
         }
         if($action==='Phantom_Mi_Estado_Cuenta') {
             if($scenario==='balance-error') return ['code'=>500,'message'=>'Private balance failure'];
-            return ['test_balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50',default=>'-12500.75'}];
+            return ['test_balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50',default=>'-12500.75'},
+                'breakdown'=>['charges'=>[['kind'=>'fixture','amount'=>'1.00']]]];
         }
         if($scenario==='empty') return ['code'=>400,'message'=>'Error: No se encontró factura para el cliente (400)'];
         if($scenario==='invoices-error') return ['code'=>400,'message'=>'Some other error'];
         if($scenario==='malformed-invoices') return ['unrecognized'=>[]];
-        $row=['IDT'=>123,'Estado'=>'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25','Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
+        $row=['IDT'=>123,'Estado'=>'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25',
+            'Metadata'=>['currency'=>'ARS','items'=>[['description'=>'fixture-item','quantity'=>1]]],
+            'Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
         if($scenario==='missing') $row=['IDT'=>123];
         if($scenario==='pagination') { $rows=[];for($i=0;$i<20;$i++) $rows[]=array_replace($row,['IDT'=>1000-(int)$query['Offset']-$i]);return $rows; }
         return [$row];

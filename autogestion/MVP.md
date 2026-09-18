@@ -9,7 +9,8 @@ Login, Inicio, Facturas/Estado de cuenta y detalle, Mi servicio, Soporte y Mi cu
 - Backend PHP propio aislado y mismo origen que el frontend.
 - Resolver IDA candidato y comparar exactamente Autogestion_User y Autogestion_Pass. Sin DNI/CUIT, normalización de contraseñas ni autorización por IDA solo. Un suspendido puede ingresar.
 - Laboratorio limitado a IDA 1 y/o 5; usuarios personalizados mediante mapeo privado, sin barrido ni contratos asociados.
-- Sesión PHP con regeneración, HttpOnly, SameSite Strict, Secure al servir HTTPS, vencimientos, CSRF login/logout y límite backend de intentos.
+- Sesión PHP con regeneración, HttpOnly, SameSite Strict, Secure al servir HTTPS, vencimientos, CSRF login/logout y límite backend basado únicamente en fallos.
+- Chequeo local sin red e inspección segura de estructuras de cliente, cuenta y factura preparados para la primera conexión.
 - API interna para Inicio y facturas paginadas. Campos públicos explícitos; secretos/JSON bruto no llegan al navegador.
 - Demo explícita del servidor, fixtures separadas, sin fallback desde Phantom.
 - Carga/error recuperable, campos no disponibles, facturas vacías y discrepancia saldo/estado de factura.

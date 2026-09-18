@@ -61,10 +61,17 @@ function api(array $c,string $dir,Phantom $ph,string $route): never {
         if(array_diff(array_keys($b),['username','password']) || !is_string($b['username']??null) || !is_string($b['password']??null)
             || strlen($b['username'])>128 || strlen($b['password'])>512 || $b['username']==='' || $b['password']==='') throw new Failure('INVALID_CREDENTIALS',401);
         $candidate=resolveUser($b['username'],$c);
-        rateLimit($dir,$b['username'],$_SERVER['REMOTE_ADDR']??'unknown',$candidate);
-        $valid=$c['mode']==='demo' ? hash_equals('agustin.demo',$b['username']) && hash_equals('usittel-demo',$b['password']) : $candidate!==null && $ph->verify($candidate,$b['username'],$b['password']);
+        $remote=$_SERVER['REMOTE_ADDR']??'unknown';
+        rateLimitBegin($dir,$b['username'],$remote,$candidate);
+        try {
+            $valid=$c['mode']==='demo' ? hash_equals('agustin.demo',$b['username']) && hash_equals('usittel-demo',$b['password']) : $candidate!==null && $ph->verify($candidate,$b['username'],$b['password']);
+        } catch(\Throwable $e) {
+            // Provider/configuration failures are not credential failures.
+            rateLimitRelease($dir,$b['username'],$remote,$candidate); unset($b); throw $e;
+        }
+        if(!$valid) { unset($b); throw new Failure('INVALID_CREDENTIALS',401); }
+        rateLimitRelease($dir,$b['username'],$remote,$candidate);
         unset($b);
-        if(!$valid) throw new Failure('INVALID_CREDENTIALS',401);
         $fingerprint=$_SESSION['config']; $_SESSION=[]; session_regenerate_id(true);
         $_SESSION=['ida'=>$c['mode']==='demo'?0:$candidate,'started'=>time(),'last'=>time(),'config'=>$fingerprint,'csrf'=>bin2hex(random_bytes(32))];
         jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf']]);

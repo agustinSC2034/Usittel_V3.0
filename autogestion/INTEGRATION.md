@@ -56,7 +56,7 @@ Con credenciales configuradas, esta herramienta CLI consulta nombres y tipos de 
 # Usar 5 si esa es la cuenta permitida.
 ```
 
-Hace autenticación técnica y lecturas de cliente/estado de cuenta. Es un primer diagnóstico: no recorre estructuras anidadas ni demuestra por sí solo la semántica. Si los datos están anidados o el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo de cliente, porque contiene credenciales. **No se ejecutó contra Phantom real en esta entrega.**
+Hace autenticación técnica y lecturas de cliente, estado de cuenta y una factura. Muestra nombres/tipos y una estructura anidada acotada (máximo cuatro niveles, un elemento representativo por lista y hasta 120 campos), sin valores. Excluye claves asociadas a contraseñas, tokens, secretos, hashes, URLs, archivos/documentos, datos fiscales/bancarios y contratos vinculados. Sigue siendo un primer diagnóstico y no demuestra semántica. Si el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo. **No se ejecutó contra Phantom real en esta entrega.**
 
 ## Contrato interno
 
@@ -81,7 +81,7 @@ HTTP: 400 entrada inválida, 401 credenciales/sesión, 403 CSRF/autorización, 4
 
 - Cookie PHP HttpOnly, SameSite Strict, Secure cuando PHP recibe HTTPS; regeneración al autenticar y vencimientos propios. En el devserver HTTP/loopback no hay Secure; HTTPS no fue probado.
 - CSRF de sesión en login/logout; Origin cuando está presente y rechazo cross-site. Contraseña exacta sin trim/números/DNI; nunca en sesión.
-- Límite de 5 intentos por cuenta/usuario y 30 por IP en 15 minutos, incluidos accesos exitosos. Claves HMAC, sin usuario/IP crudos. No confía en encabezados de proxy. No borrar contadores reales: esperar el plazo. Tests aíslan sus contadores.
+- Límite de 5 fallos por cuenta/usuario y 30 fallos por IP en 15 minutos. Cada verificación se reserva atómicamente para evitar ráfagas paralelas; un acceso correcto o un fallo del proveedor libera su reserva y no suma intentos. Los rechazos de credenciales permanecen tanto por cuenta como por IP, de modo que un acceso válido no borra protección previa. Claves HMAC, sin usuario/IP crudos. No confía en encabezados de proxy. Tests aíslan sus contadores.
 - Token técnico privado separado de sesión, caché 14 minutos. Un 401/403 permite renovar y repetir lectura solo una vez; no reintenta otros fallos.
 - POST JSON con TLS verificado, sin redirects, respuesta máxima 2 MB, profundidad JSON limitada. Diagnósticos propios solo por código, sin cuerpos/contraseñas/cabeceras sensibles. Revisar logging externo al desplegar.
 - Acciones permitidas: autentificar, Consulta_Cliente_Avanzada, Phantom_Ultima_Factura, Phantom_Mi_Estado_Cuenta. Ninguna escritura/SIRO.
@@ -89,7 +89,7 @@ HTTP: 400 entrada inválida, 401 credenciales/sesión, 403 CSRF/autorización, 4
 
 ## Validación
 
-`npm run test:mi-usittel` usa un servidor PHP aislado y transporte sintético; no llama a Phantom. Cubre sesión, CSRF, regeneración/logout/replay, vencimientos, credenciales exactas/ausentes/incorrectas, IDA ajeno, límites, errores/timeout, renovación acotada, campos ausentes, saldo independiente, paginación, whitelist, modos y mapeos sensibles. Las claves test_* son ficticias, no documentan al CRM.
+`npm run check:mi-usittel` revisa PHP/cURL/JSON, configuración/runtime externos, estructura mínima y posibles secretos locales; no llama a Phantom ni imprime credenciales. `npm run test:mi-usittel` usa un servidor PHP aislado y transporte sintético; tampoco llama a Phantom. Cubre sesión, CSRF, regeneración/logout/replay, vencimientos, credenciales exactas/ausentes/incorrectas, IDA ajeno, límites basados solo en fallos, errores/timeout, renovación acotada, campos ausentes, saldo independiente, paginación, inspección de esquemas, whitelist, modos y mapeos sensibles. Las claves test_* son ficticias, no documentan al CRM.
 
 No es una auditoría exhaustiva. Pendiente real: HTTPS/cookie Secure, contrato de autenticación/respuestas, datos personales/productos y campo del balance. Validar solo IDA 1 o 5, con configuración privada; casos negativos continúan con fixtures para evitar bloquear cuentas reales.
 

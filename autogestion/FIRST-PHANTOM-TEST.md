@@ -1,0 +1,87 @@
+# Primera prueba real con Phantom
+
+Esta prueba es únicamente para laboratorio, en modo lectura y con **IDA 1**. No habilita pagos, escrituras ni producción. Las credenciales técnicas se escriben personalmente en un archivo privado y nunca se pegan en el chat.
+
+## Paso 1 — Crear y editar la configuración privada
+
+Abrir PowerShell en la raíz del proyecto y ejecutar:
+
+```powershell
+$privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
+New-Item -ItemType Directory -Force -Path $privateFolder | Out-Null
+$privateConfig = Join-Path $privateFolder 'config.php'
+$privateRuntime = Join-Path $privateFolder 'runtime'
+New-Item -ItemType Directory -Force -Path $privateRuntime | Out-Null
+
+if (-not (Test-Path -LiteralPath $privateConfig)) {
+  Copy-Item -LiteralPath autogestion/server/config.example.php -Destination $privateConfig
+}
+notepad $privateConfig
+```
+
+En el archivo abierto, completar personalmente `api_user` y `api_pass`. No cambiar ni compartir otras credenciales. Guardar y cerrar Notepad.
+
+## Paso 2 — Limitar la prueba a IDA 1
+
+En el mismo archivo comprobar exactamente:
+
+```php
+'mode' => 'phantom',
+'allowed_idas' => [1],
+```
+
+Mantener `profile_fields` en null y `balance_path` en null. Todavía no mapear datos por intuición. Si el usuario de laboratorio no es numérico, agregar solamente su relación usuario→IDA en `lab_users`; nunca su contraseña.
+
+En la misma ventana de PowerShell configurar el entorno:
+
+```powershell
+$env:MI_USITTEL_CONFIG = $privateConfig
+$env:MI_USITTEL_RUNTIME = $privateRuntime
+# Solo si PHP no está disponible en PATH:
+$env:MI_USITTEL_PHP = 'C:\ruta\a\php.exe'
+```
+
+Estas variables duran mientras esa ventana permanezca abierta. Al abrir otra terminal hay que definirlas de nuevo.
+
+## Paso 3 — Ejecutar el chequeo local
+
+```powershell
+npm run check:mi-usittel
+```
+
+Debe terminar sin ❌. Las credenciales se informan únicamente como “presentes”; sus valores nunca se imprimen. Este chequeo **no llama a Phantom**.
+
+## Paso 4 — Inspeccionar el esquema de IDA 1
+
+Este es el primer comando que sí hará lecturas reales de Phantom:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1
+```
+
+Si PHP está en PATH y no se definió MI_USITTEL_PHP:
+
+```powershell
+php autogestion/server/inspect-schema.php 1
+```
+
+El comando autentica técnicamente y consulta cliente, estado de cuenta y una factura. Muestra solamente nombres de campos, tipos y estructura limitada. No modifica nada.
+
+## Paso 5 — Qué copiar para analizar después
+
+Copiar solamente la salida estructural completa producida por `inspect-schema.php`, desde la llave inicial hasta la final. Esa salida debería tener secciones `customer`, `account` e `invoice` con nombres de campos y tipos.
+
+Antes de compartirla, comprobar visualmente que no aparezcan datos personales o valores. Si aparece algo que no parece una descripción de tipo (`string`, `int`, `float`, `null`, `array`, `object`, `unknown` o `truncated`), detenerse y no compartirlo.
+
+Si el comando falla, copiar únicamente la línea genérica `No se pudo verificar el esquema. Código: ...`. No copiar logs del servidor ni archivos de runtime.
+
+## Paso 6 — Qué no compartir
+
+- `api_user`, `api_pass` ni contraseñas de abonados.
+- Token técnico o cookies.
+- JSON crudo devuelto por Phantom.
+- Datos personales: nombre, domicilio, DNI/CUIT/CUIL, teléfono, correo, tarjeta, CBU u otros identificadores.
+- Hashes, enlaces de descarga/pago, facturas o documentos.
+- El archivo privado `config.php` ni archivos de la carpeta runtime.
+
+Después de revisar juntos la salida segura, recién se podrán configurar rutas confirmadas de perfil y balance. Iniciar la interfaz con `npm run dev:mi-usittel:php` será una prueba posterior; no hace falta para descubrir el esquema.

@@ -85,17 +85,26 @@ final class Phantom {
         return ['balance'=>$value,'debt'=>max(0,-$value),'credit'=>max(0,$value)];
     }
     public function inspectSchema(int $ida): array {
-        // CLI helper returns names/types only, not values or linked records.
-        $shape=static function(array $data): array {
-            $out=[];
-            foreach($data as $key=>$value) {
+        // Names and types only. Lists inspect at most one representative item;
+        // nesting and total field count are bounded so this cannot dump records.
+        $remaining=120;
+        $shape=function(mixed $value,int $depth=0) use (&$shape,&$remaining): mixed {
+            if(!is_array($value)) return get_debug_type($value);
+            if($depth>=4 || $remaining<=0) return ['type'=>array_is_list($value)?'array':'object','truncated'=>true];
+            if(array_is_list($value)) return ['type'=>'array','items'=>$value===[]?'unknown':$shape($value[0],$depth+1)];
+            $fields=[];
+            foreach($value as $key=>$child) {
+                if($remaining--<=0) break;
                 if(!is_string($key) || !preg_match('/^[A-Za-z_][A-Za-z_0-9]*$/D',$key)) continue;
-                if(preg_match('/pass|token|secret|conexiones_asociadas/i',$key)) continue;
-                $out[$key]=get_debug_type($value);
+                if(preg_match('/(?:^|_)(?:autogestion|pass(?:word)?|token|secret|hash|url|link|archivo|documento|pdf|dni|cuit|cuil|tarjeta|cbu|alias)(?:_|$)|conexiones_asociadas/i',$key)) continue;
+                $fields[$key]=$shape($child,$depth+1);
             }
-            return $out;
+            return ['type'=>'object','fields'=>$fields];
         };
-        return ['customer'=>$shape($this->customer($ida)), 'account'=>$shape($this->read('Phantom_Mi_Estado_Cuenta',$ida))];
+        $customer=$this->customer($ida);
+        $account=$this->read('Phantom_Mi_Estado_Cuenta',$ida);
+        $invoice=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>1,'Offset'=>0]);
+        return ['customer'=>$shape($customer),'account'=>$shape($account),'invoice'=>$shape($invoice)];
     }
     public function invoices(int $ida,int $offset=0): array {
         $data=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>20,'Offset'=>$offset]);

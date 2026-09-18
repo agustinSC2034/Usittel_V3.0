@@ -4,6 +4,7 @@
   "description": "",
   "main": "tailwind.config.js",
   "scripts": {
+    "check:mi-usittel": "node autogestion/check.cjs",
     "dev:mi-usittel:php": "node autogestion/start-php.cjs",
     "test:mi-usittel": "node autogestion/tests/run.cjs",
     "dev:mi-usittel": "node autogestion/serve.cjs",

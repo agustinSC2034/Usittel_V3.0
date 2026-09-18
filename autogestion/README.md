@@ -26,6 +26,7 @@ Sin `MI_USITTEL_CONFIG`, PHP funciona en modo demo con sesión de servidor. Usua
 ```powershell
 npm run build:mi-usittel
 npm run watch:mi-usittel
+npm run check:mi-usittel # Diagnóstico local; no contacta Phantom.
 npm run test:mi-usittel # Requiere PHP; no contacta Phantom.
 ```
 
@@ -33,7 +34,7 @@ El CSS compilado está incluido. Para reconstruirlo se usan las dependencias exi
 
 ## Configuración privada
 
-Ver [INTEGRATION.md](INTEGRATION.md) para los pasos completos y el contrato interno.
+Ver [FIRST-PHANTOM-TEST.md](FIRST-PHANTOM-TEST.md) para la primera prueba guiada y [INTEGRATION.md](INTEGRATION.md) para el contrato interno completo.
 
 Copiar `server/config.example.php` fuera del repositorio y de cualquier carpeta pública, completar allí las credenciales técnicas actuales y definir `MI_USITTEL_CONFIG`/`MI_USITTEL_RUNTIME` en la terminal que inicia PHP. No pegar secretos en el chat. Una configuración errónea falla sin activar demo. El navegador no selecciona el modo.
 
@@ -53,7 +54,8 @@ Los datos personales/productos y saldo requieren confirmar claves, tipos y semá
 | server/Phantom.php | HTTPS, token técnico, lecturas y campos públicos permitidos |
 | server/Api.php | Sesiones, CSRF, login/logout, Inicio y facturas |
 | server/router.php, start-php.cjs | Servidor PHP local con rutas/archivos permitidos explícitamente |
-| server/config.example.php, server/inspect-schema.php | Plantilla sin secretos y diagnóstico CLI de nombres/tipos sin valores |
+| server/config.example.php, server/inspect-schema.php | Plantilla sin secretos y diagnóstico de cliente/cuenta/factura sin valores |
+| check.cjs, server/check-environment.php | Chequeo local de PHP, configuración, runtime y secretos; sin red |
 | serve.cjs | Servidor Node exclusivamente demo; no ejecuta PHP |
 | tests/ | Transporte ficticio y pruebas HTTP; no cargados por el servidor normal |
 | MVP.md, INTEGRATION.md, design-qa.md | Alcance, contrato/configuración y revisión |

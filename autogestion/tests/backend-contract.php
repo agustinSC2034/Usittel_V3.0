@@ -22,7 +22,7 @@ function curl_setopt_array(\CurlHandle $ch,array $options): bool {
         demand($q['JSON']==='1' && $q['IDA']==='1' && array_intersect(array_keys($q),['token','api_user','api_pass'])===[]);
         demand(($options[CURLOPT_POST]??false)===true && $options[CURLOPT_HTTPHEADER][0]==='Content-Type: application/json');
         demand(json_decode($options[CURLOPT_POSTFIELDS],true)===['token'=>'fixture technical token']);
-        if($q['action']==='Phantom_Ultima_Factura') demand($q['Limit']==='1' && $q['Offset']==='0');
+        if($q['action']==='Phantom_Ultima_Factura') demand($q['Limit']==='10' && $q['Offset']==='0');
     }
     return true;
 }
@@ -53,4 +53,8 @@ demand($ph->balance(1)['debt']===12500.75);
 $invoices=$ph->invoices(1);demand($invoices['historyComplete']===false && $invoices['items'][0]['outstanding']===null);
 demand($calls===['autentificar','Consulta_Cliente_Avanzada','Consulta_Cliente_Avanzada','Phantom_Mi_Estado_Cuenta','Phantom_Ultima_Factura']);
 demand(resolveCustomerRecord([['ID'=>'9','IDAx'=>'1']],1,'IDAx')['ID']==='9');
+demand(compareInvoiceIds('9007199254740993','9007199254740992')>0);
+demand(compareInvoiceIds('10000000000000000000','9999999999999999999')>0);
+try {validateInvoiceRows([['IDT'=>'12'],['IDT'=>'00012']],10);throw new \RuntimeException('duplicate accepted');}
+catch(Failure $e) {demand($e->kind==='INVOICES_DUPLICATE');}
 echo json_encode(['get_auth'=>true,'post_reads'=>true,'shared_bom_decoder'=>true,'exact_login'=>true,'public_mappings'=>true,'explicit_identity'=>true]);

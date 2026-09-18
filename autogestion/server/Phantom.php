@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/Schema.php';
 require_once __DIR__.'/CustomerContract.php';
+require_once __DIR__.'/Invoices.php';
 
 interface Transport {
     public function post(string $url, array $body): array;
@@ -197,21 +198,12 @@ final class Phantom {
         catch(InspectionFailure $e) { throw $e; }
         catch(\Throwable $e) { throw new InspectionFailure($stage,$e instanceof Failure?$e->kind:'UNEXPECTED',$e); }
     }
+    public function invoiceRows(int $ida,int $offset=0,int $limit=INVOICE_PAGE_SIZE): array {
+        if($offset<0 || $offset>INVOICE_MAX_OFFSET || !in_array($limit,[1,INVOICE_PAGE_SIZE],true)) throw new Failure('BAD_REQUEST',400);
+        return validateInvoiceRows($this->read('Phantom_Ultima_Factura',$ida,['Limit'=>$limit,'Offset'=>$offset]),$limit);
+    }
     public function invoices(int $ida,int $offset=0): array {
-        if($offset!==0) throw new Failure('BAD_REQUEST',400);
-        $data=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>1,'Offset'=>0]);
-        if(!array_is_list($data)) throw new Failure('INVOICES_SCHEMA');
-        $out=[];
-        $seen=[];
-        foreach($data as $row) {
-            if(!is_array($row) || !(is_string($row['IDT']??null) || is_int($row['IDT']??null))
-                || !preg_match('/^[0-9]+$/D',(string)$row['IDT'])) throw new Failure('INVOICES_SCHEMA');
-            $id=(string)$row['IDT'];if(isset($seen[$id])) throw new Failure('INVOICES_SCHEMA');$seen[$id]=true;
-            $out[]=['id'=>$id,'period'=>textValue($row['Periodo']??null), 'amount'=>amount($row['Total']??null),'detail'=>textValue($row['Detalle']??null),
-                'due'=>dateValue($row['Primer_Vto']??null),'secondDue'=>dateValue($row['Segundo_Vto']??null),
-                'status'=>match($row['Estado']??null) {'PAGADA'=>'Pagada','IMPAGA'=>'Pendiente',default=>'No disponible'},
-                'type'=>textValue($row['Tipo']??null),'number'=>textValue($row['Comp_ID']??null),'paidAt'=>null,'outstanding'=>null];
-        }
-        return ['items'=>$out,'offset'=>0,'nextOffset'=>null,'historyComplete'=>false];
+        if($offset<0 || $offset>INVOICE_MAX_OFFSET || $offset%INVOICE_PAGE_SIZE!==0) throw new Failure('BAD_REQUEST',400);
+        return invoicePage($this->invoiceRows($ida,$offset),$offset);
     }
 }

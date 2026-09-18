@@ -1,60 +1,44 @@
-# Primera prueba del portal con Phantom — laboratorio IDA 1
+# Facturas — prueba de laboratorio IDA 1
 
-La comunicación real ya fue comprobada por Agustín: autenticación GET HTTPS y lecturas POST de cliente, estado de cuenta y última factura. TLS funciona con el bundle privado existente. No repetir la investigación de certificados, puertos o Apache.
+## Aceptación anterior cerrada
 
-El portal usa ese mismo transporte y decoder. Identidad ID, login con usuario personalizado y persistencia al recargar ya fueron confirmados por Agustín. También confirmó que Balance positivo de 121 representa deuda: se corrigió la interpretación del signo. El siguiente paso es recargar Inicio y comprobar que muestra Deuda actual, antes de continuar con detalle y logout. No repetir la configuración ni los inspectores siguientes si ya están completados. Los tests y chequeos locales no llaman a Phantom.
+Agustín validó manualmente login real, Inicio/perfil/plan/Estado_Servicio, saldo desde Balance, última factura y detalle, sesión conservada al recargar y logout: después de recargar permaneció en login sin datos del cliente. ID fue confirmado como identificador para IDA 1; el usuario personalizado usa el mapeo privado existente.
 
-## Referencia: comprobación de identidad ya completada
+La instalación interpreta Balance positivo como deuda y negativo como saldo a favor. Se mantiene la corrección aplicada. No volver a investigar autenticación, TLS o identidad salvo un fallo nuevo.
 
-Desde la raíz del proyecto y la misma PowerShell que ya tiene las variables de entorno:
+## Único paso manual ahora
 
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-customer.php 1 --validate-identity
-```
-
-Copiar únicamente el reporte `identity`, o el diagnóstico seguro de etapa/código. Muestra cantidad de registros, presencia y tipo de ID/IDAx y credenciales, y si cada identificador coincide con IDA 1. No muestra valores personales, usuarios, contraseñas ni token. Hace como máximo una autenticación y una lectura del cliente; no guarda token ni consulta conexiones asociadas.
-
-**Esperar la revisión de ese resultado.** No configurar `customer_path=[0]` ni elegir ID/IDAx por intuición. Si hay varios registros, coincidencias ambiguas o no hay identificador confirmado, el login debe seguir bloqueado.
-
-## Después de confirmar la identidad
-
-Estos pasos son para la siguiente intervención, no para ejecutarlos antes del reporte.
-
-1. Abrir el archivo privado existente. No copiar la plantilla sobre él:
+Desde la misma PowerShell configurada y la raíz del proyecto:
 
 ```powershell
-notepad "$env:LOCALAPPDATA\MiUSITTEL\config.php"
+& $env:MI_USITTEL_PHP autogestion/server/inspect-invoices.php 1
 ```
 
-2. Mantener `mode` en `phantom`, `allowed_idas` en `[1]` y la modalidad `phantom_auth_mode` en `get-query-lab`. Agregar `customer_id_field` con el campo que se haya confirmado. Mantener intactos URL, credenciales y `ca_file`. Una configuración anterior sin `phantom_auth_mode` usa explícitamente `get-query-lab`; no intenta otros métodos.
+Si la consola está ocupada por el servidor, usar otra PowerShell con las variables de entorno habituales. No copiar config.example.php encima del archivo privado.
 
-Si el usuario de autogestión es personalizado, agregar personalmente su correspondencia exacta a IDA 1 en `lab_users`. No poner contraseñas en ese mapa. El backend siempre compara usuario y contraseña exactos con los campos de autogestión del registro validado.
+El comando hace como máximo tres solicitudes: autenticación técnica y dos páginas de facturas del IDA 1, Limit=10 con Offset=0 y 10. No consulta otros abonados, no descarga documentos, no usa SIRO, no escribe en Phantom ni guarda el token. Comparte transporte TLS/decoder con el portal.
 
-3. Ejecutar el chequeo local:
+Copiar únicamente el reporte generado o su diagnóstico seguro. Informa cantidades por página, orden, duplicados, continuidad y presencia/tipos de Hash_Descarga. No muestra IDs de facturas, importes, nombres, hash, token, URLs privadas ni contenido de documentos.
 
-```powershell
-npm run check:mi-usittel
-```
+Esperamos orden descendente, overlap_count=0 y page_2_older=true cuando existan dos páginas con datos. Si hay menos de diez facturas, la segunda página puede estar vacía: eso no permite declarar validada la continuidad entre dos páginas no vacías. No recorrer otro IDA para obtener más datos.
 
-El aviso de identidad pendiente es normal hasta completar el punto 2. Que el campo esté configurado no demuestra por sí mismo que sea correcto.
+Esperar la revisión del resultado antes de la siguiente prueba manual.
 
-4. Iniciar el servidor PHP local:
+## Descarga: pendiente de identificar el recorrido nativo
 
-```powershell
-npm run dev:mi-usittel:php
-```
+El manual explica Hash_Descarga, pero no documenta una URL inequívoca para esta instalación. El repositorio tampoco contiene esa implementación. No se construyó una URL por intuición y no se confundió con un enlace de pago.
 
-Abrir http://127.0.0.1:4174/autogestion/. El servidor está ligado a localhost. El servidor estático del puerto 4173 no ejecuta el backend PHP.
+El backend tiene preparada autorización por sesión + IDA + IDT y validación PDF; la fuente real está cerrada con DOCUMENT_NOT_CONFIGURED. La descarga pública sigue deshabilitada. Las pruebas PDF actuales usan únicamente una fuente simulada, nunca un PDF ficticio mostrado como real.
 
-5. Escribir personalmente en el formulario las credenciales actuales de autogestión del abonado 1. No usar las credenciales técnicas de API. No transformar la contraseña ni quitar espacios o ceros.
+Después de validar la paginación se indicará una única comprobación del flujo nativo de descarga. No compartir una URL completa con hash, cookies, token, capturas de datos privados, JSON crudo ni HAR sin sanear.
 
-6. Comprobar login, recarga conservando sesión, nombre/domicilio/plan/estado administrativo, saldo contrastado con Phantom, última factura y detalle, y logout. Tras logout, recargar no debe devolver información del cliente.
+## Recorrido de aceptación pendiente para Facturas
 
-Para esta instalación, el caso real confirmó positivo = deuda. El adaptador usa negativo = saldo a favor (cubierto con fixtures; pendiente contraste real del caso negativo). La factura muestra su total, no un saldo pendiente calculado; que esté pagada no significa que la cuenta no tenga deuda. La paginación completa, próximo vencimiento de cuenta y fecha de pago siguen sin validar. Opcionales ausentes muestran “No disponible”.
+Página 1 real → Cargar más → continuidad sin duplicados → abrir una factura conocida → descarga real cuando el recorrido esté confirmado → logout. Todavía no está aceptado este recorrido ampliado.
 
-## Si abriste otra PowerShell
+El portal local sigue en http://127.0.0.1:4174/autogestion/, con `npm run dev:mi-usittel:php`. `npm run check:mi-usittel` y `npm run test:mi-usittel` no contactan Phantom. No modificar credenciales, ca_file, Apache, DNS, .htaccess ni producción.
 
-Restablecer las rutas, sin copiar ni imprimir el archivo privado:
+Si se abre otra PowerShell, restablecer solo las rutas existentes:
 
 ```powershell
 $privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
@@ -63,12 +47,4 @@ $env:MI_USITTEL_RUNTIME = Join-Path $privateFolder 'runtime'
 $env:MI_USITTEL_PHP = "$env:TEMP\mi-usittel-php\php.exe"
 ```
 
-Usar la ubicación real de PHP si cambió. La carpeta runtime debe existir fuera del repositorio y tener acceso restringido al usuario que ejecuta PHP.
-
-## Qué no compartir
-
-No compartir passwords, token, archivo privado, URL de autenticación con query, JSON crudo, documentos del cliente ni capturas con información personal. No activar debug cURL ni volcar respuestas. Compartir solamente el reporte acotado o códigos de error seguros.
-
-## Límites
-
-Solo IDA 1 y lectura. No SIRO, pagos, promesas, cambios de servicio/datos/tickets, Apache, DNS ni producción. Pendientes antes de producción: certificados del hosting, protección y revisión de logs remotos ante credenciales GET, despliegue y seguridad.
+Usar la ubicación real de PHP si cambió. No imprimir ni compartir la configuración privada.

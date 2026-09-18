@@ -1,33 +1,29 @@
-# MVP — alcance efectivo al 18/09/2026
+# MVP — laboratorio IDA 1
 
-## Producto
+## Aceptado con Phantom real
 
-Login, Inicio, Facturas/Estado de cuenta y detalle, Mi servicio, Soporte y Mi cuenta básica. Diseño aprobado preservado: navegación inferior móvil y superior desktop, sin sidebar. Speedtest, mejoras de plan, adicionales, contacto comercial y Wi-Fi siguen aislados en Más opciones; no se eliminan y siguen deshabilitados en Phantom.
+Agustín confirmó login con credenciales de autogestión, identidad por ID, Inicio con datos reales, plan y Estado_Servicio, saldo desde Phantom_Mi_Estado_Cuenta.Balance, última factura y apertura del detalle. La sesión persiste al recargar; logout seguido de recarga vuelve al login sin datos del cliente.
 
-## Conectado en código y probado con fixtures
+Autenticación técnica GET HTTPS, lecturas POST JSON con token en body y TLS/CA privada funcionan. No reabrir esa investigación salvo fallo nuevo. Balance positivo = deuda; negativo = saldo a favor según el contrato de esta instalación. La prueba real de signo se hizo con deuda positiva; crédito negativo está cubierto con fixtures.
 
-- Transporte compartido: GET HTTPS de autenticación técnica y lecturas POST JSON. Sin fallback de métodos, TLS verificado y decoder estricto con un BOM inicial permitido.
-- Portal exclusivamente IDA 1. Validación de lista, cantidad e identidad antes de comparar exactamente credenciales de autogestión; suspendidos pueden ingresar. ID/IDAx requieren confirmación explícita antes de habilitar login.
-- Sesión propia, CSRF, vencimientos, logout, regeneración y límites de intentos. Token técnico separado del cliente.
-- Inicio con nombre/razón social, domicilio, plan literal, estado administrativo y estado de cuenta. Mi servicio y Mi cuenta comparten esos datos de lectura.
-- Balance del endpoint de cuenta: distingue deuda, cero, crédito y no disponible. Nunca suma facturas ni usa Balance_CC como sustituto.
-- Última factura y detalle de lectura; total separado de saldo pendiente. Sin historial completo anunciado, documentos ficticios ni pagos habilitados.
-- DTO público explícito, configuración privada, errores seguros, demo separada sin fallback. Opcionales ausentes y fallos parciales no generan datos inventados.
+## Facturas: ampliación implementada, aceptación real pendiente
 
-## Comprobado por Agustín contra Phantom real
+- Primera página y Cargar más, diez registros por solicitud y sin carga masiva automática.
+- Orden descendente por IDT, sin inventar total/páginas. Página corta o vacía finaliza la consulta actual.
+- Duplicados, cambios de continuidad u orden inesperado se rechazan sin mezclar datos; se solicita recargar.
+- Detalle reconsultado para una factura del historial autorizado en la sesión.
+- Perfil y saldo de cuenta separados del total de factura. No se inventan saldo pendiente, fecha/método de pago ni próximo vencimiento global.
+- Estados originales PAGADA/IMPAGA se presentan como Pagada/Pendiente; no se agregó una regla de vencida basada en fechas.
+- Descarga: backend autorizado y controles de PDF preparados y probados con fixtures. Falta el endpoint real, no documentado inequívocamente. Botón real deshabilitado, fuente real cerrada, sin URLs adivinadas ni documentos de ejemplo en Phantom.
 
-Autenticación GET HTTPS con token y lecturas de cliente avanzado, estado de cuenta y última factura. Cliente/factura como listas, cuenta con Balance:string, nombres y tipos de campos. Bundle CA privado operativo. Limit=1 y Offset=0 comprobados; paginación completa no comprobada.
+La próxima intervención es un único comando `inspect-invoices.php 1` para comparar dos páginas de laboratorio con metadatos seguros. Ver FIRST-PHANTOM-TEST.md. La paginación ampliada y la descarga real NO están todavía aceptadas.
 
-Identidad del registro mediante ID (IDAx distinto), login real con mapeo privado del usuario personalizado y sesión conservada después de F5 confirmados. Inicio mostró datos reales. Agustín contrastó Balance positivo de 121 como deuda; se corrigió el adaptador que lo mostraba erróneamente a favor.
+## Conservado
 
-## Pendiente de aceptación real
+Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, límites de intentos, aislamiento demo/Phantom, whitelist pública, configuración y runtime privados. Mi servicio y Mi cuenta muestran lectura de perfil; Soporte no inventa tickets. Funciones secundarias del prototipo conservadas, deshabilitadas en Phantom.
 
-Confirmar que Inicio muestra la deuda corregida, completar el contraste de perfil y detalle de factura y cerrar sesión. El caso de saldo negativo/a favor se probó con fixtures pero todavía no con una cuenta real. Ver FIRST-PHANTOM-TEST.md.
+## Fuera de alcance
 
-Login y recarga están comprobados, pero el recorrido de aceptación completo aún no terminó. Próximo vencimiento global, velocidad, conectividad y fecha de pago siguen no disponibles cuando no hay contrato confirmado.
+SIRO y todo pago/imputación, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, múltiples contratos, búsqueda universal de usuarios, web pública y producción. Comprobantes de pago reales son distintos de las facturas y no se implementaron.
 
-## Fuera de esta entrega
-
-SIRO, pagos/imputación, promesas, reactivación, PDF/comprobantes, recuperación, cambios de datos/Wi-Fi/plan, tickets, chat y speedtest reales, múltiples contratos, búsqueda universal de usuarios. Ninguna escritura habilitada.
-
-Antes de producción: certificados en hosting, riesgo de credenciales GET en logs remotos, revisión de seguridad/despliegue y validación real completa. No modificar la web pública, su acceso, DNS, Apache, .htaccess ni publicar el laboratorio en producción.
+Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.

@@ -4,7 +4,7 @@
 
 Agustín comprobó en Phantom real la autenticación GET HTTPS y las lecturas POST de Consulta_Cliente_Avanzada, Phantom_Mi_Estado_Cuenta y Phantom_Ultima_Factura mediante `inspect-schema.php 1 --auth-get`. La última lectura usó Limit=1, Offset=0. Cliente y factura son listas de objetos; cuenta es un objeto con Balance:string. El bundle CA privado ya permite verificar TLS.
 
-El backend del portal utiliza ese contrato compartido. Agustín confirmó un único registro con ID:string coincidente con IDA 1 e IDAx distinto, y credenciales de autogestión presentes como strings. Configuró ID y el mapeo privado de usuario personalizado, ingresó correctamente y comprobó que la sesión persiste al recargar. Inicio mostró perfil, estado administrativo y última factura. Falta completar detalle de factura y logout reales.
+El backend del portal utiliza ese contrato compartido. Agustín confirmó un único registro con ID:string coincidente con IDA 1 e IDAx distinto, y credenciales de autogestión presentes como strings. Configuró ID y el mapeo privado de usuario personalizado, ingresó correctamente y comprobó que la sesión persiste al recargar. Inicio mostró perfil, estado administrativo y última factura. Detalle de última factura y logout real también fueron aceptados: tras recargar vuelve al login sin datos del cliente.
 
 ## Transporte único
 
@@ -46,19 +46,41 @@ Sesión propia con regeneración al login, HttpOnly, SameSite Strict, Secure baj
 
 Los campos de presentación aceptan strings; ausentes o de otro tipo quedan no disponibles. `profile_fields` permite overrides solo sobre una lista explícita de campos públicos, y composiciones `join`. null utiliza los mapeos anteriores. Las viejas opciones customer_path y balance_path no autorizan registros ni seleccionan saldo. Verificar los mapeos visualmente con la cuenta real antes de darlos por aceptados.
 
-La prueba real del IDA 1 contradijo la interpretación inicial de crédito menos débito: Agustín confirmó que el Balance positivo de 121 representa deuda en esta instalación. El adaptador USITTEL usa positivo → deuda, cero → saldo cero y negativo → crédito. El caso negativo está cubierto con fixtures, todavía no contrastado contra una cuenta real con saldo a favor. El valor original se conserva en balance. El parser admite decimales con punto y hasta dos decimales, o números finitos dentro del rango; no elimina símbolos ni separadores arbitrarios. Inválido/ausente → no disponible. La última factura pagada no anula la deuda de cuenta; son fuentes distintas. Pendiente confirmar visualmente la corrección en el portal.
+La prueba real del IDA 1 contradijo la interpretación inicial de crédito menos débito: Agustín confirmó que el Balance positivo de 121 representa deuda en esta instalación. El adaptador USITTEL usa positivo → deuda, cero → saldo cero y negativo → crédito. El caso negativo está cubierto con fixtures, todavía no contrastado contra una cuenta real con saldo a favor. El valor original se conserva en balance. El parser admite decimales con punto y hasta dos decimales, o números finitos dentro del rango; no elimina símbolos ni separadores arbitrarios. Inválido/ausente → no disponible. La última factura pagada no anula la deuda de cuenta; son fuentes distintas. La lectura básica y el saldo fueron aceptados por Agustín para cerrar la etapa anterior.
 
 Factura: IDT como identificador validado y sin duplicados; Periodo, Tipo, Comp_ID y Detalle como texto; Total numérico estricto; Primer_Vto y Segundo_Vto solo fechas válidas YYYY-MM-DD. Adaptador de Estado para PAGADA/IMPAGA; otros valores quedan no disponibles hasta confirmar contrato. No se inventan fecha de pago, saldo pendiente ni vencimiento global de cuenta.
 
-Siempre Limit=1 y Offset=0. La API rechaza otros offsets y anuncia `historyComplete=false`; la interfaz dice última factura disponible. La paginación del historial no está validada. No hay PDF, comprobantes de pago ni enlaces SIRO públicos.
+### Historial paginado: contrato implementado, prueba real pendiente
+
+[Manual API de Phantom, páginas 23–26](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view) revisado en esta etapa: documenta Factura/Vto en orden descendente por ID, Limit y Offset conjuntos, y ausencia de total. Conservamos las lecturas POST JSON comprobadas en esta instalación aunque el manual ilustre GET.
+
+Se piden diez registros, empezando por Offset=0. Una página llena habilita Cargar más; corta o vacía termina la consulta actual. No hay precarga ni barrido automático. `historyComplete=false` no promete un snapshot íntegro del historial; `endReached` solo informa una página corta. El total de registros/páginas no se inventa. Offset máximo 100000, múltiplo de diez; límites fijados por servidor.
+
+Invoices.php valida IDs decimales de hasta 20 dígitos sin convertirlos a float; compara por longitud y orden léxico. Rechaza duplicados, páginas mayores que el límite y orden no descendente. La sesión registra posiciones/IDs ya recibidos y la próxima página autorizada; no permite saltar páginas. Reintentos de la misma página son idempotentes. Repeticiones entre páginas o continuidad alterada fallan con INVOICE_HISTORY_CHANGED: recargar reinicia el recorrido. No se presenta el resultado como un snapshot transaccional; con offsets un cambio concurrente puede causar omisiones que solo una API de cursor/snapshot podría evitar completamente.
+
+El detalle se consulta en `GET invoice?id=...`: exige que el IDT ya pertenezca al historial de la sesión, vuelve a pedir exactamente una posición con Limit=1 para el IDA de sesión y comprueba el IDT retornado. Si la posición cambió, no se entrega otra factura ni se inicia un barrido. Si aparece un campo IDA contradictorio en una fila, también se rechaza. No se asumen que IDT y Comp_ID sean iguales.
+
+`inspect-invoices.php 1` realiza una autenticación y dos lecturas (offsets 0/10), sin persistencia ni reintentos. Devuelve cantidades, orden/continuidad y metadatos de presencia/tipo del hash, nunca sus valores. Si no hay dos páginas con datos, la prueba no confirma continuidad entre páginas no vacías.
+
+### Descarga: contrato de autorización listo, fuente real bloqueada
+
+El mismo manual define Hash_Descarga como insumo para enlaces internos dependientes de cada instalación; no da una URL de PDF inequívoca. Se revisaron además los manuales de [Cuentas Corrientes](https://drive.google.com/file/d/1FrCWG1YVO-HxdQRIhhOuq8N6YiJnHsnd/view) y [Facturación](https://drive.google.com/file/d/1DY3XtxB0I-VW9IihLVcidgYavzdvCFsZ/view), sin encontrar esa URL. El repositorio no incluye el código de descarga de la autogestión nativa. No se consultó ni modificó la VM de Phantom. Un enlace de pago no se considera un documento.
+
+`GET invoice-document?id=...` exige sesión activa IDA 1 y factura previamente obtenida para esa sesión. Reconsulta exactamente esa factura antes de resolver el hash. El navegador no puede enviar IDA, hash, URL ni token. IDT no reconocido → 404 sin llamar a la fuente documental; sesión ausente/vencida → 401. Cambiar posición/propietario falla cerrado.
+
+InvoiceDocumentSource es el punto de integración pendiente. La implementación real actual, UnconfirmedInvoiceDocuments, siempre devuelve disponible=false y nunca realiza solicitudes: DOCUMENT_NOT_CONFIGURED. No existe una plantilla de URL configurable por navegador ni un endpoint inventado. La interfaz de descarga está preparada, pero los botones permanecen deshabilitados en el laboratorio real. El doble de pruebas está aislado en tests/router.php y no es accesible por el router de la aplicación.
+
+El servicio valida MIME application/pdf, máximo 10 MiB, firma PDF y cierre EOF; rechaza HTML/error/tamaño excesivo. Responde attachment con nombre derivado del IDT validado, no-store/private, nosniff y CSP sandbox; no reenvía headers arbitrarios ni URLs de Phantom. El navegador solicita un Blob a nuestra API y no recibe hash/token. Estas comprobaciones son de formato, no un análisis antimalware. El futuro adaptador HTTP real debe además limitar bytes durante transferencia, validar status/MIME/redirects y conservar TLS/CA: esa transferencia no está implementada ni validada todavía.
+
+No hay descarga real confirmada, comprobantes de pago ni enlaces SIRO públicos.
 
 ## API e interfaz
 
-El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login, overview, invoices y logout. Bloquea acceso HTTP a server/tests/configuración. La web comercial permanece intacta.
+El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login, overview, invoices, invoice, invoice-document y logout. Bloquea acceso HTTP a server/tests/configuración. La web comercial permanece intacta.
 
-Inicio recibe perfil, estado administrativo, saldo y factura. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
+Inicio recibe perfil, estado administrativo, saldo y la primera página de facturas; muestra solo las tres más recientes. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
 
-Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, documentos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
+Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, descarga real (endpoint pendiente), promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
 
 ## Configuración y ejecución
 
@@ -70,8 +92,8 @@ Seguir FIRST-PHANTOM-TEST.md. Mantener config.php, bundle CA y runtime fuera del
 
 `npm run test:mi-usittel` usa exclusivamente fixtures y un servidor local, nunca Phantom real. Cubre transporte GET/POST, encoding, BOM, TLS/errores seguros, lista e identidad, credenciales exactas, campos opcionales, saldo/facturas inválidos, whitelist pública, CSRF, sesión/logout/vencimientos, limitación de intentos, aislamiento demo y ausencia de secretos. Los dobles cURL no ejecutan red externa.
 
-Pendiente real: confirmar la corrección visual del saldo, completar aceptación de mapeos y detalle de factura, logout y contrastar un saldo negativo cuando exista un caso autorizado. Identidad, login y recarga ya confirmados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
+Pendiente real de esta etapa: páginas 1/2 y continuidad, detalle de una factura del historial ampliado, identificación del flujo nativo de documento, descarga conocida y logout del recorrido ampliado. Identidad, login, Inicio/saldo/última factura/detalle, recarga y logout de la etapa básica ya fueron aceptados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
 
 ### QA local de esta entrega
 
-Suite automatizada con fixtures, chequeo local sin red y lint PHP. Navegador Chromium con respuestas sintéticas en modo Phantom: desktop 1365×900 y móvil 390×844. Se comprobó login exacto, recarga con sesión, Inicio, Facturas/detalle, Mi servicio, Soporte, Mi cuenta y logout. Sin errores JavaScript, desbordamiento horizontal, carga de demo-data ni solicitudes externas. Pagos deshabilitados. Esto no sustituye la aceptación real del abonado.
+Suite automatizada: 205 verificaciones con fixtures, chequeo local sin red y lint PHP. Navegador Chromium con respuestas sintéticas en modo Phantom: desktop 1365×900 y móvil 390×844. Se comprobó login exacto, recarga con sesión, Inicio, historial de 25 facturas en tres páginas (10/10/5), detalle reconsultado, Mi servicio, Soporte, Mi cuenta y logout. También se descargó un PDF simulado mediante la API local y la sesión propia; la fuente documental real permanece bloqueada. Sin errores JavaScript, desbordamiento horizontal, carga de demo-data ni solicitudes externas. Pagos deshabilitados. Esto no sustituye la aceptación real del historial y la descarga.

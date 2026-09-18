@@ -1,4 +1,4 @@
-import { request } from './api.js';
+import { request, invoicePdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices } from './data.js';
 import { shell, routes, status, icon, button, input, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
@@ -10,6 +10,7 @@ const toastElement = document.querySelector('#toast');
 const views = { inicio: home, facturas: billing, servicio: service, soporte: support, cuenta: account };
 const paymentNotice = '<p class="field-hint" id="payment-provider-note">Al seleccionar Pagar, serás redirigido al portal de SIRO, nuestro proveedor de pagos.</p>';
 let authenticated = false;
+let dataGeneration = 0;
 
 let speedTimer;
 let toastTimer;
@@ -33,7 +34,7 @@ function openDialog(title, content) {
 }
 dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?.isConnected) lastTrigger.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-invoice', 'download-receipt', 'receipt', 'pay'];
+const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt', 'pay'];
 function render() {
   clearInterval(speedTimer);
   if (dialog.open) dialog.close();
@@ -60,7 +61,7 @@ function render() {
 function getInvoice(id) { return invoices.find(item => item.id === id); }
 function invoiceDialog(item, receipt = false) {
   if (!item || (receipt && item.status !== 'Pagada')) return;
-  if (runtime.mode === 'phantom') return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div><div><dt>Detalle</dt><dd>${e(item.detail)}</dd></div><div><dt>Saldo pendiente</dt><dd>No disponible</dd></div></dl><p class="field-hint">El importe mostrado es el total de la factura; no permite determinar pagos parciales.</p><div class="dialog-actions">${button('Pagar','',{iconName:'external-link',attrs:'disabled aria-describedby="payment-provider-note"'})}${button('Descargar factura','',{secondary:true,attrs:'disabled'})}</div><p class="field-hint">Pagos y descargas todavía no habilitados.</p>${paymentNotice}`);
+  if (runtime.mode === 'phantom') return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div><div><dt>Detalle</dt><dd>${e(item.detail)}</dd></div><div><dt>Saldo pendiente</dt><dd>No disponible</dd></div></dl><p class="field-hint">El importe mostrado es el total de la factura; no permite determinar pagos parciales.</p><div class="dialog-actions">${button('Pagar','',{iconName:'external-link',attrs:'disabled aria-describedby="payment-provider-note"'})}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div><p class="field-hint">${item.downloadAvailable ? 'Pagos todavía no habilitados.' : 'Pagos y descargas todavía no habilitados.'}</p>${paymentNotice}`);
   openDialog(receipt ? 'Comprobante de pago' : 'Detalle de factura', `<p class="demo-caption">Documento de ejemplo · Sin validez fiscal</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Servicio</dt><dd>${customer.plan}</dd></div><div><dt>Domicilio</dt><dd>${customer.address}</dd></div><div><dt>Vencimiento</dt><dd>${item.due}</dd></div>${receipt ? `<div><dt>Fecha de pago de ejemplo</dt><dd>${item.paidAt}</dd></div>` : '<div><dt>Concepto</dt><dd>Abono mensual</dd></div>'}</dl><div class="dialog-actions">${!receipt && item.status !== 'Pagada' ? button('Pagar', 'pay', { iconName: 'external-link', attrs: `data-id="${item.id}" aria-describedby="payment-provider-note"` }) : ''}${button(receipt ? 'Descargar comprobante' : 'Descargar factura', receipt ? 'download-receipt' : 'download-invoice', { secondary: !receipt && item.status !== 'Pagada', iconName: 'download', attrs: `data-id="${item.id}"` })}</div>${!receipt && item.status !== 'Pagada' ? paymentNotice : ''}`);
 }
 const help = {
@@ -84,9 +85,12 @@ document.addEventListener('click', async event => {
   if (action === 'boot-retry') return boot();
   if (action === 'retry') return loadOverview();
   if (action === 'more-invoices') {
-    target.disabled = true;
-    try { appendInvoices(await request(`invoices?offset=${runtime.nextOffset}`)); render(); }
-    catch(error) { await handleError(error); target.disabled = false; }
+    if (runtime.invoicesLoading || runtime.nextOffset === null) return;
+    const generation = dataGeneration; const offset = runtime.nextOffset;
+    runtime.invoicesLoading = true; render();
+    try { const page = await request(`invoices?offset=${offset}`); if (generation === dataGeneration && authenticated) appendInvoices(page); }
+    catch(error) { if (generation === dataGeneration) await handleError(error); }
+    finally { if (generation === dataGeneration) { runtime.invoicesLoading = false; render(); } }
     return;
   }
   if (action === 'close') return dialog.close();
@@ -98,10 +102,32 @@ document.addEventListener('click', async event => {
     target.setAttribute('aria-label', `${show ? 'Ocultar' : 'Mostrar'} contraseña`);
     return;
   }
-  if (action === 'invoice') return invoiceDialog(item);
+  if (action === 'invoice') {
+    if (!item) return;
+    if (runtime.mode === 'demo') return invoiceDialog(item);
+    const generation = dataGeneration; const route = location.hash; target.disabled = true;
+    try {
+      const result = await request(`invoice?id=${encodeURIComponent(item.id)}`);
+      if (generation === dataGeneration && authenticated && location.hash === route) { Object.assign(item, result.item); invoiceDialog(item); }
+    } catch(error) { if (generation === dataGeneration) await handleError(error); }
+    finally { target.disabled = false; }
+    return;
+  }
   if (action === 'receipt') return invoiceDialog(item, true);
   if (action === 'download-invoice' || action === 'download-receipt') {
     if (!item || (action === 'download-receipt' && item.status !== 'Pagada')) return;
+    if (runtime.mode === 'phantom') {
+      if (!item.downloadAvailable || action !== 'download-invoice') return;
+      const generation = dataGeneration; target.disabled = true;
+      try {
+        const blob = await invoicePdf(item.id);
+        if (generation !== dataGeneration || !authenticated) return;
+        const url = URL.createObjectURL(blob); const link = document.createElement('a');
+        link.href = url; link.download = `factura-${item.id}.pdf`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch(error) { if (generation === dataGeneration) await handleError(error); }
+      finally { target.disabled = false; }
+      return;
+    }
     downloadDocument(item, action === 'download-receipt');
     return toast('Descargaste un PDF de ejemplo, sin validez fiscal.');
   }
@@ -117,6 +143,7 @@ document.addEventListener('click', async event => {
   if (action === 'contact') return openDialog('Editar datos de contacto', `<form id="contact-form">${input('Correo electrónico', 'email', { value: customer.email, type: 'email', extra: 'maxlength="120"' })}${input('Teléfono', 'phone', { value: customer.phone, type: 'tel', required: false, extra: 'maxlength="30"' })}<p class="field-hint">Usá datos ficticios. Los cambios duran hasta que recargues la página.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'password') return openDialog('Cambiar contraseña', `<form id="password-form">${input('Contraseña actual', 'current-password', { type: 'password', autocomplete: 'off' })}${input('Nueva contraseña', 'new-password', { type: 'password', autocomplete: 'off', extra: 'minlength="8"', hint: 'Para esta demostración, usá al menos 8 caracteres.' })}${input('Repetir nueva contraseña', 'confirm-password', { type: 'password', autocomplete: 'off' })}<p class="field-hint">Usá valores de prueba. Ninguna contraseña se guarda ni se envía.</p>${button('Probar cambio', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
+    dataGeneration++;
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
@@ -186,6 +213,7 @@ document.addEventListener('submit', async event => {
 });
 async function handleError(error) {
   if (error.status === 401) {
+    dataGeneration++;
     authenticated = false; clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
@@ -193,10 +221,11 @@ async function handleError(error) {
   } else toast(error.message);
 }
 async function loadOverview() {
+  const generation = ++dataGeneration;
   clearData(); runtime.loading = true; runtime.error = ''; render();
-  try { applyOverview(await request('overview')); }
-  catch(error) { if (error.status === 401) await handleError(error); else runtime.error = error.message; }
-  finally { runtime.loading = false; render(); }
+  try { const data = await request('overview'); if (generation === dataGeneration && authenticated) applyOverview(data); }
+  catch(error) { if (generation === dataGeneration) { if (error.status === 401) await handleError(error); else runtime.error = error.message; } }
+  finally { if (generation === dataGeneration) { runtime.loading = false; render(); } }
 }
 async function boot() {
   app.innerHTML = '<main id="main" class="page"><p role="status">Cargando Mi USITTEL…</p></main>';

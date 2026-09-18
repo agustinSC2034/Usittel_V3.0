@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace MiUsittel;
+require_once __DIR__.'/../server/InvoiceDocuments.php';
 // Deliberately synthetic schema. Never included by the production router.
 final class FixtureTransport implements Transport {
     public function __construct(private string $dir) {}
@@ -70,7 +71,35 @@ final class FixtureTransport implements Transport {
         if($scenario==='invalid-invoice') $row=array_replace($row,['Total'=>'12.500,75','Primer_Vto'=>'2026-02-30','Segundo_Vto'=>"2026-09-20\0",'Estado'=>'UNKNOWN']);
         if($scenario==='invalid-invoice-id') $row['IDT']=true;
         if($scenario==='duplicate-invoice') return [$row,$row];
-        if($scenario==='pagination') { $rows=[];for($i=0;$i<20;$i++) $rows[]=array_replace($row,['IDT'=>1000-(int)$query['Offset']-$i]);return $rows; }
-        return [$row];
+        if($scenario==='foreign-invoice') $row['IDA']='5';
+        if($scenario==='document-missing-hash') unset($row['Hash_Descarga']);
+        if($scenario==='document-invalid-hash') $row['Hash_Descarga']=['private-hash'];
+        if(str_starts_with($scenario,'history-') || $scenario==='pagination') {
+            $total=match($scenario) {'history-zero'=>0,'history-one'=>1,'history-short'=>7,'history-exact'=>10,default=>25};
+            $rows=[];for($i=0;$i<$total;$i++) $rows[]=array_replace($row,['IDT'=>(string)(1000-$i)]);
+            $offset=(int)$query['Offset'];$limit=(int)$query['Limit'];
+            if($scenario==='history-repeat' && $offset>=10) $offset=0;
+            if($scenario==='history-changed-detail' && $limit===1) $offset++;
+            $rows=array_slice($rows,$offset,$limit);
+            if($scenario==='history-order') $rows=array_reverse($rows);
+            if($scenario==='history-duplicate' && count($rows)>1) $rows[1]=$rows[0];
+            return $rows;
+        }
+        return array_slice([$row],(int)($query['Offset']??0),(int)($query['Limit']??1));
+    }
+}
+
+final class FixtureDocuments implements InvoiceDocumentSource {
+    public function __construct(private string $dir) {}
+    public function available(): bool {return str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'document-');}
+    public function fetch(int $ida,string $idt,string $hash): array {
+        if($ida!==1 || $idt!=='123' || $hash!=='do-not-expose') throw new \RuntimeException('fixture document ownership');
+        file_put_contents($this->dir.'/document-calls','call\n',FILE_APPEND);
+        $scenario=trim(file_get_contents($this->dir.'/scenario'));
+        if($scenario==='document-error') throw new Failure('PHANTOM_HTTP');
+        if($scenario==='document-unsafe-error') throw new \RuntimeException('private hash do-not-expose');
+        return ['contentType'=>$scenario==='document-mime'?'text/html':'application/pdf',
+            'bytes'=>match($scenario) {'document-size'=>str_repeat('x',INVOICE_PDF_MAX_BYTES+1),
+                'document-format'=>'<html>private body</html>',default=>"%PDF-1.4\nfixture document\n%%EOF\n"}];
     }
 }

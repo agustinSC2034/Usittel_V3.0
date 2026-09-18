@@ -1,4 +1,24 @@
 let csrf = '';
+export async function invoicePdf(id) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 65000);
+  try {
+    const response = await fetch(`api/invoice-document?id=${encodeURIComponent(id)}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal });
+    if (!response.ok) {
+      const json = await response.json(); const error = new Error(json.error?.message || 'No pudimos descargar la factura.');
+      error.status = response.status; throw error;
+    }
+    if (response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/pdf') throw new Error('Documento no válido.');
+    const reader = response.body.getReader(); const chunks = []; let size = 0;
+    while (true) {
+      const { value, done } = await reader.read(); if (done) break;
+      size += value.length;
+      if (size > 10485760) { await reader.cancel(); throw new Error('El documento supera el tamaño permitido.'); }
+      chunks.push(value);
+    }
+    return new Blob(chunks, { type: 'application/pdf' });
+  } finally { clearTimeout(timer); }
+}
 export async function request(route, data) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 65000);

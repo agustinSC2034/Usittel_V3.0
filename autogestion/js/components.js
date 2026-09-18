@@ -21,7 +21,7 @@ export function input(label, name, { value = '', type = 'text', required = true,
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';
-  return `<div class="invoice-actions">${action('Ver', 'invoice', item.id, 'file-text')}${real ? '<button class="text-action" disabled title="Las descargas todavía no están habilitadas">Descargar</button>' : action('Descargar', 'download-invoice', item.id, 'download')}${item.status !== 'Pagada' ? button('Pagar', 'pay', { attrs: `data-id="${escapeHTML(item.id)}" ${real ? 'disabled title="Pagos todavía no habilitados"' : ''}` }) : real ? '<button class="text-action" disabled title="Comprobantes todavía no habilitados">Comprobante</button>' : action('Comprobante', 'receipt', item.id, 'check-circle')}</div>`;
+  return `<div class="invoice-actions">${action('Ver', 'invoice', item.id, 'file-text')}${real && !item.downloadAvailable ? '<button class="text-action" disabled title="Las descargas todavía no están habilitadas">Descargar</button>' : action('Descargar', 'download-invoice', item.id, 'download')}${item.status !== 'Pagada' ? button('Pagar', 'pay', { attrs: `data-id="${escapeHTML(item.id)}" ${real ? 'disabled title="Pagos todavía no habilitados"' : ''}` }) : real ? '<button class="text-action" disabled title="Comprobantes todavía no habilitados">Comprobante</button>' : action('Comprobante', 'receipt', item.id, 'check-circle')}</div>`;
 }
 export function invoiceTable(items, full = false) {
   if (!items.length) return `<p class="muted">${runtime.warnings.includes('INVOICES_UNAVAILABLE') ? 'Facturas no disponibles en este momento.' : 'No hay facturas para mostrar.'}</p>`;

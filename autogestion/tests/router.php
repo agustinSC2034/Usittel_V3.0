@@ -10,5 +10,5 @@ if(!str_starts_with($path,'/autogestion/api/')) {require __DIR__.'/../server/rou
 try {
     $c=\MiUsittel\config(); $dir=\MiUsittel\privateDir();
     $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\FixtureTransport($dir));
-    \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')));
+    \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')),new \MiUsittel\FixtureDocuments($dir));
 } catch(\Throwable $e) {\MiUsittel\fail($e);}

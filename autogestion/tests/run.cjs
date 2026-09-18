@@ -30,6 +30,22 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  for(const name of ['normal','empty','one','repeat','duplicate','html','http','args']) {
+    const before=fs.readdirSync(dir).sort();
+    const probe=spawnSync(php,[path.join(__dirname,'invoice-probe.php'),name],{env:fixtureEnv,encoding:'utf8'});
+    check(`inspector de historial ${name}: máximo 3 llamadas, solo metadatos y sin persistencia`,()=>{
+      assert.equal(probe.status,['duplicate','html','http','args'].includes(name)?1:0,probe.stderr);
+      assert.deepEqual(fs.readdirSync(dir).sort(),before);
+      assert.doesNotMatch(probe.stdout+probe.stderr,/private-|fixture-|1000|https?:|api_pass|Autogestion/);
+      if(probe.status===0) {
+        const result=JSON.parse(probe.stdout).invoices;assert.equal(result.limit,10);assert.equal(result.pages.length,2);
+        if(name==='normal') {assert.equal(result.two_nonempty_pages,true);assert.equal(result.page_2_older,true);assert.equal(result.overlap_count,0);}
+        if(name==='empty') assert.deepEqual(result.pages.map(p=>p.count),[0,0]);
+        if(name==='one') {assert.deepEqual(result.pages.map(p=>p.count),[1,0]);assert.equal(result.two_nonempty_pages,false);}
+        if(name==='repeat') {assert.equal(result.page_2_older,false);assert.equal(result.overlap_count,10);}
+      }
+    });
+  }
   const wire=spawnSync(php,[path.join(__dirname,'backend-contract.php')],{env:fixtureEnv,encoding:'utf8'});
   check('backend real comparte GET codificado, lecturas POST, BOM, identidad y mapeos',()=>{
     assert.equal(wire.status,0,wire.stderr);assert.equal(wire.stderr,'');
@@ -239,7 +255,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   scenario('duplicate-invoice');r=await a.call('invoices');check('facturas con identificador duplicado se rechazan',()=>assert.equal(r.status,503));
   scenario('invoices-error');r=await a.call('invoices');check('otro 400 no equivale a lista vacía',()=>assert.equal(r.status,503));
   scenario('malformed-invoices');r=await a.call('invoices');check('envoltorio inesperado rechazado',()=>assert.equal(r.status,503));
-  scenario('normal');r=await a.call('invoices?offset=20');check('historial no validado no habilita paginación',()=>assert.equal(r.status,400));
+  scenario('normal');r=await a.call('invoices?offset=20');check('no permite saltar páginas fuera de la secuencia',()=>assert.equal(r.status,409));
   r=await a.call('invoices');check('factura de lectura sin anunciar historial completo',()=>{assert.equal(r.data.nextOffset,null);assert.equal(r.data.historyComplete,false);});
   scenario('normal');r=await a.call('logout',{}, {noCsrf:true});check('CSRF logout',()=>assert.equal(r.status,403));
   const sessionCookie=a.cookie;r=await a.call('logout',{});check('logout servidor',()=>assert.equal(r.status,200));
@@ -261,5 +277,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>null").replace("'balance_path'=>['test_balance']", "'balance_path'=>null"));r=await mapping.call('overview');check('mapeos explícitos de laboratorio y Balance independiente del legado',()=>{assert.equal(r.data.customer.name,'Cliente de pruebas');assert.equal(r.data.account.debt,12500.75);});
   const trace=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');check('solo auth/lecturas IDA 1',()=>{assert.doesNotMatch(trace,/:5|:14|:999|Imputar|Promesa|Actualizar/);});
   check('logs sin secretos',()=>assert.doesNotMatch(stderr,/00Lab-fixture|fixture-api-secret|fixture-technical-token|do-not-expose/));
+  fs.writeFileSync(config,settings());clearRate();scenario('normal');
+  await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

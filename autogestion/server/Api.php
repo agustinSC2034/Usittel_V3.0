@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace MiUsittel;
+require_once __DIR__.'/InvoiceDocuments.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -41,13 +42,13 @@ function csrf(): void {
     }
     if(($_SERVER['HTTP_SEC_FETCH_SITE']??'')==='cross-site') throw new Failure('CSRF',403);
 }
-function api(array $c,string $dir,Phantom $ph,string $route): never {
+function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','overview'=>'GET','invoices'=>'GET'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
-    $allowedQuery=$route==='invoices'?['offset']:[];
+    $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
     if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf']]);
     if($method==='POST') csrf();
@@ -81,16 +82,27 @@ function api(array $c,string $dir,Phantom $ph,string $route): never {
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
     $ida=$_SESSION['ida'];
     if($ida!==1 || !in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+    $documents??=new UnconfirmedInvoiceDocuments();
+    if(in_array($route,['invoice','invoice-document'],true)) {
+        $id=$_GET['id']??null;
+        if(!is_string($id) || !preg_match('/^[1-9][0-9]{0,19}$/D',$id)) throw new Failure('BAD_REQUEST',400);
+        if($route==='invoice-document') pdfReply($id,invoiceDocument($ph,$documents,$ida,$id));
+        $row=authorizedInvoice($ph,$ida,$id);$item=publicInvoice($row);
+        $item['downloadAvailable']=$documents->available() && validInvoiceHash($row['Hash_Descarga']??null);
+        jsonReply(['item'=>$item]);
+    }
     if($route==='invoices') {
         $offset=$_GET['offset']??'0';
-        if($offset!=='0') throw new Failure('BAD_REQUEST',400);
-        jsonReply($ph->invoices($ida,(int)$offset));
+        if(!is_string($offset) || !preg_match('/^(0|[1-9][0-9]{0,5})$/D',$offset)) throw new Failure('BAD_REQUEST',400);
+        checkInvoiceOffset((int)$offset);
+        jsonReply(invoiceDocumentAvailability(rememberInvoicePage($ph->invoices($ida,(int)$offset)),$documents));
     }
     // Profile failure is recoverable, never replaced by fixtures. Optional sections
     // fail independently so an invoice outage cannot become a zero-debt account.
     $profile=$ph->profile($ida); $warnings=[];
     try {$balance=$ph->balance($ida);} catch(Failure $e) {$balance=['balance'=>null,'debt'=>null,'credit'=>null];$warnings[]='BALANCE_UNAVAILABLE';diagnostic($e);}
-    try {$invoices=$ph->invoices($ida);} catch(Failure $e) {$invoices=['items'=>[],'offset'=>0,'nextOffset'=>null];$warnings[]='INVOICES_UNAVAILABLE';diagnostic($e);}
+    unset($_SESSION['invoice_history']);
+    try {$invoices=invoiceDocumentAvailability(rememberInvoicePage($ph->invoices($ida)),$documents);} catch(Failure $e) {$invoices=['items'=>[],'offset'=>0,'nextOffset'=>null,'endReached'=>false];$warnings[]='INVOICES_UNAVAILABLE';diagnostic($e);}
     if($balance['balance']===null && !in_array('BALANCE_UNAVAILABLE',$warnings,true)) $warnings[]='BALANCE_UNAVAILABLE';
     if($balance['debt']!==null && $balance['debt']==0 && array_filter($invoices['items'],fn($i)=>$i['status']==='Pendiente')) {
         $warnings[]='ACCOUNT_RECONCILIATION'; diagnostic(new Failure('ACCOUNT_RECONCILIATION'));
@@ -107,6 +119,11 @@ function fail(\Throwable $e): never {
         'CSRF'=>'La sesión del formulario cambió. Recargá la página.',
         'CONFIGURATION'=>'El entorno necesita completar su configuración privada.',
         'LAB_IDENTITY_PENDING'=>'Falta confirmar el identificador del cliente de laboratorio antes de ingresar.',
+        'INVOICE_PAGE_SEQUENCE','INVOICE_HISTORY_CHANGED'=>'El historial cambió o la página ya no es válida. Recargá para volver a empezar.',
+        'INVOICES_ORDER','INVOICES_DUPLICATE'=>'No pudimos validar el orden del historial. Recargá para volver a intentar.',
+        'INVOICE_NOT_FOUND'=>'La factura no pertenece al historial consultado en esta sesión.',
+        'DOCUMENT_NOT_CONFIGURED'=>'La descarga real todavía espera confirmar el endpoint de Phantom.',
+        'DOCUMENT_UNAVAILABLE'=>'Esta factura no tiene un documento disponible.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         default=>'No pudimos consultar la información. Podés volver a intentar.',
     };

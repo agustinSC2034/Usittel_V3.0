@@ -6,7 +6,7 @@ Agustín confirmó login con credenciales de autogestión, identidad por ID, Ini
 
 Autenticación técnica GET HTTPS, lecturas POST JSON con token en body y TLS/CA privada funcionan. No reabrir esa investigación salvo fallo nuevo. Balance positivo = deuda; negativo = saldo a favor según el contrato de esta instalación. La prueba real de signo se hizo con deuda positiva; crédito negativo está cubierto con fixtures.
 
-## Facturas: ampliación implementada, aceptación real pendiente
+## Facturas: historial y detalle aceptados; descarga pendiente
 
 - Primera página y Cargar más, diez registros por solicitud y sin carga masiva automática.
 - Orden descendente por IDT, sin inventar total/páginas. Página corta o vacía finaliza la consulta actual.
@@ -16,7 +16,7 @@ Autenticación técnica GET HTTPS, lecturas POST JSON con token en body y TLS/CA
 - Estados originales PAGADA/IMPAGA se presentan como Pagada/Pendiente; no se agregó una regla de vencida basada en fechas.
 - Descarga: backend autorizado y controles de PDF preparados y probados con fixtures. Falta el endpoint real, no documentado inequívocamente. Botón real deshabilitado, fuente real cerrada, sin URLs adivinadas ni documentos de ejemplo en Phantom.
 
-La próxima intervención es un único comando `inspect-invoices.php 1` para comparar dos páginas de laboratorio con metadatos seguros. Ver FIRST-PHANTOM-TEST.md. La paginación ampliada y la descarga real NO están todavía aceptadas.
+El inspector y la navegación real confirmaron las dos páginas (10 + 1) y sus detalles. Ver FIRST-PHANTOM-TEST.md. La descarga real continúa pendiente de confirmar su endpoint.
 
 ## Conservado
 
@@ -27,3 +27,9 @@ Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, 
 SIRO y todo pago/imputación, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, múltiples contratos, búsqueda universal de usuarios, web pública y producción. Comprobantes de pago reales son distintos de las facturas y no se implementaron.
 
 Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.
+
+## Validación real del historial y ajuste visual — 18/09/2026
+
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de identificar su endpoint.
+
+Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.

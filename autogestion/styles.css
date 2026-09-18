@@ -88,6 +88,8 @@
   .two-columns { display:grid; grid-template-columns:1fr 1fr; gap:56px; }
   .second-column { border-left:1px solid var(--line); padding-left:50px; }
   .plan-title { font-size:23px; }
+  .service-management { border-top:1px solid var(--line); margin-top:28px; padding-top:26px; }
+  .service-management > .button { margin-top:24px; }
   .secondary-options { border-top:1px solid var(--line); margin-top:28px; }
   .secondary-options summary { padding:17px 0; min-height:54px; cursor:pointer; color:var(--green); font-weight:500; }
   .secondary-options summary:focus-visible { outline:3px solid #217dae; outline-offset:4px; }

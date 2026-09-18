@@ -28,3 +28,10 @@ export function appendInvoices(data) {
   for (const item of data.items) if (!ids.has(item.id)) { invoices.push(item); ids.add(item.id); }
   runtime.nextOffset = data.nextOffset; runtime.endReached = data.endReached === true;
 }
+
+// Presentation only: retain the original Phantom plan and remove only its observed prefix.
+export function planLabel(value) {
+  if (typeof value !== 'string') return value;
+  const cleaned = value.replace(/^RES \(\$\)\s*-\s*/, '');
+  return cleaned.trim() ? cleaned : value;
+}

@@ -6,7 +6,7 @@ Agustín validó manualmente login real, Inicio/perfil/plan/Estado_Servicio, sal
 
 La instalación interpreta Balance positivo como deuda y negativo como saldo a favor. Se mantiene la corrección aplicada. No volver a investigar autenticación, TLS o identidad salvo un fallo nuevo.
 
-## Único paso manual ahora
+## Inspector de referencia — prueba ya completada
 
 Desde la misma PowerShell configurada y la raíz del proyecto:
 
@@ -22,7 +22,7 @@ Copiar únicamente el reporte generado o su diagnóstico seguro. Informa cantida
 
 Esperamos orden descendente, overlap_count=0 y page_2_older=true cuando existan dos páginas con datos. Si hay menos de diez facturas, la segunda página puede estar vacía: eso no permite declarar validada la continuidad entre dos páginas no vacías. No recorrer otro IDA para obtener más datos.
 
-Esperar la revisión del resultado antes de la siguiente prueba manual.
+La prueba ya fue completada; no es necesario repetirla.
 
 ## Descarga: pendiente de identificar el recorrido nativo
 
@@ -48,3 +48,9 @@ $env:MI_USITTEL_PHP = "$env:TEMP\mi-usittel-php\php.exe"
 ```
 
 Usar la ubicación real de PHP si cambió. No imprimir ni compartir la configuración privada.
+
+## Validación real del historial y ajuste visual — 18/09/2026
+
+Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga real sigue pendiente de identificar su endpoint.
+
+Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.

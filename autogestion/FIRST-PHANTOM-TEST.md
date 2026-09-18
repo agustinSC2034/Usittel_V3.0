@@ -83,6 +83,22 @@ El soporte de formulario todavía no está confirmado. Si vuelve a fallar, compa
 
 ## Paso 5 — Qué copiar para analizar después
 
+### Excepción autorizada: prueba GET de autenticación únicamente
+
+Tras recibir HTTP 400 tanto en POST JSON como en formulario, el usuario autorizó una prueba GET con credenciales en la URL, aceptando que podrían quedar en logs del servidor/intermediarios aunque se use HTTPS. Esta autorización puntual no cambia el transporte del portal.
+
+En la PC de desarrollo, con las variables privadas ya configuradas, ejecutar **una sola vez**:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-auth-get.php
+```
+
+No lleva IDA: no consulta clientes. Lee la configuración privada existente, conserva el dominio HTTPS, la validación TLS y `JSON=1`; envía únicamente `action=autentificar`, `api_user` y `api_pass`. No sigue redirecciones ni reintenta; no guarda el token ni crea archivos de runtime. No cambia Apache, certificados ni configuración privada. No usar navegador, pegar URLs con credenciales ni activar trazas de cURL.
+
+La salida esperada es `Etapa: autenticacion`, `Código: TOKEN_RECIBIDO` y una aclaración de que el token está oculto. Esto confirma un campo `token` no vacío en una respuesta JSON sin error reconocido; todavía no comprueba su validez para consultar clientes. Una respuesta diferente falla de forma cerrada. Si falla, compartir solo el diagnóstico seguro. El código suprime salida accidental de configuración y errores crudos locales, pero no puede impedir el logging en el servidor remoto.
+
+### Salida del inspector de esquemas
+
 Copiar solamente la salida estructural completa producida por `inspect-schema.php`, desde la llave inicial hasta la final. Esa salida debería tener secciones `customer`, `account` e `invoice` con nombres de campos y tipos.
 
 Antes de compartirla, comprobar visualmente que no aparezcan datos personales o valores. Si aparece algo que no parece una descripción de tipo (`string`, `int`, `float`, `null`, `array`, `object`, `unknown` o `truncated`), detenerse y no compartirlo.

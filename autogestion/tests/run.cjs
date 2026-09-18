@@ -30,6 +30,35 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const getConfig=path.join(dir,'get-probe.php');const getCa=path.join(dir,'fixture-ca.pem');
+  fs.writeFileSync(getCa,'fixture only; intercepted cURL does not open a connection');
+  const getSettings=settings().replace('fixture-api-secret','fixture %&=+#? /á').replace('fixture-api','fixture +&=%á').replace("'allowed_idas'=>",`'ca_file'=>'${getCa.replace(/\\/g,'/')}', 'allowed_idas'=>`);
+  const expectedGet=[['success',null],['redirect','PHANTOM_HTTP',302],['http','PHANTOM_HTTP',400],['unauthorized','TOKEN_EXPIRED',401],
+    ['malformed','PHANTOM_FORMAT',200],['scalar','PHANTOM_FORMAT',200],['empty','PHANTOM_TOKEN',200],['functional','PHANTOM_FUNCTIONAL',200],
+    ['tls','PHANTOM_TLS_ISSUER'],['large','PHANTOM_RESPONSE_TOO_LARGE'],['warning','PROBE_PHP'],['exception','PHANTOM_CURL_RUNTIME'],
+    ['args','INSPECTOR_ARGUMENTS'],['demo','CONFIGURATION'],['insecure','CONFIGURATION'],['missing-ca','PHANTOM_CA_FILE']];
+  for(const [scenarioName,code,http] of expectedGet) {
+    let content=getSettings;
+    if(scenarioName==='demo') content=content.replace("'mode'=>'phantom'","'mode'=>'demo'");
+    if(scenarioName==='insecure') content=content.replace('https://fixture.invalid','http://fixture.invalid');
+    if(scenarioName==='missing-ca') content=content.replace('fixture-ca.pem','missing-ca.pem');
+    // Even accidental output from a valid private config must not reach stdout.
+    content=content.replace('<?php return',"<?php echo 'fixture-private-output'; return");
+    fs.writeFileSync(getConfig,content);
+    const before=fs.readdirSync(dir).sort();
+    const probe=spawnSync(php,[path.join(__dirname,'auth-get.php'),scenarioName],{env:{...fixtureEnv,MI_USITTEL_CONFIG:getConfig},encoding:'utf8'});
+    check(`GET aislado ${scenarioName}: salida segura, una solicitud como máximo y sin persistencia`,()=>{
+      assert.equal(probe.status,code?1:0,probe.stderr);
+      assert.deepEqual(fs.readdirSync(dir).sort(),before);
+      if(!code) {assert.equal(probe.stdout.replace(/\r\n/g,'\n'),'Etapa: autenticacion\nCódigo: TOKEN_RECIBIDO\nToken oculto; sin guardar ni consultar clientes.\n');assert.equal(probe.stderr,'');}
+      else {
+        const stage=['args','demo','insecure'].includes(scenarioName)?'configuracion':'autenticacion';
+        assert.equal(probe.stdout,'');
+        assert.equal(probe.stderr.replace(/\r\n/g,'\n'),`Etapa: ${stage}\nCódigo: ${code}\n${http?`HTTP: ${http}\n`:''}`);
+      }
+      assert.doesNotMatch(probe.stdout+probe.stderr,/fixture-|sensitive|https?:\/\//);
+    });
+  }
   const formTest=spawnSync(php,[path.join(__dirname,'auth-form.php')],{env:fixtureEnv,encoding:'utf8'});
   check('prueba de formulario preserva HTTPS, secretos en cuerpo, JSON normal y no reintenta',()=>{
     assert.equal(formTest.status,0,formTest.stderr);

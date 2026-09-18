@@ -33,7 +33,7 @@ function curl_exec(\CurlHandle $ch): bool {
             'Nombre'=>'Persona','Apellido'=>'Prueba','Razon_Social'=>'Empresa de prueba','Direccion'=>'Calle ficticia','Dir_Numero'=>'100',
             'Dir_Lote'=>'3','Ciudad'=>'Ciudad de prueba','Producto_Internet'=>'Fibra / texto compuesto sin interpretar',
             'Email'=>null,'Telefono'=>[],'Movil'=>'5550000','Estado_Servicio'=>'SUSPENDIDO','Balance_CC'=>'999999']],
-        'Phantom_Mi_Estado_Cuenta'=>['Balance'=>'-12500.75'],
+        'Phantom_Mi_Estado_Cuenta'=>['Balance'=>'12500.75'],
         'Phantom_Ultima_Factura'=>[['IDT'=>'12','Estado'=>'IMPAGA','Total'=>'12500.75','Periodo'=>'202609','Primer_Vto'=>'2026-09-20']],
     };
     ($GLOBALS['options'][CURLOPT_WRITEFUNCTION])($ch,"\xEF\xBB\xBF".json_encode($payload));

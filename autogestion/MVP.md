@@ -18,11 +18,13 @@ Login, Inicio, Facturas/Estado de cuenta y detalle, Mi servicio, Soporte y Mi cu
 
 Autenticación GET HTTPS con token y lecturas de cliente avanzado, estado de cuenta y última factura. Cliente/factura como listas, cuenta con Balance:string, nombres y tipos de campos. Bundle CA privado operativo. Limit=1 y Offset=0 comprobados; paginación completa no comprobada.
 
+Identidad del registro mediante ID (IDAx distinto), login real con mapeo privado del usuario personalizado y sesión conservada después de F5 confirmados. Inicio mostró datos reales. Agustín contrastó Balance positivo de 121 como deuda; se corrigió el adaptador que lo mostraba erróneamente a favor.
+
 ## Pendiente de aceptación real
 
-Una comprobación segura de ID frente a IDAx y presencia/tipo de credenciales mediante el inspector existente. Luego configurar el campo confirmado, ingresar personalmente en localhost:4174, recargar conservando sesión, contrastar perfil/saldo/factura con Phantom y cerrar sesión. Ver FIRST-PHANTOM-TEST.md.
+Confirmar que Inicio muestra la deuda corregida, completar el contraste de perfil y detalle de factura y cerrar sesión. El caso de saldo negativo/a favor se probó con fixtures pero todavía no con una cuenta real. Ver FIRST-PHANTOM-TEST.md.
 
-No declarar el login real terminado hasta completar este recorrido. Nombres de campos observados no prueban identidad, semántica de estados ni contenido de la cuenta. Próximo vencimiento global, velocidad, conectividad y fecha de pago siguen no disponibles cuando no hay contrato confirmado.
+Login y recarga están comprobados, pero el recorrido de aceptación completo aún no terminó. Próximo vencimiento global, velocidad, conectividad y fecha de pago siguen no disponibles cuando no hay contrato confirmado.
 
 ## Fuera de esta entrega
 

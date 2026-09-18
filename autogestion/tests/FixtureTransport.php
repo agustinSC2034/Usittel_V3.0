@@ -54,7 +54,7 @@ final class FixtureTransport implements Transport {
         if($action==='Phantom_Mi_Estado_Cuenta') {
             if($scenario==='account-failure') throw new Failure('PHANTOM_ACCOUNT_TEST');
             if($scenario==='balance-error') return ['code'=>500,'message'=>'Private balance failure'];
-            return ['Balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50','zero'=>'0.00','invalid-balance'=>'$ 12.500,75',default=>'-12500.75'},
+            return ['Balance'=>match($scenario) {'missing'=>null,'credit'=>'-150.50','zero'=>'0.00','lab-debt'=>'121','invalid-balance'=>'$ 12.500,75',default=>'12500.75'},
                 'breakdown'=>['charges'=>[['kind'=>'fixture','amount'=>'1.00']]]];
         }
         if($scenario==='invoice-failure') throw new Failure('PHANTOM_INVOICE_TEST');
@@ -66,6 +66,7 @@ final class FixtureTransport implements Transport {
             'Metadata'=>['currency'=>'ARS','items'=>[['description'=>'fixture-item','quantity'=>1]]],
             'Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
         if($scenario==='missing') $row=['IDT'=>123];
+        if($scenario==='lab-debt') $row=array_replace($row,['Total'=>'121','Estado'=>'PAGADA']);
         if($scenario==='invalid-invoice') $row=array_replace($row,['Total'=>'12.500,75','Primer_Vto'=>'2026-02-30','Segundo_Vto'=>"2026-09-20\0",'Estado'=>'UNKNOWN']);
         if($scenario==='invalid-invoice-id') $row['IDT']=true;
         if($scenario==='duplicate-invoice') return [$row,$row];

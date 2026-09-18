@@ -174,7 +174,9 @@ final class Phantom {
         $data=$this->read('Phantom_Mi_Estado_Cuenta',$ida);
         $value=amount($data['Balance']??null);
         if($value===null) throw new Failure('BALANCE_SCHEMA');
-        return ['balance'=>$value,'debt'=>max(0,-$value),'credit'=>max(0,$value)];
+        // USITTEL laboratory verified against Phantom: positive Balance is debt.
+        // Preserve the raw sign; never derive account balance from invoices.
+        return ['balance'=>$value,'debt'=>max(0,$value),'credit'=>max(0,-$value)];
     }
     public function inspectSchema(int $ida): array {
         // Names and types only. Lists inspect at most one representative item;

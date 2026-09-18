@@ -4,7 +4,7 @@
 
 Agustín comprobó en Phantom real la autenticación GET HTTPS y las lecturas POST de Consulta_Cliente_Avanzada, Phantom_Mi_Estado_Cuenta y Phantom_Ultima_Factura mediante `inspect-schema.php 1 --auth-get`. La última lectura usó Limit=1, Offset=0. Cliente y factura son listas de objetos; cuenta es un objeto con Balance:string. El bundle CA privado ya permite verificar TLS.
 
-El backend del portal utiliza ahora ese contrato compartido. No se ha comprobado todavía el login real del abonado ni la aceptación visual de sus datos. La selección de ID o IDAx queda bloqueada hasta revisar el reporte seguro de identidad. Los campos observados y sus tipos no prueban por sí solos su significado ni su contenido para esta cuenta.
+El backend del portal utiliza ese contrato compartido. Agustín confirmó un único registro con ID:string coincidente con IDA 1 e IDAx distinto, y credenciales de autogestión presentes como strings. Configuró ID y el mapeo privado de usuario personalizado, ingresó correctamente y comprobó que la sesión persiste al recargar. Inicio mostró perfil, estado administrativo y última factura. Falta completar detalle de factura y logout reales.
 
 ## Transporte único
 
@@ -46,7 +46,7 @@ Sesión propia con regeneración al login, HttpOnly, SameSite Strict, Secure baj
 
 Los campos de presentación aceptan strings; ausentes o de otro tipo quedan no disponibles. `profile_fields` permite overrides solo sobre una lista explícita de campos públicos, y composiciones `join`. null utiliza los mapeos anteriores. Las viejas opciones customer_path y balance_path no autorizan registros ni seleccionan saldo. Verificar los mapeos visualmente con la cuenta real antes de darlos por aceptados.
 
-Balance usa la semántica documentada crédito menos débito. El parser admite decimales con punto y hasta dos decimales, o números finitos dentro del rango; no elimina símbolos ni separadores arbitrarios. Negativo → deuda, cero → saldo cero, positivo → crédito, inválido/ausente → no disponible. La semántica y el formato real deben contrastarse con la cuenta de laboratorio.
+La prueba real del IDA 1 contradijo la interpretación inicial de crédito menos débito: Agustín confirmó que el Balance positivo de 121 representa deuda en esta instalación. El adaptador USITTEL usa positivo → deuda, cero → saldo cero y negativo → crédito. El caso negativo está cubierto con fixtures, todavía no contrastado contra una cuenta real con saldo a favor. El valor original se conserva en balance. El parser admite decimales con punto y hasta dos decimales, o números finitos dentro del rango; no elimina símbolos ni separadores arbitrarios. Inválido/ausente → no disponible. La última factura pagada no anula la deuda de cuenta; son fuentes distintas. Pendiente confirmar visualmente la corrección en el portal.
 
 Factura: IDT como identificador validado y sin duplicados; Periodo, Tipo, Comp_ID y Detalle como texto; Total numérico estricto; Primer_Vto y Segundo_Vto solo fechas válidas YYYY-MM-DD. Adaptador de Estado para PAGADA/IMPAGA; otros valores quedan no disponibles hasta confirmar contrato. No se inventan fecha de pago, saldo pendiente ni vencimiento global de cuenta.
 
@@ -70,7 +70,7 @@ Seguir FIRST-PHANTOM-TEST.md. Mantener config.php, bundle CA y runtime fuera del
 
 `npm run test:mi-usittel` usa exclusivamente fixtures y un servidor local, nunca Phantom real. Cubre transporte GET/POST, encoding, BOM, TLS/errores seguros, lista e identidad, credenciales exactas, campos opcionales, saldo/facturas inválidos, whitelist pública, CSRF, sesión/logout/vencimientos, limitación de intentos, aislamiento demo y ausencia de secretos. Los dobles cURL no ejecutan red externa.
 
-Pendiente real: revisión de identidad, login del abonado, recarga, aceptación de los mapeos, contraste del saldo y factura, logout. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
+Pendiente real: confirmar la corrección visual del saldo, completar aceptación de mapeos y detalle de factura, logout y contrastar un saldo negativo cuando exista un caso autorizado. Identidad, login y recarga ya confirmados por Agustín. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
 
 ### QA local de esta entrega
 

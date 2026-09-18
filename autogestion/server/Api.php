@@ -92,7 +92,7 @@ function api(array $c,string $dir,Phantom $ph,string $route): never {
     try {$balance=$ph->balance($ida);} catch(Failure $e) {$balance=['balance'=>null,'debt'=>null,'credit'=>null];$warnings[]='BALANCE_UNAVAILABLE';diagnostic($e);}
     try {$invoices=$ph->invoices($ida);} catch(Failure $e) {$invoices=['items'=>[],'offset'=>0,'nextOffset'=>null];$warnings[]='INVOICES_UNAVAILABLE';diagnostic($e);}
     if($balance['balance']===null && !in_array('BALANCE_UNAVAILABLE',$warnings,true)) $warnings[]='BALANCE_UNAVAILABLE';
-    if($balance['balance']!==null && $balance['balance']>=0 && array_filter($invoices['items'],fn($i)=>$i['status']==='Pendiente')) {
+    if($balance['debt']!==null && $balance['debt']==0 && array_filter($invoices['items'],fn($i)=>$i['status']==='Pendiente')) {
         $warnings[]='ACCOUNT_RECONCILIATION'; diagnostic(new Failure('ACCOUNT_RECONCILIATION'));
     }
     jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings]);

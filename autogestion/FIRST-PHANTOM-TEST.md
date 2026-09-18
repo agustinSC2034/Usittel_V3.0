@@ -2,9 +2,9 @@
 
 La comunicación real ya fue comprobada por Agustín: autenticación GET HTTPS y lecturas POST de cliente, estado de cuenta y última factura. TLS funciona con el bundle privado existente. No repetir la investigación de certificados, puertos o Apache.
 
-El portal ahora usa ese mismo transporte y decoder. Todavía falta confirmar la identidad del registro y completar la aceptación real en el navegador. Los tests y chequeos locales no llaman a Phantom.
+El portal usa ese mismo transporte y decoder. Identidad ID, login con usuario personalizado y persistencia al recargar ya fueron confirmados por Agustín. También confirmó que Balance positivo de 121 representa deuda: se corrigió la interpretación del signo. El siguiente paso es recargar Inicio y comprobar que muestra Deuda actual, antes de continuar con detalle y logout. No repetir la configuración ni los inspectores siguientes si ya están completados. Los tests y chequeos locales no llaman a Phantom.
 
-## Único paso necesario ahora
+## Referencia: comprobación de identidad ya completada
 
 Desde la raíz del proyecto y la misma PowerShell que ya tiene las variables de entorno:
 
@@ -50,7 +50,7 @@ Abrir http://127.0.0.1:4174/autogestion/. El servidor está ligado a localhost. 
 
 6. Comprobar login, recarga conservando sesión, nombre/domicilio/plan/estado administrativo, saldo contrastado con Phantom, última factura y detalle, y logout. Tras logout, recargar no debe devolver información del cliente.
 
-El saldo es crédito menos débito: negativo indica deuda; positivo indica saldo a favor. La factura muestra su total, no un saldo pendiente calculado. La paginación completa, próximo vencimiento de cuenta y fecha de pago siguen sin validar. Opcionales ausentes muestran “No disponible”.
+Para esta instalación, el caso real confirmó positivo = deuda. El adaptador usa negativo = saldo a favor (cubierto con fixtures; pendiente contraste real del caso negativo). La factura muestra su total, no un saldo pendiente calculado; que esté pagada no significa que la cuenta no tenga deuda. La paginación completa, próximo vencimiento de cuenta y fecha de pago siguen sin validar. Opcionales ausentes muestran “No disponible”.
 
 ## Si abriste otra PowerShell
 

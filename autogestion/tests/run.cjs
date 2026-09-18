@@ -31,9 +31,13 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
   const customerConfig=path.join(dir,'customer-probe.php');
-  for(const [name,stage,code,http] of [['success'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
+  for(const [name,stage,code,http,format] of [['success'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
     ['http','cliente','PHANTOM_HTTP',400],['expired','cliente','TOKEN_EXPIRED',401],['redirect','cliente','PHANTOM_HTTP',302],
-    ['malformed','cliente','PHANTOM_FORMAT',200],['functional','cliente','PHANTOM_FUNCTIONAL'],['warning','cliente','PROBE_PHP'],
+    ['malformed','cliente','PHANTOM_FORMAT',200,'TEXTO_O_JSON_INVALIDO'],
+    ...Object.entries({html:'APARIENCIA_HTML',empty:'RESPUESTA_VACIA',string:'JSON_STRING','nested-json':'JSON_DENTRO_DE_STRING',
+      null:'JSON_NULL',boolean:'JSON_BOOLEAN',number:'JSON_NUMBER',bom:'PREFIJO_BOM_UTF8',utf8:'UTF8_INVALIDO',deep:'JSON_PROFUNDIDAD_EXCEDIDA'})
+      .map(([name,format])=>[name,'cliente','PHANTOM_FORMAT',200,format]),
+    ['unsafe-format','cliente','PHANTOM_FORMAT',200],['functional','cliente','PHANTOM_FUNCTIONAL'],['warning','cliente','PROBE_PHP'],
     ['args','configuracion','INSPECTOR_ARGUMENTS'],['forbidden','configuracion','CONFIGURATION'],['demo','configuracion','CONFIGURATION']]) {
     let content=settings(name==='demo'?'demo':'phantom');
     if(name==='forbidden') content=content.replace("'allowed_idas'=>[1,5]","'allowed_idas'=>[5]");
@@ -42,7 +46,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const probe=spawnSync(php,[path.join(__dirname,'customer-probe.php'),name],{env:{...fixtureEnv,MI_USITTEL_CONFIG:customerConfig},encoding:'utf8'});
     check(`cliente IDA 1 ${name}: alcance, transporte y salida segura`,()=>{
       assert.equal(probe.status,code?1:0,probe.stderr);assert.deepEqual(fs.readdirSync(dir).sort(),before);
-      if(code) {assert.equal(probe.stdout,'');assert.equal(probe.stderr.replace(/\r\n/g,'\n'),`Etapa: ${stage}\nCódigo: ${code}\n${http?`HTTP: ${http}\n`:''}`);}
+      if(code) {assert.equal(probe.stdout,'');assert.equal(probe.stderr.replace(/\r\n/g,'\n'),`Etapa: ${stage}\nCódigo: ${code}\n${http?`HTTP: ${http}\n`:''}${format?`Formato: ${format}\n`:''}`);}
       else {
         assert.equal(probe.stderr,'');const shape=JSON.parse(probe.stdout);
         assert.deepEqual(Object.keys(shape),['customer']);

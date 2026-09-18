@@ -27,6 +27,10 @@ function writeInspectorFailure(string $stage,\Throwable $e): int {
     if($source instanceof Failure && $source->upstreamHttp!==null && $source->upstreamHttp>=100 && $source->upstreamHttp<=599) {
         fwrite(STDERR,'HTTP: '.$source->upstreamHttp.PHP_EOL);
     }
+    if($source instanceof Failure && $source->kind==='PHANTOM_FORMAT' && in_array($source->responseFormat,[
+        'RESPUESTA_VACIA','PREFIJO_BOM_UTF8','APARIENCIA_HTML','UTF8_INVALIDO','JSON_PROFUNDIDAD_EXCEDIDA',
+        'TEXTO_O_JSON_INVALIDO','JSON_STRING','JSON_BOOLEAN','JSON_NULL','JSON_NUMBER','JSON_DENTRO_DE_STRING',
+    ],true)) fwrite(STDERR,'Formato: '.$source->responseFormat.PHP_EOL);
     if(!($source instanceof Failure)) {
         $class=preg_replace('/[^A-Za-z0-9_]/','',str_replace('\\','_',$source::class))?:'Throwable';
         fwrite(STDERR,'Excepción: '.$class.PHP_EOL);

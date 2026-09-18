@@ -5,7 +5,7 @@ require_once __DIR__.'/Schema.php';
 
 interface Transport { public function post(string $url, array $body): array; }
 final class CurlTransport implements Transport {
-    public function __construct(private array $config, private bool $inspectorAuthForm=false) {}
+    public function __construct(private array $config, private bool $inspectorAuthForm=false, private bool $inspectResponseFormat=false) {}
     public function post(string $url, array $body): array {
         if (!extension_loaded('curl')) throw new Failure('CONFIGURATION');
         // Explicit inspector experiment only; account reads and the portal stay JSON.
@@ -34,14 +34,30 @@ final class CurlTransport implements Transport {
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
         finally { if($ch instanceof \CurlHandle) curl_close($ch); }
         if ($ok===false) throw new Failure(self::diagnosticCodeForCurlFailure($errno,$curlError),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
-        return self::decodeHttpResponse($code,$response);
+        return self::decodeHttpResponse($code,$response,$this->inspectResponseFormat);
     }
-    public static function decodeHttpResponse(int $code,string $response): array {
+    public static function decodeHttpResponse(int $code,string $response,bool $diagnoseFormat=false): array {
         if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED',503,$code);
         if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP',503,$code);
-        try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT',503,$code); }
-        if (!is_array($json)) throw new Failure('PHANTOM_FORMAT',503,$code);
+        try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); }
+        catch (\JsonException $e) { throw new Failure('PHANTOM_FORMAT',503,$code,$diagnoseFormat?self::invalidFormat($response,$e):null); }
+        if (!is_array($json)) {
+            $format=match(true) {is_string($json)=>'JSON_STRING',is_bool($json)=>'JSON_BOOLEAN',is_null($json)=>'JSON_NULL',default=>'JSON_NUMBER'};
+            if($diagnoseFormat && is_string($json)) {
+                try {if(is_array(json_decode($json,true,32,JSON_THROW_ON_ERROR))) $format='JSON_DENTRO_DE_STRING';}
+                catch(\JsonException) {} // Classify only; do not accept or expose the inner response.
+            }
+            throw new Failure('PHANTOM_FORMAT',503,$code,$diagnoseFormat?$format:null);
+        }
         return $json;
+    }
+    private static function invalidFormat(string $response,\JsonException $error): string {
+        if(trim($response)==='') return 'RESPUESTA_VACIA';
+        if(str_starts_with($response,"\xEF\xBB\xBF")) return 'PREFIJO_BOM_UTF8';
+        if(preg_match('/^\s*(?:<!doctype\s+html\b|<html\b|<head\b|<body\b|<br\s*\/?\s*>)/i',$response)) return 'APARIENCIA_HTML';
+        if($error->getCode()===JSON_ERROR_UTF8) return 'UTF8_INVALIDO';
+        if($error->getCode()===JSON_ERROR_DEPTH) return 'JSON_PROFUNDIDAD_EXCEDIDA';
+        return 'TEXTO_O_JSON_INVALIDO';
     }
     public static function diagnosticCodeForCurlErrno(int $errno): string {
         $map=[CURLE_OPERATION_TIMEDOUT=>'PHANTOM_TIMEOUT',CURLE_COULDNT_RESOLVE_HOST=>'PHANTOM_DNS',

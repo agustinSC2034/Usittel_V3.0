@@ -29,6 +29,13 @@ function curl_exec(\CurlHandle $handle): bool {
         'Conexiones_Asociadas'=>[['Nombre'=>'private-other']],
     ]);
     if($GLOBALS['calls']===2 && $GLOBALS['scenario']==='malformed') $body='private raw body';
+    if($GLOBALS['calls']===2) {
+        $formats=['html'=>'<!doctype html><html>private URL token</html>','empty'=>" \r\n",'string'=>'"private-token"',
+            'nested-json'=>json_encode('{"Nombre":"private-person"}'),'null'=>'null','boolean'=>'false','number'=>'12345',
+            'bom'=>"\xEF\xBB\xBF".'{"Nombre":"private-person"}','utf8'=>"\xFF",'deep'=>str_repeat('[',40).'0'.str_repeat(']',40)];
+        $body=$formats[$GLOBALS['scenario']]??$body;
+        if($GLOBALS['scenario']==='unsafe-format') throw new Failure('PHANTOM_FORMAT',503,200,'private-token');
+    }
     if($GLOBALS['calls']===2 && $GLOBALS['scenario']==='functional') $body='{"code":400,"message":"private upstream"}';
     if($GLOBALS['calls']===2 && $GLOBALS['scenario']==='warning') trigger_error('private token or URL',E_USER_WARNING);
     ($GLOBALS['options'][CURLOPT_WRITEFUNCTION])($handle,$body);

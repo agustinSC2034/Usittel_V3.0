@@ -14,7 +14,7 @@ try {
     $token=\MiUsittel\inspectionAuthGetToken($config);
     $stage='cliente';
     // Single read, token in JSON body; no retries or fallback to query parameters.
-    $data=(new \MiUsittel\CurlTransport($config))->post($config['phantom_url'].'?'.http_build_query([
+    $data=(new \MiUsittel\CurlTransport($config,inspectResponseFormat:true))->post($config['phantom_url'].'?'.http_build_query([
         'action'=>'Consulta_Cliente_Avanzada','JSON'=>1,'IDA'=>1]),['token'=>$token]);
     if((isset($data['code']) && (int)$data['code']!==200) || isset($data['error'])
         || (isset($data['message']) && is_string($data['message']) && str_starts_with($data['message'],'Error:'))) throw new \MiUsittel\Failure('PHANTOM_FUNCTIONAL');

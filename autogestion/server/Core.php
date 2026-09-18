@@ -14,16 +14,19 @@ final class InspectionFailure extends \RuntimeException {
 function config(): array {
     $c = ['mode'=>'demo', 'allowed_idas'=>[], 'lab_users'=>[], 'idle_seconds'=>900, 'max_seconds'=>28800,
         'timeout_seconds'=>10, 'connect_timeout_seconds'=>4, 'customer_path'=>[], 'profile_fields'=>[],
-        'balance_path'=>null, 'ca_file'=>null];
+        'balance_path'=>null, 'ca_file'=>null,'phantom_auth_mode'=>'get-query-lab','customer_id_field'=>null];
     $path = getenv('MI_USITTEL_CONFIG');
     if ($path) {
         $real = realpath($path);
         if (!$real || insideRepo($real)) throw new Failure('CONFIGURATION');
-        $loaded = require $real;
+        ob_start();
+        try {$loaded = require $real;} finally {ob_end_clean();}
         if (!is_array($loaded)) throw new Failure('CONFIGURATION');
         $c = array_replace($c, $loaded);
     }
     if (!in_array($c['mode'], ['demo','phantom'], true)) throw new Failure('CONFIGURATION');
+    if($c['phantom_auth_mode']!=='get-query-lab' || !in_array($c['customer_id_field'],[null,'ID','IDAx'],true)
+        || !is_array($c['lab_users']) || !is_array($c['profile_fields'])) throw new Failure('CONFIGURATION');
     foreach (['idle_seconds','max_seconds','timeout_seconds','connect_timeout_seconds'] as $key) {
         if (!is_int($c[$key]) || $c[$key] < 1) throw new Failure('CONFIGURATION');
     }
@@ -90,7 +93,7 @@ function rateLimitRelease(string $dir, string $user, string $ip, ?int $candidate
 function resolveUser(string $user, array $c): ?int {
     $candidate = $c['lab_users'][$user] ?? null;
     if ($candidate === null && preg_match('/^[0-9]{1,10}$/D', $user)) $candidate = (int)$user;
-    return is_int($candidate) && in_array($candidate,$c['allowed_idas'],true) ? $candidate : null;
+    return $candidate===1 && in_array($candidate,$c['allowed_idas'],true) ? $candidate : null;
 }
 function atPath(array $value, ?array $path): mixed {
     if ($path === null) return null;
@@ -107,8 +110,8 @@ function publicField(array $raw, mixed $mapping): ?string {
     $paths = isset($mapping['join']) ? $mapping['join'] : [$mapping];
     $parts=[];
     foreach($paths as $path) {
-        if(!is_array($path) || !$path) throw new Failure('PROFILE_MAPPING');
-        foreach($path as $key) if(!is_string($key) || preg_match('/autogestion|pass|token|secret|conexiones_asociadas|dni|cuit|tarjeta/i',$key)) throw new Failure('PROFILE_MAPPING');
+        $publicKeys=['Nombre','Apellido','Razon_Social','Direccion','Dir_Numero','Dir_Lote','Dir_Manzana','Dir_Referencia','Barrio','Ciudad','Telefono','Movil','Email','Producto_Internet'];
+        if(!is_array($path) || count($path)!==1 || !in_array($path[0]??null,$publicKeys,true)) throw new Failure('PROFILE_MAPPING');
         $part=textValue(atPath($raw,$path)); if($part!==null) $parts[]=$part;
     }
     return $parts ? implode(' ', $parts) : null;
@@ -120,7 +123,7 @@ function amount(mixed $v): ?float {
     $n=(float)$v; return is_finite($n) && abs($n)<1e12 ? $n : null;
 }
 function dateValue(mixed $v): ?string {
-    if (!is_string($v)) return null;
+    if (!is_string($v) || !preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/D',$v)) return null;
     $d=\DateTimeImmutable::createFromFormat('!Y-m-d',$v);
     return $d && $d->format('Y-m-d')===$v ? $d->format('d/m/Y') : null;
 }

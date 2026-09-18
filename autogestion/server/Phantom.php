@@ -2,10 +2,20 @@
 declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/Schema.php';
+require_once __DIR__.'/CustomerContract.php';
 
-interface Transport { public function post(string $url, array $body): array; }
+interface Transport {
+    public function post(string $url, array $body): array;
+    public function authenticate(string $url,array $credentials): array;
+}
 final class CurlTransport implements Transport {
     public function __construct(private array $config, private bool $inspectorAuthForm=false, private bool $inspectResponseFormat=false) {}
+    public function authenticate(string $url,array $credentials): array {
+        // Explicit laboratory contract: GET only for technical authentication.
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
+        if($query!==['action'=>'autentificar','JSON'=>'1'] || array_keys($credentials)!==['api_user','api_pass']) throw new Failure('CONFIGURATION');
+        return $this->request($url.'&'.http_build_query($credentials,'','&',PHP_QUERY_RFC3986),[CURLOPT_HTTPGET=>true,CURLOPT_HTTPHEADER=>['Accept: application/json']]);
+    }
     public function post(string $url, array $body): array {
         if (!extension_loaded('curl')) throw new Failure('CONFIGURATION');
         // Explicit inspector experiment only; account reads and the portal stay JSON.
@@ -13,26 +23,35 @@ final class CurlTransport implements Transport {
         $form=$this->inspectorAuthForm && ($query['action']??null)==='autentificar';
         try { $encoded=$form?http_build_query($body,'','&',PHP_QUERY_RFC3986):json_encode($body,JSON_THROW_ON_ERROR); }
         catch(\JsonException) { throw new Failure('PHANTOM_REQUEST_FORMAT'); }
+        return $this->request($url,[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$encoded,
+            CURLOPT_HTTPHEADER=>['Content-Type: '.($form?'application/x-www-form-urlencoded':'application/json'),'Accept: application/json']]);
+    }
+    private function request(string $url,array $methodOptions): array {
+        if(!extension_loaded('curl')) throw new Failure('CONFIGURATION');
+        $parts=parse_url($url);
+        if(($parts['scheme']??null)!=='https' || empty($parts['host']) || isset($parts['user']) || isset($parts['pass']) || isset($parts['fragment'])) throw new Failure('CONFIGURATION');
         $ca=null;
         if($this->config['ca_file']!==null) {
             if(!is_string($this->config['ca_file']) || ($ca=realpath($this->config['ca_file']))===false || !is_file($ca) || !is_readable($ca)) throw new Failure('PHANTOM_CA_FILE');
         }
         $ch=null;$response='';$ok=false;$code=0;$errno=0;$curlError='';
+        // cURL warnings may contain the URL; never send their raw text to logs.
+        set_error_handler(static function() {throw new Failure('PHANTOM_CURL_RUNTIME');});
         try {
             $ch=curl_init($url);
             if($ch===false) throw new Failure('PHANTOM_CURL_INIT');
-            $options=[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$encoded,
-                CURLOPT_HTTPHEADER=>['Content-Type: '.($form?'application/x-www-form-urlencoded':'application/json'),'Accept: application/json'],
+            $options=$methodOptions+[
+                CURLOPT_VERBOSE=>false,
                 CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,
                 CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2,
                 CURLOPT_CONNECTTIMEOUT=>$this->config['connect_timeout_seconds'],CURLOPT_TIMEOUT=>$this->config['timeout_seconds'],
                 CURLOPT_WRITEFUNCTION=>static function($handle,$chunk) use (&$response) { if(strlen($response)+strlen($chunk)>2097152) return 0; $response.=$chunk; return strlen($chunk); }];
+            if($ca!==null) $options[CURLOPT_CAINFO]=$ca;
             if(!curl_setopt_array($ch,$options)) throw new Failure('PHANTOM_CURL_SETUP');
-            if($ca!==null && !curl_setopt($ch,CURLOPT_CAINFO,$ca)) throw new Failure('PHANTOM_CA_FILE');
             $ok=curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$errno=curl_errno($ch);$curlError=curl_error($ch);
         } catch(Failure $e) { throw $e; }
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
-        finally { if($ch instanceof \CurlHandle) curl_close($ch); }
+        finally { if($ch instanceof \CurlHandle) curl_close($ch); restore_error_handler(); }
         if ($ok===false) throw new Failure(self::diagnosticCodeForCurlFailure($errno,$curlError),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
         return self::decodeHttpResponse($code,$response,$this->inspectResponseFormat);
     }
@@ -89,7 +108,8 @@ final class CurlTransport implements Transport {
 final class Phantom {
     public function __construct(private array $config, private string $dir, private Transport $transport) {}
     private function raw(string $action, array $params, array $body): array {
-        $data=$this->transport->post($this->config['phantom_url'].'?'.http_build_query(['action'=>$action,'JSON'=>1]+$params),$body);
+        $url=$this->config['phantom_url'].'?'.http_build_query(['action'=>$action,'JSON'=>1]+$params);
+        $data=$action==='autentificar'?$this->transport->authenticate($url,$body):$this->transport->post($url,$body);
         if (isset($data['code']) && (int)$data['code']!==200) {
             if (in_array((int)$data['code'],[401,403],true)) throw new Failure('TOKEN_EXPIRED');
             if ($action==='Phantom_Ultima_Factura' && (int)$data['code']===400 && ($data['message']??null)==='Error: No se encontró factura para el cliente (400)') return [];
@@ -100,19 +120,19 @@ final class Phantom {
     }
     private function token(bool $refresh=false): string {
         // Separate cache when credentials/host change, no token in PHP session.
-        $key=hash('sha256',$this->config['phantom_url'].'|'.$this->config['api_user'].'|'.$this->config['api_pass']);
+        $key=hash('sha256','get-query-lab|'.$this->config['phantom_url'].'|'.$this->config['api_user'].'|'.$this->config['api_pass']);
         return locked($this->dir.'/token-'.$key.'.json',function($f) use ($refresh) {
             $cached=json_decode(stream_get_contents($f),true);
             if (!$refresh && is_array($cached) && ($cached['until']??0)>time() && is_string($cached['token']??null)) return $cached['token'];
             writeFileHandle($f,[]);
             $data=$this->raw('autentificar',[],['api_user'=>$this->config['api_user'],'api_pass'=>$this->config['api_pass']]);
-            if (!is_string($data['token']??null) || $data['token']==='') throw new Failure('PHANTOM_TOKEN');
+            if (!is_string($data['token']??null) || trim($data['token'])==='') throw new Failure('PHANTOM_TOKEN');
             writeFileHandle($f,['token'=>$data['token'],'until'=>time()+840]);
             return $data['token'];
         });
     }
     private function read(string $action,int $ida,array $params=[]): array {
-        if (!in_array($ida,$this->config['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+        if ($ida!==1 || !in_array($ida,$this->config['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
         if (!in_array($action,['Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new Failure('FORBIDDEN',403);
         for($attempt=0;$attempt<2;$attempt++) {
             $token=$this->token($attempt===1);
@@ -122,10 +142,9 @@ final class Phantom {
         throw new Failure('PHANTOM_TOKEN');
     }
     public function customer(int $ida): array {
-        $data=atPath($this->read('Consulta_Cliente_Avanzada',$ida),$this->config['customer_path']);
-        if (!is_array($data) || array_is_list($data)) throw new Failure('PHANTOM_FORMAT');
-        // Never expand Conexiones_Asociadas or search other records.
-        return $data;
+        $field=$this->config['customer_id_field']??null;
+        if(!in_array($field,['ID','IDAx'],true)) throw new Failure('LAB_IDENTITY_PENDING');
+        return resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida),$ida,$field);
     }
     public function verify(int $ida,string $user,string $password): bool {
         $c=$this->customer($ida);
@@ -135,14 +154,25 @@ final class Phantom {
     }
     public function profile(int $ida): array {
         $raw=$this->customer($ida); $out=[];
-        foreach(['name','address','plan','city','email','phone'] as $key) $out[$key]=publicField($raw,$this->config['profile_fields'][$key]??null);
+        $defaults=['name'=>['join'=>[['Nombre'],['Apellido']]],'address'=>['join'=>[['Direccion'],['Dir_Numero']]],
+            'plan'=>['Producto_Internet'],'city'=>['Ciudad'],'email'=>['Email'],'phone'=>['Telefono']];
+        foreach($defaults as $key=>$mapping) $out[$key]=publicField($raw,$this->config['profile_fields'][$key]??$mapping);
+        if(empty($this->config['profile_fields']['name'])) $out['name']=textValue($raw['Razon_Social']??null)??$out['name'];
+        if(empty($this->config['profile_fields']['phone'])) $out['phone']=$out['phone']??textValue($raw['Movil']??null);
+        if(empty($this->config['profile_fields']['address'])) {
+            $extra=[];
+            foreach(['Dir_Lote'=>'Lote','Dir_Manzana'=>'Manzana','Dir_Referencia'=>'Referencia','Barrio'=>'Barrio'] as $key=>$label) {
+                $value=textValue($raw[$key]??null);if($value!==null) $extra[]=$label.': '.$value;
+            }
+            $out['address']=implode(' · ',array_filter([$out['address'],...$extra],fn($v)=>$v!==null))?:null;
+        }
         $out['serviceStatus']=textValue($raw['Estado_Servicio']??null);
         $out['network']=null; $out['speed']=null;
         return $out;
     }
     public function balance(int $ida): array {
-        if ($this->config['balance_path']===null) return ['balance'=>null,'debt'=>null,'credit'=>null];
-        $value=amount(atPath($this->read('Phantom_Mi_Estado_Cuenta',$ida),$this->config['balance_path']));
+        $data=$this->read('Phantom_Mi_Estado_Cuenta',$ida);
+        $value=amount($data['Balance']??null);
         if($value===null) throw new Failure('BALANCE_SCHEMA');
         return ['balance'=>$value,'debt'=>max(0,-$value),'credit'=>max(0,$value)];
     }
@@ -150,11 +180,10 @@ final class Phantom {
         // Names and types only. Lists inspect at most one representative item;
         // nesting and total field count are bounded so this cannot dump records.
         $remaining=120;
-        if(!in_array($ida,$this->config['allowed_idas'],true)) throw new InspectionFailure('configuracion','FORBIDDEN',new Failure('FORBIDDEN',403));
+        if($ida!==1 || !in_array($ida,$this->config['allowed_idas'],true)) throw new InspectionFailure('configuracion','FORBIDDEN',new Failure('FORBIDDEN',403));
         $token=$this->inspectionStep('autenticacion',fn()=>$this->token(true));
         $customer=$this->inspectionStep('cliente',function() use ($ida,$token) {
-            $data=atPath($this->raw('Consulta_Cliente_Avanzada',['IDA'=>$ida],['token'=>$token]),$this->config['customer_path']);
-            if(!is_array($data) || array_is_list($data)) throw new Failure('PHANTOM_FORMAT');
+            $data=$this->raw('Consulta_Cliente_Avanzada',['IDA'=>$ida],['token'=>$token]);
             return $data;
         });
         $account=$this->inspectionStep('estado_cuenta',fn()=>$this->raw('Phantom_Mi_Estado_Cuenta',['IDA'=>$ida],['token'=>$token]));
@@ -167,16 +196,20 @@ final class Phantom {
         catch(\Throwable $e) { throw new InspectionFailure($stage,$e instanceof Failure?$e->kind:'UNEXPECTED',$e); }
     }
     public function invoices(int $ida,int $offset=0): array {
-        $data=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>20,'Offset'=>$offset]);
+        if($offset!==0) throw new Failure('BAD_REQUEST',400);
+        $data=$this->read('Phantom_Ultima_Factura',$ida,['Limit'=>1,'Offset'=>0]);
         if(!array_is_list($data)) throw new Failure('INVOICES_SCHEMA');
         $out=[];
+        $seen=[];
         foreach($data as $row) {
-            if(!is_array($row) || !isset($row['IDT']) || !preg_match('/^\d+$/D',(string)$row['IDT'])) throw new Failure('INVOICES_SCHEMA');
-            $out[]=['id'=>(string)$row['IDT'],'period'=>textValue($row['Periodo']??null), 'amount'=>amount($row['Total']??null),
+            if(!is_array($row) || !(is_string($row['IDT']??null) || is_int($row['IDT']??null))
+                || !preg_match('/^[0-9]+$/D',(string)$row['IDT'])) throw new Failure('INVOICES_SCHEMA');
+            $id=(string)$row['IDT'];if(isset($seen[$id])) throw new Failure('INVOICES_SCHEMA');$seen[$id]=true;
+            $out[]=['id'=>$id,'period'=>textValue($row['Periodo']??null), 'amount'=>amount($row['Total']??null),'detail'=>textValue($row['Detalle']??null),
                 'due'=>dateValue($row['Primer_Vto']??null),'secondDue'=>dateValue($row['Segundo_Vto']??null),
                 'status'=>match($row['Estado']??null) {'PAGADA'=>'Pagada','IMPAGA'=>'Pendiente',default=>'No disponible'},
                 'type'=>textValue($row['Tipo']??null),'number'=>textValue($row['Comp_ID']??null),'paidAt'=>null,'outstanding'=>null];
         }
-        return ['items'=>$out,'offset'=>$offset,'nextOffset'=>count($out)===20?$offset+20:null];
+        return ['items'=>$out,'offset'=>0,'nextOffset'=>null,'historyComplete'=>false];
     }
 }

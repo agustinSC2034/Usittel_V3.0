@@ -1,106 +1,77 @@
-# Integración local PHP / Phantom
+# Integración local PHP / Phantom — 18/09/2026
 
-## Evidencia y límites
+## Estado y evidencia
 
-Próxima comprobación: `inspect-schema.php 1 --auth-get` usa la autenticación GET confirmada y tres consultas POST JSON (cliente, cuenta, una factura). CLI aislado, IDA 1 permitido, máximo cuatro llamadas sin reintentos, sin caché/sesiones. Conserva los envoltorios crudos y limita el esquema a 120 campos por sección. El cliente ya fue observado como lista; no se selecciona un registro para autorizar ni se configuran mapeos por nombre. Login y Dashboard permanecen sin conectar a este transporte. El modo histórico del inspector sigue disponible sin esta opción.
+Agustín comprobó en Phantom real la autenticación GET HTTPS y las lecturas POST de Consulta_Cliente_Avanzada, Phantom_Mi_Estado_Cuenta y Phantom_Ultima_Factura mediante `inspect-schema.php 1 --auth-get`. La última lectura usó Limit=1, Offset=0. Cliente y factura son listas de objetos; cuenta es un objeto con Balance:string. El bundle CA privado ya permite verificar TLS.
 
-Compatibilidad de respuesta confirmada por diagnóstico: la consulta de cliente devuelve un prefijo BOM UTF-8. El decoder compartido elimina solamente un BOM en el byte cero antes de validar JSON; mantiene los rechazos HTTP, límites, validación de estructura y errores funcionales. La presencia del prefijo no demuestra por sí sola que el resto sean datos válidos del cliente. No cambia métodos HTTP ni autenticación del portal.
+El backend del portal utiliza ahora ese contrato compartido. No se ha comprobado todavía el login real del abonado ni la aceptación visual de sus datos. La selección de ID o IDAx queda bloqueada hasta revisar el reporte seguro de identidad. Los campos observados y sus tipos no prueban por sí solos su significado ni su contenido para esta cuenta.
 
-Actualización de laboratorio: el usuario confirmó `TOKEN_RECIBIDO` con GET por HTTPS y `JSON=1`; POST JSON y formulario devolvieron HTTP 400 en autenticación. El portal permanece sin cambios. `inspect-customer.php 1` permite ahora una autenticación GET y una única lectura POST JSON de cliente con token en el cuerpo, sin caché ni reintentos. Esta segunda operación todavía no está validada contra Phantom real. El esquema se filtra con el mismo helper acotado del inspector completo, sin inferir campos de perfil.
+## Transporte único
 
-Fuente revisada: [documentación API REST de Phantom de la carpeta provista](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view), secciones de autenticación, cliente avanzado, estado de cuenta y facturas. Los ejemplos de autenticación incluyen variantes GET y POST; el ejemplo PHP también incluye credenciales en la URL, por lo que no demuestra soporte de POST JSON con credenciales exclusivamente en el cuerpo. La captura de Botmaker provista por el usuario muestra GET sobre HTTP con credenciales en la URL, en otro puerto. No se copió ese transporte ni sus secretos.
+- Base HTTPS configurada privadamente, sin query, credenciales embebidas ni fragmento.
+- Modalidad explícita `phantom_auth_mode=get-query-lab`. GET para action=autentificar y JSON=1; api_user/api_pass codificados RFC3986 en query. Sin fallback POST/formulario.
+- Todas las lecturas son POST application/json: action, JSON=1, IDA y los parámetros de factura en query; token exclusivamente en cuerpo JSON.
+- CurlTransport comparte TLS, límites, errores y decoder entre portal e inspectores. Certificado y hostname siempre verificados, redirects deshabilitados, respuesta limitada a 2 MiB, timeouts acotados.
+- Exactamente un BOM UTF-8 inicial es tolerado. JSON estricto después; HTML, mensajes PHP, doble BOM y texto arbitrario se rechazan.
+- El token técnico se guarda únicamente en runtime privado, con caché de 14 minutos y bloqueo de archivo. Una lectura con token vencido permite una renovación acotada. Los inspectores GET aislados no guardan tokens ni reintentan.
+- El token no forma parte de la sesión del cliente ni llega al navegador. Los errores públicos y logs contienen códigos controlados, nunca URL completa ni cuerpos.
+- El antiguo experimento `--auth-form` ya no es una opción del inspector. `--auth-get` conserva la inspección aislada comprobada; sin opción el inspector también usa GET y la caché privada del backend.
 
-Confirma token de 15 minutos, consultas/paginación, balance crédito menos débito y campos de factura. El texto disponible no confirmó las claves exactas de todos los datos personales/productos ni la ruta al valor numérico del balance. No se inventaron. La autenticación técnica POST JSON y los envoltorios aún deben verificarse contra la instalación real. No se usaron secretos de commits o conversaciones.
+Las credenciales en query pueden aparecer en logs de Apache, proxies o infraestructura remota. Es un riesgo aceptado exclusivamente para este laboratorio y debe resolverse/revisarse antes de producción. No confundir HTTPS con protección frente a logs del servidor remoto.
 
-## Configuración fuera del repositorio
+## Identidad y acceso
 
-En PowerShell, desde la raíz del proyecto:
+Laboratorio exclusivamente IDA 1, incluso si una configuración histórica incluye 5. No se recorren clientes ni conexiones asociadas. Un usuario numérico solo resuelve un candidato; no autoriza. Los nombres personalizados necesitan `lab_users` privado.
 
-```powershell
-$privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
-New-Item -ItemType Directory -Force -Path $privateFolder | Out-Null
-$privateConfig = Join-Path $privateFolder 'config.php'
-if (-not (Test-Path -LiteralPath $privateConfig)) {
-  Copy-Item -LiteralPath autogestion/server/config.example.php -Destination $privateConfig
-}
-notepad $privateConfig
-```
+CustomerContract exige una lista de exactamente un objeto y un identificador string decimal coincidente con el IDA solicitado. `customer_id_field` solo acepta ID o IDAx y comienza null. No hay elección automática entre ellos ni fallback al primero, ni selección mediante customer_path. Identificadores ausentes, incorrectos o de tipo inesperado, múltiples registros y duplicados fallan cerrados.
 
-Completar ese archivo personalmente, sin pegar secretos en el chat. Restringir permisos a la cuenta que ejecuta PHP; no usar carpetas compartidas, sincronizadas o públicas. En Windows revisar ACL; chmod por sí solo no las sustituye. Proteger también runtime: contiene sesiones, caché del token técnico y contadores.
+Antes de activar el login se revisa `inspect-customer.php 1 --validate-identity`: solo metadatos de ID, IDAx, Autogestion_User y Autogestion_Pass, sin sus valores. Si el reporte deja ambigüedad, no habilitar el contrato.
 
-| Opción privada | Valor/criterio |
+Autogestion_User y Autogestion_Pass deben ser strings no vacíos y compararse exactamente. No se recorta ni convierte la contraseña; no hay contraseña derivada de DNI/CUIT. Un cliente suspendido puede ingresar. El IDA de lecturas se obtiene solo de la sesión del servidor; no se acepta desde el navegador.
+
+Sesión propia con regeneración al login, HttpOnly, SameSite Strict, Secure bajo HTTPS, CSRF login/logout, vencimiento por inactividad y duración máxima. Cambiar el contrato de identidad invalida sesiones anteriores. Logout destruye la sesión. Límites por IP/cuenta reservan intentos concurrentes y liberan exitosos/errores del proveedor, sin borrar fallos anteriores.
+
+## Mapeos públicos explícitos
+
+| Dato público | Fuente candidata observada / criterio |
 | --- | --- |
-| mode | phantom para laboratorio, demo para diseño; jamás por navegador |
-| phantom_url | Base indicada por USITTEL, HTTPS sin credenciales/query/fragmento |
-| api_user, api_pass | Credenciales técnicas actuales, distintas de las del abonado |
-| allowed_idas | Solamente [1], [5] o [1, 5] |
-| lab_users | Usuario personalizado exacto => IDA permitido, sin contraseñas; ambos campos se verifican igual |
-| customer_path | [] para objeto raíz; cambiar solo tras comprobar otro envoltorio |
-| profile_fields | name/address/plan/city/email/phone, inicialmente null |
-| balance_path | null hasta confirmar ruta exacta del valor numérico crédito menos débito |
-| idle_seconds, max_seconds | 900 y 28800 por defecto |
-| timeout_seconds, connect_timeout_seconds | 10 y 4 por defecto; máximos 30 y 10 |
-| ca_file | Bundle CA confiable opcional; nunca desactivar validación TLS |
+| Nombre | Razon_Social si tiene texto; si no, Nombre + Apellido |
+| Domicilio | Direccion + Dir_Numero; Lote, Manzana, Referencia y Barrio rotulados si existen |
+| Ciudad | Ciudad |
+| Plan | Producto_Internet, singular; texto literal, sin deducir velocidad/precio |
+| Email | Email |
+| Teléfono | Telefono; Movil si el primero no tiene texto |
+| Estado administrativo | Estado_Servicio; no inferir conectividad desde él |
+| Saldo | Phantom_Mi_Estado_Cuenta.Balance; nunca Balance_CC ni suma de facturas |
 
-Los mapeos son arrays de claves exactas, por ejemplo `['ClaveConfirmada']`. Para texto compuesto: `['join'=>[['ClaveConfirmada'],['OtraClaveConfirmada']]]`. Esos nombres ilustran sintaxis: **no son campos confirmados de Phantom**. El perfil acepta texto; confirmar tipos antes de convertir números. El balance acepta números/decimales con punto, no HTML ni importes ambiguos. Negativo → deuda, positivo → crédito; ausente no equivale a cero.
+Los campos de presentación aceptan strings; ausentes o de otro tipo quedan no disponibles. `profile_fields` permite overrides solo sobre una lista explícita de campos públicos, y composiciones `join`. null utiliza los mapeos anteriores. Las viejas opciones customer_path y balance_path no autorizan registros ni seleccionan saldo. Verificar los mapeos visualmente con la cuenta real antes de darlos por aceptados.
 
-```powershell
-$env:MI_USITTEL_CONFIG = Join-Path $privateFolder 'config.php'
-$env:MI_USITTEL_RUNTIME = Join-Path $privateFolder 'runtime'
-$env:MI_USITTEL_PHP = "$env:TEMP\mi-usittel-php\php.exe" # O PHP permanente.
-npm run dev:mi-usittel:php
-```
+Balance usa la semántica documentada crédito menos débito. El parser admite decimales con punto y hasta dos decimales, o números finitos dentro del rango; no elimina símbolos ni separadores arbitrarios. Negativo → deuda, cero → saldo cero, positivo → crédito, inválido/ausente → no disponible. La semántica y el formato real deben contrastarse con la cuenta de laboratorio.
 
-Abrir http://127.0.0.1:4174/autogestion/. Reiniciar PHP al cambiar variables. Configuración inválida falla sin demo; sin variable de configuración el modo predeterminado es demo. Node 4173 no ejecuta PHP.
+Factura: IDT como identificador validado y sin duplicados; Periodo, Tipo, Comp_ID y Detalle como texto; Total numérico estricto; Primer_Vto y Segundo_Vto solo fechas válidas YYYY-MM-DD. Adaptador de Estado para PAGADA/IMPAGA; otros valores quedan no disponibles hasta confirmar contrato. No se inventan fecha de pago, saldo pendiente ni vencimiento global de cuenta.
 
-### Comprobar campos sin imprimir valores
+Siempre Limit=1 y Offset=0. La API rechaza otros offsets y anuncia `historyComplete=false`; la interfaz dice última factura disponible. La paginación del historial no está validada. No hay PDF, comprobantes de pago ni enlaces SIRO públicos.
 
-Con credenciales configuradas, esta herramienta CLI consulta nombres y tipos de primer nivel, sin valores, tokens, contraseñas ni contratos asociados:
+## API e interfaz
 
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1
-# Usar 5 si esa es la cuenta permitida.
-```
+El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login, overview, invoices y logout. Bloquea acceso HTTP a server/tests/configuración. La web comercial permanece intacta.
 
-Hace autenticación técnica y lecturas de cliente, estado de cuenta y una factura. Muestra nombres/tipos y una estructura anidada acotada (máximo cuatro niveles, un elemento representativo por lista y hasta 120 campos), sin valores. Excluye claves asociadas a contraseñas, tokens, secretos, hashes, URLs, archivos/documentos, datos fiscales/bancarios y contratos vinculados. Sigue siendo un primer diagnóstico y no demuestra semántica. Si el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo. **No se ejecutó contra Phantom real en esta entrega.**
+Inicio recibe perfil, estado administrativo, saldo y factura. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
 
-Ante un fallo, el inspector informa la etapa (`autenticacion`, `cliente`, `estado_cuenta` o `factura`) y un código propio. TLS distingue archivo CA (`PHANTOM_CA_FILE`), validación general (`PHANTOM_TLS_VERIFY`), emisor/cadena (`PHANTOM_TLS_ISSUER`), hostname, vigencia, revocación, certificado autofirmado y negociación (`PHANTOM_TLS_HANDSHAKE`) sin exponer el error crudo de cURL. Una excepción inesperada agrega únicamente clase, basename del archivo y línea; el mensaje se omite salvo que provenga del código local y pase un filtro estricto. Nunca imprime respuestas.
+Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, documentos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
 
-## Contrato interno
+## Configuración y ejecución
 
-Base `/autogestion/api/`, mismo origen, JSON UTF-8, Cache-Control no-store, sin CORS. Errores: `{"error":{"code":"CODIGO","message":"Texto público"}}`. El IDA se obtiene de sesión; parámetros de IDA/modo/action/URL se rechazan. No hay proxy genérico.
+Seguir FIRST-PHANTOM-TEST.md. Mantener config.php, bundle CA y runtime fuera del repositorio/directorio público con permisos del usuario de PHP. No reemplazar config.php con la plantilla ni imprimirlo. Variables: MI_USITTEL_CONFIG, MI_USITTEL_RUNTIME y MI_USITTEL_PHP.
 
-| Ruta | Entrada | Resultado |
-| --- | --- | --- |
-| GET bootstrap | Ninguna | {mode, authenticated, csrf} |
-| POST login | JSON {username,password}, X-CSRF-Token | {authenticated:true, csrf} nuevo tras regenerar sesión |
-| POST logout | JSON {}, X-CSRF-Token | {ok:true}; destruye sesión y expira cookie |
-| GET overview | Sesión autenticada | {customer,account,invoices,nextDue,warnings} |
-| GET invoices?offset=0 | Sesión; offset no negativo, múltiplo de 20, máximo seis dígitos | {items,offset,nextOffset}; 20 registros/página |
+`npm run check:mi-usittel` comprueba PHP 8.2+, cURL/JSON, configuración, runtime y rastros de secretos sin contactar Phantom. Identidad pendiente produce un aviso y el portal bloquea el login. `npm run dev:mi-usittel:php` sirve localhost:4174; el servidor estático 4173 no sustituye PHP.
 
-- `customer`: name,address,plan,city,email,phone,serviceStatus,network,speed. Texto o null. Estado_Servicio es administrativo; network/speed aún null.
-- `account`: balance,debt,credit, números o null; no representa saldo de factura. `nextDue` queda null hasta confirmar regla de cuenta.
-- Factura: id,period,amount,due,secondDue,status,type,number,paidAt,outstanding. IDT → id; Total → amount; fechas YYYY-MM-DD válidas → dd/mm/YYYY. PAGADA → Pagada, IMPAGA → Pendiente, desconocido → No disponible. paidAt/outstanding null. No hashes, URLs ni JSON original.
-- `warnings`: BALANCE_UNAVAILABLE, INVOICES_UNAVAILABLE, ACCOUNT_RECONCILIATION. Saldo/facturas pueden fallar independientemente; fallo de cliente deja error recuperable. Solo el 400 con mensaje exacto documentado de factura inexistente equivale a lista vacía; ningún error implica deuda cero.
+## Pruebas y límites
 
-HTTP: 400 entrada inválida, 401 credenciales/sesión, 403 CSRF/autorización, 404 ruta, 405 método, 409 lectura real en demo, 429 límite, 503 proveedor/configuración, 504 timeout. No se infiere vencimiento, reactivación o pago parcial con datos insuficientes.
+`npm run test:mi-usittel` usa exclusivamente fixtures y un servidor local, nunca Phantom real. Cubre transporte GET/POST, encoding, BOM, TLS/errores seguros, lista e identidad, credenciales exactas, campos opcionales, saldo/facturas inválidos, whitelist pública, CSRF, sesión/logout/vencimientos, limitación de intentos, aislamiento demo y ausencia de secretos. Los dobles cURL no ejecutan red externa.
 
-## Sesión y transporte
+Pendiente real: revisión de identidad, login del abonado, recarga, aceptación de los mapeos, contraste del saldo y factura, logout. Pendiente de producción: gestión de certificados en hosting, logs remotos de credenciales GET, revisión del despliegue y seguridad, gestión multiusuario y recuperación de contraseña. No modificar Apache, BAT de certificados, DNS, .htaccess, despliegue ni acceso público en esta etapa.
 
-- Cookie PHP HttpOnly, SameSite Strict, Secure cuando PHP recibe HTTPS; regeneración al autenticar y vencimientos propios. En el devserver HTTP/loopback no hay Secure; HTTPS no fue probado.
-- CSRF de sesión en login/logout; Origin cuando está presente y rechazo cross-site. Contraseña exacta sin trim/números/DNI; nunca en sesión.
-- Límite de 5 fallos por cuenta/usuario y 30 fallos por IP en 15 minutos. Cada verificación se reserva atómicamente para evitar ráfagas paralelas; un acceso correcto o un fallo del proveedor libera su reserva y no suma intentos. Los rechazos de credenciales permanecen tanto por cuenta como por IP, de modo que un acceso válido no borra protección previa. Claves HMAC, sin usuario/IP crudos. No confía en encabezados de proxy. Tests aíslan sus contadores.
-- Token técnico privado separado de sesión, caché 14 minutos. Un 401/403 permite renovar y repetir lectura solo una vez; no reintenta otros fallos.
-- POST JSON con TLS verificado, sin redirects, respuesta máxima 2 MB, profundidad JSON limitada. Diagnósticos propios solo por código, sin cuerpos/contraseñas/cabeceras sensibles. Revisar logging externo al desplegar.
-- Excepción explícita de diagnóstico: `inspect-schema.php 1 --auth-form` prueba autenticación POST `application/x-www-form-urlencoded`, con valores codificados y siempre en el cuerpo. No hay fallback automático; el inspector hace un solo intento de autenticación y mantiene las consultas en JSON. No cambia la configuración ni el transporte del portal. Compatibilidad pendiente de comprobar en la instalación real; un HTTP 400 no identifica por sí solo credenciales incorrectas.
-- Excepción puntual autorizada posteriormente: `inspect-auth-get.php` es CLI separado, exclusivamente autenticación GET por HTTPS con `JSON=1`. Credenciales codificadas en query: el usuario aceptó el riesgo de logs remotos. No sigue redirecciones, no reintenta, no consulta clientes ni persiste tokens. Salida cerrada, warnings locales redactados y sin trazas. `TOKEN_RECIBIDO` solo comprueba el campo esperado en la respuesta, no su uso posterior. No está conectado al portal ni se ejecuta automáticamente. Ver FIRST-PHANTOM-TEST.md.
-- Acciones permitidas: autentificar, Consulta_Cliente_Avanzada, Phantom_Ultima_Factura, Phantom_Mi_Estado_Cuenta. Ninguna escritura/SIRO.
-- Router local publica solo HTML/assets/JS y cinco rutas API; nunca server/, tests/, configuración o runtime. No usar un servidor estático genérico sobre todo el repo.
+### QA local de esta entrega
 
-## Validación
-
-`npm run check:mi-usittel` revisa PHP/cURL/JSON, configuración/runtime externos, estructura mínima y posibles secretos locales; no llama a Phantom ni imprime credenciales. `npm run test:mi-usittel` usa un servidor PHP aislado y transporte sintético; tampoco llama a Phantom. Cubre sesión, CSRF, regeneración/logout/replay, vencimientos, credenciales exactas/ausentes/incorrectas, IDA ajeno, límites basados solo en fallos, errores/timeout, renovación acotada, campos ausentes, saldo independiente, paginación, inspección de esquemas, whitelist, modos y mapeos sensibles. Las claves test_* son ficticias, no documentan al CRM.
-
-No es una auditoría exhaustiva. Pendiente real: HTTPS/cookie Secure, contrato de autenticación/respuestas, datos personales/productos y campo del balance. Validar solo IDA 1 o 5, con configuración privada; casos negativos continúan con fixtures para evitar bloquear cuentas reales.
-
-Producción, cPanel, DNS, .htaccess, SIRO y escrituras siguen fuera de alcance.
+Suite automatizada con fixtures, chequeo local sin red y lint PHP. Navegador Chromium con respuestas sintéticas en modo Phantom: desktop 1365×900 y móvil 390×844. Se comprobó login exacto, recarga con sesión, Inicio, Facturas/detalle, Mi servicio, Soporte, Mi cuenta y logout. Sin errores JavaScript, desbordamiento horizontal, carga de demo-data ni solicitudes externas. Pagos deshabilitados. Esto no sustituye la aceptación real del abonado.

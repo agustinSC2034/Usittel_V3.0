@@ -3,10 +3,9 @@ declare(strict_types=1);
 namespace MiUsittel;
 
 function inspectorArguments(array $args): array {
-    if(!in_array(count($args),[2,3],true) || !in_array($args[1]??null,['1','5'],true)
-        || (isset($args[2]) && !in_array($args[2],['--auth-form','--auth-get'],true))
-        || (($args[2]??null)==='--auth-get' && $args[1]!=='1')) throw new Failure('INSPECTOR_ARGUMENTS');
-    return ['ida'=>(int)$args[1],'authForm'=>($args[2]??null)==='--auth-form','authGet'=>($args[2]??null)==='--auth-get'];
+    if(!in_array(count($args),[2,3],true) || ($args[1]??null)!=='1'
+        || (isset($args[2]) && $args[2]!=='--auth-get')) throw new Failure('INSPECTOR_ARGUMENTS');
+    return ['ida'=>1,'authForm'=>false,'authGet'=>($args[2]??null)==='--auth-get'];
 }
 function safeDiagnosticCode(\Throwable $e): string {
     return $e instanceof Failure && preg_match('/^[A-Z][A-Z0-9_]{1,63}$/D',$e->kind) ? $e->kind : 'UNEXPECTED';

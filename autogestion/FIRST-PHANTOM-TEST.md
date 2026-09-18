@@ -1,147 +1,74 @@
-# Primera prueba real con Phantom
+# Primera prueba del portal con Phantom — laboratorio IDA 1
 
-Esta prueba es únicamente para laboratorio, en modo lectura y con **IDA 1**. No habilita pagos, escrituras ni producción. Las credenciales técnicas se escriben personalmente en un archivo privado y nunca se pegan en el chat.
+La comunicación real ya fue comprobada por Agustín: autenticación GET HTTPS y lecturas POST de cliente, estado de cuenta y última factura. TLS funciona con el bundle privado existente. No repetir la investigación de certificados, puertos o Apache.
 
-## Próxima prueba: esquema completo con autenticación confirmada
+El portal ahora usa ese mismo transporte y decoder. Todavía falta confirmar la identidad del registro y completar la aceptación real en el navegador. Los tests y chequeos locales no llaman a Phantom.
 
-La autenticación GET por HTTPS y la lectura POST JSON del cliente ya fueron comprobadas por el usuario. El cliente llega como lista y con un BOM UTF-8 inicial. Para inspeccionar ahora también estado de cuenta y una factura, desde la PC de desarrollo y con las variables privadas existentes, ejecutar una vez:
+## Único paso necesario ahora
 
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1 --auth-get
-```
-
-Este modo está limitado a IDA 1 y exige que esté permitido en el archivo privado. Hace como máximo cuatro solicitudes: autenticación GET y tres lecturas POST JSON con token en el cuerpo. No reintenta ni sigue redirecciones. El token queda solamente en memoria; no usa ni escribe caché o sesiones. Mantiene el riesgo de logs remotos de la autenticación GET aceptado previamente.
-
-La salida incluye `customer`, `account` e `invoice` con claves/tipos, máximo cuatro niveles, un elemento representativo por lista y 120 campos por sección. Conserva los envoltorios originales: mostrar la estructura de un elemento no selecciona un cliente para Login. No aplica `customer_path`, mapeos de perfil ni interpreta `Balance_CC` como deuda. La factura se solicita con `Limit=1` y `Offset=0`; únicamente el error funcional documentado de factura inexistente se representa como lista vacía.
-
-Copiar únicamente esa salida estructural, o el bloque `Etapa / Código / HTTP / Formato` si falla. Si una consulta falla, no se imprimen resultados parciales. No compartir valores, JSON crudo, URLs, tokens o archivos privados. Todavía no conecta Login/Dashboard ni consulta pagos/SIRO. Los comandos históricos sin `--auth-get` conservan su comportamiento anterior.
-
-## Paso 1 — Crear y editar la configuración privada
-
-Abrir PowerShell en la raíz del proyecto y ejecutar:
+Desde la raíz del proyecto y la misma PowerShell que ya tiene las variables de entorno:
 
 ```powershell
-$privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
-New-Item -ItemType Directory -Force -Path $privateFolder | Out-Null
-$privateConfig = Join-Path $privateFolder 'config.php'
-$privateRuntime = Join-Path $privateFolder 'runtime'
-New-Item -ItemType Directory -Force -Path $privateRuntime | Out-Null
-
-if (-not (Test-Path -LiteralPath $privateConfig)) {
-  Copy-Item -LiteralPath autogestion/server/config.example.php -Destination $privateConfig
-}
-notepad $privateConfig
+& $env:MI_USITTEL_PHP autogestion/server/inspect-customer.php 1 --validate-identity
 ```
 
-En el archivo abierto, completar personalmente `api_user` y `api_pass`. No cambiar ni compartir otras credenciales. Guardar y cerrar Notepad.
+Copiar únicamente el reporte `identity`, o el diagnóstico seguro de etapa/código. Muestra cantidad de registros, presencia y tipo de ID/IDAx y credenciales, y si cada identificador coincide con IDA 1. No muestra valores personales, usuarios, contraseñas ni token. Hace como máximo una autenticación y una lectura del cliente; no guarda token ni consulta conexiones asociadas.
 
-## Paso 2 — Limitar la prueba a IDA 1
+**Esperar la revisión de ese resultado.** No configurar `customer_path=[0]` ni elegir ID/IDAx por intuición. Si hay varios registros, coincidencias ambiguas o no hay identificador confirmado, el login debe seguir bloqueado.
 
-En el mismo archivo comprobar exactamente:
+## Después de confirmar la identidad
 
-```php
-'mode' => 'phantom',
-'allowed_idas' => [1],
-```
+Estos pasos son para la siguiente intervención, no para ejecutarlos antes del reporte.
 
-Mantener `profile_fields` en null y `balance_path` en null. Todavía no mapear datos por intuición. Si el usuario de laboratorio no es numérico, agregar solamente su relación usuario→IDA en `lab_users`; nunca su contraseña.
-
-En la misma ventana de PowerShell configurar el entorno:
+1. Abrir el archivo privado existente. No copiar la plantilla sobre él:
 
 ```powershell
-$env:MI_USITTEL_CONFIG = $privateConfig
-$env:MI_USITTEL_RUNTIME = $privateRuntime
-# Solo si PHP no está disponible en PATH:
-$env:MI_USITTEL_PHP = 'C:\ruta\a\php.exe'
+notepad "$env:LOCALAPPDATA\MiUSITTEL\config.php"
 ```
 
-Estas variables duran mientras esa ventana permanezca abierta. Al abrir otra terminal hay que definirlas de nuevo.
+2. Mantener `mode` en `phantom`, `allowed_idas` en `[1]` y la modalidad `phantom_auth_mode` en `get-query-lab`. Agregar `customer_id_field` con el campo que se haya confirmado. Mantener intactos URL, credenciales y `ca_file`. Una configuración anterior sin `phantom_auth_mode` usa explícitamente `get-query-lab`; no intenta otros métodos.
 
-## Paso 3 — Ejecutar el chequeo local
+Si el usuario de autogestión es personalizado, agregar personalmente su correspondencia exacta a IDA 1 en `lab_users`. No poner contraseñas en ese mapa. El backend siempre compara usuario y contraseña exactos con los campos de autogestión del registro validado.
+
+3. Ejecutar el chequeo local:
 
 ```powershell
 npm run check:mi-usittel
 ```
 
-Debe terminar sin ❌. Las credenciales se informan únicamente como “presentes”; sus valores nunca se imprimen. Este chequeo **no llama a Phantom**.
+El aviso de identidad pendiente es normal hasta completar el punto 2. Que el campo esté configurado no demuestra por sí mismo que sea correcto.
 
-## Paso 4 — Inspeccionar el esquema de IDA 1
-
-Este es el primer comando que sí hará lecturas reales de Phantom:
+4. Iniciar el servidor PHP local:
 
 ```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1
+npm run dev:mi-usittel:php
 ```
 
-Si PHP está en PATH y no se definió MI_USITTEL_PHP:
+Abrir http://127.0.0.1:4174/autogestion/. El servidor está ligado a localhost. El servidor estático del puerto 4173 no ejecuta el backend PHP.
+
+5. Escribir personalmente en el formulario las credenciales actuales de autogestión del abonado 1. No usar las credenciales técnicas de API. No transformar la contraseña ni quitar espacios o ceros.
+
+6. Comprobar login, recarga conservando sesión, nombre/domicilio/plan/estado administrativo, saldo contrastado con Phantom, última factura y detalle, y logout. Tras logout, recargar no debe devolver información del cliente.
+
+El saldo es crédito menos débito: negativo indica deuda; positivo indica saldo a favor. La factura muestra su total, no un saldo pendiente calculado. La paginación completa, próximo vencimiento de cuenta y fecha de pago siguen sin validar. Opcionales ausentes muestran “No disponible”.
+
+## Si abriste otra PowerShell
+
+Restablecer las rutas, sin copiar ni imprimir el archivo privado:
 
 ```powershell
-php autogestion/server/inspect-schema.php 1
+$privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
+$env:MI_USITTEL_CONFIG = Join-Path $privateFolder 'config.php'
+$env:MI_USITTEL_RUNTIME = Join-Path $privateFolder 'runtime'
+$env:MI_USITTEL_PHP = "$env:TEMP\mi-usittel-php\php.exe"
 ```
 
-El comando autentica técnicamente y consulta cliente, estado de cuenta y una factura. Muestra solamente nombres de campos, tipos y estructura limitada. No modifica nada.
+Usar la ubicación real de PHP si cambió. La carpeta runtime debe existir fuera del repositorio y tener acceso restringido al usuario que ejecuta PHP.
 
-### Prueba puntual si la autenticación POST JSON devuelve HTTP 400
+## Qué no compartir
 
-La captura de Botmaker confirma una petición GET con credenciales en la URL sobre HTTP. Mi USITTEL usa HTTPS y credenciales en el cuerpo. Esa diferencia puede influir, pero no demuestra por sí sola la causa del 400.
+No compartir passwords, token, archivo privado, URL de autenticación con query, JSON crudo, documentos del cliente ni capturas con información personal. No activar debug cURL ni volcar respuestas. Compartir solamente el reporte acotado o códigos de error seguros.
 
-Para probar **una vez** si esta instalación acepta las credenciales como formulario POST:
+## Límites
 
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1 --auth-form
-```
-
-No editar la configuración ni cambiar la URL para esta prueba. La opción afecta solamente la autenticación de esa ejecución del inspector; mantiene HTTPS y validación de certificados, sin credenciales en la URL ni redirecciones. No reintenta automáticamente ni cambia el formato del portal. Si autentica, continúa con las tres consultas de lectura en JSON y la misma salida sin valores.
-
-El soporte de formulario todavía no está confirmado. Si vuelve a fallar, compartir solamente el bloque técnico indicado en el paso 5. No repetir intentos cambiando contraseñas al azar: necesitaremos confirmar el contrato de esta instalación. Un error en `cliente` después de esta prueba permite distinguirlo de un rechazo en `autenticacion`.
-
-## Paso 5 — Qué copiar para analizar después
-
-### Excepción autorizada: prueba GET de autenticación únicamente
-
-Tras recibir HTTP 400 tanto en POST JSON como en formulario, el usuario autorizó una prueba GET con credenciales en la URL, aceptando que podrían quedar en logs del servidor/intermediarios aunque se use HTTPS. Esta autorización puntual no cambia el transporte del portal.
-
-En la PC de desarrollo, con las variables privadas ya configuradas, ejecutar **una sola vez**:
-
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-auth-get.php
-```
-
-No lleva IDA: no consulta clientes. Lee la configuración privada existente, conserva el dominio HTTPS, la validación TLS y `JSON=1`; envía únicamente `action=autentificar`, `api_user` y `api_pass`. No sigue redirecciones ni reintenta; no guarda el token ni crea archivos de runtime. No cambia Apache, certificados ni configuración privada. No usar navegador, pegar URLs con credenciales ni activar trazas de cURL.
-
-La salida esperada es `Etapa: autenticacion`, `Código: TOKEN_RECIBIDO` y una aclaración de que el token está oculto. Esto confirma un campo `token` no vacío en una respuesta JSON sin error reconocido; todavía no comprueba su validez para consultar clientes. Una respuesta diferente falla de forma cerrada. Si falla, compartir solo el diagnóstico seguro. El código suprime salida accidental de configuración y errores crudos locales, pero no puede impedir el logging en el servidor remoto.
-
-### Siguiente lectura controlada: solamente cliente IDA 1
-
-El usuario confirmó `TOKEN_RECIBIDO` en la prueba GET por HTTPS. Para verificar ahora la consulta de cliente, ejecutar una vez en la PC de desarrollo:
-
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-customer.php 1
-```
-
-Usa el archivo privado existente y exige modo phantom e IDA 1 permitido. Autentica por GET (mantiene el riesgo de logs remotos aceptado), conserva el token solamente en memoria y hace una consulta `Consulta_Cliente_Avanzada` por POST JSON con el token en el cuerpo. El formato de esta lectura todavía debe comprobarse en la instalación real. No prueba otros formatos automáticamente ni coloca el token en la URL; tampoco renueva/reintenta ante 401. Máximo dos solicitudes: autenticación y cliente.
-
-No consulta estado de cuenta ni facturas, no crea caché/sesiones ni cambia el Login o Dashboard. Éxito: solo sección `customer`, con claves/tipos y el filtro estructural compartido; preserva el envoltorio recibido sin inventar mapeos. Error: bloque técnico que distingue `autenticacion` de `cliente`. Compartir únicamente esa salida segura, nunca la respuesta cruda.
-
-Si devuelve `PHANTOM_FORMAT` con HTTP 200 en cliente, agrega `Formato:` con una categoría cerrada: respuesta vacía, apariencia HTML, texto/JSON inválido, prefijo BOM residual, UTF-8 inválido, exceso de profundidad o JSON de tipo string/boolean/null/número. También distingue JSON de objeto/lista dentro de un string. No muestra fragmentos del contenido ni acepta envoltorios nuevos automáticamente. HTTP 200 por sí solo no confirma datos del cliente.
-
-Tras confirmar `PREFIJO_BOM_UTF8` en la respuesta real, el lector admite exclusivamente un BOM UTF-8 (tres bytes) en la posición inicial. Después aplica la misma validación JSON, de estructura y de errores funcionales. No elimina HTML, avisos PHP ni BOM repetidos/intermedios. Volver a ejecutar el mismo comando una vez: si el resto es JSON válido mostrará el esquema; de lo contrario, compartir el nuevo bloque técnico completo, incluida `Formato:`.
-
-### Lectura de la salida estructural
-
-Copiar solamente la salida estructural completa producida por `inspect-schema.php`, desde la llave inicial hasta la final. Esa salida debería tener secciones `customer`, `account` e `invoice` con nombres de campos y tipos.
-
-Antes de compartirla, comprobar visualmente que no aparezcan datos personales o valores. Si aparece algo que no parece una descripción de tipo (`string`, `int`, `float`, `null`, `array`, `object`, `unknown` o `truncated`), detenerse y no compartirlo.
-
-Si el comando falla, copiar únicamente el bloque técnico que comienza con `Etapa:` y `Código:`. Puede incluir `HTTP:` con el estado numérico recibido (por ejemplo, 301, 404 o 500); no incluye cuerpos, cabeceras ni destinos de redirección. Si es una excepción inesperada también puede incluir `Excepción`, `Archivo`, `Línea` y, solo cuando pasó el filtro seguro, `Mensaje`. No copiar logs del servidor ni archivos de runtime.
-
-## Paso 6 — Qué no compartir
-
-- `api_user`, `api_pass` ni contraseñas de abonados.
-- Token técnico o cookies.
-- JSON crudo devuelto por Phantom.
-- Datos personales: nombre, domicilio, DNI/CUIT/CUIL, teléfono, correo, tarjeta, CBU u otros identificadores.
-- Hashes, enlaces de descarga/pago, facturas o documentos.
-- El archivo privado `config.php` ni archivos de la carpeta runtime.
-
-Después de revisar juntos la salida segura, recién se podrán configurar rutas confirmadas de perfil y balance. Iniciar la interfaz con `npm run dev:mi-usittel:php` será una prueba posterior; no hace falta para descubrir el esquema.
+Solo IDA 1 y lectura. No SIRO, pagos, promesas, cambios de servicio/datos/tickets, Apache, DNS ni producción. Pendientes antes de producción: certificados del hosting, protección y revisión de logs remotos ante credenciales GET, despliegue y seguridad.

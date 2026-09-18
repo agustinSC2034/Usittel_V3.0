@@ -27,7 +27,8 @@ function curl_error(\CurlHandle $handle): string {return '';}
 function ensure(bool $condition,string $label): void {if(!$condition) throw new \RuntimeException($label);}
 
 ensure(inspectorArguments(['inspect-schema.php','1'])===['ida'=>1,'authForm'=>false,'authGet'=>false],'default CLI arguments');
-ensure(inspectorArguments(['inspect-schema.php','5','--auth-form'])===['ida'=>5,'authForm'=>true,'authGet'=>false],'form CLI arguments');
+try {inspectorArguments(['inspect-schema.php','1','--auth-form']);throw new \RuntimeException('legacy experiment still enabled');}
+catch(Failure $e) {ensure($e->kind==='INSPECTOR_ARGUMENTS','legacy experiment rejected');}
 ensure(inspectorArguments(['inspect-schema.php','1','--auth-get'])===['ida'=>1,'authForm'=>false,'authGet'=>true],'GET CLI arguments');
 $config=config();$config['ca_file']=null;
 $url='https://fixture.invalid/API_Rest.php?action=autentificar&JSON=1';

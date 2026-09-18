@@ -1,35 +1,31 @@
-# MVP — alcance efectivo al 17/09/2026
+# MVP — alcance efectivo al 18/09/2026
 
-## Producto aprobado
+## Producto
 
-Login, Inicio, Facturas/Estado de cuenta y detalle, Mi servicio, Soporte y Mi cuenta básica. Navegación inferior móvil y superior desktop, sin sidebar. No se eliminó ninguna función previa: speedtest, mejoras de plan, adicionales, contacto comercial y Wi-Fi siguen en Más opciones; deshabilitados en Phantom hasta su integración.
+Login, Inicio, Facturas/Estado de cuenta y detalle, Mi servicio, Soporte y Mi cuenta básica. Diseño aprobado preservado: navegación inferior móvil y superior desktop, sin sidebar. Speedtest, mejoras de plan, adicionales, contacto comercial y Wi-Fi siguen aislados en Más opciones; no se eliminan y siguen deshabilitados en Phantom.
 
-## Implementado y comprobado con fixtures
+## Conectado en código y probado con fixtures
 
-- Backend PHP propio aislado y mismo origen que el frontend.
-- Resolver IDA candidato y comparar exactamente Autogestion_User y Autogestion_Pass. Sin DNI/CUIT, normalización de contraseñas ni autorización por IDA solo. Un suspendido puede ingresar.
-- Laboratorio limitado a IDA 1 y/o 5; usuarios personalizados mediante mapeo privado, sin barrido ni contratos asociados.
-- Sesión PHP con regeneración, HttpOnly, SameSite Strict, Secure al servir HTTPS, vencimientos, CSRF login/logout y límite backend basado únicamente en fallos.
-- Chequeo local sin red e inspección segura de estructuras de cliente, cuenta y factura preparados para la primera conexión.
-- API interna para Inicio y facturas paginadas. Campos públicos explícitos; secretos/JSON bruto no llegan al navegador.
-- Demo explícita del servidor, fixtures separadas, sin fallback desde Phantom.
-- Carga/error recuperable, campos no disponibles, facturas vacías y discrepancia saldo/estado de factura.
-- Detalle de lectura, total separado del saldo pendiente. Sin PDF ficticio en modo Phantom.
-- Pruebas HTTP de sesión y casos negativos con transporte ficticio aislado; revisión en navegador móvil/desktop. Ver INTEGRATION.md.
+- Transporte compartido: GET HTTPS de autenticación técnica y lecturas POST JSON. Sin fallback de métodos, TLS verificado y decoder estricto con un BOM inicial permitido.
+- Portal exclusivamente IDA 1. Validación de lista, cantidad e identidad antes de comparar exactamente credenciales de autogestión; suspendidos pueden ingresar. ID/IDAx requieren confirmación explícita antes de habilitar login.
+- Sesión propia, CSRF, vencimientos, logout, regeneración y límites de intentos. Token técnico separado del cliente.
+- Inicio con nombre/razón social, domicilio, plan literal, estado administrativo y estado de cuenta. Mi servicio y Mi cuenta comparten esos datos de lectura.
+- Balance del endpoint de cuenta: distingue deuda, cero, crédito y no disponible. Nunca suma facturas ni usa Balance_CC como sustituto.
+- Última factura y detalle de lectura; total separado de saldo pendiente. Sin historial completo anunciado, documentos ficticios ni pagos habilitados.
+- DTO público explícito, configuración privada, errores seguros, demo separada sin fallback. Opcionales ausentes y fallos parciales no generan datos inventados.
 
-## Pendiente de Phantom real
+## Comprobado por Agustín contra Phantom real
 
-**No se validó login real ni se cargaron datos reales.** Faltan credenciales técnicas en configuración privada y una respuesta controlada de laboratorio.
+Autenticación GET HTTPS con token y lecturas de cliente avanzado, estado de cuenta y última factura. Cliente/factura como listas, cuenta con Balance:string, nombres y tipos de campos. Bundle CA privado operativo. Limit=1 y Offset=0 comprobados; paginación completa no comprobada.
 
-- Confirmar autenticación técnica POST JSON y envoltorios/errores reales con IDA 1 o 5.
-- Estado_Servicio y campos documentados de facturas tienen adaptadores preparados.
-- Nombre/razón social, domicilio, plan, ciudad, correo y teléfono esperan claves/tipos confirmados; la plantilla los deja sin mapear.
-- Balance: documentación define crédito menos débito, pero falta el campo JSON numérico exacto. Sin mapeo no se consulta ni inventa saldo; no se suman facturas.
-- Próximo vencimiento de cuenta, pagos parciales, estado técnico y Wi-Fi no disponibles hasta confirmar contrato suficiente. Activo es administrativo, no prueba conexión.
-- Resolución universal de usuarios personalizados pendiente; el mapeo de laboratorio no es una solución general.
+## Pendiente de aceptación real
+
+Una comprobación segura de ID frente a IDAx y presencia/tipo de credenciales mediante el inspector existente. Luego configurar el campo confirmado, ingresar personalmente en localhost:4174, recargar conservando sesión, contrastar perfil/saldo/factura con Phantom y cerrar sesión. Ver FIRST-PHANTOM-TEST.md.
+
+No declarar el login real terminado hasta completar este recorrido. Nombres de campos observados no prueban identidad, semántica de estados ni contenido de la cuenta. Próximo vencimiento global, velocidad, conectividad y fecha de pago siguen no disponibles cuando no hay contrato confirmado.
 
 ## Fuera de esta entrega
 
-SIRO, verificación/imputación de pagos, promesas, reactivación, PDF/comprobantes reales, recuperación, cambios de datos/Wi-Fi/plan, lectura/creación de tickets, chat y speedtest reales, múltiples contratos. Ninguna escritura habilitada.
+SIRO, pagos/imputación, promesas, reactivación, PDF/comprobantes, recuperación, cambios de datos/Wi-Fi/plan, tickets, chat y speedtest reales, múltiples contratos, búsqueda universal de usuarios. Ninguna escritura habilitada.
 
-Antes de producción: validación real, revisión de seguridad/despliegue, servidor HTTPS y operación. No cambiar .htaccess, .cpanel.yml, acceso comercial ni dominio en esta etapa. No publicar el laboratorio.
+Antes de producción: certificados en hosting, riesgo de credenciales GET en logs remotos, revisión de seguridad/despliegue y validación real completa. No modificar la web pública, su acceso, DNS, Apache, .htaccess ni publicar el laboratorio en producción.

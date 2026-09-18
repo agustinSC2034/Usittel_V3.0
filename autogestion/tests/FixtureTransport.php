@@ -4,6 +4,11 @@ namespace MiUsittel;
 // Deliberately synthetic schema. Never included by the production router.
 final class FixtureTransport implements Transport {
     public function __construct(private string $dir) {}
+    public function authenticate(string $url,array $credentials): array {
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
+        if($query!==['action'=>'autentificar','JSON'=>'1'] || $credentials!==['api_user'=>'fixture-api','api_pass'=>'fixture-api-secret']) throw new \RuntimeException('Invalid fixture auth');
+        return $this->post($url,$credentials);
+    }
     public function post(string $url,array $body): array {
         parse_str(parse_url($url,PHP_URL_QUERY),$query);
         $action=$query['action'];
@@ -24,17 +29,32 @@ final class FixtureTransport implements Transport {
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
-            if($scenario==='missing-credentials') return ['Estado_Servicio'=>'Activo'];
-            return ['Autogestion_User'=>(int)$query['IDA']===1?'000001':'laboratorio', 'Autogestion_Pass'=>' 00Lab-fixture! ',
+            $record=['ID'=>'1','IDAx'=>'99','Autogestion_User'=>$scenario==='custom-user'?'laboratorio':'000001', 'Autogestion_Pass'=>' 00Lab-fixture! ',
                 'Estado_Servicio'=>'Suspendido',
+                'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
+                'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
+                'Email'=>'cliente@example.invalid','Telefono'=>'fixture-phone','Balance_CC'=>'9999999',
                 'test_name'=>$scenario==='missing'?null:'Cliente de pruebas', 'test_address'=>'Calle ficticia 123', 'test_plan'=>'Plan de laboratorio',
                 'technical_meta'=>['connection'=>['state'=>'fixture-state','ports'=>[['kind'=>'ethernet','enabled'=>true]]]],
                 'Conexiones_Asociadas'=>[['IDA'=>999,'Autogestion_Pass'=>'do-not-expose']], 'DNI'=>'do-not-expose', 'Tarjeta'=>'do-not-expose'];
+            if($scenario==='missing-credentials') unset($record['Autogestion_User'],$record['Autogestion_Pass']);
+            if($scenario==='numeric-password') $record['Autogestion_Pass']=123;
+            if($scenario==='numeric-user') $record['Autogestion_User']=1;
+            if($scenario==='empty-password') $record['Autogestion_Pass']='';
+            if($scenario==='wrong-identity') $record['ID']='2';
+            if($scenario==='missing-identity') unset($record['ID']);
+            if($scenario==='numeric-identity') $record['ID']=1;
+            if($scenario==='alternate-identity') {$record['ID']='2';$record['IDAx']='1';}
+            if($scenario==='empty-customer') return [];
+            if($scenario==='object-customer') return $record;
+            if($scenario==='duplicate-customer') return [$record,$record];
+            if($scenario==='ambiguous-customer') return [$record,array_replace($record,['ID'=>'2'])];
+            return [$record];
         }
         if($action==='Phantom_Mi_Estado_Cuenta') {
             if($scenario==='account-failure') throw new Failure('PHANTOM_ACCOUNT_TEST');
             if($scenario==='balance-error') return ['code'=>500,'message'=>'Private balance failure'];
-            return ['test_balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50',default=>'-12500.75'},
+            return ['Balance'=>match($scenario) {'missing'=>null,'credit'=>'150.50','zero'=>'0.00','invalid-balance'=>'$ 12.500,75',default=>'-12500.75'},
                 'breakdown'=>['charges'=>[['kind'=>'fixture','amount'=>'1.00']]]];
         }
         if($scenario==='invoice-failure') throw new Failure('PHANTOM_INVOICE_TEST');
@@ -46,6 +66,9 @@ final class FixtureTransport implements Transport {
             'Metadata'=>['currency'=>'ARS','items'=>[['description'=>'fixture-item','quantity'=>1]]],
             'Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
         if($scenario==='missing') $row=['IDT'=>123];
+        if($scenario==='invalid-invoice') $row=array_replace($row,['Total'=>'12.500,75','Primer_Vto'=>'2026-02-30','Segundo_Vto'=>"2026-09-20\0",'Estado'=>'UNKNOWN']);
+        if($scenario==='invalid-invoice-id') $row['IDT']=true;
+        if($scenario==='duplicate-invoice') return [$row,$row];
         if($scenario==='pagination') { $rows=[];for($i=0;$i<20;$i++) $rows[]=array_replace($row,['IDT'=>1000-(int)$query['Offset']-$i]);return $rows; }
         return [$row];
     }

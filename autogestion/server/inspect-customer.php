@@ -7,7 +7,8 @@ $stage='configuracion';$failure=null;$output=null;
 ob_start();
 set_error_handler(static function() {throw new \MiUsittel\Failure('PROBE_PHP');});
 try {
-    if(count($argv)!==2 || $argv[1]!=='1') throw new \MiUsittel\Failure('INSPECTOR_ARGUMENTS');
+    if(!in_array(count($argv),[2,3],true) || ($argv[1]??null)!=='1'
+        || (isset($argv[2]) && $argv[2]!=='--validate-identity')) throw new \MiUsittel\Failure('INSPECTOR_ARGUMENTS');
     $config=\MiUsittel\config();
     if($config['mode']!=='phantom' || !in_array(1,$config['allowed_idas'],true)) throw new \MiUsittel\Failure('CONFIGURATION');
     $stage='autenticacion';
@@ -20,7 +21,8 @@ try {
         || (isset($data['message']) && is_string($data['message']) && str_starts_with($data['message'],'Error:'))) throw new \MiUsittel\Failure('PHANTOM_FUNCTIONAL');
     // Inspect the raw envelope without inferring profile mappings or field semantics.
     $remaining=120;
-    $output=json_encode(['customer'=>\MiUsittel\inspectionShape($data,$remaining)],JSON_THROW_ON_ERROR|JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+    $report=isset($argv[2])?['identity'=>\MiUsittel\inspectCustomerIdentity($data,1)]:['customer'=>\MiUsittel\inspectionShape($data,$remaining)];
+    $output=json_encode($report,JSON_THROW_ON_ERROR|JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
 } catch(\Throwable $e) {$failure=$e;}
 finally {unset($token,$data);restore_error_handler();ob_end_clean();}
 if($failure!==null) exit(\MiUsittel\writeInspectorFailure($stage,$failure));

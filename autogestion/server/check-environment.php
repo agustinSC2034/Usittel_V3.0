@@ -44,7 +44,13 @@ if(!$configPath) {
                     $add($urlOk?'ok':'fail','URL Phantom',$urlOk?'HTTPS válida':'falta una URL HTTPS válida y sin credenciales/query');
                     $idas=$config['allowed_idas']??null;
                     $idasOk=is_array($idas) && $idas!==[] && array_diff($idas,[1,5])===[];
-                    $add($idasOk?'ok':'fail','Cuentas de laboratorio',$idasOk?'limitadas a IDA 1 y/o 5':'usar únicamente [1], [5] o [1, 5]');
+                    $idasOk=$idasOk && in_array(1,$idas,true);
+                    $add($idasOk?'ok':'fail','Cuentas de laboratorio',$idasOk?'portal restringido a IDA 1; se recomienda [1]':'incluir IDA 1; usar [1]');
+                    $authOk=($config['phantom_auth_mode']??'get-query-lab')==='get-query-lab';
+                    $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET explícito de laboratorio; lecturas POST':'usar get-query-lab');
+                    $identity=$config['customer_id_field']??null;
+                    $add($identity===null?'warn':(in_array($identity,['ID','IDAx'],true)?'ok':'fail'),'Identidad del abonado',
+                        $identity===null?'pendiente de validación; login bloqueado':(in_array($identity,['ID','IDAx'],true)?'campo configurado; requiere confirmación real':'campo no permitido'));
                     $userOk=is_string($config['api_user']??null) && $config['api_user']!=='';
                     $passOk=is_string($config['api_pass']??null) && $config['api_pass']!=='';
                     $add($userOk&&$passOk?'ok':'warn','Credenciales Phantom',$userOk&&$passOk?'presentes (valores ocultos)':'faltan api_user y/o api_pass');

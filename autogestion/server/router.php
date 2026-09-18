@@ -4,6 +4,7 @@ require_once __DIR__.'/Core.php';
 require_once __DIR__.'/Phantom.php';
 require_once __DIR__.'/Api.php';
 ini_set('display_errors','0'); ini_set('zend.exception_ignore_args','1');
+set_error_handler(static function() {throw new \MiUsittel\Failure('INTERNAL');});
 header('X-Content-Type-Options: nosniff'); header('Referrer-Policy: no-referrer');
 header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
 header('Cache-Control: no-store');

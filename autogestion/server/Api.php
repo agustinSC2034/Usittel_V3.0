@@ -8,7 +8,8 @@ function startSession(array $c,string $dir): void {
     session_save_path($dir); session_name('MIUSITTEL_'.strtoupper($c['mode']));
     session_set_cookie_params(['lifetime'=>0,'path'=>'/autogestion/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
     session_start();
-    $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'']));
+    $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
+        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,'lab-v2']));
     $now=time();
     if (isset($_SESSION['ida']) && (($_SESSION['config']??'')!==$fingerprint || $now-($_SESSION['last']??0)>=$c['idle_seconds'] || $now-($_SESSION['started']??0)>=$c['max_seconds'])) {
         $_SESSION=[]; session_regenerate_id(true);
@@ -79,10 +80,10 @@ function api(array $c,string $dir,Phantom $ph,string $route): never {
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
     $ida=$_SESSION['ida'];
-    if(!in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+    if($ida!==1 || !in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
     if($route==='invoices') {
         $offset=$_GET['offset']??'0';
-        if(!is_string($offset) || !preg_match('/^\d{1,6}$/D',$offset) || (int)$offset%20!==0) throw new Failure('BAD_REQUEST',400);
+        if($offset!=='0') throw new Failure('BAD_REQUEST',400);
         jsonReply($ph->invoices($ida,(int)$offset));
     }
     // Profile failure is recoverable, never replaced by fixtures. Optional sections
@@ -105,6 +106,7 @@ function fail(\Throwable $e): never {
         'RATE_LIMIT'=>'Se alcanzó el límite de intentos. Intentá nuevamente en 15 minutos.',
         'CSRF'=>'La sesión del formulario cambió. Recargá la página.',
         'CONFIGURATION'=>'El entorno necesita completar su configuración privada.',
+        'LAB_IDENTITY_PENDING'=>'Falta confirmar el identificador del cliente de laboratorio antes de ingresar.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         default=>'No pudimos consultar la información. Podés volver a intentar.',
     };

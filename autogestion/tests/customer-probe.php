@@ -42,6 +42,12 @@ function curl_exec(\CurlHandle $handle): bool {
     }
     if($GLOBALS['calls']===2 && $GLOBALS['scenario']==='functional') $body='{"code":400,"message":"private upstream"}';
     if($GLOBALS['calls']===2 && $GLOBALS['scenario']==='warning') trigger_error('private token or URL',E_USER_WARNING);
+    if($GLOBALS['calls']===2 && str_starts_with($GLOBALS['scenario'],'identity')) {
+        $record=json_decode($body,true);$record['ID']=$GLOBALS['scenario']==='identity-wrong'?'2':'1';$record['IDAx']='99';
+        $record['Autogestion_User']='fixture-login';
+        if($GLOBALS['scenario']==='identity-type') $record['Autogestion_Pass']=123;
+        $body=json_encode($GLOBALS['scenario']==='identity-duplicate'?[$record,$record]:[$record]);
+    }
     ($GLOBALS['options'][CURLOPT_WRITEFUNCTION])($handle,$body);
     return true;
 }
@@ -56,4 +62,5 @@ register_shutdown_function(static function() {
     if($GLOBALS['calls']!==$expected) {fwrite(STDERR,'FIXTURE_CALL_COUNT_FAILED');exit(90);}
 });
 $argv=['inspect-customer.php',$scenario==='args'?'5':'1'];
+if(str_starts_with($scenario,'identity')) $argv[]='--validate-identity';
 require __DIR__.'/../server/inspect-customer.php';

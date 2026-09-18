@@ -47,6 +47,15 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   }
   scenario('unexpected-invoice');command=spawnSync(php,[path.join(__dirname,'inspect-schema-fixture.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},encoding:'utf8'});
   check('inspector limita excepción inesperada a metadatos seguros',()=>{assert.equal(command.status,1);assert.match(command.stderr,/Etapa: factura\r?\nCódigo: UNEXPECTED\r?\nExcepción: TypeError\r?\nArchivo: FixtureTransport.php\r?\nLínea: \d+/);assert.doesNotMatch(command.stderr,/sensitive-value|Mensaje:|fixture-api|token|https?:\/\//i);});
+  for(const status of [200,301,302,307,308,400,401,403,404,405,429,500,502,503,0,999]) {
+    scenario(`http-status-${status}`);command=spawnSync(php,[path.join(__dirname,'inspect-schema-fixture.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},encoding:'utf8'});
+    check(`inspector HTTP ${status}: solo metadatos sin cuerpo sensible`,()=>{
+      const code=status===200?'PHANTOM_FORMAT':[401,403].includes(status)?'TOKEN_EXPIRED':'PHANTOM_HTTP';
+      const http=status>=100&&status<=599?`HTTP: ${status}\n`:'';
+      assert.equal(command.status,1);assert.equal(command.stdout,'');
+      assert.equal(command.stderr.replace(/\r\n/g,'\n'),`Etapa: autenticacion\nCódigo: ${code}\n${http}`);
+    });
+  }
   scenario('normal');command=spawnSync(php,[path.join(__dirname,'curl-diagnostics.php')],{env:{...process.env,MI_USITTEL_TEST:'1'},encoding:'utf8'});
   check('cURL distingue causas TLS sin exponer el error interno',()=>{assert.equal(command.status,0,command.stderr);const diagnostic=JSON.parse(command.stdout);assert.equal(diagnostic.handshake,'PHANTOM_TLS_HANDSHAKE');assert.equal(diagnostic.verify,'PHANTOM_TLS_VERIFY');assert.equal(diagnostic.ca_file,'PHANTOM_CA_FILE');assert.equal(diagnostic.issuer,'PHANTOM_TLS_ISSUER');assert.equal(diagnostic.hostname,'PHANTOM_TLS_HOSTNAME');assert.equal(diagnostic.expired,'PHANTOM_TLS_EXPIRED');assert.equal(diagnostic.missing_ca,'PHANTOM_CA_FILE');assert.doesNotMatch(command.stdout,/do-not-print|certificate problem|target host/i);});
   const traceAfterSchema=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');
@@ -83,7 +92,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   scenario('expired-always');const traceBefore=fs.readFileSync(path.join(dir,'trace.txt'),'utf8').split('\n').length;r=await a.call('overview');check('token inválido persistente no reintenta indefinidamente',()=>{assert.equal(r.status,503);assert.equal(fs.readFileSync(path.join(dir,'trace.txt'),'utf8').split('\n').length-traceBefore,3);});
   scenario('timeout');r=await a.call('overview');check('timeout recuperable sin mocks',()=>{assert.equal(r.status,504);assert.equal(r.data.customer,undefined);});
   scenario('functional');r=await a.call('overview');check('error funcional sin datos sensibles',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/Private upstream/);});
-  scenario('http');r=await a.call('overview');check('error HTTP upstream',()=>assert.equal(r.status,503));
+  scenario('http');r=await a.call('overview');check('error HTTP upstream no expone metadatos del inspector en API',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/upstreamHttp|502|Private upstream|HTTP:/);assert.equal(r.data.customer,undefined);});
   scenario('missing');r=await a.call('overview');check('campos ausentes no generan ceros ni ejemplos',()=>{assert.equal(r.data.customer.name,null);assert.equal(r.data.account.debt,null);assert.equal(r.data.invoices.items[0].amount,null);assert.equal(r.data.invoices.items[0].status,'No disponible');});
   scenario('empty');r=await a.call('overview');check('facturas vacías no equivalen a deuda cero',()=>{assert.deepEqual(r.data.invoices.items,[]);assert.equal(r.data.account.debt,12500.75);});
   scenario('balance-error');r=await a.call('overview');check('fallo de saldo no suma facturas',()=>{assert.equal(r.data.account.debt,null);assert.ok(r.data.warnings.includes('BALANCE_UNAVAILABLE'));});

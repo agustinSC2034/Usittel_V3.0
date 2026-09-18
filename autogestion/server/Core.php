@@ -3,7 +3,8 @@ declare(strict_types=1);
 namespace MiUsittel;
 
 final class Failure extends \RuntimeException {
-    public function __construct(public string $kind, public int $http = 503) { parent::__construct($kind); }
+    // Upstream status is diagnostic metadata, never the status of our public API.
+    public function __construct(public string $kind, public int $http = 503, public ?int $upstreamHttp = null) { parent::__construct($kind); }
 }
 final class InspectionFailure extends \RuntimeException {
     public function __construct(public string $stage, public string $safeCode, \Throwable $previous) {

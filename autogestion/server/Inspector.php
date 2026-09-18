@@ -19,6 +19,9 @@ function writeInspectorFailure(string $stage,\Throwable $e): int {
     $code=$e instanceof InspectionFailure && preg_match('/^[A-Z][A-Z0-9_]{1,63}$/D',$e->safeCode)?$e->safeCode:safeDiagnosticCode($source);
     $safeStage=preg_match('/^[a-z_]{3,32}$/D',$stage)?$stage:'desconocida';
     fwrite(STDERR,'Etapa: '.$safeStage.PHP_EOL.'Código: '.$code.PHP_EOL);
+    if($source instanceof Failure && $source->upstreamHttp!==null && $source->upstreamHttp>=100 && $source->upstreamHttp<=599) {
+        fwrite(STDERR,'HTTP: '.$source->upstreamHttp.PHP_EOL);
+    }
     if(!($source instanceof Failure)) {
         $class=preg_replace('/[^A-Za-z0-9_]/','',str_replace('\\','_',$source::class))?:'Throwable';
         fwrite(STDERR,'Excepción: '.$class.PHP_EOL);

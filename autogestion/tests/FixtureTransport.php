@@ -12,7 +12,10 @@ final class FixtureTransport implements Transport {
         $scenario=trim(@file_get_contents($this->dir.'/scenario')?:'normal');
         if($scenario==='auth-failure' && $action==='autentificar') throw new Failure('PHANTOM_AUTH_TEST');
         if($scenario==='timeout') throw new Failure('PHANTOM_TIMEOUT',504);
-        if($scenario==='http') throw new Failure('PHANTOM_HTTP');
+        if($scenario==='http') return CurlTransport::decodeHttpResponse(502,'Private upstream failure');
+        if(preg_match('/^http-status-(\d{1,3})$/D',$scenario,$match)) {
+            return CurlTransport::decodeHttpResponse((int)$match[1],'<html>Private upstream: api_pass=fixture-api-secret token=fixture-technical-token https://fixture.invalid/?secret=do-not-expose</html>');
+        }
         if($action==='autentificar') return ['token'=>'fixture-technical-token'];
         if(($body['token']??'')!=='fixture-technical-token') throw new \RuntimeException('Token absent');
         if($scenario==='expired-always') throw new Failure('TOKEN_EXPIRED');

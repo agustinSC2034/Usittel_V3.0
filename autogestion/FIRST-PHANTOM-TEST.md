@@ -73,7 +73,7 @@ Copiar solamente la salida estructural completa producida por `inspect-schema.ph
 
 Antes de compartirla, comprobar visualmente que no aparezcan datos personales o valores. Si aparece algo que no parece una descripción de tipo (`string`, `int`, `float`, `null`, `array`, `object`, `unknown` o `truncated`), detenerse y no compartirlo.
 
-Si el comando falla, copiar únicamente el bloque técnico que comienza con `Etapa:` y `Código:`. Si es una excepción inesperada también puede incluir `Excepción`, `Archivo`, `Línea` y, solo cuando pasó el filtro seguro, `Mensaje`. No copiar logs del servidor ni archivos de runtime.
+Si el comando falla, copiar únicamente el bloque técnico que comienza con `Etapa:` y `Código:`. Puede incluir `HTTP:` con el estado numérico recibido (por ejemplo, 301, 404 o 500); no incluye cuerpos, cabeceras ni destinos de redirección. Si es una excepción inesperada también puede incluir `Excepción`, `Archivo`, `Línea` y, solo cuando pasó el filtro seguro, `Mensaje`. No copiar logs del servidor ni archivos de runtime.
 
 ## Paso 6 — Qué no compartir
 

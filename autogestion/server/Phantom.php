@@ -30,10 +30,13 @@ final class CurlTransport implements Transport {
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
         finally { if($ch instanceof \CurlHandle) curl_close($ch); }
         if ($ok===false) throw new Failure(self::diagnosticCodeForCurlFailure($errno,$curlError),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
-        if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED');
-        if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP');
-        try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT'); }
-        if (!is_array($json)) throw new Failure('PHANTOM_FORMAT');
+        return self::decodeHttpResponse($code,$response);
+    }
+    public static function decodeHttpResponse(int $code,string $response): array {
+        if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED',503,$code);
+        if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP',503,$code);
+        try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT',503,$code); }
+        if (!is_array($json)) throw new Failure('PHANTOM_FORMAT',503,$code);
         return $json;
     }
     public static function diagnosticCodeForCurlErrno(int $errno): string {

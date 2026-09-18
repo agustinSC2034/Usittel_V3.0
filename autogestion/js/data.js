@@ -1,5 +1,5 @@
 // Live state starts empty. Demo fixtures are loaded only after server bootstrap.
-export const runtime = { mode: null, paymentsEnabled: false, paymentItems: [], paymentError: '', backend: true, loading: false, error: '', warnings: [], nextOffset: null, endReached: false, invoicesLoading: false };
+export const runtime = { mode: null, services: [], selectedServiceId: null, servicesUnavailable: false, paymentsEnabled: false, paymentItems: [], paymentError: '', backend: true, loading: false, error: '', warnings: [], nextOffset: null, endReached: false, invoicesLoading: false };
 const emptyCustomer = () => ({ name: null, email: null, phone: null, address: null, city: null, plan: null, serviceStatus: null, network: null, speed: null });
 export let customer = emptyCustomer();
 export let invoices = [];

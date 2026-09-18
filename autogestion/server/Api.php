@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/InvoiceDocuments.php';
 require_once __DIR__.'/Payments.php';
+require_once __DIR__.'/Services.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -11,7 +12,7 @@ function startSession(array $c,string $dir): void {
     session_set_cookie_params(['lifetime'=>0,'path'=>'/autogestion/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
     session_start();
     $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
-        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,'lab-v2']));
+        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,$c['service_login_idas']??[1],'services-v1']));
     $now=time();
     if (isset($_SESSION['ida']) && (($_SESSION['config']??'')!==$fingerprint || $now-($_SESSION['last']??0)>=$c['idle_seconds'] || $now-($_SESSION['started']??0)>=$c['max_seconds'])) {
         $_SESSION=[]; session_regenerate_id(true);
@@ -46,12 +47,12 @@ function csrf(): void {
 function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
-    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null]);
+    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null && count($_SESSION['authorized_services']??[])===1 && ($_SESSION['selected_ida']??null)===1]+serviceSession());
     if($method==='POST') csrf();
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
@@ -75,15 +76,32 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(!$valid) { unset($b); throw new Failure('INVALID_CREDENTIALS',401); }
         rateLimitRelease($dir,$b['username'],$remote,$candidate);
         unset($b);
+        $discovery=$c['mode']==='phantom'?discoverServices($ph,$candidate):['services'=>[],'servicesUnavailable'=>false];
         $fingerprint=$_SESSION['config']; $_SESSION=[]; session_regenerate_id(true);
         $_SESSION=['ida'=>$c['mode']==='demo'?0:$candidate,'started'=>time(),'last'=>time(),'config'=>$fingerprint,'csrf'=>bin2hex(random_bytes(32))];
-        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf']]);
+        if($c['mode']==='phantom') {
+            $_SESSION['authenticated_ida']=$candidate;$_SESSION['selected_ida']=$candidate;
+            $_SESSION['authorized_services']=$discovery['services'];$_SESSION['services_unavailable']=$discovery['servicesUnavailable'];
+            $_SESSION['service_revision']=bin2hex(random_bytes(16));
+        }
+        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null && count($_SESSION['authorized_services']??[])===1 && ($_SESSION['selected_ida']??null)===1]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
-    $ida=$_SESSION['ida'];
-    if($ida!==1 || !in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+    $context=serviceSession();
+    $ids=array_map('intval',array_column($context['services'],'id'));
+    $ph->scope($ids);$ida=$_SESSION['selected_ida'];
+    // A revision is a precondition, never authorization. PHP's session lock serializes selection and reads.
+    if(count($ids)>1 && ($_SERVER['HTTP_X_SERVICE_REVISION']??'')!==$_SESSION['service_revision']) throw new Failure('SERVICE_CHANGED',409);
+    if($route==='select-service') {
+        $b=body();$id=$b['serviceId']??null;
+        if(array_keys($b)!==['serviceId'] || !is_string($id) || !preg_match('/^[1-9][0-9]{0,9}$/D',$id)) throw new Failure('BAD_REQUEST',400);
+        if(!in_array((int)$id,$ids,true)) throw new Failure('FORBIDDEN',403);
+        $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));unset($_SESSION['invoice_history']);
+        jsonReply(serviceSession());
+    }
     if(in_array($route,['payments','payment-create','payment-reconcile'],true)) {
+        if(count($ids)!==1 || $ida!==1) throw new Failure('SIRO_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
         $settings=siroConfig($c);if($settings===null) throw new Failure('SIRO_DISABLED',409);
@@ -139,6 +157,7 @@ function fail(\Throwable $e): never {
         'INVOICE_NOT_FOUND'=>'La factura no pertenece al historial consultado en esta sesión.',
         'DOCUMENT_NOT_CONFIGURED'=>'La descarga real todavía espera confirmar el endpoint de Phantom.',
         'DOCUMENT_UNAVAILABLE'=>'Esta factura no tiene un documento disponible.',
+        'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         'PAYMENT_NOT_UNPAID'=>'Esta factura no está pendiente de pago.',
         'PAYMENT_RATE_LIMIT'=>'Esperá unos minutos antes de crear otro intento.',

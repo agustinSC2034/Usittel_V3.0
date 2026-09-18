@@ -1,12 +1,14 @@
 let csrf = '';
+let serviceRevision = '';
+const serviceHeaders = () => serviceRevision ? { 'X-Service-Revision': serviceRevision } : {};
 export async function invoicePdf(id) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 65000);
   try {
-    const response = await fetch(`api/invoice-document?id=${encodeURIComponent(id)}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal });
+    const response = await fetch(`api/invoice-document?id=${encodeURIComponent(id)}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: serviceHeaders() });
     if (!response.ok) {
       const json = await response.json(); const error = new Error(json.error?.message || 'No pudimos descargar la factura.');
-      error.status = response.status; throw error;
+      error.code = json.error?.code; error.status = response.status; throw error;
     }
     if (response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/pdf') throw new Error('Documento no válido.');
     const reader = response.body.getReader(); const chunks = []; let size = 0;
@@ -24,10 +26,12 @@ export async function request(route, data) {
   const timer = setTimeout(() => controller.abort(), route.startsWith('payment-') ? 110000 : 65000);
   try {
     const response = await fetch(`api/${route}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
-      ...(data === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(data) }) });
+      headers: serviceHeaders(),
+      ...(data === undefined ? {} : { method: 'POST', headers: { ...serviceHeaders(), 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(data) }) });
     const json = await response.json();
     if (!response.ok) { const error = new Error(json.error?.message || 'No pudimos consultar la información.'); error.code = json.error?.code; error.status = response.status; throw error; }
     if (json.csrf) csrf = json.csrf;
+    if (['bootstrap', 'login', 'select-service'].includes(route)) serviceRevision = json.serviceRevision || '';
     return json;
   } catch (error) {
     if (error.status) throw error;

@@ -48,7 +48,7 @@ if(!$configPath) {
                     $idas=$config['allowed_idas']??null;
                     $idasOk=is_array($idas) && $idas!==[] && array_diff($idas,[1,5])===[];
                     $idasOk=$idasOk && in_array(1,$idas,true);
-                    $add($idasOk?'ok':'fail','Cuentas de laboratorio',$idasOk?'portal restringido a IDA 1; se recomienda [1]':'incluir IDA 1; usar [1]');
+                    $add($idasOk?'ok':'fail','Cuentas de laboratorio',$idasOk?'acceso inicial IDA 1 por defecto; servicios asociados se autorizan en servidor':'incluir IDA 1; usar [1]');
                     $authOk=($config['phantom_auth_mode']??'get-query-lab')==='get-query-lab';
                     $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET explícito de laboratorio; lecturas POST':'usar get-query-lab');
                     $identity=$config['customer_id_field']??null;

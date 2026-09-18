@@ -1,5 +1,9 @@
 # Integración local PHP / Phantom — 18/09/2026
 
+## Selección de contrato
+
+La etapa actual incorpora servicios asociados explícitos de Phantom y selección persistente. Ver [SERVICES.md](SERVICES.md): authenticated_ida, authorized_services y selected_ida son conceptos separados. Las consultas y descargas usan selected_ida del servidor; nunca un IDA libre del navegador. Se mantienen login inicial IDA 1 por defecto y configuración privada intacta. SIRO multicontrato bloqueado, sin nuevas escrituras. 377 verificaciones locales; contraste real multicontrato pendiente.
+
 ## Etapa actual: SIRO separado de Phantom
 
 La lectura de laboratorio quedó aceptada en f47bb26. Se agregó creación y reconciliación SIRO, deshabilitada por defecto y validada únicamente con fixtures. Ver [arquitectura SIRO](SIRO.md) y [primera prueba](FIRST-SIRO-TEST.md). SIRO intent created, SIRO payment confirmed y Phantom payment posted son hitos distintos: el tercero no se implementa. No se toca la lógica de lectura aceptada ni se imputan pagos.

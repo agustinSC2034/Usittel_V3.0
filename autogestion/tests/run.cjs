@@ -15,13 +15,14 @@ function check(name, fn) { fn(); count++; console.log(`OK ${name}`); }
 async function freePort() { return new Promise(resolve=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const port=s.address().port;s.close(()=>resolve(port));});}); }
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
 function jar() {
-  return {cookie:'',csrf:'', async call(route,body,opts={}) {
-    const headers={Cookie:this.cookie,...opts.headers};
+  return {cookie:'',csrf:'',serviceRevision:'', async call(route,body,opts={}) {
+    const headers={Cookie:this.cookie,...(this.serviceRevision?{'X-Service-Revision':this.serviceRevision}:{}),...opts.headers};
     if(body!==undefined) {headers['Content-Type']='application/json';if(!opts.noCsrf) headers['X-CSRF-Token']=this.csrf;}
     const response=await fetch(base+route,{method:body===undefined?'GET':'POST',headers,body:body===undefined?undefined:JSON.stringify(body)});
     const set=response.headers.get('set-cookie'); if(set) this.cookie=set.split(';')[0];
     const text=await response.text(); let data;try{data=JSON.parse(text);}catch{data=text;}
     if(data.csrf) this.csrf=data.csrf;
+    if(Object.hasOwn(data,'serviceRevision')) this.serviceRevision=data.serviceRevision || '';
     return {status:response.status,data,text,headers:response.headers};
   }};
 }
@@ -34,6 +35,9 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const result=spawnSync(php,[path.join(__dirname,'siro-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
     check('transporte SIRO aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
   }
+  const serviceTests=spawnSync(php,[path.join(__dirname,'services-unit.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('reglas de asociación y recuperación de selección',()=>{assert.equal(serviceTests.status,0,serviceTests.stderr);assert.match(serviceTests.stdout,/^[0-9]+$/);});
+  count+=Number(serviceTests.stdout)-1;
   const paymentTests=spawnSync(php,[path.join(__dirname,'payments.php'),dir],{env:fixtureEnv,encoding:'utf8'});
   check('servicio SIRO con fixtures: identidad, intentos, importes y recuperación',()=>{assert.equal(paymentTests.status,0,paymentTests.stdout+paymentTests.stderr);assert.match(paymentTests.stdout,/PAYMENT_CHECKS=/);});
   count+=Number(paymentTests.stdout.match(/PAYMENT_CHECKS=(\d+)/)[1])-1;
@@ -326,5 +330,6 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
+  await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

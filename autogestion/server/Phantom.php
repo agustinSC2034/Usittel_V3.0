@@ -132,8 +132,10 @@ final class Phantom {
             return $data['token'];
         });
     }
+    private ?array $scope=null;
+    public function scope(array $ids): void { $this->scope=$ids; }
     private function read(string $action,int $ida,array $params=[]): array {
-        if ($ida!==1 || !in_array($ida,$this->config['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+        if (!in_array($ida,$this->scope ?? ($this->config['service_login_idas']??array_values(array_intersect([1],$this->config['allowed_idas']))),true)) throw new Failure('FORBIDDEN',403);
         if (!in_array($action,['Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new Failure('FORBIDDEN',403);
         for($attempt=0;$attempt<2;$attempt++) {
             $token=$this->token($attempt===1);
@@ -154,7 +156,10 @@ final class Phantom {
         return is_string($u) && $u!=='' && is_string($p) && $p!=='' && hash_equals($u,$user) && hash_equals($p,$password);
     }
     public function profile(int $ida): array {
-        $raw=$this->customer($ida); $out=[];
+        return $this->publicProfile($this->customer($ida));
+    }
+    public function publicProfile(array $raw): array {
+        $out=[];
         $defaults=['name'=>['join'=>[['Nombre'],['Apellido']]],'address'=>['join'=>[['Direccion'],['Dir_Numero']]],
             'plan'=>['Producto_Internet'],'city'=>['Ciudad'],'email'=>['Email'],'phone'=>['Telefono']];
         foreach($defaults as $key=>$mapping) $out[$key]=publicField($raw,$this->config['profile_fields'][$key]??$mapping);
@@ -200,10 +205,10 @@ final class Phantom {
     }
     public function invoiceRows(int $ida,int $offset=0,int $limit=INVOICE_PAGE_SIZE): array {
         if($offset<0 || $offset>INVOICE_MAX_OFFSET || !in_array($limit,[1,INVOICE_PAGE_SIZE],true)) throw new Failure('BAD_REQUEST',400);
-        return validateInvoiceRows($this->read('Phantom_Ultima_Factura',$ida,['Limit'=>$limit,'Offset'=>$offset]),$limit);
+        return validateInvoiceRows($this->read('Phantom_Ultima_Factura',$ida,['Limit'=>$limit,'Offset'=>$offset]),$limit,$ida);
     }
     public function invoices(int $ida,int $offset=0): array {
         if($offset<0 || $offset>INVOICE_MAX_OFFSET || $offset%INVOICE_PAGE_SIZE!==0) throw new Failure('BAD_REQUEST',400);
-        return invoicePage($this->invoiceRows($ida,$offset),$offset);
+        return invoicePage($this->invoiceRows($ida,$offset),$offset,$ida);
     }
 }

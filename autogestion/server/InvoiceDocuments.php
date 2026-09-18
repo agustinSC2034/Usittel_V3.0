@@ -18,7 +18,7 @@ final class PhantomInvoiceDocuments implements InvoiceDocumentSource {
     public function __construct(private array $config) {}
     public function available(): bool {return $this->config['mode']==='phantom' && in_array(1,$this->config['allowed_idas'],true);}
     public function fetch(int $ida,string $idt,string $hash): array {
-        if(!$this->available() || $ida!==1) throw new Failure('FORBIDDEN',403);
+        if(!$this->available() || $ida<1) throw new Failure('FORBIDDEN',403);
         $response=requestInvoiceDocument($this->config,$hash,true);
         if($response['http']!==200) throw new Failure('DOCUMENT_HTTP',503,$response['http']);
         $document=['contentType'=>$response['headers']['content-type']??'', 'bytes'=>$response['bytes']];

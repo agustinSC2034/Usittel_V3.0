@@ -11,6 +11,8 @@ const views = { inicio: home, facturas: billing, servicio: service, soporte: sup
 const paymentNotice = '<p class="field-hint" id="payment-provider-note">Al seleccionar Pagar, serás redirigido al portal de SIRO, nuestro proveedor de pagos.</p>';
 let authenticated = false;
 let paymentBusy = false;
+let serviceBusy = false;
+function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
 let speedTimer;
@@ -83,6 +85,19 @@ document.addEventListener('click', async event => {
   if (!target || target.disabled) return;
   const action = target.dataset.action;
   const item = getInvoice(target.dataset.id);
+  if (action === 'choose-service') {
+    if (serviceBusy || runtime.services.length < 2) return;
+    openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${e(s.address || 'No disponible')}</strong><span>${e(s.plan || 'No disponible')}</span><small>Contrato ${e(s.id)}</small></button>`).join('')}</div>`);
+    return;
+  }
+  if (action === 'select-service') {
+    if (serviceBusy) return;
+    serviceBusy = true; ++dataGeneration; clearData(); runtime.loading = true; runtime.error = ''; render();
+    try { applyServices(await request('select-service', { serviceId: target.dataset.id })); await loadOverview(); }
+    catch (error) { runtime.loading = false; runtime.error = error.message; await handleError(error); render(); }
+    finally { serviceBusy = false; }
+    return;
+  }
   if (runtime.mode === 'phantom' && unavailable.includes(action)) return toast('Esta función todavía no está disponible.');
   if (action === 'payment-invoices') { location.hash = '/facturas'; return; }
   if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check')) {
@@ -166,7 +181,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
-      authenticated = false; clearData(); runtime.error = ''; location.hash = '/login';
+      authenticated = false; applyServices({}); clearData(); runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
     return;
@@ -204,7 +219,7 @@ document.addEventListener('submit', async event => {
   if (form.id === 'login-form') {
     const submit = form.querySelector('[type="submit"]'); submit.disabled = true;
     try {
-      if (runtime.backend) await request('login', { username: data.get('username'), password: data.get('password') });
+      if (runtime.backend) applyServices(await request('login', { username: data.get('username'), password: data.get('password') }));
       else if (runtime.mode !== 'demo' || data.get('username') !== 'agustin.demo' || data.get('password') !== 'usittel-demo') throw new Error('Para esta prueba usá agustin.demo y usittel-demo.');
       form.reset(); authenticated = true; location.hash = '/inicio';
       if (runtime.mode === 'phantom') await loadOverview(); else render();
@@ -231,9 +246,10 @@ document.addEventListener('submit', async event => {
   }
 });
 async function handleError(error) {
+  if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
     dataGeneration++;
-    authenticated = false; clearData(); runtime.error = ''; location.hash = '/login';
+    authenticated = false; applyServices({}); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
     render(); toast(error.message);
@@ -266,11 +282,11 @@ async function boot() {
   try {
     const session = await request('bootstrap');
     runtime.backend = session.backend !== false;
-    await initialize(session.mode); runtime.paymentsEnabled = session.payments_enabled === true; authenticated = session.authenticated;
+    await initialize(session.mode); applyServices(session); runtime.paymentsEnabled = session.payments_enabled === true; authenticated = session.authenticated;
     document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
-    authenticated = false; clearData();
+    authenticated = false; applyServices({}); clearData();
     app.innerHTML = `<main id="main" class="page"><h1>Mi USITTEL</h1><p role="alert">${e(error.message)}</p><div class="dialog-actions">${button('Volver a intentar','boot-retry')}</div></main>`;
   }
 }

@@ -8,7 +8,7 @@ function identityMatches(mixed $value,int $ida): bool {
         && (ltrim($value,'0')?:'0')===(string)$ida;
 }
 function resolveCustomerRecord(array $rows,int $ida,string $field): array {
-    if($ida!==1 || !in_array($field,['ID','IDAx'],true)) throw new Failure('FORBIDDEN',403);
+    if($ida<1 || $ida>9999999999 || $field!=='ID') throw new Failure('FORBIDDEN',403);
     if(!array_is_list($rows) || count($rows)!==1) throw new Failure('CUSTOMER_IDENTITY');
     $record=$rows[0];
     if(!is_array($record) || array_is_list($record) || !identityMatches($record[$field]??null,$ida)) throw new Failure('CUSTOMER_IDENTITY');

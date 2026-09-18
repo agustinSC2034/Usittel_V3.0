@@ -14,7 +14,7 @@ function invoiceId(mixed $value): string {
 function compareInvoiceIds(string $a,string $b): int {
     return strlen($a)<=>strlen($b) ?: strcmp($a,$b);
 }
-function validateInvoiceRows(array $rows,int $limit): array {
+function validateInvoiceRows(array $rows,int $limit,int $ida=1): array {
     if(!array_is_list($rows) || count($rows)>$limit) throw new Failure('INVOICES_SCHEMA');
     $previous=null;$seen=[];
     foreach($rows as $row) {
@@ -23,7 +23,7 @@ function validateInvoiceRows(array $rows,int $limit): array {
         if(isset($seen[$id])) throw new Failure('INVOICES_DUPLICATE');
         if($previous!==null && compareInvoiceIds($previous,$id)<=0) throw new Failure('INVOICES_ORDER');
         // If Phantom supplies an owner, never ignore a contradictory owner.
-        if(array_key_exists('IDA',$row) && !in_array($row['IDA'],[1,'1'],true)) throw new Failure('INVOICE_OWNERSHIP');
+        if(array_key_exists('IDA',$row) && !in_array($row['IDA'],[$ida,(string)$ida],true)) throw new Failure('INVOICE_OWNERSHIP');
         $previous=$id;$seen[$id]=true;
     }
     return $rows;
@@ -36,8 +36,8 @@ function publicInvoice(array $row): array {
         'type'=>textValue($row['Tipo']??null),'number'=>textValue($row['Comp_ID']??null),
         'paidAt'=>null,'outstanding'=>null,'downloadAvailable'=>false];
 }
-function invoicePage(array $rows,int $offset): array {
-    $rows=validateInvoiceRows($rows,INVOICE_PAGE_SIZE);
+function invoicePage(array $rows,int $offset,int $ida=1): array {
+    $rows=validateInvoiceRows($rows,INVOICE_PAGE_SIZE,$ida);
     $end=count($rows)<INVOICE_PAGE_SIZE;
     return ['items'=>array_map(__NAMESPACE__.'\\publicInvoice',$rows),'offset'=>$offset,'limit'=>INVOICE_PAGE_SIZE,
         'nextOffset'=>$end || $offset>=INVOICE_MAX_OFFSET?null:$offset+INVOICE_PAGE_SIZE,
@@ -68,7 +68,7 @@ function rememberInvoicePage(array $page): array {
     return $page;
 }
 function authorizedInvoice(Phantom $phantom,int $ida,string $id): array {
-    if($ida!==1 || ($_SESSION['ida']??null)!==$ida) throw new Failure('FORBIDDEN',403);
+    if(($_SESSION['selected_ida']??null)!==$ida || !in_array((string)$ida,array_column($_SESSION['authorized_services']??[],'id'),true)) throw new Failure('FORBIDDEN',403);
     if(!preg_match('/^[1-9][0-9]{0,19}$/D',$id)) throw new Failure('BAD_REQUEST',400);
     $position=$_SESSION['invoice_history']['positions'][$id]??null;
     if(!is_int($position)) throw new Failure('INVOICE_NOT_FOUND',404);

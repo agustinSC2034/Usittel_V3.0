@@ -52,7 +52,7 @@ demand($p['serviceStatus']==='SUSPENDIDO');
 demand($ph->balance(1)['debt']===12500.75);
 $invoices=$ph->invoices(1);demand($invoices['historyComplete']===false && $invoices['items'][0]['outstanding']===null);
 demand($calls===['autentificar','Consulta_Cliente_Avanzada','Consulta_Cliente_Avanzada','Phantom_Mi_Estado_Cuenta','Phantom_Ultima_Factura']);
-demand(resolveCustomerRecord([['ID'=>'9','IDAx'=>'1']],1,'IDAx')['ID']==='9');
+try {resolveCustomerRecord([['ID'=>'9','IDAx'=>'1']],1,'IDAx');throw new \RuntimeException('IDAx accepted');} catch(Failure $e) {demand($e->kind==='FORBIDDEN');}
 demand(compareInvoiceIds('9007199254740993','9007199254740992')>0);
 demand(compareInvoiceIds('10000000000000000000','9999999999999999999')>0);
 try {validateInvoiceRows([['IDT'=>'12'],['IDT'=>'00012']],10);throw new \RuntimeException('duplicate accepted');}

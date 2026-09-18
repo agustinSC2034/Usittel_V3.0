@@ -25,9 +25,21 @@ final class FixtureTransport implements Transport {
         if($action==='autentificar') return ['token'=>'fixture-technical-token'];
         if(($body['token']??'')!=='fixture-technical-token') throw new \RuntimeException('Token absent');
         if($scenario==='expired-always') throw new Failure('TOKEN_EXPIRED');
-        if(!in_array((int)($query['IDA']??0),[1,5],true)) throw new \RuntimeException('Unapproved IDA');
+        if(!in_array((int)($query['IDA']??0),[1,5,7],true)) throw new \RuntimeException('Unapproved IDA');
         if($scenario==='expired-once' && !file_exists($this->dir.'/expired')) {touch($this->dir.'/expired');throw new Failure('TOKEN_EXPIRED');}
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
+        if(str_starts_with($scenario,'services-')) {
+            $ida=(int)$query['IDA'];
+            if($action==='Consulta_Cliente_Avanzada') {
+                $links=match($scenario) {'services-one'=>[], 'services-three'=>[['ID'=>'1'],['ID'=>'5'],['ID'=>'5'],[['ID'=>'7']]], 'services-bad'=>[['ID'=>'5x']], default=>[['ID'=>'5'],['ID'=>'1'],['ID'=>'5']]};
+                return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
+                    'Autogestion_User'=>'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
+                    'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
+                    'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[], 'DNI'=>'do-not-expose']];
+            }
+            if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];
+            return [['IDA'=>(string)$ida,'IDT'=>(string)($ida*100),'Estado'=>'IMPAGA','Total'=>'10.00','Periodo'=>'2026-09','Hash_Descarga'=>'do-not-expose']];
+        }
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
             $record=['ID'=>'1','IDAx'=>'99','Autogestion_User'=>$scenario==='custom-user'?'laboratorio':'000001', 'Autogestion_Pass'=>' 00Lab-fixture! ',
@@ -91,9 +103,9 @@ final class FixtureTransport implements Transport {
 
 final class FixtureDocuments implements InvoiceDocumentSource {
     public function __construct(private string $dir) {}
-    public function available(): bool {return str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'document-');}
+    public function available(): bool {return str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'document-') || str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'services-');}
     public function fetch(int $ida,string $idt,string $hash): array {
-        if($ida!==1 || $idt!=='123' || $hash!=='do-not-expose') throw new \RuntimeException('fixture document ownership');
+        if((!str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'services-') && ($ida!==1 || $idt!=='123')) || (str_starts_with(trim(file_get_contents($this->dir.'/scenario')),'services-') && $idt!==(string)($ida*100)) || $hash!=='do-not-expose') throw new \RuntimeException('fixture document ownership');
         file_put_contents($this->dir.'/document-calls','call\n',FILE_APPEND);
         $scenario=trim(file_get_contents($this->dir.'/scenario'));
         if($scenario==='document-error') throw new Failure('PHANTOM_HTTP');

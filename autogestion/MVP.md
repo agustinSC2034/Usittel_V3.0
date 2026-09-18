@@ -1,5 +1,9 @@
 # MVP — laboratorio IDA 1
 
+## Servicios asociados
+
+Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop, pendiente de prueba real. Se usan únicamente asociaciones explícitas verificadas por ID, sin búsqueda DNI/CUIT. [Arquitectura y siguiente paso](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.
+
 ## Etapa SIRO actual
 
 Creación de intención y confirmación backend implementadas con fixtures (338 verificaciones locales). Deshabilitadas por defecto hasta completar configuración privada y prueba real. Solo factura IMPAGA de IDA 1, importe reconsultado en Phantom, checkout oficial, intentos persistentes y recuperación después de cerrar el navegador. La UI distingue confirmación SIRO de imputación Phantom, que sigue sin implementarse; no altera el saldo. Ver [SIRO.md](SIRO.md) y [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md).

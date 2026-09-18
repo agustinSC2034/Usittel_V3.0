@@ -276,3 +276,11 @@
 }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
 @keyframes page-in { from { opacity:.6; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
+
+/* The address is the contract selector. */
+.service-selector { display:flex; align-items:center; gap:.75rem; text-align:left; background:none; border:0; padding:0; color:inherit; cursor:pointer; }
+.service-selector:focus-visible,.service-option:focus-visible { outline:2px solid #147956; outline-offset:4px; }
+.service-options { display:grid; }
+.service-option { display:grid; gap:.3rem; text-align:left; background:transparent; border:0; border-bottom:1px solid #dde3e5; padding:1rem 0; color:inherit; cursor:pointer; }
+.service-option span,.service-option small { color:#657488; }
+.service-option[aria-pressed="true"] strong { color:#147956; }

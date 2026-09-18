@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace MiUsittel;
+require_once __DIR__.'/Schema.php';
 
 interface Transport { public function post(string $url, array $body): array; }
 final class CurlTransport implements Transport {
@@ -131,19 +132,6 @@ final class Phantom {
         // Names and types only. Lists inspect at most one representative item;
         // nesting and total field count are bounded so this cannot dump records.
         $remaining=120;
-        $shape=function(mixed $value,int $depth=0) use (&$shape,&$remaining): mixed {
-            if(!is_array($value)) return get_debug_type($value);
-            if($depth>=4 || $remaining<=0) return ['type'=>array_is_list($value)?'array':'object','truncated'=>true];
-            if(array_is_list($value)) return ['type'=>'array','items'=>$value===[]?'unknown':$shape($value[0],$depth+1)];
-            $fields=[];
-            foreach($value as $key=>$child) {
-                if($remaining--<=0) break;
-                if(!is_string($key) || !preg_match('/^[A-Za-z_][A-Za-z_0-9]*$/D',$key)) continue;
-                if(preg_match('/(?:^|_)(?:autogestion|pass(?:word)?|token|secret|hash|url|link|archivo|documento|pdf|dni|cuit|cuil|tarjeta|cbu|alias)(?:_|$)|conexiones_asociadas/i',$key)) continue;
-                $fields[$key]=$shape($child,$depth+1);
-            }
-            return ['type'=>'object','fields'=>$fields];
-        };
         if(!in_array($ida,$this->config['allowed_idas'],true)) throw new InspectionFailure('configuracion','FORBIDDEN',new Failure('FORBIDDEN',403));
         $token=$this->inspectionStep('autenticacion',fn()=>$this->token(true));
         $customer=$this->inspectionStep('cliente',function() use ($ida,$token) {
@@ -153,7 +141,7 @@ final class Phantom {
         });
         $account=$this->inspectionStep('estado_cuenta',fn()=>$this->raw('Phantom_Mi_Estado_Cuenta',['IDA'=>$ida],['token'=>$token]));
         $invoice=$this->inspectionStep('factura',fn()=>$this->raw('Phantom_Ultima_Factura',['IDA'=>$ida,'Limit'=>1,'Offset'=>0],['token'=>$token]));
-        return ['customer'=>$shape($customer),'account'=>$shape($account),'invoice'=>$shape($invoice)];
+        return ['customer'=>inspectionShape($customer,$remaining),'account'=>inspectionShape($account,$remaining),'invoice'=>inspectionShape($invoice,$remaining)];
     }
     private function inspectionStep(string $stage,callable $callback): mixed {
         try { return $callback(); }

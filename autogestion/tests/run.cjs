@@ -30,6 +30,29 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const customerConfig=path.join(dir,'customer-probe.php');
+  for(const [name,stage,code,http] of [['success'],['auth-failure','autenticacion','PHANTOM_HTTP',400],
+    ['http','cliente','PHANTOM_HTTP',400],['expired','cliente','TOKEN_EXPIRED',401],['redirect','cliente','PHANTOM_HTTP',302],
+    ['malformed','cliente','PHANTOM_FORMAT',200],['functional','cliente','PHANTOM_FUNCTIONAL'],['warning','cliente','PROBE_PHP'],
+    ['args','configuracion','INSPECTOR_ARGUMENTS'],['forbidden','configuracion','CONFIGURATION'],['demo','configuracion','CONFIGURATION']]) {
+    let content=settings(name==='demo'?'demo':'phantom');
+    if(name==='forbidden') content=content.replace("'allowed_idas'=>[1,5]","'allowed_idas'=>[5]");
+    fs.writeFileSync(customerConfig,content.replace('<?php return',"<?php echo 'private-config-output'; return"));
+    const before=fs.readdirSync(dir).sort();
+    const probe=spawnSync(php,[path.join(__dirname,'customer-probe.php'),name],{env:{...fixtureEnv,MI_USITTEL_CONFIG:customerConfig},encoding:'utf8'});
+    check(`cliente IDA 1 ${name}: alcance, transporte y salida segura`,()=>{
+      assert.equal(probe.status,code?1:0,probe.stderr);assert.deepEqual(fs.readdirSync(dir).sort(),before);
+      if(code) {assert.equal(probe.stdout,'');assert.equal(probe.stderr.replace(/\r\n/g,'\n'),`Etapa: ${stage}\nCódigo: ${code}\n${http?`HTTP: ${http}\n`:''}`);}
+      else {
+        assert.equal(probe.stderr,'');const shape=JSON.parse(probe.stdout);
+        assert.deepEqual(Object.keys(shape),['customer']);
+        assert.equal(shape.customer.fields.Nombre,'string');assert.equal(shape.customer.fields.Estado_Servicio,'string');
+        assert.equal(shape.customer.fields.Autogestion_Pass,undefined);assert.equal(shape.customer.fields.Conexiones_Asociadas,undefined);
+        assert.deepEqual(Object.keys(shape.customer.fields.nested.fields),['ports']);
+      }
+      assert.doesNotMatch(probe.stdout+probe.stderr,/private-|fixture-|https?:\/\//);
+    });
+  }
   const getConfig=path.join(dir,'get-probe.php');const getCa=path.join(dir,'fixture-ca.pem');
   fs.writeFileSync(getCa,'fixture only; intercepted cURL does not open a connection');
   const getSettings=settings().replace('fixture-api-secret','fixture %&=+#? /á').replace('fixture-api','fixture +&=%á').replace("'allowed_idas'=>",`'ca_file'=>'${getCa.replace(/\\/g,'/')}', 'allowed_idas'=>`);

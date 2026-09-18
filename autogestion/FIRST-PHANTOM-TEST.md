@@ -97,7 +97,19 @@ No lleva IDA: no consulta clientes. Lee la configuración privada existente, con
 
 La salida esperada es `Etapa: autenticacion`, `Código: TOKEN_RECIBIDO` y una aclaración de que el token está oculto. Esto confirma un campo `token` no vacío en una respuesta JSON sin error reconocido; todavía no comprueba su validez para consultar clientes. Una respuesta diferente falla de forma cerrada. Si falla, compartir solo el diagnóstico seguro. El código suprime salida accidental de configuración y errores crudos locales, pero no puede impedir el logging en el servidor remoto.
 
-### Salida del inspector de esquemas
+### Siguiente lectura controlada: solamente cliente IDA 1
+
+El usuario confirmó `TOKEN_RECIBIDO` en la prueba GET por HTTPS. Para verificar ahora la consulta de cliente, ejecutar una vez en la PC de desarrollo:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-customer.php 1
+```
+
+Usa el archivo privado existente y exige modo phantom e IDA 1 permitido. Autentica por GET (mantiene el riesgo de logs remotos aceptado), conserva el token solamente en memoria y hace una consulta `Consulta_Cliente_Avanzada` por POST JSON con el token en el cuerpo. El formato de esta lectura todavía debe comprobarse en la instalación real. No prueba otros formatos automáticamente ni coloca el token en la URL; tampoco renueva/reintenta ante 401. Máximo dos solicitudes: autenticación y cliente.
+
+No consulta estado de cuenta ni facturas, no crea caché/sesiones ni cambia el Login o Dashboard. Éxito: solo sección `customer`, con claves/tipos y el filtro estructural compartido; preserva el envoltorio recibido sin inventar mapeos. Error: bloque técnico que distingue `autenticacion` de `cliente`. Compartir únicamente esa salida segura, nunca la respuesta cruda.
+
+### Lectura de la salida estructural
 
 Copiar solamente la salida estructural completa producida por `inspect-schema.php`, desde la llave inicial hasta la final. Esa salida debería tener secciones `customer`, `account` e `invoice` con nombres de campos y tipos.
 

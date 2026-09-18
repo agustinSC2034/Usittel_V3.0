@@ -5,6 +5,10 @@ namespace MiUsittel;
 // CLI experiment only, explicitly accepted by the user. Never used by the portal.
 // Query credentials may be recorded by upstream servers even with HTTPS.
 function probeAuthGet(array $config): void {
+    inspectionAuthGetToken($config);
+}
+// Token stays in process memory only, for the explicitly invoked CLI inspectors.
+function inspectionAuthGetToken(array $config): string {
     if(PHP_SAPI!=='cli' || ($config['mode']??null)!=='phantom') throw new Failure('CONFIGURATION');
     $base=$config['phantom_url']??'';
     $parts=parse_url($base);
@@ -42,5 +46,5 @@ function probeAuthGet(array $config): void {
     if((isset($data['code']) && (int)$data['code']!==200) || isset($data['error'])
         || (isset($data['message']) && is_string($data['message']) && str_starts_with($data['message'],'Error:'))) throw new Failure('PHANTOM_FUNCTIONAL',503,$code);
     if(!is_string($data['token']??null) || trim($data['token'])==='') throw new Failure('PHANTOM_TOKEN',503,$code);
-    // Return no token or body; do not create cache, session or runtime files.
+    return $data['token'];
 }

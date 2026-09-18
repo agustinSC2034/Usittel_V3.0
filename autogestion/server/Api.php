@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/InvoiceDocuments.php';
+require_once __DIR__.'/Payments.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -42,15 +43,15 @@ function csrf(): void {
     }
     if(($_SERVER['HTTP_SEC_FETCH_SITE']??'')==='cross-site') throw new Failure('CSRF',403);
 }
-function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null): never {
+function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
-    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf']]);
+    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null]);
     if($method==='POST') csrf();
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
@@ -82,6 +83,20 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
     $ida=$_SESSION['ida'];
     if($ida!==1 || !in_array($ida,$c['allowed_idas'],true)) throw new Failure('FORBIDDEN',403);
+    if(in_array($route,['payments','payment-create','payment-reconcile'],true)) {
+        if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
+        set_time_limit(100);
+        $settings=siroConfig($c);if($settings===null) throw new Failure('SIRO_DISABLED',409);
+        $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);
+        if($route==='payments') jsonReply(['items'=>$payments->list($ida)]);
+        $b=body();$field=$route==='payment-create'?'idt':'attempt_id';
+        if(array_keys($b)!==[$field] || !is_string($b[$field])) throw new Failure('BAD_REQUEST',400);
+        if($route==='payment-create') {
+            if(!preg_match('/^[1-9][0-9]{0,19}$/D',$b['idt'])) throw new Failure('BAD_REQUEST',400);
+            jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
+        }
+        jsonReply($payments->reconcile($ida,$b['attempt_id']));
+    }
     $documents??=new PhantomInvoiceDocuments($c);
     if(in_array($route,['invoice','invoice-document'],true)) {
         $id=$_GET['id']??null;
@@ -125,6 +140,11 @@ function fail(\Throwable $e): never {
         'DOCUMENT_NOT_CONFIGURED'=>'La descarga real todavía espera confirmar el endpoint de Phantom.',
         'DOCUMENT_UNAVAILABLE'=>'Esta factura no tiene un documento disponible.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
+        'PAYMENT_NOT_UNPAID'=>'Esta factura no está pendiente de pago.',
+        'PAYMENT_RATE_LIMIT'=>'Esperá unos minutos antes de crear otro intento.',
+        'SIRO_DISABLED','SIRO_CONFIGURATION'=>'Los pagos SIRO no están habilitados en este laboratorio.',
+        'PAYMENT_CPE','PAYMENT_AMOUNT'=>'La factura no tiene datos válidos para iniciar el pago.',
+        'PAYMENT_SEQUENCE_EXHAUSTED'=>'No se pueden crear más intentos con la configuración actual.',
         default=>'No pudimos consultar la información. Podés volver a intentar.',
     };
     if($f->http===429) header('Retry-After: 900');

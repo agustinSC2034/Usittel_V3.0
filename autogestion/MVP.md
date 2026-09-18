@@ -1,5 +1,9 @@
 # MVP — laboratorio IDA 1
 
+## Etapa SIRO actual
+
+Creación de intención y confirmación backend implementadas con fixtures (338 verificaciones locales). Deshabilitadas por defecto hasta completar configuración privada y prueba real. Solo factura IMPAGA de IDA 1, importe reconsultado en Phantom, checkout oficial, intentos persistentes y recuperación después de cerrar el navegador. La UI distingue confirmación SIRO de imputación Phantom, que sigue sin implementarse; no altera el saldo. Ver [SIRO.md](SIRO.md) y [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md).
+
 ## Aceptado con Phantom real
 
 Agustín confirmó login con credenciales de autogestión, identidad por ID, Inicio con datos reales, plan y Estado_Servicio, saldo desde Phantom_Mi_Estado_Cuenta.Balance, última factura y apertura del detalle. La sesión persiste al recargar; logout seguido de recarga vuelve al login sin datos del cliente.
@@ -24,7 +28,7 @@ Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, 
 
 ## Fuera de alcance
 
-SIRO y todo pago/imputación, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, múltiples contratos, búsqueda universal de usuarios, web pública y producción. Comprobantes de pago reales son distintos de las facturas y no se implementaron.
+Imputación de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, múltiples contratos, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente, pendiente de prueba real de este módulo. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
 
 Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.
 

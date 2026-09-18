@@ -1,5 +1,11 @@
 # Integración local PHP / Phantom — 18/09/2026
 
+## Etapa actual: SIRO separado de Phantom
+
+La lectura de laboratorio quedó aceptada en f47bb26. Se agregó creación y reconciliación SIRO, deshabilitada por defecto y validada únicamente con fixtures. Ver [arquitectura SIRO](SIRO.md) y [primera prueba](FIRST-SIRO-TEST.md). SIRO intent created, SIRO payment confirmed y Phantom payment posted son hitos distintos: el tercero no se implementa. No se toca la lógica de lectura aceptada ni se imputan pagos.
+
+Validación local de esta etapa: 338 verificaciones, incluyendo transporte simulado, identidad/importes, estados, recuperación y dos procesos concurrentes. Recorrido de navegador desktop/mobile con checkout interceptado localmente, cierre/retorno, confirmación, saldo sin cambios y logout. No se contactó Phantom ni SIRO real. Las menciones de “pagos deshabilitados” en los cierres históricos siguientes describen la etapa anterior; ahora solo pueden habilitarse mediante configuración SIRO privada explícita.
+
 ## Estado y evidencia
 
 Agustín comprobó en Phantom real la autenticación GET HTTPS y las lecturas POST de Consulta_Cliente_Avanzada, Phantom_Mi_Estado_Cuenta y Phantom_Ultima_Factura mediante `inspect-schema.php 1 --auth-get`. La última lectura usó Limit=1, Offset=0. Cliente y factura son listas de objetos; cuenta es un objeto con Balance:string. El bundle CA privado ya permite verificar TLS.

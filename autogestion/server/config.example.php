@@ -23,4 +23,13 @@ return [
     // Legacy customer_path/balance_path settings no longer select records or balances.
     // Optional CA bundle absolute path; certificate validation is NEVER disabled.
     'ca_file' => null,
+    // Optional lab SIRO. Add privately, never overwrite an existing config.
+    'siro' => [
+        'enabled' => false,
+        'user' => '', 'password' => '',
+        'return_base' => 'http://127.0.0.1:4174/autogestion',
+        // Explicit unused five-digit suffix range reserved for this CPE/integration.
+        // Do not guess or overlap Phantom/Botmaker/previous POC sequences.
+        'receipt_start' => null, 'receipt_end' => null,
+    ],
 ];

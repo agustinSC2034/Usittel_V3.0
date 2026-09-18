@@ -30,6 +30,18 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  for(const [name,expected] of Object.entries({ok:'SIRO_HTTP_OK',timeout:'SIRO_TIMEOUT',session:'SIRO_SESSION',redirect:'SIRO_HTTP',malformed:'SIRO_FORMAT'})) {
+    const result=spawnSync(php,[path.join(__dirname,'siro-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
+    check('transporte SIRO aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
+  }
+  const paymentTests=spawnSync(php,[path.join(__dirname,'payments.php'),dir],{env:fixtureEnv,encoding:'utf8'});
+  check('servicio SIRO con fixtures: identidad, intentos, importes y recuperación',()=>{assert.equal(paymentTests.status,0,paymentTests.stdout+paymentTests.stderr);assert.match(paymentTests.stdout,/PAYMENT_CHECKS=/);});
+  count+=Number(paymentTests.stdout.match(/PAYMENT_CHECKS=(\d+)/)[1])-1;
+  console.log(paymentTests.stdout.trim());
+  const concurrentDir=path.join(dir,'concurrent-payments');fs.mkdirSync(concurrentDir);
+  const worker=()=>new Promise((resolve,reject)=>{let out='',err='';const child=spawn(php,[path.join(__dirname,'payments.php'),concurrentDir,'worker'],{env:fixtureEnv});child.stdout.on('data',v=>out+=v);child.stderr.on('data',v=>err+=v);child.on('error',reject);child.on('exit',code=>code===0?resolve(out):reject(new Error(err)));});
+  const workers=await Promise.all([worker(),worker()]);
+  check('dos procesos comparten reserva y un solo POST SIRO',()=>{assert.equal(workers[0],workers[1]);assert.equal(fs.readFileSync(path.join(concurrentDir,'calls'),'utf8'),'1');});
   const documentConfig=path.join(dir,'document-config.php');
   const caFixture=path.join(dir,'fixture-ca.pem');fs.writeFileSync(caFixture,'fixture only');
   fs.writeFileSync(documentConfig,settings().replace("'mode'=>'phantom'", "'ca_file'=>'"+caFixture.replaceAll('\\','/')+"','mode'=>'phantom'"));
@@ -313,5 +325,6 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('logs sin secretos',()=>assert.doesNotMatch(stderr,/00Lab-fixture|fixture-api-secret|fixture-technical-token|do-not-expose/));
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
+  await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

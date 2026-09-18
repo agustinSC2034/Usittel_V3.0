@@ -2,6 +2,9 @@
 declare(strict_types=1);
 if(PHP_SAPI!=='cli') {http_response_code(404);exit;}
 
+require_once __DIR__.'/Core.php';
+require_once __DIR__.'/Siro.php';
+
 $root=(string)realpath(__DIR__.'/../..');
 $inside=static function(string $path) use ($root): bool {
     $root=strtolower(str_replace('\\','/',$root));
@@ -55,6 +58,11 @@ if(!$configPath) {
                     $passOk=is_string($config['api_pass']??null) && $config['api_pass']!=='';
                     $add($userOk&&$passOk?'ok':'warn','Credenciales Phantom',$userOk&&$passOk?'presentes (valores ocultos)':'faltan api_user y/o api_pass');
                 }
+                try {
+                    $si=\MiUsittel\siroConfig($config+['mode'=>'demo']);
+                    $add($si===null?'warn':'ok','SIRO laboratorio',$si===null?'deshabilitado; no se consulta SIRO':'configuración presente y rango definido; valores ocultos; falta validación real');
+                    if($si!==null && !getenv('MI_USITTEL_RUNTIME')) $add('fail','Persistencia SIRO','definir MI_USITTEL_RUNTIME privado y persistente; no usar carpeta temporal');
+                } catch(Throwable) {$add('fail','SIRO laboratorio','revisar estructura, credenciales privadas, retorno propio y rango reservado');}
                 $shapeErrors=[];
                 if(isset($config['lab_users']) && !is_array($config['lab_users'])) $shapeErrors[]='lab_users';
                 if(isset($config['customer_path']) && !is_array($config['customer_path'])) $shapeErrors[]='customer_path';

@@ -49,5 +49,5 @@ checks.push(findings.length
 const icons = { ok: '✅', warn: '⚠️', fail: '❌' };
 console.log('Chequeo local de Mi USITTEL\n');
 for (const item of checks) console.log(`${icons[item.status] || '•'} ${item.label}${item.detail ? ` — ${item.detail}` : ''}`);
-console.log('\nEste comando no contactó Phantom.');
+console.log('\nEste comando no contactó Phantom ni SIRO.');
 process.exitCode = checks.some(item => item.status === 'fail') ? 1 : 0;

@@ -1,6 +1,6 @@
 import { request, invoicePdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices } from './data.js';
-import { shell, routes, status, icon, button, input, escapeHTML as e } from './components.js';
+import { shell, routes, status, icon, button, input, invoicePayButton, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 
@@ -10,6 +10,7 @@ const toastElement = document.querySelector('#toast');
 const views = { inicio: home, facturas: billing, servicio: service, soporte: support, cuenta: account };
 const paymentNotice = '<p class="field-hint" id="payment-provider-note">Al seleccionar Pagar, serás redirigido al portal de SIRO, nuestro proveedor de pagos.</p>';
 let authenticated = false;
+let paymentBusy = false;
 let dataGeneration = 0;
 
 let speedTimer;
@@ -34,7 +35,7 @@ function openDialog(title, content) {
 }
 dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?.isConnected) lastTrigger.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt', 'pay'];
+const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
 function render() {
   clearInterval(speedTimer);
   if (dialog.open) dialog.close();
@@ -50,9 +51,10 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
+      if (paymentBusy && ['pay', 'payment-check'].includes(control.dataset.action)) control.disabled = true;
     });
     const hint = document.createElement('p'); hint.className = 'field-hint';
-    hint.textContent = route === 'login' ? 'La recuperación de contraseña todavía no está habilitada.' : 'Modo lectura. Las acciones de pago y modificación todavía no están habilitadas.';
+    hint.textContent = route === 'login' ? 'La recuperación de contraseña todavía no está habilitada.' : (runtime.paymentsEnabled ? 'Laboratorio SIRO. Los pagos no se registran en Phantom. Otras modificaciones no están habilitadas.' : 'Modo lectura. Las acciones de pago y modificación todavía no están habilitadas.');
     app.querySelector('main').append(hint);
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
@@ -61,7 +63,7 @@ function render() {
 function getInvoice(id) { return invoices.find(item => item.id === id); }
 function invoiceDialog(item, receipt = false) {
   if (!item || (receipt && item.status !== 'Pagada')) return;
-  if (runtime.mode === 'phantom') return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${button('Pagar','',{iconName:'external-link',attrs:'disabled aria-describedby="payment-provider-note"'})}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div><p class="field-hint">${item.downloadAvailable ? 'Pagos todavía no habilitados.' : 'Pagos y descargas todavía no habilitados.'}</p>${paymentNotice}`);
+  if (runtime.mode === 'phantom') return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' ? invoicePayButton(item, 'aria-describedby="payment-provider-note"') : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div><p class="field-hint">${runtime.paymentsEnabled ? 'Los pagos confirmados por SIRO no se registran en Phantom en esta etapa.' : (item.downloadAvailable ? 'Pagos todavía no habilitados.' : 'Pagos y descargas todavía no habilitados.')}</p>${paymentNotice}`);
   openDialog(receipt ? 'Comprobante de pago' : 'Detalle de factura', `<p class="demo-caption">Documento de ejemplo · Sin validez fiscal</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Servicio</dt><dd>${customer.plan}</dd></div><div><dt>Domicilio</dt><dd>${customer.address}</dd></div><div><dt>Vencimiento</dt><dd>${item.due}</dd></div>${receipt ? `<div><dt>Fecha de pago de ejemplo</dt><dd>${item.paidAt}</dd></div>` : '<div><dt>Concepto</dt><dd>Abono mensual</dd></div>'}</dl><div class="dialog-actions">${!receipt && item.status !== 'Pagada' ? button('Pagar', 'pay', { iconName: 'external-link', attrs: `data-id="${item.id}" aria-describedby="payment-provider-note"` }) : ''}${button(receipt ? 'Descargar comprobante' : 'Descargar factura', receipt ? 'download-receipt' : 'download-invoice', { secondary: !receipt && item.status !== 'Pagada', iconName: 'download', attrs: `data-id="${item.id}"` })}</div>${!receipt && item.status !== 'Pagada' ? paymentNotice : ''}`);
 }
 const help = {
@@ -82,6 +84,23 @@ document.addEventListener('click', async event => {
   const action = target.dataset.action;
   const item = getInvoice(target.dataset.id);
   if (runtime.mode === 'phantom' && unavailable.includes(action)) return toast('Esta función todavía no está disponible.');
+  if (action === 'payment-invoices') { location.hash = '/facturas'; return; }
+  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check')) {
+    if (!runtime.paymentsEnabled || paymentBusy) return;
+    paymentBusy = true; target.disabled = true; const generation = dataGeneration;
+    target.textContent = action === 'pay' ? 'Preparando pago...' : 'Consultando...';
+    try {
+      const result = await request(action === 'pay' ? 'payment-create' : 'payment-reconcile', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
+      if (generation !== dataGeneration || !authenticated) return;
+      await refreshPayments(false);
+      if (result.checkout_url) {
+        if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
+        window.location.assign(result.checkout_url);
+      } else { location.hash = '/facturas'; render(); }
+    } catch (error) { if (generation === dataGeneration) await handleError(error); }
+    finally { paymentBusy = false; if (generation === dataGeneration) render(); }
+    return;
+  }
   if (action === 'boot-retry') return boot();
   if (action === 'retry') return loadOverview();
   if (action === 'more-invoices') {
@@ -220,10 +239,25 @@ async function handleError(error) {
     render(); toast(error.message);
   } else toast(error.message);
 }
+async function refreshPayments(reconcile = true) {
+  if (!runtime.paymentsEnabled || !authenticated) return;
+  const generation = dataGeneration;
+  try {
+    const list = await request('payments');
+    if (generation !== dataGeneration || !authenticated) return;
+    runtime.paymentItems = list.items; runtime.paymentError = ''; render();
+    const pending = list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
+    if (reconcile && pending) {
+      const result = await request('payment-reconcile', { attempt_id: pending.attempt_id });
+      if (generation !== dataGeneration || !authenticated) return;
+      runtime.paymentItems = runtime.paymentItems.map(a => a.attempt_id === result.attempt_id ? result : a); render();
+    }
+  } catch (error) { if (generation === dataGeneration) { runtime.paymentError = 'No pudimos consultar los intentos de pago. Volvé a intentar.'; await handleError(error); render(); } }
+}
 async function loadOverview() {
   const generation = ++dataGeneration;
   clearData(); runtime.loading = true; runtime.error = ''; render();
-  try { const data = await request('overview'); if (generation === dataGeneration && authenticated) applyOverview(data); }
+  try { const data = await request('overview'); if (generation === dataGeneration && authenticated) { applyOverview(data); void refreshPayments(); } }
   catch(error) { if (generation === dataGeneration) { if (error.status === 401) await handleError(error); else runtime.error = error.message; } }
   finally { if (generation === dataGeneration) { runtime.loading = false; render(); } }
 }
@@ -232,8 +266,8 @@ async function boot() {
   try {
     const session = await request('bootstrap');
     runtime.backend = session.backend !== false;
-    await initialize(session.mode); authenticated = session.authenticated;
-    document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura';
+    await initialize(session.mode); runtime.paymentsEnabled = session.payments_enabled === true; authenticated = session.authenticated;
+    document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
     authenticated = false; clearData();

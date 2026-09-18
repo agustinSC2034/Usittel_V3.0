@@ -63,7 +63,7 @@ final class FixtureTransport implements Transport {
         if($scenario==='empty') return ['code'=>400,'message'=>'Error: No se encontró factura para el cliente (400)'];
         if($scenario==='invoices-error') return ['code'=>400,'message'=>'Some other error'];
         if($scenario==='malformed-invoices') return ['unrecognized'=>[]];
-        $row=['IDT'=>123,'Estado'=>'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25',
+        $row=['SIRO_CE'=>'1111111111111111111','IDT'=>123,'Estado'=>'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25',
             'Metadata'=>['currency'=>'ARS','items'=>[['description'=>'fixture-item','quantity'=>1]]],
             'Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
         if($scenario==='missing') $row=['IDT'=>123];

@@ -61,4 +61,6 @@ Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpreta
 
 ## Cierre aceptado — 18/09/2026
 
+Esta etapa de lectura permanece cerrada. La nueva etapa SIRO se documenta por separado en [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md); no requiere repetir esta investigación ni modificar la configuración Phantom que funciona.
+
 Agustín respondió “listo todo ok” a la comprobación final solicitada: descarga de factura reciente e histórica, correspondencia de período/número/importe y logout seguido de recarga al login. Es aceptación manual del laboratorio IDA 1, no validación de otros clientes ni de producción. No se habilitan SIRO, pagos ni escrituras.

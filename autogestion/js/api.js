@@ -21,7 +21,7 @@ export async function invoicePdf(id) {
 }
 export async function request(route, data) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 65000);
+  const timer = setTimeout(() => controller.abort(), route.startsWith('payment-') ? 110000 : 65000);
   try {
     const response = await fetch(`api/${route}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
       ...(data === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(data) }) });

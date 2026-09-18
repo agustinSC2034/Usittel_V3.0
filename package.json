@@ -4,6 +4,11 @@
   "description": "",
   "main": "tailwind.config.js",
   "scripts": {
+    "dev:mi-usittel:php": "node autogestion/start-php.cjs",
+    "test:mi-usittel": "node autogestion/tests/run.cjs",
+    "dev:mi-usittel": "node autogestion/serve.cjs",
+    "build:mi-usittel": "tailwindcss -c autogestion/tailwind.config.cjs -i autogestion/styles.css -o autogestion/assets/app.css --minify",
+    "watch:mi-usittel": "npm run build:mi-usittel -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

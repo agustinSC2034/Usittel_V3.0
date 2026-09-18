@@ -1,0 +1,96 @@
+# Integración local PHP / Phantom
+
+## Evidencia y límites
+
+Fuente revisada: [documentación API REST de Phantom de la carpeta provista](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view), secciones de autenticación, cliente avanzado, estado de cuenta y facturas. Se combina con los campos y petición POST comprobados previamente por el usuario en su especificación.
+
+Confirma token de 15 minutos, consultas/paginación, balance crédito menos débito y campos de factura. El texto disponible no confirmó las claves exactas de todos los datos personales/productos ni la ruta al valor numérico del balance. No se inventaron. La autenticación técnica POST JSON y los envoltorios aún deben verificarse contra la instalación real. No se usaron secretos de commits o conversaciones.
+
+## Configuración fuera del repositorio
+
+En PowerShell, desde la raíz del proyecto:
+
+```powershell
+$privateFolder = Join-Path $env:LOCALAPPDATA 'MiUSITTEL'
+New-Item -ItemType Directory -Force -Path $privateFolder | Out-Null
+$privateConfig = Join-Path $privateFolder 'config.php'
+if (-not (Test-Path -LiteralPath $privateConfig)) {
+  Copy-Item -LiteralPath autogestion/server/config.example.php -Destination $privateConfig
+}
+notepad $privateConfig
+```
+
+Completar ese archivo personalmente, sin pegar secretos en el chat. Restringir permisos a la cuenta que ejecuta PHP; no usar carpetas compartidas, sincronizadas o públicas. En Windows revisar ACL; chmod por sí solo no las sustituye. Proteger también runtime: contiene sesiones, caché del token técnico y contadores.
+
+| Opción privada | Valor/criterio |
+| --- | --- |
+| mode | phantom para laboratorio, demo para diseño; jamás por navegador |
+| phantom_url | Base indicada por USITTEL, HTTPS sin credenciales/query/fragmento |
+| api_user, api_pass | Credenciales técnicas actuales, distintas de las del abonado |
+| allowed_idas | Solamente [1], [5] o [1, 5] |
+| lab_users | Usuario personalizado exacto => IDA permitido, sin contraseñas; ambos campos se verifican igual |
+| customer_path | [] para objeto raíz; cambiar solo tras comprobar otro envoltorio |
+| profile_fields | name/address/plan/city/email/phone, inicialmente null |
+| balance_path | null hasta confirmar ruta exacta del valor numérico crédito menos débito |
+| idle_seconds, max_seconds | 900 y 28800 por defecto |
+| timeout_seconds, connect_timeout_seconds | 10 y 4 por defecto; máximos 30 y 10 |
+| ca_file | Bundle CA confiable opcional; nunca desactivar validación TLS |
+
+Los mapeos son arrays de claves exactas, por ejemplo `['ClaveConfirmada']`. Para texto compuesto: `['join'=>[['ClaveConfirmada'],['OtraClaveConfirmada']]]`. Esos nombres ilustran sintaxis: **no son campos confirmados de Phantom**. El perfil acepta texto; confirmar tipos antes de convertir números. El balance acepta números/decimales con punto, no HTML ni importes ambiguos. Negativo → deuda, positivo → crédito; ausente no equivale a cero.
+
+```powershell
+$env:MI_USITTEL_CONFIG = Join-Path $privateFolder 'config.php'
+$env:MI_USITTEL_RUNTIME = Join-Path $privateFolder 'runtime'
+$env:MI_USITTEL_PHP = "$env:TEMP\mi-usittel-php\php.exe" # O PHP permanente.
+npm run dev:mi-usittel:php
+```
+
+Abrir http://127.0.0.1:4174/autogestion/. Reiniciar PHP al cambiar variables. Configuración inválida falla sin demo; sin variable de configuración el modo predeterminado es demo. Node 4173 no ejecuta PHP.
+
+### Comprobar campos sin imprimir valores
+
+Con credenciales configuradas, esta herramienta CLI consulta nombres y tipos de primer nivel, sin valores, tokens, contraseñas ni contratos asociados:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1
+# Usar 5 si esa es la cuenta permitida.
+```
+
+Hace autenticación técnica y lecturas de cliente/estado de cuenta. Es un primer diagnóstico: no recorre estructuras anidadas ni demuestra por sí solo la semántica. Si los datos están anidados o el balance no es inequívoco, confirmar una muestra controlada y redactada antes de mapear. No compartir JSON crudo de cliente, porque contiene credenciales. **No se ejecutó contra Phantom real en esta entrega.**
+
+## Contrato interno
+
+Base `/autogestion/api/`, mismo origen, JSON UTF-8, Cache-Control no-store, sin CORS. Errores: `{"error":{"code":"CODIGO","message":"Texto público"}}`. El IDA se obtiene de sesión; parámetros de IDA/modo/action/URL se rechazan. No hay proxy genérico.
+
+| Ruta | Entrada | Resultado |
+| --- | --- | --- |
+| GET bootstrap | Ninguna | {mode, authenticated, csrf} |
+| POST login | JSON {username,password}, X-CSRF-Token | {authenticated:true, csrf} nuevo tras regenerar sesión |
+| POST logout | JSON {}, X-CSRF-Token | {ok:true}; destruye sesión y expira cookie |
+| GET overview | Sesión autenticada | {customer,account,invoices,nextDue,warnings} |
+| GET invoices?offset=0 | Sesión; offset no negativo, múltiplo de 20, máximo seis dígitos | {items,offset,nextOffset}; 20 registros/página |
+
+- `customer`: name,address,plan,city,email,phone,serviceStatus,network,speed. Texto o null. Estado_Servicio es administrativo; network/speed aún null.
+- `account`: balance,debt,credit, números o null; no representa saldo de factura. `nextDue` queda null hasta confirmar regla de cuenta.
+- Factura: id,period,amount,due,secondDue,status,type,number,paidAt,outstanding. IDT → id; Total → amount; fechas YYYY-MM-DD válidas → dd/mm/YYYY. PAGADA → Pagada, IMPAGA → Pendiente, desconocido → No disponible. paidAt/outstanding null. No hashes, URLs ni JSON original.
+- `warnings`: BALANCE_UNAVAILABLE, INVOICES_UNAVAILABLE, ACCOUNT_RECONCILIATION. Saldo/facturas pueden fallar independientemente; fallo de cliente deja error recuperable. Solo el 400 con mensaje exacto documentado de factura inexistente equivale a lista vacía; ningún error implica deuda cero.
+
+HTTP: 400 entrada inválida, 401 credenciales/sesión, 403 CSRF/autorización, 404 ruta, 405 método, 409 lectura real en demo, 429 límite, 503 proveedor/configuración, 504 timeout. No se infiere vencimiento, reactivación o pago parcial con datos insuficientes.
+
+## Sesión y transporte
+
+- Cookie PHP HttpOnly, SameSite Strict, Secure cuando PHP recibe HTTPS; regeneración al autenticar y vencimientos propios. En el devserver HTTP/loopback no hay Secure; HTTPS no fue probado.
+- CSRF de sesión en login/logout; Origin cuando está presente y rechazo cross-site. Contraseña exacta sin trim/números/DNI; nunca en sesión.
+- Límite de 5 intentos por cuenta/usuario y 30 por IP en 15 minutos, incluidos accesos exitosos. Claves HMAC, sin usuario/IP crudos. No confía en encabezados de proxy. No borrar contadores reales: esperar el plazo. Tests aíslan sus contadores.
+- Token técnico privado separado de sesión, caché 14 minutos. Un 401/403 permite renovar y repetir lectura solo una vez; no reintenta otros fallos.
+- POST JSON con TLS verificado, sin redirects, respuesta máxima 2 MB, profundidad JSON limitada. Diagnósticos propios solo por código, sin cuerpos/contraseñas/cabeceras sensibles. Revisar logging externo al desplegar.
+- Acciones permitidas: autentificar, Consulta_Cliente_Avanzada, Phantom_Ultima_Factura, Phantom_Mi_Estado_Cuenta. Ninguna escritura/SIRO.
+- Router local publica solo HTML/assets/JS y cinco rutas API; nunca server/, tests/, configuración o runtime. No usar un servidor estático genérico sobre todo el repo.
+
+## Validación
+
+`npm run test:mi-usittel` usa un servidor PHP aislado y transporte sintético; no llama a Phantom. Cubre sesión, CSRF, regeneración/logout/replay, vencimientos, credenciales exactas/ausentes/incorrectas, IDA ajeno, límites, errores/timeout, renovación acotada, campos ausentes, saldo independiente, paginación, whitelist, modos y mapeos sensibles. Las claves test_* son ficticias, no documentan al CRM.
+
+No es una auditoría exhaustiva. Pendiente real: HTTPS/cookie Secure, contrato de autenticación/respuestas, datos personales/productos y campo del balance. Validar solo IDA 1 o 5, con configuración privada; casos negativos continúan con fixtures para evitar bloquear cuentas reales.
+
+Producción, cPanel, DNS, .htaccess, SIRO y escrituras siguen fuera de alcance.

@@ -1,1 +1,7 @@
 node_modules/
+
+# Mi USITTEL: secrets and runtime must live outside the repository.
+**/config.local.php
+**/.env
+**/.env.local
+autogestion/runtime/

@@ -2,7 +2,7 @@
 
 ## Evidencia y límites
 
-Fuente revisada: [documentación API REST de Phantom de la carpeta provista](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view), secciones de autenticación, cliente avanzado, estado de cuenta y facturas. Se combina con los campos y petición POST comprobados previamente por el usuario en su especificación.
+Fuente revisada: [documentación API REST de Phantom de la carpeta provista](https://drive.google.com/file/d/1ydYXQUSh_8YlvUH6PtaIBZqWMjgCLeHd/view), secciones de autenticación, cliente avanzado, estado de cuenta y facturas. Los ejemplos de autenticación incluyen variantes GET y POST; el ejemplo PHP también incluye credenciales en la URL, por lo que no demuestra soporte de POST JSON con credenciales exclusivamente en el cuerpo. La captura de Botmaker provista por el usuario muestra GET sobre HTTP con credenciales en la URL, en otro puerto. No se copió ese transporte ni sus secretos.
 
 Confirma token de 15 minutos, consultas/paginación, balance crédito menos débito y campos de factura. El texto disponible no confirmó las claves exactas de todos los datos personales/productos ni la ruta al valor numérico del balance. No se inventaron. La autenticación técnica POST JSON y los envoltorios aún deben verificarse contra la instalación real. No se usaron secretos de commits o conversaciones.
 
@@ -86,6 +86,7 @@ HTTP: 400 entrada inválida, 401 credenciales/sesión, 403 CSRF/autorización, 4
 - Límite de 5 fallos por cuenta/usuario y 30 fallos por IP en 15 minutos. Cada verificación se reserva atómicamente para evitar ráfagas paralelas; un acceso correcto o un fallo del proveedor libera su reserva y no suma intentos. Los rechazos de credenciales permanecen tanto por cuenta como por IP, de modo que un acceso válido no borra protección previa. Claves HMAC, sin usuario/IP crudos. No confía en encabezados de proxy. Tests aíslan sus contadores.
 - Token técnico privado separado de sesión, caché 14 minutos. Un 401/403 permite renovar y repetir lectura solo una vez; no reintenta otros fallos.
 - POST JSON con TLS verificado, sin redirects, respuesta máxima 2 MB, profundidad JSON limitada. Diagnósticos propios solo por código, sin cuerpos/contraseñas/cabeceras sensibles. Revisar logging externo al desplegar.
+- Excepción explícita de diagnóstico: `inspect-schema.php 1 --auth-form` prueba autenticación POST `application/x-www-form-urlencoded`, con valores codificados y siempre en el cuerpo. No hay fallback automático; el inspector hace un solo intento de autenticación y mantiene las consultas en JSON. No cambia la configuración ni el transporte del portal. Compatibilidad pendiente de comprobar en la instalación real; un HTTP 400 no identifica por sí solo credenciales incorrectas.
 - Acciones permitidas: autentificar, Consulta_Cliente_Avanzada, Phantom_Ultima_Factura, Phantom_Mi_Estado_Cuenta. Ninguna escritura/SIRO.
 - Router local publica solo HTML/assets/JS y cinco rutas API; nunca server/, tests/, configuración o runtime. No usar un servidor estático genérico sobre todo el repo.
 

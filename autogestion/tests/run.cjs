@@ -29,6 +29,20 @@ const scenario = value => fs.writeFileSync(path.join(dir,'scenario'),value);
 const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync(f)) fs.unlinkSync(f);};
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
+  const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const formTest=spawnSync(php,[path.join(__dirname,'auth-form.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('prueba de formulario preserva HTTPS, secretos en cuerpo, JSON normal y no reintenta',()=>{
+    assert.equal(formTest.status,0,formTest.stderr);
+    assert.deepEqual(JSON.parse(formTest.stdout),{default_json:true,form_roundtrip:true,secure_post:true,reads_json:true,single_auth:true});
+    assert.equal(formTest.stderr.replace(/\r\n/g,'\n'),'Etapa: autenticacion\nCódigo: PHANTOM_HTTP\nHTTP: 400\n');
+  });
+  for(const args of [[],['1','--unknown'],['1','--auth-form','--auth-form'],['2','--auth-form']]) {
+    const invalid=spawnSync(php,[path.join(root,'server/inspect-schema.php'),...args],{env:{...fixtureEnv,MI_USITTEL_CONFIG:path.join(dir,'does-not-exist.php')},encoding:'utf8'});
+    check(`inspector rechaza argumentos inválidos antes de configuración/red: ${JSON.stringify(args)}`,()=>{
+      assert.equal(invalid.status,1);assert.equal(invalid.stdout,'');
+      assert.equal(invalid.stderr.replace(/\r\n/g,'\n'),'Etapa: configuracion\nCódigo: INSPECTOR_ARGUMENTS\n');
+    });
+  }
   let command=spawnSync(php,[path.join(__dirname,'inspect-schema-fixture.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},encoding:'utf8'});
   check('inspector incluye cliente, cuenta y factura sin valores',()=>{
     assert.equal(command.status,0,command.stderr);const schema=JSON.parse(command.stdout);

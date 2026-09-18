@@ -2,6 +2,11 @@
 declare(strict_types=1);
 namespace MiUsittel;
 
+function inspectorArguments(array $args): array {
+    if(!in_array(count($args),[2,3],true) || !in_array($args[1]??null,['1','5'],true)
+        || (isset($args[2]) && $args[2]!=='--auth-form')) throw new Failure('INSPECTOR_ARGUMENTS');
+    return ['ida'=>(int)$args[1],'authForm'=>isset($args[2])];
+}
 function safeDiagnosticCode(\Throwable $e): string {
     return $e instanceof Failure && preg_match('/^[A-Z][A-Z0-9_]{1,63}$/D',$e->kind) ? $e->kind : 'UNEXPECTED';
 }

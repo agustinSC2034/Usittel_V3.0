@@ -4,10 +4,13 @@ namespace MiUsittel;
 
 interface Transport { public function post(string $url, array $body): array; }
 final class CurlTransport implements Transport {
-    public function __construct(private array $config) {}
+    public function __construct(private array $config, private bool $inspectorAuthForm=false) {}
     public function post(string $url, array $body): array {
         if (!extension_loaded('curl')) throw new Failure('CONFIGURATION');
-        try { $encoded=json_encode($body,JSON_THROW_ON_ERROR); }
+        // Explicit inspector experiment only; account reads and the portal stay JSON.
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
+        $form=$this->inspectorAuthForm && ($query['action']??null)==='autentificar';
+        try { $encoded=$form?http_build_query($body,'','&',PHP_QUERY_RFC3986):json_encode($body,JSON_THROW_ON_ERROR); }
         catch(\JsonException) { throw new Failure('PHANTOM_REQUEST_FORMAT'); }
         $ca=null;
         if($this->config['ca_file']!==null) {
@@ -18,7 +21,7 @@ final class CurlTransport implements Transport {
             $ch=curl_init($url);
             if($ch===false) throw new Failure('PHANTOM_CURL_INIT');
             $options=[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$encoded,
-                CURLOPT_HTTPHEADER=>['Content-Type: application/json','Accept: application/json'],
+                CURLOPT_HTTPHEADER=>['Content-Type: '.($form?'application/x-www-form-urlencoded':'application/json'),'Accept: application/json'],
                 CURLOPT_FOLLOWLOCATION=>false,CURLOPT_PROTOCOLS=>CURLPROTO_HTTPS,
                 CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2,
                 CURLOPT_CONNECTTIMEOUT=>$this->config['connect_timeout_seconds'],CURLOPT_TIMEOUT=>$this->config['timeout_seconds'],

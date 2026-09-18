@@ -67,6 +67,20 @@ php autogestion/server/inspect-schema.php 1
 
 El comando autentica técnicamente y consulta cliente, estado de cuenta y una factura. Muestra solamente nombres de campos, tipos y estructura limitada. No modifica nada.
 
+### Prueba puntual si la autenticación POST JSON devuelve HTTP 400
+
+La captura de Botmaker confirma una petición GET con credenciales en la URL sobre HTTP. Mi USITTEL usa HTTPS y credenciales en el cuerpo. Esa diferencia puede influir, pero no demuestra por sí sola la causa del 400.
+
+Para probar **una vez** si esta instalación acepta las credenciales como formulario POST:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-schema.php 1 --auth-form
+```
+
+No editar la configuración ni cambiar la URL para esta prueba. La opción afecta solamente la autenticación de esa ejecución del inspector; mantiene HTTPS y validación de certificados, sin credenciales en la URL ni redirecciones. No reintenta automáticamente ni cambia el formato del portal. Si autentica, continúa con las tres consultas de lectura en JSON y la misma salida sin valores.
+
+El soporte de formulario todavía no está confirmado. Si vuelve a fallar, compartir solamente el bloque técnico indicado en el paso 5. No repetir intentos cambiando contraseñas al azar: necesitaremos confirmar el contrato de esta instalación. Un error en `cliente` después de esta prueba permite distinguirlo de un rechazo en `autenticacion`.
+
 ## Paso 5 — Qué copiar para analizar después
 
 Copiar solamente la salida estructural completa producida por `inspect-schema.php`, desde la llave inicial hasta la final. Esa salida debería tener secciones `customer`, `account` e `invoice` con nombres de campos y tipos.

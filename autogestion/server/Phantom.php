@@ -29,17 +29,21 @@ final class CurlTransport implements Transport {
         } catch(Failure $e) { throw $e; }
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
         finally { if($ch instanceof \CurlHandle) curl_close($ch); }
-        if ($ok===false) throw new Failure($this->curlFailureCode($errno),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
+        if ($ok===false) throw new Failure(self::diagnosticCodeForCurlErrno($errno),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
         if (in_array($code,[401,403],true)) throw new Failure('TOKEN_EXPIRED');
         if ($code<200 || $code>=300) throw new Failure('PHANTOM_HTTP');
         try { $json=json_decode($response,true,32,JSON_THROW_ON_ERROR); } catch (\JsonException) { throw new Failure('PHANTOM_FORMAT'); }
         if (!is_array($json)) throw new Failure('PHANTOM_FORMAT');
         return $json;
     }
-    private function curlFailureCode(int $errno): string {
+    public static function diagnosticCodeForCurlErrno(int $errno): string {
         $map=[CURLE_OPERATION_TIMEDOUT=>'PHANTOM_TIMEOUT',CURLE_COULDNT_RESOLVE_HOST=>'PHANTOM_DNS',
-            CURLE_COULDNT_CONNECT=>'PHANTOM_CONNECT',CURLE_SSL_CONNECT_ERROR=>'PHANTOM_TLS',CURLE_WRITE_ERROR=>'PHANTOM_RESPONSE_TOO_LARGE'];
-        foreach(['CURLE_PEER_FAILED_VERIFICATION','CURLE_SSL_CACERT','CURLE_SSL_CACERT_BADFILE'] as $name) if(defined($name)) $map[(int)constant($name)]='PHANTOM_TLS';
+            CURLE_COULDNT_CONNECT=>'PHANTOM_CONNECT',CURLE_SSL_CONNECT_ERROR=>'PHANTOM_TLS_HANDSHAKE',
+            CURLE_WRITE_ERROR=>'PHANTOM_RESPONSE_TOO_LARGE'];
+        // Stable CURLE values; some Windows PHP builds omit the named constants.
+        foreach([77,82] as $code) $map[$code]='PHANTOM_CA_FILE';
+        foreach([60,83,90] as $code) $map[$code]='PHANTOM_TLS_VERIFY';
+        foreach([35,58,59,64] as $code) $map[$code]='PHANTOM_TLS_HANDSHAKE';
         return $map[$errno]??'PHANTOM_NETWORK';
     }
 }

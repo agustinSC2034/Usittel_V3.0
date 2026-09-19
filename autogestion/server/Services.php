@@ -65,7 +65,9 @@ function discoverServices(Phantom $ph,int $rootId,?callable $inspect=null): arra
     if($source!==null) {
         $stage='document_search';
         try {
-            $ids=documentCandidateIds($ph->customersByDocument($source),$source,$rootId);
+            $documentRows=$ph->customersByDocument($source);
+            if($inspect!==null) $inspect('document_lookup',documentSearchDiagnostics($documentRows,$source));
+            $ids=documentCandidateIds($documentRows,$source,$rootId);
             $ph->scope(array_values(array_unique([$rootId,...$ids,...array_keys($candidates)])));
             $stage='document_customer';
             $documentCandidates=[];
@@ -80,7 +82,7 @@ function discoverServices(Phantom $ph,int $rootId,?callable $inspect=null): arra
             $success=true;
         } catch(Failure $e) {
             $warning=true;
-            if($inspect!==null) $inspect($stage,['code'=>in_array($e->kind,['SERVICES_DOCUMENT_SCHEMA','SERVICES_DOCUMENT_MISMATCH','SERVICES_DOCUMENT_ROOT','SERVICES_LIMIT','CUSTOMER_IDENTITY','FORBIDDEN'],true)?$e->kind:'DOCUMENT_READ_FAILED']);
+            if($inspect!==null) $inspect($stage,['code'=>in_array($e->kind,['PHANTOM_TIMEOUT','SERVICES_DOCUMENT_SCHEMA','SERVICES_DOCUMENT_MISMATCH','SERVICES_DOCUMENT_ROOT','SERVICES_LIMIT','CUSTOMER_IDENTITY','FORBIDDEN'],true)?$e->kind:'DOCUMENT_READ_FAILED']);
         }
     }
     $rows+=$candidates;

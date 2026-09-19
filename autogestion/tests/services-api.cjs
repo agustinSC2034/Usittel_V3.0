@@ -1,13 +1,13 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep})=>{
   fs.writeFileSync(config,settings());
-  for(const [name,count] of [['one',1],['two',2],['three',3],['document',2],['bad',1],['wrong',1],['missing',2]]) {
+  for(const [name,count] of [['one',1],['two',2],['three',3],['document',2],['document-timeout',2],['bad',1],['wrong',1],['missing',2]]) {
     clearRate();scenario('services-'+name);const u=jar();let r=await login(u);
     check('servicios '+name+': autorización, deduplicación y principal',()=>{
       assert.equal(r.status,200);assert.equal(r.data.services.length,count);assert.equal(r.data.selectedServiceId,'1');
       assert.doesNotMatch(r.text,/DNI|CUIT|Autogestion|Hash_Descarga|do-not-expose|IDAx/);
       if(name==='missing') assert.equal(r.data.services[0].address,null);
       if(name==='document') assert.equal(r.data.servicesUnavailable,false);
-      if(['bad','wrong'].includes(name)) assert.equal(r.data.servicesUnavailable,true);
+      if(['document-timeout','bad','wrong'].includes(name)) assert.equal(r.data.servicesUnavailable,true);
     });
     await u.call('logout',{});
   }

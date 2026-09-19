@@ -73,4 +73,12 @@ foreach(['services-bad'=>'association_structure','services-wrong'=>'associated_c
     $result=discoverServices($ph,1,static function($stage,$data) use (&$stages) {$stages[]=$stage;});
     expect($expected===null ? $stages===['root'] && count($result['services'])===2 : $stages===['root',$expected] && $result['servicesUnavailable']);
 }
+file_put_contents($dir.'/scenario','services-document');$stages=[];
+$result=discoverServices(new Phantom($c,$dir,new FixtureTransport($dir)),1,static function($stage,$data) use (&$stages) {$stages[]=$stage;});
+expect($stages===['root','document_lookup'] && count($result['services'])===2 && !$result['servicesUnavailable']);
+file_put_contents($dir.'/scenario','services-document-timeout');$events=[];
+$result=discoverServices(new Phantom($c,$dir,new FixtureTransport($dir)),1,static function($stage,$data) use (&$events) {$events[$stage]=$data;});
+expect(isset($events['root'],$events['document_search']) && $events['document_search']['code']==='PHANTOM_TIMEOUT');
+expect(count($result['services'])===2 && $result['servicesUnavailable']);
+expect(!str_contains(json_encode($events['document_search']),'12345678'));
 echo $count;

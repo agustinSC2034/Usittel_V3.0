@@ -33,7 +33,7 @@ final class FixtureTransport implements Transport {
             $ida=(int)($query['IDA']??0);
             if($action==='Consulta_Cliente_Avanzada') {
                 if($documentRead) {
-                    if($scenario==='services-document-timeout') throw new Failure('PHANTOM_TIMEOUT',504);
+                    if(in_array($scenario,['services-document-timeout','services-document-only-timeout'],true)) throw new Failure('PHANTOM_TIMEOUT',504);
                     if($scenario!=='services-document' || $query['Documento']!=='12345678') throw new Failure('PHANTOM_CUSTOMER_TEST');
                     return [
                         ['ID'=>'1','Cuit'=>'12345678','Direccion'=>'Calle fixture 1','Producto_Internet'=>'Plan fixture 1'],
@@ -41,12 +41,12 @@ final class FixtureTransport implements Transport {
                     ];
                 }
                 $links=match($scenario) {'services-one'=>[], 'services-three'=>[['ID'=>'1'],['ID'=>'5'],['ID'=>'5'],[['ID'=>'7']]], 'services-bad'=>[['ID'=>'5x']], default=>[['ID'=>'5'],['ID'=>'1'],['ID'=>'5']]};
-                if($scenario==='services-document') $links=[''];
+                if(in_array($scenario,['services-document','services-document-only-timeout'],true)) $links=[''];
                 return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
                     'Autogestion_User'=>'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
                     'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
                     'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[],
-                    'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout'],true)?'12345678':null]];
+                    'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout','services-document-only-timeout'],true)?'12345678':null]];
             }
             if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];
             return [['IDA'=>(string)$ida,'IDT'=>(string)($ida*100),'Estado'=>'IMPAGA','Total'=>'10.00','Periodo'=>'2026-09','Hash_Descarga'=>'do-not-expose']];

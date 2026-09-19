@@ -78,7 +78,11 @@ $result=discoverServices(new Phantom($c,$dir,new FixtureTransport($dir)),1,stati
 expect($stages===['root','document_lookup'] && count($result['services'])===2 && !$result['servicesUnavailable']);
 file_put_contents($dir.'/scenario','services-document-timeout');$events=[];
 $result=discoverServices(new Phantom($c,$dir,new FixtureTransport($dir)),1,static function($stage,$data) use (&$events) {$events[$stage]=$data;});
+expect(isset($events['root'],$events['document_skipped']) && !isset($events['document_search']));
+expect(count($result['services'])===2 && !$result['servicesUnavailable']);
+file_put_contents($dir.'/scenario','services-document-only-timeout');$events=[];
+$result=discoverServices(new Phantom($c,$dir,new FixtureTransport($dir)),1,static function($stage,$data) use (&$events) {$events[$stage]=$data;});
 expect(isset($events['root'],$events['document_search']) && $events['document_search']['code']==='PHANTOM_TIMEOUT');
-expect(count($result['services'])===2 && $result['servicesUnavailable']);
+expect(count($result['services'])===1 && $result['servicesUnavailable']);
 expect(!str_contains(json_encode($events['document_search']),'12345678'));
 echo $count;

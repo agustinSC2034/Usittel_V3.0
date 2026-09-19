@@ -10,6 +10,8 @@ La comparación admite igualdad exacta normalizada y DNI↔CUIT personal solamen
 
 El documento permanece en backend y no se agrega a sesión, HTML, JavaScript ni respuesta pública. La consulta histórica de Phantom coloca `Documento` en la query remota; por eso puede aparecer en logs internos de Phantom y debe revisarse antes de producción, al igual que las credenciales técnicas GET.
 
+La prueba controlada del contrato 1271 confirmó una asociación directa utilizable: `Conexiones_Asociadas` contiene un objeto con `ID`, dirección y plan, y el descubrimiento produjo dos servicios. En este caso la asociación directa es suficiente y la búsqueda complementaria por CUIT no se ejecuta. Esto evita demoras y consultas documentales innecesarias; el respaldo por documento queda reservado para contratos cuya asociación directa esté vacía.
+
 ## Alcance
 
 Lectura multicontrato implementada con fixtures y contrato de búsqueda contrastado con Phantom real. Falta la aceptación visual del selector con una sesión real de dos servicios. No se consultó Phantom automáticamente desde tests ni se modificó configuración privada, Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.
@@ -45,4 +47,4 @@ El siguiente paso manual es reiniciar el servidor local para cargar este commit 
 
 ## Validación
 
-414 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, asociación vacía, búsqueda exacta por documento con dos contratos, timeout de la búsqueda documental sin perder asociaciones directas, DNI↔CUIT personal válido, CUIT incompatible o inválido, raíz ausente, tipos incorrectos, duplicados, reconsulta por ID, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. La UX del selector ya fue validada en 390×844 y 1365×900 con fixtures; este cambio no altera su HTML/CSS.
+417 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, prioridad de asociación directa sin búsqueda documental redundante, asociación vacía, búsqueda exacta por documento con dos contratos, timeout del respaldo documental con degradación segura, DNI↔CUIT personal válido, CUIT incompatible o inválido, raíz ausente, tipos incorrectos, duplicados, reconsulta por ID, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. La UX del selector ya fue validada en 390×844 y 1365×900 con fixtures; este cambio no altera su HTML/CSS.

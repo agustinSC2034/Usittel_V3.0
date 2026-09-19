@@ -62,7 +62,9 @@ function discoverServices(Phantom $ph,int $rootId,?callable $inspect=null): arra
         if($inspect!==null) $inspect($stage,['code'=>in_array($e->kind,['SERVICES_SCHEMA','SERVICES_LIMIT','CUSTOMER_IDENTITY','FORBIDDEN'],true)?$e->kind:'ASSOCIATED_READ_FAILED']);
     }
     $source=preferredIdentityDocument($root);
-    if($source!==null) {
+    if($source!==null && $candidates!==[]) {
+        if($inspect!==null) $inspect('document_skipped',['reason'=>'direct_association']);
+    } elseif($source!==null) {
         $stage='document_search';
         try {
             $documentRows=$ph->customersByDocument($source);

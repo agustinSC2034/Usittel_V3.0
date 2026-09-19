@@ -14,20 +14,21 @@ try {
     $c=\MiUsittel\config();if($c['mode']!=='phantom' || $c['customer_id_field']!=='ID') throw new \MiUsittel\Failure('CONFIGURATION');
     $c['service_login_idas']=[(int)$input];
     $ph=new \MiUsittel\Phantom($c,\MiUsittel\privateDir(),new \MiUsittel\CurlTransport($c));
-    $diagnostics=['failure_stage'=>null,'failure_code'=>null];$rootRecord=null;$documentLookup=null;
-    $result=\MiUsittel\discoverServices($ph,(int)$input,static function($stage,$data) use (&$diagnostics,&$rootRecord,&$documentLookup) {
+    $diagnostics=['failure_stage'=>null,'failure_code'=>null];$rootRecord=null;$documentLookup=null;$documentSkipped=false;
+    $result=\MiUsittel\discoverServices($ph,(int)$input,static function($stage,$data) use (&$diagnostics,&$rootRecord,&$documentLookup,&$documentSkipped) {
         if($stage==='root') {$rootRecord=$data;$diagnostics+=\MiUsittel\serviceRootDiagnostics($data);}
         elseif($stage==='document_lookup') $documentLookup=$data;
+        elseif($stage==='document_skipped') $documentSkipped=true;
         else {$diagnostics['failure_stage']=$stage;$diagnostics['failure_code']=$data['code'];}
     });
     $report=['services_found'=>count($result['services']),'association_unavailable'=>$result['servicesUnavailable'],'services'=>[]];
     foreach($result['services'] as $s) $report['services'][]=['ID_present'=>true,'address_present'=>$s['address']!==null,'plan_present'=>$s['plan']!==null];
     $documents=\MiUsittel\recordDocuments($rootRecord);$source=$documents['Cuit']??$documents['CUIT']??$documents['Cuit_Cuil']??$documents['Documento']??$documents['DNI']??$documents['dni']??null;
-    $documentAttempted=$source!==null;
-    $report['document_lookup']=['source_available'=>$source!==null,'source_kind'=>\MiUsittel\documentKind($source),'performed'=>$documentAttempted,'available'=>$documentLookup!==null];
+    $documentAttempted=$source!==null && !$documentSkipped;
+    $report['document_lookup']=['source_available'=>$source!==null,'source_kind'=>\MiUsittel\documentKind($source),'performed'=>$documentAttempted,'available'=>$documentLookup!==null,'skipped_for_direct_association'=>$documentSkipped];
     if($documentLookup!==null) $report['document_lookup']=array_merge($report['document_lookup'],$documentLookup);
     elseif($documentAttempted && $diagnostics['failure_stage']==='document_search') $report['document_lookup']['failure_code']=$diagnostics['failure_code'];
     $report['diagnostics']=$diagnostics;
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;
 } catch(\Throwable $e) {exit(\MiUsittel\writeInspectorFailure('servicios',$e));}
-finally {unset($source,$documents,$rootRecord,$documentLookup);}
+finally {unset($source,$documents,$rootRecord,$documentLookup,$documentSkipped);}

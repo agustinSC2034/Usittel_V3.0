@@ -29,9 +29,16 @@ export function appendInvoices(data) {
   runtime.nextOffset = data.nextOffset; runtime.endReached = data.endReached === true;
 }
 
-// Presentation only: retain the original Phantom plan and remove only its observed prefix.
+// Presentation only: retain the original Phantom values in state and hide CRM annotations.
 export function planLabel(value) {
   if (typeof value !== 'string') return value;
-  const cleaned = value.replace(/^RES \(\$\)\s*-\s*/, '');
+  const cleaned = value
+    .replace(/^\s*\d{1,2}\/\d{1,2}\/\d{2,4}\s*-\s*/, '')
+    .replace(/^\s*RES\s*\(\$\)\s*-\s*/i, '');
   return cleaned.trim() ? cleaned : value;
+}
+export function addressLabel(value) {
+  if (typeof value !== 'string') return value;
+  const cleaned = value.split(/\s*·\s*(?=(?:Lote|Manzana|Referencia|Barrio)\s*:)/i, 1)[0].trim();
+  return cleaned || value;
 }

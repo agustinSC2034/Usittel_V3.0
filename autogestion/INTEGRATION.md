@@ -112,7 +112,7 @@ QA de la etapa inicial del historial: 205 verificaciones con fixtures, chequeo l
 
 Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal fue aceptada manualmente.
 
-Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
+Ajuste de presentación solicitado: se oculta el Detalle técnico sin modificar los datos recibidos. En pantalla se quitan del plan la fecha técnica inicial y el prefijo `RES ($) -`; del domicilio se ocultan lote, manzana, referencia y barrio agregados por CRM. El selector muestra solo domicilio y plan, sin número de contrato. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
 
 ## Inspector del comprobante: evidencia Botmaker y prueba aceptada
 

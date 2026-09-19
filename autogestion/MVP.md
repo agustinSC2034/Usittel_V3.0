@@ -40,7 +40,7 @@ Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gest
 
 Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal fue aceptada manualmente.
 
-Ajuste de presentación solicitado: se oculta el Detalle técnico sin interpretar su cadena ni modificar los datos recibidos; se elimina únicamente el prefijo observado RES ($) - del nombre visible del plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
+Ajuste de presentación solicitado: se oculta el Detalle técnico sin modificar los datos recibidos. La UI limpia fecha/prefijo técnico del plan y referencias anexas del domicilio; el selector muestra solo domicilio y plan. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
 
 Inspector CLI de documento preparado: IDA 1 + IDT numérico, o --latest explícito, resolución interna de Hash_Descarga desde JSON, GET único al path fijo encontrado en Botmaker, TLS/CA y sin redirects. La prueba manual solo produce metadatos seguros. La prueba del inspector ya confirmó PDF. Descargar está conectado; pagos y escrituras continúan deshabilitados.
 

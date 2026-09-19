@@ -26,7 +26,7 @@ final class FixtureTransport implements Transport {
         if(($body['token']??'')!=='fixture-technical-token') throw new \RuntimeException('Token absent');
         if($scenario==='expired-always') throw new Failure('TOKEN_EXPIRED');
         $documentRead=$action==='Consulta_Cliente_Avanzada' && isset($query['Documento']);
-        if(!$documentRead && !in_array((int)($query['IDA']??0),[1,5,7],true)) throw new \RuntimeException('Unapproved IDA');
+        if(!$documentRead && !in_array((int)($query['IDA']??0),[1,5,6,7],true)) throw new \RuntimeException('Unapproved IDA');
         if($scenario==='expired-once' && !file_exists($this->dir.'/expired')) {touch($this->dir.'/expired');throw new Failure('TOKEN_EXPIRED');}
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
         if(str_starts_with($scenario,'services-')) {
@@ -43,7 +43,7 @@ final class FixtureTransport implements Transport {
                 $links=match($scenario) {'services-one'=>[], 'services-three'=>[['ID'=>'1'],['ID'=>'5'],['ID'=>'5'],[['ID'=>'7']]], 'services-bad'=>[['ID'=>'5x']], default=>[['ID'=>'5'],['ID'=>'1'],['ID'=>'5']]};
                 if(in_array($scenario,['services-document','services-document-only-timeout'],true)) $links=[''];
                 return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
-                    'Autogestion_User'=>'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
+                    'Autogestion_User'=>$ida===6?'000006':'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
                     'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
                     'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[],
                     'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout','services-document-only-timeout'],true)?'12345678':null]];

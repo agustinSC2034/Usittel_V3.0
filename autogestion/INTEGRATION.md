@@ -147,3 +147,7 @@ Agustín respondió “listo todo ok” a la comprobación final solicitada: des
 ## Presentación de conectividad pendiente de contraste
 
 La pantalla muestra únicamente Estado de tu conexión, a partir de Estado_Conexion. El estado del equipo queda oculto hasta confirmar su significado y disponibilidad. Online/Offline se traducen de forma limitada; falta contrastar el resultado con un servicio conocido en funcionamiento. No se interpreta como diagnóstico de avería ni se garantiza una frecuencia de actualización.
+
+## Ingreso de todos los contratos en el portal local
+
+Por solicitud de Agustín, service_login_idas admite el valor explícito `all`, además de la lista de laboratorio. Un usuario numérico identifica únicamente el candidato; Phantom debe confirmar ID y credenciales exactas antes de crear sesión. No hay barrido de clientes. Los usuarios personalizados siguen requiriendo lab_users privado. La consulta inicial se limita al candidato y las lecturas posteriores a authorized_services/selected_ida. Cambiar la opción invalida sesiones existentes. SIRO e imputación conservan sus compuertas de laboratorio independientes. Esta ampliación no habilita producción ni modifica la configuración privada automáticamente.

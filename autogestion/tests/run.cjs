@@ -251,6 +251,9 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const multiLoginConfig=path.join(dir,'multi-login.php');fs.writeFileSync(multiLoginConfig,settings().replace("'allowed_idas'=>[1,5],","'allowed_idas'=>[1,5],'service_login_idas'=>[1,1271],"));
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:multiLoginConfig,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
   check('chequeo confirma múltiples contratos iniciales sin exponer IDs',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/2 contratos iniciales configurados/);assert.doesNotMatch(command.stdout,/1271/);});
+  const allLoginConfig=path.join(dir,'all-login.php');fs.writeFileSync(allLoginConfig,settings().replace("'allowed_idas'=>[1,5],","'allowed_idas'=>[1,5],'service_login_idas'=>'all',"));
+  command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:allLoginConfig,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
+  check('chequeo reconoce todos los contratos sin ampliar pagos',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/Todos los contratos; credenciales exactas obligatorias/);});
   const incomplete=path.join(dir,'incomplete.php');fs.writeFileSync(incomplete,settings().replace("'fixture-api'","''").replace("'fixture-api-secret'","''"));
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:incomplete,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
   check('chequeo avisa credenciales faltantes sin imprimir valores',()=>{assert.equal(command.status,0);assert.match(command.stdout,/⚠️ Credenciales Phantom/);assert.doesNotMatch(command.stdout,/api_pass\s*=>/);});

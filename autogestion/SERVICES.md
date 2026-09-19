@@ -48,3 +48,7 @@ El siguiente paso manual es reiniciar el servidor local para cargar este commit 
 ## Validación
 
 418 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, prioridad de asociación directa sin búsqueda documental redundante, asociación vacía, búsqueda exacta por documento con dos contratos, timeout del respaldo documental con degradación segura, DNI↔CUIT personal válido, CUIT incompatible o inválido, chequeo privado de múltiples contratos iniciales, raíz ausente, tipos incorrectos, duplicados, reconsulta por ID, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. La UX del selector ya fue validada en 390×844 y 1365×900 con fixtures; este cambio no altera su HTML/CSS.
+
+## Ingreso de todos los contratos en el portal local
+
+Por solicitud de Agustín, service_login_idas admite el valor explícito `all`, además de la lista de laboratorio. Un usuario numérico identifica únicamente el candidato; Phantom debe confirmar ID y credenciales exactas antes de crear sesión. No hay barrido de clientes. Los usuarios personalizados siguen requiriendo lab_users privado. La consulta inicial se limita al candidato y las lecturas posteriores a authorized_services/selected_ida. Cambiar la opción invalida sesiones existentes. SIRO e imputación conservan sus compuertas de laboratorio independientes. Esta ampliación no habilita producción ni modifica la configuración privada automáticamente.

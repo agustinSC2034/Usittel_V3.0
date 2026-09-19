@@ -50,11 +50,11 @@ if(!$configPath) {
                     $idasOk=is_array($idas) && $idas!==[] && array_diff($idas,[1,5])===[];
                     $idasOk=$idasOk && in_array(1,$idas,true);
                     $loginIdas=$config['service_login_idas']??[1];
-                    $loginIdasOk=is_array($loginIdas) && array_is_list($loginIdas) && $loginIdas!==[] && count($loginIdas)<=3;
-                    if($loginIdasOk) foreach($loginIdas as $loginId) if(!is_int($loginId) || $loginId<1 || $loginId>9999999999) {$loginIdasOk=false;break;}
+                    $loginIdasOk=\MiUsittel\validLoginScope($loginIdas);
                     $accountsOk=$idasOk && $loginIdasOk;
-                    $loginCount=$loginIdasOk?count($loginIdas):0;
-                    $add($accountsOk?'ok':'fail','Cuentas de laboratorio',$accountsOk?$loginCount.' contrato'.($loginCount===1?'':'s').' inicial'.($loginCount===1?'':'es').' configurado'.($loginCount===1?'':'s').'; servicios asociados se autorizan en servidor':'revisar allowed_idas y service_login_idas');
+                    $loginCount=is_array($loginIdas)?count($loginIdas):0;
+                    $loginDetail=$loginIdas==='all'?'Todos los contratos; credenciales exactas obligatorias; servicios autorizados en servidor':$loginCount.' contrato'.($loginCount===1?'':'s').' inicial'.($loginCount===1?'':'es').' configurado'.($loginCount===1?'':'s').'; servicios asociados se autorizan en servidor';
+                    $add($accountsOk?'ok':'fail','Cuentas de laboratorio',$accountsOk?$loginDetail:'revisar allowed_idas y service_login_idas');
                     $authOk=($config['phantom_auth_mode']??'get-query-lab')==='get-query-lab';
                     $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET explícito de laboratorio; lecturas POST':'usar get-query-lab');
                     $identity=$config['customer_id_field']??null;

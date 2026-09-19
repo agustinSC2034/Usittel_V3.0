@@ -32,8 +32,7 @@ function config(): array {
     }
     if ($c['timeout_seconds'] > 30 || $c['connect_timeout_seconds'] > 10) throw new Failure('CONFIGURATION');
     if (!is_array($c['allowed_idas']) || array_diff($c['allowed_idas'], [1,5])) throw new Failure('CONFIGURATION');
-    if(!is_array($c['service_login_idas']??[1]) || !array_is_list($c['service_login_idas']??[1]) || count($c['service_login_idas']??[1])>3 || ($c['service_login_idas']??[1])===[]) throw new Failure('CONFIGURATION');
-    foreach($c['service_login_idas']??[1] as $rootId) if(!is_int($rootId) || $rootId<1 || $rootId>9999999999) throw new Failure('CONFIGURATION');
+    if(!validLoginScope($c['service_login_idas']??[1])) throw new Failure('CONFIGURATION');
     $c['allowed_idas'] = array_map('intval', $c['allowed_idas']);
     if ($c['mode'] === 'phantom') {
         $url = parse_url($c['phantom_url'] ?? '');
@@ -92,10 +91,18 @@ function rateLimitRelease(string $dir, string $user, string $ip, ?int $candidate
         writeFileHandle($f,$state);
     });
 }
+function validLoginScope(mixed $scope): bool {
+    if($scope==='all') return true;
+    if(!is_array($scope) || !array_is_list($scope) || $scope===[] || count($scope)>3) return false;
+    foreach($scope as $id) if(!is_int($id) || $id<1 || $id>9999999999) return false;
+    return true;
+}
 function resolveUser(string $user, array $c): ?int {
     $candidate = $c['lab_users'][$user] ?? null;
     if ($candidate === null && preg_match('/^[0-9]{1,10}$/D', $user)) $candidate = (int)$user;
-    return is_int($candidate) && in_array($candidate,$c['service_login_idas']??array_values(array_intersect([1],$c['allowed_idas'])),true) ? $candidate : null;
+    $scope=$c['service_login_idas']??array_values(array_intersect([1],$c['allowed_idas']));
+    return is_int($candidate) && $candidate>=1 && $candidate<=9999999999
+        && ($scope==='all' || is_array($scope) && in_array($candidate,$scope,true)) ? $candidate : null;
 }
 function atPath(array $value, ?array $path): mixed {
     if ($path === null) return null;

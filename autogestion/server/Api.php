@@ -73,6 +73,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         $remote=$_SERVER['REMOTE_ADDR']??'unknown';
         rateLimitBegin($dir,$b['username'],$remote,$candidate);
         try {
+            // Login eligibility is not session authorization: read only this candidate.
+            if($c['mode']==='phantom' && $candidate!==null) $ph->scope([$candidate]);
             $valid=$c['mode']==='demo' ? hash_equals('agustin.demo',$b['username']) && hash_equals('usittel-demo',$b['password']) : $candidate!==null && $ph->verify($candidate,$b['username'],$b['password']);
         } catch(\Throwable $e) {
             // Provider/configuration failures are not credential failures.

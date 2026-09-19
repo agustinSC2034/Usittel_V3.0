@@ -136,7 +136,8 @@ final class Phantom {
     private ?array $scope=null;
     public function scope(array $ids): void { $this->scope=$ids; }
     private function read(string $action,int $ida,array $params=[]): array {
-        if (!in_array($ida,$this->scope ?? ($this->config['service_login_idas']??array_values(array_intersect([1],$this->config['allowed_idas']))),true)) throw new Failure('FORBIDDEN',403);
+        $initial=$this->config['service_login_idas']??array_values(array_intersect([1],$this->config['allowed_idas']));
+        if (!in_array($ida,$this->scope ?? (is_array($initial)?$initial:[]),true)) throw new Failure('FORBIDDEN',403);
         if (!in_array($action,['Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new Failure('FORBIDDEN',403);
         return $this->readAuthorized($action,['IDA'=>$ida]+$params);
     }

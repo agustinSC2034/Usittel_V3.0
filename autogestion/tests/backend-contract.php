@@ -43,6 +43,10 @@ function curl_getinfo(\CurlHandle $ch,?int $option=null): int {return 200;}
 function curl_errno(\CurlHandle $ch): int {return 0;}
 function curl_error(\CurlHandle $ch): string {return '';}
 $c=config();$c['api_user']='fixture +&?';$c['api_pass']='fixture &=# secret';$c['profile_fields']=[];
+demand(validLoginScope('all') && !validLoginScope('*') && !validLoginScope(true) && !validLoginScope([]));
+$all=$c;$all['service_login_idas']='all';
+demand(resolveUser('000006',$all)===6);
+foreach(['0','000000','-6','6e0','6.0',' 6','10000000000'] as $invalid) demand(resolveUser($invalid,$all)===null);
 $dir=privateDir().'/wire-fixture';if(!is_dir($dir)) mkdir($dir);
 $ph=new Phantom($c,$dir,new CurlTransport($c));
 demand($ph->verify(1,'000001',' 00fixture '));

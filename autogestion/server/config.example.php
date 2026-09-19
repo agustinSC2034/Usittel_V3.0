@@ -10,7 +10,7 @@ return [
     'allowed_idas' => [1], // Legacy lab scope; initial login is configured below, associated services are server-authorized.
     // Optional initial login candidates AFTER the safe service inspection is reviewed.
     // This does not authorize associated contracts by itself; exact credentials still required.
-    'service_login_idas' => [1],
+    'service_login_idas' => [1], // Use 'all' to allow any numeric contract username or private lab_users mapping; exact credentials remain required.
     'lab_users' => [], // e.g. 'actual-custom-username' => 1. NO passwords.
     'idle_seconds' => 900,
     'max_seconds' => 28800,

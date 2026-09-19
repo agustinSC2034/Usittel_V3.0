@@ -13,6 +13,7 @@ function setup(): array {
     return [new Payments($store,$gateway,$s),$store,$gateway,$dir];
 }
 function row(): array {return ['IDT'=>'123','IDA'=>'1','Estado'=>'IMPAGA','Total'=>'121.00','SIRO_CE'=>str_repeat('1',19)];}
+function crmRow(string $idt='123',string $ida='1',string $total='121.00'): array {return [[$idt,'Fixture',$ida,'2026-09-01','2026-09','1-123',$total]];}
 function unlock(PaymentStore $store): void {$store->transaction(function(&$s,$save){foreach($s['attempts'] as &$a)$a['checked_at']=0;$save();});}
 if(($argv[2]??null)==='worker') {
     $gateway=new class($root) implements SiroGateway {
@@ -100,27 +101,51 @@ $confirmAttempt=function() {
     [$p,$store,$g,$dir]=setup();$a=$p->create(1,'123',fn()=>row());$g->scenario='confirmed';$a=$p->reconcile(1,$a['attempt_id']);
     return [$p,$store,$g,$dir,$a];
 };
+ok(phantomCrmAcknowledgement('OK')==='SUCCESS');
+ok(phantomCrmAcknowledgement("OK - pago recibido")==='SUCCESS');
+ok(phantomCrmAcknowledgement('Error: referencia duplicada')==='ERROR');
+ok(phantomCrmAcknowledgement('texto inesperado')==='UNKNOWN');
+ok(phantomCrmUnpaidRecord(crmRow(),'123',1,12100)===['idt'=>'123','ida'=>1,'cents'=>12100]);
+foreach([[[], 'PHANTOM_CRM_UNPAID_SCHEMA'],[crmRow('999'),'PHANTOM_CRM_IDT_MISMATCH'],[crmRow('123','5'),'PHANTOM_CRM_IDA_MISMATCH'],[crmRow('123','1','1.00'),'PHANTOM_CRM_AMOUNT_MISMATCH']] as [$rows,$code]) failure(fn()=>phantomCrmUnpaidRecord($rows,'123',1,12100),$code);
+[$p,$store,$g,$dir,$a]=$confirmAttempt();
+$ready=$p->postingPreflight(1,fn()=>row(),fn()=>crmRow());
+ok($ready['code']==='READY_FOR_CONTROLLED_POST' && $ready['siro_confirmed'] && $ready['rest_unpaid'] && $ready['crm_unpaid']);
+failure(fn()=>$p->postingPreflight(5,fn()=>row(),fn()=>crmRow()),'CANDIDATE_NOT_FOUND');
+failure(fn()=>$p->postingPreflight(1,fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>[]),'PHANTOM_ALREADY_SETTLED');
+failure(fn()=>$p->postingPreflight(1,fn()=>row(),fn()=>crmRow('999')),'PHANTOM_CRM_IDT_MISMATCH');
+$g->scenario='pending';failure(fn()=>$p->postingPreflight(1,fn()=>row(),fn()=>crmRow()),'PAYMENT_NOT_CONFIRMED');$g->scenario='confirmed';
+$store->transaction(function(&$state,$save){$copy=reset($state['attempts']);$copy['attempt_id']=str_repeat('b',32);$state['attempts'][$copy['attempt_id']]=$copy;$save();});
+failure(fn()=>$p->postingPreflight(1,fn()=>row(),fn()=>crmRow()),'CANDIDATE_AMBIGUOUS');
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;$invoiceState='IMPAGA';
 $posted=$p->postToPhantom(1,$a['attempt_id'],function(string $idt) use (&$invoiceState){ok($idt==='123');return array_replace(row(),['Estado'=>$invoiceState]);},
-    function(string $idt,int $cents,string $reference) use (&$posts,&$invoiceState){ok($idt==='123' && $cents===12100);ok((bool)preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference));$posts++;$invoiceState='PAGADA';});
+    function(string $idt) use (&$invoiceState){return $invoiceState==='IMPAGA'?crmRow():[];},function(string $idt,int $cents,string $reference) use (&$posts,&$invoiceState){ok($idt==='123' && $cents===12100);ok((bool)preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference));$posts++;$invoiceState='PAGADA';return 'SUCCESS';});
 ok($posted['phantom_payment_posted']===true && $posted['phantom_posting_state']==='POSTED' && $posts===1 && !$posted['can_post_to_phantom']);
-ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>[],fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
-$uncertain=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),function()use(&$posts){$posts++;});
+$uncertain=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),function()use(&$posts){$posts++;return 'UNKNOWN';});
 ok($uncertain['phantom_posting_state']==='POST_UNCONFIRMED' && !$uncertain['phantom_payment_posted'] && $posts===1);
-ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
-ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>[],fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
-$failed=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),function()use(&$posts){$posts++;throw new Failure('PHANTOM_TIMEOUT');});
+$failed=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),function()use(&$posts){$posts++;throw new Failure('PHANTOM_TIMEOUT');});
 ok($failed['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
-ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
-ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_posting_state']==='NEEDS_REVIEW' && $posts===0);
+$rejected=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),function()use(&$posts){$posts++;return 'ERROR';});
+ok($rejected['phantom_posting_state']==='NEEDS_REVIEW' && $posts===1);
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$afterState='IMPAGA';
+$extended=$p->postToPhantom(1,$a['attempt_id'],function()use(&$afterState){return array_replace(row(),['Estado'=>$afterState]);},function()use(&$afterState){return $afterState==='IMPAGA'?crmRow():[];},function()use(&$afterState){$afterState='PAGADA';return 'SUCCESS';});
+ok($extended['phantom_posting_state']==='POSTED');
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$afterState='IMPAGA';
+$timedButPosted=$p->postToPhantom(1,$a['attempt_id'],function()use(&$afterState){return array_replace(row(),['Estado'=>$afterState]);},function()use(&$afterState){return $afterState==='IMPAGA'?crmRow():[];},function()use(&$afterState){$afterState='PAGADA';throw new Failure('PHANTOM_TIMEOUT');});
+ok($timedButPosted['phantom_posting_state']==='POSTED');
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>[],fn()=>$posts++)['phantom_posting_state']==='ALREADY_SETTLED' && $posts===0);
 [$p,$store,$g,$dir]=setup();$pending=$p->create(1,'123',fn()=>row());
-failure(fn()=>$p->postToPhantom(1,$pending['attempt_id'],fn()=>row(),fn()=>null),'PAYMENT_NOT_CONFIRMED');
+failure(fn()=>$p->postToPhantom(1,$pending['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>null),'PAYMENT_NOT_CONFIRMED');
 [$p,$store,$g,$dir,$a]=$confirmAttempt();
-failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00']),fn()=>null),'PAYMENT_INVOICE_CHANGED');
-failure(fn()=>$p->postToPhantom(5,$a['attempt_id'],fn()=>row(),fn()=>null),'PAYMENT_NOT_FOUND');
+failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00']),fn()=>crmRow(),fn()=>null),'PAYMENT_INVOICE_CHANGED');
+failure(fn()=>$p->postToPhantom(5,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>null),'PAYMENT_NOT_FOUND');
 $saved=file_get_contents($dir.'/siro-attempts.json');
 ok(!preg_match('/Password|api_pass|Autogestion|access_token|Request|fixture-password|fixture-token/',$saved));
 echo 'PAYMENT_CHECKS='.$count.PHP_EOL;

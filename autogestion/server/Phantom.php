@@ -108,7 +108,7 @@ final class CurlTransport implements Transport {
     }
 }
 final class Phantom {
-    public function __construct(private array $config, private string $dir, private Transport $transport,private ?PhantomPaymentGateway $paymentGateway=null) {}
+    public function __construct(private array $config, private string $dir, private Transport $transport,private ?PhantomCrmGateway $crm=null) {}
     private function raw(string $action, array $params, array $body): array {
         $url=$this->config['phantom_url'].'?'.http_build_query(['action'=>$action,'JSON'=>1]+$params);
         $data=$action==='autentificar'?$this->transport->authenticate($url,$body):$this->transport->post($url,$body);
@@ -219,14 +219,35 @@ final class Phantom {
         if($offset<0 || $offset>INVOICE_MAX_OFFSET || $offset%INVOICE_PAGE_SIZE!==0) throw new Failure('BAD_REQUEST',400);
         return invoicePage($this->invoiceRows($ida,$offset),$offset,$ida);
     }
-    public function imputePayment(int $ida,string $idt,int $cents,string $reference): void {
-        $settings=phantomPostingConfig($this->config);
-        if($settings===null || $this->paymentGateway===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_DISABLED',409);
-        if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
-        for($attempt=0;$attempt<2;$attempt++) {
-            try {$this->paymentGateway->impute($this->token($attempt===1),$idt,$cents,$settings['origin'],$reference);return;}
-            catch(Failure $e){if($e->kind!=='TOKEN_EXPIRED' || $attempt===1)throw $e;}
+    public function invoiceById(int $ida,string $idt): array {
+        if(!preg_match('/^[1-9][0-9]{0,19}$/D',$idt)) throw new Failure('BAD_REQUEST',400);
+        // Bounded read-only lookup; the controlled SIRO candidate is recent.
+        for($offset=0;$offset<1000;$offset+=INVOICE_PAGE_SIZE) {
+            $rows=$this->invoiceRows($ida,$offset);
+            foreach($rows as $row) if(invoiceId($row['IDT']??null)===$idt) return $row;
+            if(count($rows)<INVOICE_PAGE_SIZE) break;
+            $last=invoiceId(end($rows)['IDT']??null);
+            if(compareInvoiceIds($last,$idt)<0) break;
         }
-        throw new Failure('PHANTOM_TOKEN');
+        throw new Failure('INVOICE_NOT_FOUND',404);
+    }
+    public function authenticateCrm(bool $refresh=false): void {
+        if($this->crm===null) throw new Failure('PHANTOM_POSTING_CONFIGURATION');
+        $this->crm->authenticate($refresh);
+    }
+    public function crmUnpaidRows(int $ida,string $idt): array {
+        $settings=phantomPostingCandidateConfig($this->config);
+        if($settings===null || $this->crm===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_CONFIGURATION');
+        if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
+        return $this->crm->unpaid($idt);
+    }
+    public function crmUnpaid(int $ida,string $idt,int $cents): array {
+        return phantomCrmUnpaidRecord($this->crmUnpaidRows($ida,$idt),$idt,$ida,$cents);
+    }
+    public function imputePayment(int $ida,string $idt,int $cents,string $reference): string {
+        $settings=phantomPostingConfig($this->config);
+        if($settings===null || $this->crm===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_DISABLED',409);
+        if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
+        return $this->crm->impute($idt,$cents,$settings['origin'],$reference);
     }
 }

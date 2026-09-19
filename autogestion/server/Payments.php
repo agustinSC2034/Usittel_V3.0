@@ -131,36 +131,63 @@ final class Payments {
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
         });
     }
-    public function postToPhantom(int $ida,string $id,callable $invoice,callable $post): array {
+    public function postingPreflight(int $ida,callable $invoice,callable $crmUnpaid): array {
+        if($ida<1) throw new Failure('FORBIDDEN',403);
+        return $this->store->transaction(function(&$state) use($ida,$invoice,$crmUnpaid) {
+            $candidates=array_values(array_filter($state['attempts'],static fn($a)=>($a['ida']??null)===$ida && ($a['state']??null)==='CONFIRMED'
+                && ($a['posting_state']??'NOT_POSTED')==='NOT_POSTED'));
+            if($candidates===[]) throw new Failure('CANDIDATE_NOT_FOUND',404);
+            if(count($candidates)!==1) throw new Failure('CANDIDATE_AMBIGUOUS',409);
+            $a=$candidates[0];
+            $this->assertConfirmedAttempt($a);
+            $row=$invoice($a['idt']);$this->assertPostingInvoice($row,$a,$ida);
+            if(($row['Estado']??null)!=='IMPAGA') throw new Failure('PHANTOM_ALREADY_SETTLED',409);
+            phantomCrmUnpaidRecord($crmUnpaid($a['idt']),$a['idt'],$ida,$a['cents']);
+            return ['siro_confirmed'=>true,'rest_unpaid'=>true,'crm_unpaid'=>true,'ida_matches'=>true,
+                'idt_matches'=>true,'amount_matches'=>true,'posting_previous'=>false,'code'=>'READY_FOR_CONTROLLED_POST'];
+        });
+    }
+    public function postToPhantom(int $ida,string $id,callable $invoice,callable $crmUnpaid,callable $post): array {
         if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
-        return $this->store->transaction(function(&$state,$save) use($ida,$id,$invoice,$post) {
+        return $this->store->transaction(function(&$state,$save) use($ida,$id,$invoice,$crmUnpaid,$post) {
             $a=$state['attempts'][$id]??null;
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
             $a['posting_state']??='NOT_POSTED';$a['posting_reference']??=null;$a['posted_at']??=null;
             if($a['posting_state']==='POSTED') return paymentPublic($a);
-            if($a['state']!=='CONFIRMED' || !is_string($a['hash']??null) || !is_string($a['result_id']??null)) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
-            // The browser return and the stored flag are insufficient: SIRO is checked again immediately before any Phantom write.
-            $verified=paymentResult($this->siro->result($a['hash'],$a['result_id']),$a,$this->s);
-            if($verified['state']!=='CONFIRMED' || $verified['result_id']!==$a['result_id']) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
+            $this->assertConfirmedAttempt($a);
             $row=$invoice($a['idt']);$this->assertPostingInvoice($row,$a,$ida);
             if(($row['Estado']??null)!=='IMPAGA') {
-                $a['posting_state']=in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED'],true)?'POSTED':'NEEDS_REVIEW';
+                if(in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED'],true)) {
+                    try {$a['posting_state']=$crmUnpaid($a['idt'])===[]?'POSTED':'POST_UNCONFIRMED';}
+                    catch(\Throwable) {$a['posting_state']='POST_UNCONFIRMED';}
+                } else $a['posting_state']='ALREADY_SETTLED';
                 if($a['posting_state']==='POSTED')$a['posted_at']=gmdate('c');
                 $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
             }
             // An uncertain previous POST is reconciled by reading Phantom; it is never repeated blindly.
-            if(in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED','NEEDS_REVIEW'],true)) return paymentPublic($a);
+            if(in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED','NEEDS_REVIEW','ALREADY_SETTLED'],true)) return paymentPublic($a);
+            try {phantomCrmUnpaidRecord($crmUnpaid($a['idt']),$a['idt'],$ida,$a['cents']);}
+            catch(\Throwable) {$a['posting_state']='NEEDS_REVIEW';$a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);}
             $a['posting_reference']='SIRO '.strtolower($a['result_id']);$a['posting_state']='POSTING';$a['updated_at']=gmdate('c');
             $state['attempts'][$id]=$a;$save();
-            try {$post($a['idt'],$a['cents'],$a['posting_reference']);}
-            catch(\Throwable) {
-                $a['posting_state']='POST_UNCONFIRMED';$a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
-            }
-            try {$after=$invoice($a['idt']);$this->assertPostingInvoice($after,$a,$ida);$a['posting_state']=($after['Estado']??null)==='IMPAGA'?'POST_UNCONFIRMED':'POSTED';}
-            catch(\Throwable) {$a['posting_state']='POST_UNCONFIRMED';}
+            $ack='UNKNOWN';$transportFailed=false;
+            try {$ack=$post($a['idt'],$a['cents'],$a['posting_reference']);}
+            catch(\Throwable) {$transportFailed=true;}
+            try {
+                $after=$invoice($a['idt']);$this->assertPostingInvoice($after,$a,$ida);
+                if(($after['Estado']??null)!=='IMPAGA') {
+                    $rows=$crmUnpaid($a['idt']);
+                    $a['posting_state']=$rows===[]?'POSTED':'POST_UNCONFIRMED';
+                } else $a['posting_state']=$ack==='ERROR' && !$transportFailed?'NEEDS_REVIEW':'POST_UNCONFIRMED';
+            } catch(\Throwable) {$a['posting_state']='POST_UNCONFIRMED';}
             if($a['posting_state']==='POSTED')$a['posted_at']=gmdate('c');
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
         });
+    }
+    private function assertConfirmedAttempt(array $a): void {
+        if(($a['state']??null)!=='CONFIRMED' || !is_string($a['hash']??null) || !is_string($a['result_id']??null)) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
+        $verified=paymentResult($this->siro->result($a['hash'],$a['result_id']),$a,$this->s);
+        if($verified['state']!=='CONFIRMED' || $verified['result_id']!==$a['result_id']) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
     }
     private function assertPostingInvoice(array $row,array $a,int $ida): void {
         if(invoiceId($row['IDT']??null)!==$a['idt'] || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);

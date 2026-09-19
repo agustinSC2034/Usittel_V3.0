@@ -2,7 +2,7 @@
 
 ## Revisión SIRO1 — 19/09/2026
 
-Validación local: 471 verificaciones fixture, sintaxis PHP/JS y compilación visual. La prueba SIRO real de laboratorio quedó completada: intención creada, cancelación recuperada por consulta posterior, segundo intento único, pago confirmado con PagoExitoso=true y Estado=PROCESADA. Esa prueba no imputó en Phantom. La etapa siguiente ya está implementada detrás de una compuerta independiente y todavía espera validar el CRM real; ver [PHANTOM-PAYMENTS.md](PHANTOM-PAYMENTS.md).
+Validación local actual: 493 verificaciones fixture, sintaxis PHP/JS y compilación visual. La prueba SIRO real de laboratorio quedó completada: intención creada, cancelación recuperada por consulta posterior, segundo intento único, pago confirmado con PagoExitoso=true y Estado=PROCESADA. Esa prueba no imputó en Phantom. La autenticación CRM real también quedó confirmada con `CRM_AUTH_OK`; la primera escritura continúa pendiente de un preflight real de solo lectura. Ver [PHANTOM-PAYMENTS.md](PHANTOM-PAYMENTS.md).
 
 La lectura multicontrato aceptada se conserva. El dominio recibe `selected_ida` del servidor, y las rutas SIRO exigen exactamente un servicio autorizado y coincidencia con `siro.lab_ida` privado (1 por defecto). IDA 1 tiene dos servicios en la instalación actual: SIRO queda bloqueado. Para probar será necesaria otra cuenta de laboratorio de un único servicio, acordada explícitamente; nunca ocultar asociaciones.
 
@@ -32,7 +32,7 @@ Contrato contrastado con la investigación local `Mi_USITTEL_SIRO_Estado_Tecnico
 | --- | --- | --- |
 | SIRO intent created | SIRO devuelve Hash y URL oficial válida | Implementado |
 | SIRO payment confirmed | Consulta autenticada, identidad e importe coincidentes, PagoExitoso booleano true Y Estado PROCESADA | Implementado |
-| Phantom payment posted | Imputación enviada y verificada con una lectura posterior | Implementado detrás de compuerta; pendiente de prueba CRM real |
+| Phantom payment posted | Imputación enviada y verificada con lecturas posteriores REST/CRM | Implementado detrás de compuerta; autenticación CRM confirmada, primera escritura pendiente |
 
 Antes de la verificación Phantom no se modifica el estado original ni se descuenta el saldo mostrado. La presentación superpone “Pago confirmado” y explica que la cuenta se está actualizando. Un intento confirmado bloquea otro cobro aunque Phantom todavía devuelva IMPAGA.
 

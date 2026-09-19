@@ -18,7 +18,7 @@ if(str_starts_with($path,'/autogestion/api/')) {
     try {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
         $posting=\MiUsittel\phantomPostingConfig($c);
-        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting));
+        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting,$dir));
         \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')));
     } catch(\Throwable $e) {\MiUsittel\fail($e);}
 }

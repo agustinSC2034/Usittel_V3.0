@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/../server/InvoiceDocuments.php';
 // Deliberately synthetic schema. Never included by the production router.
-final class FixtureTransport implements Transport,PhantomPaymentGateway {
+final class FixtureTransport implements Transport {
     public function __construct(private string $dir) {}
     public function authenticate(string $url,array $credentials): array {
         parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
@@ -110,12 +110,38 @@ final class FixtureTransport implements Transport,PhantomPaymentGateway {
         }
         return array_slice([$row],(int)($query['Offset']??0),(int)($query['Limit']??1));
     }
-    public function impute(string $token,string $idt,int $cents,string $origin,string $reference): void {
-        if($token!=='fixture-technical-token' || $idt!=='123' || $cents!==2000025 || $origin!=='SIRO Mi USITTEL'
-            || !preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference)) throw new \RuntimeException('invalid safe fixture payment');
-        file_put_contents($this->dir.'/phantom-post-calls','1',FILE_APPEND);
-        if(trim(@file_get_contents($this->dir.'/scenario')?:'normal')==='phantom-post-timeout') throw new Failure('PHANTOM_TIMEOUT');
+}
+
+final class FixtureCrm implements PhantomCrmGateway {
+    private bool $authenticated=false;
+    public function __construct(private string $dir) {}
+    private function scenario(): string {return trim(@file_get_contents($this->dir.'/scenario')?:'normal');}
+    public function authenticate(bool $refresh=false): void {
+        file_put_contents($this->dir.'/crm-auth-calls','1',FILE_APPEND);$this->authenticated=true;
+    }
+    public function unpaid(string $idt): array {
+        if(!$this->authenticated)$this->authenticate();
+        $scenario=$this->scenario();
+        if($scenario==='crm-token-expired' && !is_file($this->dir.'/crm-expired')) {touch($this->dir.'/crm-expired');$this->authenticate(true);}
+        if(is_file($this->dir.'/phantom-posted') || $scenario==='crm-unpaid-missing') return [];
+        $row=[$idt,'Fixture abonado','1','2026-09-01','2026-09','1-123','20000.25',[],'','','0','2026-09-20','2026-09-25'];
+        if($scenario==='crm-idt-mismatch')$row[0]='999';
+        if($scenario==='crm-ida-mismatch')$row[2]='5';
+        if($scenario==='crm-amount-mismatch')$row[6]='1.00';
+        if($scenario==='crm-malformed')return [['private']];
+        return [$row];
+    }
+    public function impute(string $idt,int $cents,string $origin,string $reference): string {
+        if(!$this->authenticated)$this->authenticate();
+        if($idt!=='123' || $cents!==2000025 || $origin!=='SIRO Mi USITTEL' || !preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference)) throw new \RuntimeException('invalid safe fixture payment');
+        file_put_contents($this->dir.'/phantom-post-calls','1',FILE_APPEND);$scenario=$this->scenario();
+        if($scenario==='phantom-post-timeout') throw new Failure('PHANTOM_TIMEOUT');
+        if($scenario==='phantom-post-timeout-after-write'){touch($this->dir.'/phantom-posted');throw new Failure('PHANTOM_TIMEOUT');}
+        if($scenario==='crm-post-error')return 'ERROR';
+        if($scenario==='crm-post-error-after-write'){touch($this->dir.'/phantom-posted');return 'ERROR';}
+        if($scenario==='crm-post-unknown')return 'UNKNOWN';
         touch($this->dir.'/phantom-posted');
+        return $scenario==='crm-post-extended'?'SUCCESS':'SUCCESS';
     }
 }
 

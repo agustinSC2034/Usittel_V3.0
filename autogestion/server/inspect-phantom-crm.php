@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-use MiUsittel\CurlTransport;
 use MiUsittel\Failure;
 
 if(PHP_SAPI!=='cli') {http_response_code(404);exit;}
@@ -16,11 +15,8 @@ try {
         $base=parse_url($config['phantom_url']);
         $posting=['crm_url'=>'https://'.$base['host'].'/PHANTOM/Includes/CRM/API_CRM.php'];
     }
-    $transport=new CurlTransport($config);
-    $response=$transport->authenticate($posting['crm_url'].'?action=autentificar&JSON=1',[
-        'api_user'=>$config['api_user'],'api_pass'=>$config['api_pass'],
-    ]);
-    if(!is_string($response['token']??null) || trim($response['token'])==='') throw new Failure('PHANTOM_TOKEN');
+    $crm=new MiUsittel\PhantomCrmHttp($config,$posting,MiUsittel\privateDir());
+    $crm->authenticate(true);
     fwrite(STDOUT,"Etapa: crm_autenticacion\nCódigo: CRM_AUTH_OK\nSin escritura en Phantom.\n");
     exit(0);
 } catch(Throwable $error) {

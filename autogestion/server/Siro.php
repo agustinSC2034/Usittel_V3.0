@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace MiUsittel;
 
-function siroConfig(array $c): ?array {
+function siroCandidateConfig(array $c): ?array {
     $s=$c['siro']??[];
     if(!is_array($s)) throw new Failure('SIRO_CONFIGURATION');
-    if(($s['enabled']??false)!==true || $c['mode']!=='phantom') return null;
+    if(!array_key_exists('enabled',$s) || !is_bool($s['enabled']) || $c['mode']!=='phantom') return null;
     foreach(['user','password','return_base'] as $key) if(!is_string($s[$key]??null) || $s[$key]==='') throw new Failure('SIRO_CONFIGURATION');
     $p=parse_url($s['return_base']);
     if(!$p || !in_array($p['scheme']??null,['https','http'],true) || empty($p['host']) || isset($p['user'],$p['pass']) || isset($p['query']) || isset($p['fragment'])
@@ -17,6 +17,12 @@ function siroConfig(array $c): ?array {
     $s['lab_ida']??=1;
     if(!is_int($s['lab_ida']) || $s['lab_ida']<1 || $s['lab_ida']>9999999999) throw new Failure('SIRO_CONFIGURATION');
     return $s;
+}
+function siroConfig(array $c): ?array {
+    $raw=$c['siro']??null;
+    if($raw===null || (is_array($raw) && ($raw['enabled']??false)===false)) return null;
+    $s=siroCandidateConfig($c);
+    return $s!==null && $s['enabled']?$s:null;
 }
 function siroLabService(?array $s,array $ids,?int $selected): bool {
     return $s!==null && count($ids)===1 && $selected===($s['lab_ida']??1) && in_array($selected,$ids,true);

@@ -41,14 +41,22 @@ Después del chequeo local, acordar una factura IMPAGA controlada del contrato d
 
 La prueba de confirmación debe mostrar “SIRO confirmó el pago” y aclarar que todavía no se registra automáticamente en Phantom. El saldo de Phantom no se modifica artificialmente. Luego se podrá validar recuperación tras cerrar el navegador; el retorno OK no es prueba de éxito.
 
-## Siguiente etapa: comprobación CRM sin escritura
+## Autenticación CRM confirmada y preflight pendiente
 
-La confirmación SIRO real ya fue aceptada. Antes de habilitar `Imputar_Pago`, ejecutar una única autenticación segura contra el endpoint CRM:
+Agustín ejecutó manualmente la autenticación segura contra el endpoint CRM:
 
 ```powershell
 & $env:MI_USITTEL_PHP autogestion/server/inspect-phantom-crm.php
 ```
 
-El resultado esperado es `CRM_AUTH_OK` y `Sin escritura en Phantom.`. Este inspector no recibe IDA, IDT, importe ni referencia y no invoca `Imputar_Pago`. No compartir token, credenciales, configuración privada ni respuestas crudas.
+El resultado real fue `CRM_AUTH_OK` y `Sin escritura en Phantom.`. Quedaron confirmados endpoint, credenciales técnicas, token CRM y TLS/CA/hostname. No se ejecutó `Imputar_Pago`.
+
+El siguiente y único paso manual es el preflight de solo lectura:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-payment-posting-preflight.php
+```
+
+No recibe attempt_id, IDT, importe, referencia ni token. Busca en el runtime privado exactamente un intento `CONFIRMED` y `NOT_POSTED` para `phantom_posting.lab_ida`, revalida el resultado individual en SIRO y compara la factura exacta en API Rest y CRM `Consultar_Impagos`. Cero candidatos produce `CANDIDATE_NOT_FOUND`; más de uno, `CANDIDATE_AMBIGUOUS`; una factura ya saldada, `PHANTOM_ALREADY_SETTLED`. Solo `READY_FOR_CONTROLLED_POST` habilita discutir la primera escritura. Durante esta prueba `phantom_posting.enabled` debe seguir `false`.
 
 Compartir solo el estado visible y, si aparece, el código seguro del error. No compartir passwords, tokens, hashes, enlaces completos de checkout/retorno, datos bancarios, JSON crudo ni archivos del runtime. El usuario completa personalmente cualquier dato de pago.

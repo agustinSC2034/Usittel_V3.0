@@ -121,7 +121,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
         }
         if($route==='payment-post') jsonReply($payments->postToPhantom($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt),
-            fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
+            fn(string $idt)=>$ph->crmUnpaidRows($ida,$idt),fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
         jsonReply($payments->reconcile($ida,$b['attempt_id']));
     }
     $documents??=new PhantomInvoiceDocuments($c);

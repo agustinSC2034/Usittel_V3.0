@@ -35,6 +35,11 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const result=spawnSync(php,[path.join(__dirname,'siro-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
     check('transporte SIRO aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
   }
+  for(const [name,expected] of Object.entries({ok:'CRM_HTTP_OK',expired:'CRM_HTTP_OK',timeout:'PHANTOM_TIMEOUT',malformed:'PHANTOM_CRM_FORMAT'})) {
+    const crmDir=path.join(dir,'crm-'+name);fs.mkdirSync(crmDir);
+    const result=spawnSync(php,[path.join(__dirname,'crm-http.php'),name],{env:{...fixtureEnv,MI_USITTEL_RUNTIME:crmDir},encoding:'utf8'});
+    check('transporte CRM aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
+  }
   const serviceTests=spawnSync(php,[path.join(__dirname,'services-unit.php')],{env:fixtureEnv,encoding:'utf8'});
   check('reglas de asociación y recuperación de selección',()=>{assert.equal(serviceTests.status,0,serviceTests.stderr);assert.match(serviceTests.stdout,/^[0-9]+$/);});
   count+=Number(serviceTests.stdout)-1;
@@ -349,12 +354,19 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en reflejarse/);
     assert.match(views,/saldo puede no incluir pagos recientes ya confirmados por SIRO/);
     assert.match(payments,/Actualizando cuenta|actualizando tu cuenta/);
+    assert.match(payments,/ALREADY_SETTLED[\s\S]*Mi USITTEL no realizó otra imputación/);
   });
   check('inspector CRM es sólo autenticación y no contiene acciones de escritura',()=>{
     const inspector=fs.readFileSync(path.join(root,'server','inspect-phantom-crm.php'),'utf8');
-    assert.match(inspector,/action=autentificar/);assert.doesNotMatch(inspector,/Imputar_Pago|postToPhantom/);
+    assert.match(inspector,/PhantomCrmHttp[\s\S]*authenticate\(true\)/);assert.doesNotMatch(inspector,/Imputar_Pago|postToPhantom/);
     const writer=fs.readFileSync(path.join(root,'server','PhantomPayments.php'),'utf8');
-    assert.match(writer,/action.*Imputar_Pago/);assert.doesNotMatch(writer,/permitir_importe_menor/);
+    assert.match(writer,/Imputar_Pago/);assert.match(writer,/Consultar_Impagos/);assert.doesNotMatch(writer,/permitir_importe_menor/);
+    assert.match(writer,/crm-token-/);
+    const phantom=fs.readFileSync(path.join(root,'server','Phantom.php'),'utf8');
+    assert.match(phantom,/imputePayment[\s\S]*?\$this->crm->impute/);
+    assert.doesNotMatch(phantom,/imputePayment[\s\S]{0,700}?\$this->token/);
+    const preflight=fs.readFileSync(path.join(root,'server','inspect-payment-posting-preflight.php'),'utf8');
+    assert.match(preflight,/postingPreflight/);assert.doesNotMatch(preflight,/imputePayment|Imputar_Pago|payment-post/);
   });
   clearRate();const mapping=jar();await login(mapping);
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['Autogestion_Pass']"));r=await mapping.call('overview');check('configuración no expone credenciales como perfil',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/00Lab-fixture/);});

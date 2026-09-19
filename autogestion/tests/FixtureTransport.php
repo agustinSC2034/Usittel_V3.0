@@ -54,7 +54,7 @@ final class FixtureTransport implements Transport {
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
             $record=['ID'=>'1','IDAx'=>'99','Autogestion_User'=>$scenario==='custom-user'?'laboratorio':'000001', 'Autogestion_Pass'=>' 00Lab-fixture! ',
-                'Estado_Servicio'=>'Suspendido',
+                'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline',
                 'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
                 'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
                 'Email'=>'cliente@example.invalid','Telefono'=>'fixture-phone','Balance_CC'=>'9999999',
@@ -62,6 +62,8 @@ final class FixtureTransport implements Transport {
                 'technical_meta'=>['connection'=>['state'=>'fixture-state','ports'=>[['kind'=>'ethernet','enabled'=>true]]]],
                 'Conexiones_Asociadas'=>[['IDA'=>999,'Autogestion_Pass'=>'do-not-expose']], 'DNI'=>'do-not-expose', 'Tarjeta'=>'do-not-expose'];
             if($scenario==='missing-credentials') unset($record['Autogestion_User'],$record['Autogestion_Pass']);
+            if($scenario==='missing') {$record['Estado_Conexion']=null;$record['Estado_ONU']=null;}
+            if($scenario==='unknown-connectivity') {$record['Estado_Conexion']='SYNCING';$record['Estado_ONU']=['unexpected'];}
             if($scenario==='numeric-password') $record['Autogestion_Pass']=123;
             if($scenario==='numeric-user') $record['Autogestion_User']=1;
             if($scenario==='empty-password') $record['Autogestion_Pass']='';

@@ -32,7 +32,7 @@ function curl_exec(\CurlHandle $ch): bool {
         'Consulta_Cliente_Avanzada'=>[['ID'=>'1','IDAx'=>'44','Autogestion_User'=>'000001','Autogestion_Pass'=>' 00fixture ',
             'Nombre'=>'Persona','Apellido'=>'Prueba','Razon_Social'=>'Empresa de prueba','Direccion'=>'Calle ficticia','Dir_Numero'=>'100',
             'Dir_Lote'=>'3','Ciudad'=>'Ciudad de prueba','Producto_Internet'=>'Fibra / texto compuesto sin interpretar',
-            'Email'=>null,'Telefono'=>[],'Movil'=>'5550000','Estado_Servicio'=>'SUSPENDIDO','Balance_CC'=>'999999']],
+            'Email'=>null,'Telefono'=>[],'Movil'=>'5550000','Estado_Servicio'=>'SUSPENDIDO','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','Balance_CC'=>'999999']],
         'Phantom_Mi_Estado_Cuenta'=>['Balance'=>'12500.75'],
         'Phantom_Ultima_Factura'=>[['IDT'=>'12','Estado'=>'IMPAGA','Total'=>'12500.75','Periodo'=>'202609','Primer_Vto'=>'2026-09-20']],
     };
@@ -49,6 +49,7 @@ demand($ph->verify(1,'000001',' 00fixture '));
 $p=$ph->profile(1);demand($p['name']==='Empresa de prueba' && $p['address']==='Calle ficticia 100 · Lote: 3');
 demand($p['plan']==='Fibra / texto compuesto sin interpretar' && $p['speed']===null && $p['email']===null && $p['phone']==='5550000');
 demand($p['serviceStatus']==='SUSPENDIDO');
+demand($p['connectionState']==='online' && $p['equipmentState']==='offline');
 demand($ph->balance(1)['debt']===12500.75);
 $invoices=$ph->invoices(1);demand($invoices['historyComplete']===false && $invoices['items'][0]['outstanding']===null);
 demand($calls===['autentificar','Consulta_Cliente_Avanzada','Consulta_Cliente_Avanzada','Phantom_Mi_Estado_Cuenta','Phantom_Ultima_Factura']);

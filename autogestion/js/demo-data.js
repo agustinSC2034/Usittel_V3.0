@@ -2,7 +2,7 @@
 export const customer = {
   name: 'Agustín', email: 'agustin@example.com', phone: '',
   address: 'Costa Rica 550', city: 'Tandil', plan: 'Fibra 300 Mbps',
-  serviceStatus: 'Activo', network: 'USITTEL_Hogar',
+  serviceStatus: 'Activo', connectionState: 'online', equipmentState: 'online', network: 'USITTEL_Hogar',
 };
 export const invoices = [
   { id: '2026-09', period: 'Septiembre 2026', amount: 12500, due: '20/09/2026', status: 'Pendiente', paidAt: null },

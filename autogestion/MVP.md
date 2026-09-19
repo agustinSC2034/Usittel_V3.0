@@ -30,7 +30,7 @@ El inspector y la navegación real confirmaron las dos páginas (10 + 1) y sus d
 
 ## Conservado
 
-Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, límites de intentos, aislamiento demo/Phantom, whitelist pública, configuración y runtime privados. Mi servicio y Mi cuenta muestran lectura de perfil; Soporte no inventa tickets. Funciones secundarias del prototipo conservadas, deshabilitadas en Phantom.
+Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, límites de intentos, aislamiento demo/Phantom, whitelist pública, configuración y runtime privados. Mi servicio muestra el estado público de la conexión y del equipo únicamente cuando Phantom informa Online/Offline; cualquier otro valor queda como No disponible. No entrega identificadores ni topología técnica. Mi cuenta muestra lectura de perfil; Soporte no inventa tickets. Funciones secundarias del prototipo conservadas, deshabilitadas en Phantom.
 
 ## Fuera de alcance
 

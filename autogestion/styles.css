@@ -112,6 +112,12 @@
   .service-details { display:grid; gap:28px; margin-bottom:24px; }
   .service-details dt { margin-bottom:5px; }
   .service-details dd { font-size:19px; }
+  .connectivity-details { display:grid; gap:0; margin-top:2px; }
+  .connectivity-details > div { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:54px; border-bottom:1px solid var(--line); }
+  .connectivity-details dt { color:var(--ink); }
+  .connectivity-details .status { padding:4px 12px; border-radius:20px; background:#eef0f1; }
+  .connectivity-details .status-success { background:#e0eee4; }
+  .connectivity-details .status-pending { background:#fbf0dc; }
   .field-hint { font-size:13px; color:var(--muted); margin-top:12px; line-height:1.6; }
   .support-link { border-top:1px solid var(--line); padding-top:25px; margin-top:32px; font-size:14px; }
   .support-link a { display:inline-block; padding:6px 0; text-decoration:underline; }
@@ -251,6 +257,7 @@
   .plan-title { font-size:22px; }
   .service-details { gap:24px; margin:18px 0 24px; }
   .service-details dd { font-size:18px; }
+  .connectivity-details > div { min-height:52px; }
   .page-servicio .second-column .button { width:100%; }
   .support-link { margin-top:26px; }
   .speed-metrics { gap:10px; }

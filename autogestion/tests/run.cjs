@@ -288,7 +288,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   clearRate();scenario('timeout');const providerFailure=jar();await providerFailure.call('bootstrap');r=await providerFailure.call('login',{username:'000001',password:' 00Lab-fixture! '});check('fallo del proveedor no consume intentos de credenciales',()=>{assert.equal(r.status,504);const state=JSON.parse(fs.readFileSync(path.join(dir,'attempts.json'),'utf8'));assert.equal(Object.keys(state.buckets).length,0);});scenario('normal');
   const oldCookie=a.cookie;r=await login(a);check('login fixture suspendido y regeneración',()=>{assert.equal(r.status,200);assert.notEqual(a.cookie,oldCookie);});
   r=await a.call('bootstrap');check('sesión persiste al recargar',()=>assert.equal(r.data.authenticated,true));
-  r=await a.call('overview');check('whitelist y saldo independiente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas/);});
+  r=await a.call('overview');check('whitelist, conectividad pública y saldo independiente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
+  scenario('unknown-connectivity');r=await a.call('overview');check('estados técnicos desconocidos no se interpretan ni se exponen',()=>{assert.equal(r.data.customer.connectionState,null);assert.equal(r.data.customer.equipmentState,null);assert.doesNotMatch(r.text,/SYNCING|unexpected/);});scenario('normal');
   scenario('wrong-identity');r=await a.call('overview');check('identidad incorrecta después de login no devuelve perfil ajeno',()=>{assert.equal(r.status,503);assert.equal(r.data.customer,undefined);});scenario('normal');
   scenario('invalid-invoice-id');r=await a.call('overview');check('identificador de factura booleano no se convierte y no bloquea perfil',()=>{assert.equal(r.status,200);assert.equal(r.data.customer.name,'Cliente de pruebas');assert.ok(r.data.warnings.includes('INVOICES_UNAVAILABLE'));});scenario('normal');
   r=await a.call('overview?IDA=5');check('IDA navegador rechazado',()=>assert.equal(r.status,400));
@@ -341,6 +342,17 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     ];
     for(const [raw,visible] of cases) assert.equal(presentation.planLabel(raw),visible);
     assert.equal(cases[1][0],'EMP ($) - Internet Empresa 200 Mbps Simétricos');
+  });
+  check('conectividad traduce solo estados canónicos confirmados',()=>{
+    assert.equal(presentation.connectivityLabel('online'),'En línea');
+    assert.equal(presentation.connectivityLabel('offline'),'Sin conexión');
+    assert.equal(presentation.connectivityLabel('SYNCING'),'No disponible');
+    assert.equal(presentation.connectivityLabel(null),'No disponible');
+  });
+  check('Mi servicio muestra conectividad útil sin datos internos',()=>{
+    const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
+    assert.match(views,/Conectividad[\s\S]*Conexión a internet[\s\S]*Equipo de conexión/);
+    assert.doesNotMatch(views,/Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion/);
   });
   check('Facturas separa comprobantes y movimientos con pestañas accesibles',()=>{
     const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');

@@ -7,7 +7,7 @@ export const routes = [
   ['inicio', 'Inicio', 'home'], ['facturas', 'Facturas', 'file-text'],
   ['servicio', 'Mi servicio', 'wifi'], ['soporte', 'Soporte', 'headphones'], ['cuenta', 'Mi cuenta', 'user'],
 ];
-export const status = value => `<span class="status status-${['Pagada','Activo','Pago confirmado','Pago registrado'].includes(value) ? 'success' : value === 'Vencida' || value === 'Suspendido' ? 'danger' : value === 'Pendiente' || value === 'En revisión' ? 'pending' : 'neutral'}">${escapeHTML(value)}</span>`;
+export const status = value => `<span class="status status-${['Pagada','Activo','Pago confirmado','Pago registrado','En línea'].includes(value) ? 'success' : value === 'Vencida' || value === 'Suspendido' ? 'danger' : ['Pendiente','En revisión','Sin conexión'].includes(value) ? 'pending' : 'neutral'}">${escapeHTML(value)}</span>`;
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);

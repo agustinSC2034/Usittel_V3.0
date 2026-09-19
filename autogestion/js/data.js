@@ -1,6 +1,6 @@
 // Live state starts empty. Demo fixtures are loaded only after server bootstrap.
 export const runtime = { mode: null, services: [], selectedServiceId: null, servicesUnavailable: false, paymentsEnabled: false, phantomPostingEnabled: false, paymentItems: [], paymentError: '', billingView: 'invoices', backend: true, loading: false, error: '', warnings: [], nextOffset: null, endReached: false, invoicesLoading: false };
-const emptyCustomer = () => ({ name: null, email: null, phone: null, address: null, city: null, plan: null, serviceStatus: null, network: null, speed: null });
+const emptyCustomer = () => ({ name: null, email: null, phone: null, address: null, city: null, plan: null, serviceStatus: null, connectionState: null, equipmentState: null, network: null, speed: null });
 export let customer = emptyCustomer();
 export let invoices = [];
 export let ticket = null;
@@ -43,4 +43,10 @@ export function addressLabel(value) {
   if (typeof value !== 'string') return value;
   const cleaned = value.split(/\s*·\s*(?=(?:Lote|Manzana|Referencia|Barrio)\s*:)/i, 1)[0].trim();
   return cleaned || value;
+}
+
+export function connectivityLabel(value) {
+  if (value === 'online') return 'En línea';
+  if (value === 'offline') return 'Sin conexión';
+  return 'No disponible';
 }

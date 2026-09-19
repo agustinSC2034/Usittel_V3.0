@@ -181,8 +181,15 @@ final class Phantom {
             $out['address']=implode(' · ',array_filter([$out['address'],...$extra],fn($v)=>$v!==null))?:null;
         }
         $out['serviceStatus']=textValue($raw['Estado_Servicio']??null);
+        $out['connectionState']=$this->publicConnectivityState($raw['Estado_Conexion']??null);
+        $out['equipmentState']=$this->publicConnectivityState($raw['Estado_ONU']??null);
         $out['network']=null; $out['speed']=null;
         return $out;
+    }
+    private function publicConnectivityState(mixed $value): ?string {
+        $value=textValue($value);
+        if($value===null) return null;
+        return match(strtolower($value)) {'online'=>'online','offline'=>'offline',default=>null};
     }
     public function balance(int $ida): array {
         $data=$this->read('Phantom_Mi_Estado_Cuenta',$ida);

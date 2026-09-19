@@ -94,7 +94,7 @@ El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login,
 
 Inicio recibe perfil, estado administrativo, saldo y la primera página de facturas; muestra solo las tres más recientes. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
 
-Mi servicio y Mi cuenta reutilizan el perfil de lectura. Soporte no inventa tickets. Pagos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom. No se rediseñaron pantallas ni se eliminaron funciones del prototipo demo.
+Mi servicio y Mi cuenta reutilizan el perfil de lectura. Mi servicio muestra dos señales de conectividad acotadas: conexión a internet desde `Estado_Conexion` y equipo de conexión desde `Estado_ONU`. Solo `Online` y `Offline` se convierten a estados públicos; valores ausentes o no reconocidos se muestran como No disponible. No se exponen IP, MAC/GPON, PPPoE, router, OLT, NAP, coordenadas ni topología interna. Soporte no inventa tickets. Pagos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom.
 
 ## Configuración y ejecución
 

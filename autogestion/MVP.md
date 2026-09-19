@@ -30,7 +30,7 @@ El inspector y la navegación real confirmaron las dos páginas (10 + 1) y sus d
 
 ## Conservado
 
-Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, límites de intentos, aislamiento demo/Phantom, whitelist pública, configuración y runtime privados. Mi servicio muestra el estado público de la conexión y del equipo únicamente cuando Phantom informa Online/Offline; cualquier otro valor queda como No disponible. No entrega identificadores ni topología técnica. Mi cuenta muestra lectura de perfil; Soporte no inventa tickets. Funciones secundarias del prototipo conservadas, deshabilitadas en Phantom.
+Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, límites de intentos, aislamiento demo/Phantom, whitelist pública, configuración y runtime privados. Mi servicio muestra el estado público de la conexión únicamente cuando Phantom informa Online/Offline; cualquier otro valor queda como No disponible. No entrega identificadores ni topología técnica. Mi cuenta muestra lectura de perfil; Soporte no inventa tickets. Funciones secundarias del prototipo conservadas, deshabilitadas en Phantom.
 
 ## Fuera de alcance
 
@@ -53,3 +53,7 @@ Prueba real aportada por Agustín: endpoint PDF, HTTP 200, 512207 bytes, sin red
 ## Cierre aceptado — 18/09/2026
 
 Agustín respondió “listo todo ok” a la comprobación final solicitada: descarga de factura reciente e histórica, correspondencia de período/número/importe y logout seguido de recarga al login. Es aceptación manual del laboratorio IDA 1, no validación de otros clientes ni de producción. No se habilitan SIRO, pagos ni escrituras.
+
+## Presentación de conectividad pendiente de contraste
+
+La pantalla muestra únicamente Estado de tu conexión, a partir de Estado_Conexion. El estado del equipo queda oculto hasta confirmar su significado y disponibilidad. Online/Offline se traducen de forma limitada; falta contrastar el resultado con un servicio conocido en funcionamiento. No se interpreta como diagnóstico de avería ni se garantiza una frecuencia de actualización.

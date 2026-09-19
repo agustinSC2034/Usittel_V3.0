@@ -1,14 +1,14 @@
 # Primera prueba SIRO — un único servicio
 
-El código está probado con simulaciones. La primera conexión real SIRO de este módulo está pendiente. No hay imputación en Phantom.
+La conexión real SIRO de laboratorio quedó validada el 19/09/2026 con una cuenta controlada de un solo servicio. Se creó y canceló un primer intento; la consulta posterior devolvió CANCELADA. Un segundo intento nuevo sobre la misma factura fue procesado y la reconciliación devolvió PagoExitoso=true con Estado=PROCESADA. Mi USITTEL mostró Pago confirmado, mantuvo el saldo y la factura informados por Phantom y no ejecutó ninguna imputación en Phantom.
 
-## Único paso solicitado ahora
+## Resultado de la prueba
 
-Indicar el número de contrato de **una cuenta de laboratorio con un solo servicio** y una factura IMPAGA controlada, sin pagos parciales. No enviar credenciales, DNI/CUIT ni datos bancarios.
+La prueba confirmó creación de intención, redirección al dominio oficial, cancelación, reintento con comprobante nuevo, pago real y reconciliación backend. SIRO demoró unos segundos en publicar la cancelación; una consulta posterior recuperó el estado terminal correcto. El retorno del navegador no se usó como prueba de pago.
 
-IDA 1 tiene dos servicios autorizados: SIRO sigue bloqueado para esa sesión. No borrar asociaciones ni cambiar documentos para sortearlo. No se habilita automáticamente otra cuenta. Primero confirmar la cuenta candidata; después se indicará una sola comprobación manual.
+IDA 1 tiene dos servicios autorizados y SIRO sigue bloqueado para esa sesión. La habilitación privada continúa limitada a la cuenta de laboratorio acordada. No borrar asociaciones ni cambiar documentos para sortearlo.
 
-## Preparación posterior — todavía no ejecutar
+## Configuración utilizada en laboratorio
 
 Abrí el archivo que ya funciona, sin reemplazarlo:
 
@@ -33,7 +33,7 @@ npm run check:mi-usittel
 
 Este chequeo NO contacta SIRO ni Phantom y no valida que las credenciales sean aceptadas. Compartí únicamente su salida de comprobaciones, nunca el archivo privado. Esperar revisión antes de la prueba siguiente.
 
-## Prueba posterior, de a una
+## Procedimiento conservado para regresiones manuales
 
 Después del chequeo local, acordar una factura IMPAGA controlada del contrato de laboratorio, sin pagos parciales. Agustín abre el portal local, inicia sesión personalmente, carga esa factura y pulsa Pagar una vez. La aplicación reconsulta a Phantom y recién entonces crea la intención. Agustín hace el checkout en el portal oficial; nadie ejecuta pagos automáticos.
 

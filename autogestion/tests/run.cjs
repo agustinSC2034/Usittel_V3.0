@@ -337,6 +337,15 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     for(const [raw,visible] of cases) assert.equal(presentation.planLabel(raw),visible);
     assert.equal(cases[1][0],'EMP ($) - Internet Empresa 200 Mbps Simétricos');
   });
+  check('Facturas separa comprobantes y movimientos con pestañas accesibles',()=>{
+    const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
+    const payments=fs.readFileSync(path.join(root,'js','payment-view.js'),'utf8');
+    const app=fs.readFileSync(path.join(root,'js','app.js'),'utf8');
+    assert.match(views,/role="tablist"[\s\S]*role="tab"[\s\S]*Facturas[\s\S]*Movimientos/);
+    assert.match(views,/role="tabpanel"/);
+    assert.match(app,/returnAttempt[\s\S]*billingView = 'movements'/);
+    assert.match(payments,/\['CONFIRMED', 'CANCELLED', 'REJECTED'\]/);
+  });
   clearRate();const mapping=jar();await login(mapping);
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['Autogestion_Pass']"));r=await mapping.call('overview');check('configuración no expone credenciales como perfil',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/00Lab-fixture/);});
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['api_user']"));r=await mapping.call('overview');check('mapeos limitados a lista pública explícita',()=>assert.equal(r.status,503));

@@ -14,7 +14,7 @@ let paymentBusy = false;
 let serviceBusy = false;
 // Navigation hint only; authorization and all outcome checks remain on the server.
 let returnAttempt = /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(location.hash)?.[1] || null;
-if (returnAttempt) history.replaceState(null, '', '#/facturas');
+if (returnAttempt) { runtime.billingView = 'movements'; history.replaceState(null, '', '#/facturas'); }
 function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
@@ -104,6 +104,13 @@ document.addEventListener('click', async event => {
   }
   if (runtime.mode === 'phantom' && unavailable.includes(action)) return toast('Esta función todavía no está disponible.');
   if (action === 'payment-invoices') { location.hash = '/facturas'; return; }
+  if (action === 'billing-tab') {
+    if (!['invoices', 'movements'].includes(target.dataset.view)) return;
+    runtime.billingView = target.dataset.view;
+    render();
+    document.querySelector(`[data-action="billing-tab"][data-view="${runtime.billingView}"]`)?.focus();
+    return;
+  }
   if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check')) {
     if (!runtime.paymentsEnabled || paymentBusy) return;
     paymentBusy = true; target.disabled = true; const generation = dataGeneration;
@@ -188,7 +195,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
-      authenticated = false; applyServices({}); clearData(); runtime.error = ''; location.hash = '/login';
+      authenticated = false; applyServices({}); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
     return;

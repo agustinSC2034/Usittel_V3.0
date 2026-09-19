@@ -2,7 +2,7 @@
 
 ## Revisión SIRO1 — 19/09/2026
 
-Validación local: 449 verificaciones fixture, sintaxis PHP/JS, escaneo local de secretos y QA desktop/mobile sin errores de consola ni desborde. Checkout siempre interceptado; no hubo llamadas reales a Phantom/SIRO. La primera prueba de este módulo queda pendiente y será de creación/cancelación, según FIRST-SIRO-TEST.md.
+Validación local: 450 verificaciones fixture, sintaxis PHP/JS, escaneo local de secretos y QA desktop/mobile sin errores de consola ni desborde. La prueba SIRO real de laboratorio quedó completada: intención creada, cancelación recuperada por consulta posterior, segundo intento único, pago confirmado con PagoExitoso=true y Estado=PROCESADA. No hubo imputación ni escritura en Phantom. Ver FIRST-SIRO-TEST.md.
 
 La lectura multicontrato aceptada se conserva. El dominio recibe `selected_ida` del servidor, y las rutas SIRO exigen exactamente un servicio autorizado y coincidencia con `siro.lab_ida` privado (1 por defecto). IDA 1 tiene dos servicios en la instalación actual: SIRO queda bloqueado. Para probar será necesaria otra cuenta de laboratorio de un único servicio, acordada explícitamente; nunca ocultar asociaciones.
 
@@ -22,7 +22,7 @@ Se conserva el margen de un minuto en FechaHasta. FechaDesde se ancla doce horas
 
 ## Alcance y evidencia
 
-Lectura Phantom IDA 1 aceptada por Agustín en f47bb26: login, sesión, perfil, saldo, 11 facturas, detalle, PDF reciente/histórico y logout. Esta etapa conserva ese recorrido. SIRO está implementado con fixtures y deshabilitado por defecto; todavía no fue probado con credenciales reales desde este módulo.
+Lectura Phantom IDA 1 aceptada por Agustín en f47bb26: login, sesión, perfil, saldo, 11 facturas, detalle, PDF reciente/histórico y logout. Esta etapa conserva ese recorrido. SIRO está implementado con fixtures, deshabilitado por defecto y validado con credenciales reales únicamente para la cuenta de laboratorio privada acordada.
 
 Contrato contrastado con la investigación local `Mi_USITTEL_SIRO_Estado_Tecnico_POC_2026-09-14.pdf` y el [manual oficial API SIRO Pagos 1.4](https://www.bancoroela.com.ar/uploads/SIRO%20Developers%20-%20API%20SIRO%20PAGOS%20-%20Versi%C3%B3n%201.4%20-%2003.25.pdf). El manual permite comprobantes numéricos de veinte posiciones y exige diferenciar sus cinco posiciones finales para un mismo cliente empresa; contempla un contador secuencial. Los ejemplos de resultados contienen Request, IdOperacion, Estado y PagoExitoso. La compatibilidad exacta de esta instalación se comprobará manualmente, sin exponer respuestas crudas.
 
@@ -43,7 +43,7 @@ No se modifica el estado de la factura ni se descuenta el saldo mostrado. “Pag
 - `server/Api.php`: sesión propia, IDA de sesión exclusivamente, CSRF para POST y listas explícitas de campos. `payment-create` recibe únicamente `{idt: "..."}`. El IDT debe estar en el historial autorizado; vuelve a consultarse su posición en Phantom y debe coincidir, pertenecer al cliente y tener Estado IMPAGA. No hay datos demo ni importe del navegador.
 - `GET payments`: estados públicos propios, sin CPE, comprobantes internos, referencias ni hash. `POST payment-reconcile` recibe únicamente attempt_id y verifica pertenencia a la sesión.
 - `server/router.php`: las rutas propias `/autogestion/pago-ok/<attempt_id>` y `/pago-error/<attempt_id>` redirigen a Facturas sin interpretar ni conservar la query del retorno. Ninguna de ellas confirma un pago.
-- `js/payment-view.js` y frontend existente: preparación, salida al checkout oficial, lista de intentos y consulta de estado. No iframe ni proxy del checkout.
+- `js/payment-view.js` y frontend existente: preparación, salida al checkout oficial, lista de intentos y consulta de estado. Facturas y Movimientos se presentan en pestañas internas separadas; el retorno SIRO abre Movimientos. No iframe ni proxy del checkout.
 
 La URL de checkout es el único dato externo necesario que recibe el navegador; se exige exactamente `https://siropagos.bancoroela.com.ar/Home/Pago/<hash válido>`. Ese enlace contiene inevitablemente el identificador SIRO del checkout. Nunca se entrega Hash_Descarga de Phantom, credenciales ni respuestas SIRO crudas.
 
@@ -70,7 +70,7 @@ Al volver a entrar se recuperan los intentos desde disco y se reconcilia automá
 ## Límites de esta etapa
 
 - Solo el contrato de laboratorio configurado, con un único servicio y factura controlada IMPAGA. Se usa Total estricto de Phantom (positivo, hasta nueve enteros y dos decimales), no saldo pendiente calculado. No está resuelto el pago parcial: no probar una factura parcialmente abonada.
-- No SIRO real automático en tests/build/chequeos. Fixtures de transporte, servicio, HTTP y navegador; prueba real pendiente.
+- No SIRO real automático en tests/build/chequeos. Fixtures de transporte, servicio, HTTP y navegador; la prueba real manual quedó validada únicamente en laboratorio.
 - No Imputar_Pago, promesas, cambios de servicio, Wi-Fi, perfil, Apache, DNS, web pública o producción.
 - La sesión puede vencer durante el checkout: ingresar nuevamente recupera intentos del mismo cliente.
 - Antes de producción: certificados/CA del hosting, retornos HTTPS públicos, credenciales Phantom GET en logs remotos, permisos/backup, coordinación de comprobantes, seguridad y despliegue. Revisar también si SIRO/Phantom tienen procesos externos de imputación propios: este módulo no los controla.

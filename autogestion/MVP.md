@@ -6,7 +6,7 @@ Selector discreto en Inicio solo cuando existen varios contratos autorizados; se
 
 ## Etapa SIRO actual
 
-Creación de intención y confirmación backend implementadas con fixtures (449 verificaciones locales al 19/09/2026). QA móvil/escritorio con checkout interceptado, cancelación, reintento, retorno con sesión perdida y confirmación. Deshabilitadas por defecto hasta completar configuración privada y prueba real. Solo factura IMPAGA de una cuenta de laboratorio explícita con un único servicio autorizado, importe reconsultado en Phantom, checkout oficial, intentos persistentes y recuperación sin retorno. IDA 1 tiene dos servicios: permanece bloqueado. Antes de probar necesitamos otra cuenta controlada de un solo servicio; no ocultar asociaciones. Primera prueba real: crear y cancelar, no pagar.
+Creación de intención y confirmación backend implementadas con fixtures (450 verificaciones locales al 19/09/2026) y validadas manualmente con SIRO real en una cuenta controlada de un solo servicio: cancelación, nuevo intento y pago confirmado. Deshabilitadas por defecto fuera de esa configuración privada. Solo factura IMPAGA de una cuenta de laboratorio explícita con un único servicio autorizado, importe reconsultado en Phantom, checkout oficial, intentos persistentes y recuperación sin retorno. IDA 1 tiene dos servicios y permanece bloqueado. La UI separa Facturas de Movimientos; no mezcla los intentos SIRO con el listado principal.
 
 La UI distingue intención SIRO, confirmación SIRO e imputación Phantom (siempre no realizada); no altera el saldo. Las fechas de Consulta reproducen la función validada de la POC de Buenos Aires, sin sustituirla por UTC. El almacenamiento depende de PaymentAttempts para poder migrar a persistencia transaccional antes de producción. Ver [SIRO.md](SIRO.md) y [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md).
 
@@ -34,7 +34,7 @@ Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, 
 
 ## Fuera de alcance
 
-Imputación de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente, pendiente de prueba real de este módulo. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
+Imputación de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente; su prueba real de laboratorio quedó completada. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
 
 Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.
 

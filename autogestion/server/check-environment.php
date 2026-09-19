@@ -48,7 +48,12 @@ if(!$configPath) {
                     $idas=$config['allowed_idas']??null;
                     $idasOk=is_array($idas) && $idas!==[] && array_diff($idas,[1,5])===[];
                     $idasOk=$idasOk && in_array(1,$idas,true);
-                    $add($idasOk?'ok':'fail','Cuentas de laboratorio',$idasOk?'acceso inicial IDA 1 por defecto; servicios asociados se autorizan en servidor':'incluir IDA 1; usar [1]');
+                    $loginIdas=$config['service_login_idas']??[1];
+                    $loginIdasOk=is_array($loginIdas) && array_is_list($loginIdas) && $loginIdas!==[] && count($loginIdas)<=3;
+                    if($loginIdasOk) foreach($loginIdas as $loginId) if(!is_int($loginId) || $loginId<1 || $loginId>9999999999) {$loginIdasOk=false;break;}
+                    $accountsOk=$idasOk && $loginIdasOk;
+                    $loginCount=$loginIdasOk?count($loginIdas):0;
+                    $add($accountsOk?'ok':'fail','Cuentas de laboratorio',$accountsOk?$loginCount.' contrato'.($loginCount===1?'':'s').' inicial'.($loginCount===1?'':'es').' configurado'.($loginCount===1?'':'s').'; servicios asociados se autorizan en servidor':'revisar allowed_idas y service_login_idas');
                     $authOk=($config['phantom_auth_mode']??'get-query-lab')==='get-query-lab';
                     $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET explícito de laboratorio; lecturas POST':'usar get-query-lab');
                     $identity=$config['customer_id_field']??null;
@@ -65,6 +70,7 @@ if(!$configPath) {
                 } catch(Throwable) {$add('fail','SIRO laboratorio','revisar estructura, credenciales privadas, retorno propio y rango reservado');}
                 $shapeErrors=[];
                 if(isset($config['lab_users']) && !is_array($config['lab_users'])) $shapeErrors[]='lab_users';
+                if(isset($config['service_login_idas']) && (!isset($loginIdasOk) || !$loginIdasOk)) $shapeErrors[]='service_login_idas';
                 if(isset($config['customer_path']) && !is_array($config['customer_path'])) $shapeErrors[]='customer_path';
                 if(isset($config['profile_fields']) && !is_array($config['profile_fields'])) $shapeErrors[]='profile_fields';
                 if(array_key_exists('balance_path',$config) && $config['balance_path']!==null && !is_array($config['balance_path'])) $shapeErrors[]='balance_path';

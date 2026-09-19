@@ -34,7 +34,9 @@ export function planLabel(value) {
   if (typeof value !== 'string') return value;
   const cleaned = value
     .replace(/^\s*\d{1,2}\/\d{1,2}\/\d{2,4}\s*-\s*/, '')
-    .replace(/^\s*RES\s*\(\$\)\s*-\s*/i, '');
+    // Phantom prefixes plans with internal customer segments such as
+    // RES ($), EMP ($), COM ($) or MUNI ($). Keep them in state, hide in UI.
+    .replace(/^\s*[A-ZÁÉÍÓÚÑ]{2,12}\s*\(\s*\$\s*\)\s*-\s*/i, '');
   return cleaned.trim() ? cleaned : value;
 }
 export function addressLabel(value) {

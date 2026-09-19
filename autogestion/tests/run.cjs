@@ -323,6 +323,20 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   fs.writeFileSync(config,settings('phantom'));r=await demo.call('overview');check('sesión demo no abre modo Phantom',()=>assert.equal(r.status,401));
   const injected=jar();r=await login(injected,'agustin.demo','usittel-demo');check('login simulado no aceptado en Phantom',()=>assert.equal(r.status,401));
   check('fixture demo solo se importa tras modo demo',()=>{const source=fs.readFileSync(path.join(root,'js','data.js'),'utf8');assert.match(source,/if \(mode === 'demo'\)[\s\S]*import\('\.\/demo-data\.js'\)/);assert.doesNotMatch(fs.readFileSync(path.join(root,'js','api.js'),'utf8'),/demo-data/);});
+  const presentationSource=fs.readFileSync(path.join(root,'js','data.js'),'utf8');
+  const presentation=await import('data:text/javascript;base64,'+Buffer.from(presentationSource).toString('base64'));
+  check('planes ocultan segmentos internos Phantom sin alterar el valor original',()=>{
+    const cases=[
+      ['RES ($) - Internet Residencial 300 Mbps','Internet Residencial 300 Mbps'],
+      ['EMP ($) - Internet Empresa 200 Mbps Simétricos','Internet Empresa 200 Mbps Simétricos'],
+      ['COM($)-Internet Comercial 500 Mbps','Internet Comercial 500 Mbps'],
+      ['MUNI ( $ ) - Internet Municipalidad 100 Mbps','Internet Municipalidad 100 Mbps'],
+      ['1/3/25 - MUNI ($) - Internet Municipalidad 100 Mbps','Internet Municipalidad 100 Mbps'],
+      ['Internet Empresa 200 Mbps Simétricos','Internet Empresa 200 Mbps Simétricos'],
+    ];
+    for(const [raw,visible] of cases) assert.equal(presentation.planLabel(raw),visible);
+    assert.equal(cases[1][0],'EMP ($) - Internet Empresa 200 Mbps Simétricos');
+  });
   clearRate();const mapping=jar();await login(mapping);
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['Autogestion_Pass']"));r=await mapping.call('overview');check('configuración no expone credenciales como perfil',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/00Lab-fixture/);});
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['api_user']"));r=await mapping.call('overview');check('mapeos limitados a lista pública explícita',()=>assert.equal(r.status,503));

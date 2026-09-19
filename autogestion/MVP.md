@@ -2,7 +2,7 @@
 
 ## Servicios asociados
 
-Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop. El contrato de búsqueda DNI/CUIT fue contrastado con Phantom real; queda aceptar el selector con el login real de dos servicios. Las asociaciones explícitas y documentales se verifican por ID y documento antes de autorizar. [Arquitectura y siguiente paso](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.
+Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop y con una sesión Phantom real de dos servicios. El contrato 1271 confirmó asociación directa, cambio sin nuevo login y actualización conjunta de dirección, plan, saldo y facturas; el contrato 1 conserva el respaldo exacto por documento. Las asociaciones explícitas y documentales se verifican antes de autorizar. [Arquitectura](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.
 
 ## Etapa SIRO actual
 

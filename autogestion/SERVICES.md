@@ -14,7 +14,7 @@ La prueba controlada del contrato 1271 confirmó una asociación directa utiliza
 
 ## Alcance
 
-Lectura multicontrato implementada con fixtures y contrato de búsqueda contrastado con Phantom real. Falta la aceptación visual del selector con una sesión real de dos servicios. No se consultó Phantom automáticamente desde tests ni se modificó configuración privada, Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.
+Lectura multicontrato implementada con fixtures y aceptada con Phantom real. El login controlado del contrato 1271 devolvió dos servicios, mantuvo el contrato autenticado como selección inicial y permitió cambiar al asociado sin volver a ingresar credenciales. Dirección, plan, saldo y facturas se actualizaron juntos; no apareció la advertencia de asociación incompleta. No se consultó Phantom automáticamente desde tests ni se modificó Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.
 
 ## Adaptación de Botmaker
 

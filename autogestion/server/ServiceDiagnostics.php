@@ -48,6 +48,7 @@ function documentKind(?string $value): string {
 }
 function documentsEquivalent(?string $a,?string $b): bool {
     if($a===null || $b===null) return false;
+    if(documentKind($a)==='cuit_invalid' || documentKind($b)==='cuit_invalid') return false;
     if($a===$b) return true;
     $dni=strlen($a)<=8?$a:(strlen($b)<=8?$b:null);$cuit=strlen($a)===11?$a:(strlen($b)===11?$b:null);
     if($dni===null || $cuit===null || documentKind($cuit)!=='personal_cuit') return false;

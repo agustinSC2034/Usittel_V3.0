@@ -3,10 +3,19 @@ declare(strict_types=1);
 namespace MiUsittel;
 if(getenv('MI_USITTEL_TEST')!=='1') exit(1);
 require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Services.php';
-require __DIR__.'/../server/ServiceDiagnostics.php';
+require_once __DIR__.'/../server/ServiceDiagnostics.php';
 $count=0;
-function expect(bool $ok): void {global $count;if(!$ok)throw new \RuntimeException('service assertion');$count++;}
+function expect(bool $ok): void {
+    global $count;
+    if(!$ok) {
+        $caller=debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,1)[0];
+        throw new \RuntimeException('service assertion at line '.($caller['line']??'?'));
+    }
+    $count++;
+}
 expect(serviceCandidates([])===[]);
+expect(serviceCandidates(['Conexiones_Asociadas'=>['']])===[]);
+expect(serviceCandidates(['Conexiones_Asociadas'=>['5','5']])===[5]);
 expect(serviceCandidates(['Conexiones_Asociadas'=>[['ID'=>'9'],[['ID'=>'3']],['ID'=>'9']]])===[9,3]);
 // Document candidates, even exact duplicates, are not an authorization source.
 foreach([['Documento'=>'fixture-doc','results'=>[['ID'=>'3'],['ID'=>'3']]],['DNI'=>'fixture-doc','Cuit'=>'other-fixture-doc','results'=>[['ID'=>'3'],['ID'=>'4']]]] as $root) expect(serviceCandidates($root)===[]);
@@ -35,6 +44,8 @@ expect(normalizedIdentityDocument('private')===null && normalizedIdentityDocumen
 expect(validCuit('20123456786') && documentKind('20123456786')==='personal_cuit');
 expect(documentsEquivalent('12345678','20123456786'));
 expect(!documentsEquivalent('12345678','30123456780'));
+expect(!documentsEquivalent('30123456780','30123456780'));
+expect(preferredIdentityDocument(['Cuit'=>'30123456780','DNI'=>'12345678'])==='12345678');
 $documentReport=documentSearchDiagnostics([
     ['ID'=>'1','Cuit'=>'20-12345678-6','Direccion'=>'Uno'],
     ['ID'=>'5','DNI'=>'12345678','Producto_Internet'=>'Plan'],
@@ -42,6 +53,18 @@ $documentReport=documentSearchDiagnostics([
 expect($documentReport['records']===2 && $documentReport['unique_ids']===2 && $documentReport['document_matches']===2 && !$documentReport['ambiguous']);
 $ambiguous=documentSearchDiagnostics([['ID'=>'1','Cuit'=>'20-12345678-6'],['ID'=>'1','Cuit'=>'private']], '20123456786');
 expect($ambiguous['ambiguous'] && !str_contains(json_encode($ambiguous),'private'));
+expect(documentCandidateIds([
+    ['ID'=>'1','Cuit'=>'12345678'],['ID'=>'5','DNI'=>'12345678'],['ID'=>'5','Documento'=>'12345678']
+],'12345678',1)===[1,5]);
+foreach([
+    [[['ID'=>'5','DNI'=>'12345678']],'12345678',1,'SERVICES_DOCUMENT_ROOT'],
+    [[['ID'=>'1','DNI'=>'87654321']],'12345678',1,'SERVICES_DOCUMENT_MISMATCH'],
+    [[['ID'=>1,'DNI'=>'12345678']],'12345678',1,'SERVICES_DOCUMENT_SCHEMA'],
+    [[['ID'=>'1','Cuit'=>'30123456780']],'30123456780',1,'SERVICES_DOCUMENT_SCHEMA'],
+] as [$rows,$source,$root,$code]) {
+    try {documentCandidateIds($rows,$source,$root);throw new \RuntimeException('document candidate accepted');}
+    catch(Failure $e) {expect($e->kind===$code);}
+}
 require __DIR__.'/../server/Phantom.php';require __DIR__.'/FixtureTransport.php';
 $dir=privateDir().'/service-diagnostic-fixtures';mkdir($dir);$c=config();
 foreach(['services-bad'=>'association_structure','services-wrong'=>'associated_customer','services-two'=>null] as $scenario=>$expected) {

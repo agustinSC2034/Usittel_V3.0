@@ -2,7 +2,7 @@
 
 ## Servicios asociados
 
-Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop, pendiente de prueba real. Se usan únicamente asociaciones explícitas verificadas por ID, sin búsqueda DNI/CUIT. [Arquitectura y siguiente paso](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.
+Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop. El contrato de búsqueda DNI/CUIT fue contrastado con Phantom real; queda aceptar el selector con el login real de dos servicios. Las asociaciones explícitas y documentales se verifican por ID y documento antes de autorizar. [Arquitectura y siguiente paso](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.
 
 ## Etapa SIRO actual
 
@@ -32,7 +32,7 @@ Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, 
 
 ## Fuera de alcance
 
-Imputación de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, múltiples contratos, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente, pendiente de prueba real de este módulo. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
+Imputación de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente, pendiente de prueba real de este módulo. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
 
 Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.
 

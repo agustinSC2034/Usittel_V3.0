@@ -25,17 +25,27 @@ final class FixtureTransport implements Transport {
         if($action==='autentificar') return ['token'=>'fixture-technical-token'];
         if(($body['token']??'')!=='fixture-technical-token') throw new \RuntimeException('Token absent');
         if($scenario==='expired-always') throw new Failure('TOKEN_EXPIRED');
-        if(!in_array((int)($query['IDA']??0),[1,5,7],true)) throw new \RuntimeException('Unapproved IDA');
+        $documentRead=$action==='Consulta_Cliente_Avanzada' && isset($query['Documento']);
+        if(!$documentRead && !in_array((int)($query['IDA']??0),[1,5,7],true)) throw new \RuntimeException('Unapproved IDA');
         if($scenario==='expired-once' && !file_exists($this->dir.'/expired')) {touch($this->dir.'/expired');throw new Failure('TOKEN_EXPIRED');}
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
         if(str_starts_with($scenario,'services-')) {
-            $ida=(int)$query['IDA'];
+            $ida=(int)($query['IDA']??0);
             if($action==='Consulta_Cliente_Avanzada') {
+                if($documentRead) {
+                    if($scenario!=='services-document' || $query['Documento']!=='12345678') throw new Failure('PHANTOM_CUSTOMER_TEST');
+                    return [
+                        ['ID'=>'1','Cuit'=>'12345678','Direccion'=>'Calle fixture 1','Producto_Internet'=>'Plan fixture 1'],
+                        ['ID'=>'5','DNI'=>'12345678','Direccion'=>'Calle fixture 5','Producto_Internet'=>'Plan fixture 5'],
+                    ];
+                }
                 $links=match($scenario) {'services-one'=>[], 'services-three'=>[['ID'=>'1'],['ID'=>'5'],['ID'=>'5'],[['ID'=>'7']]], 'services-bad'=>[['ID'=>'5x']], default=>[['ID'=>'5'],['ID'=>'1'],['ID'=>'5']]};
+                if($scenario==='services-document') $links=[''];
                 return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
                     'Autogestion_User'=>'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
                     'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
-                    'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[], 'DNI'=>'do-not-expose']];
+                    'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[],
+                    'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>$scenario==='services-document'?'12345678':null]];
             }
             if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];
             return [['IDA'=>(string)$ida,'IDT'=>(string)($ida*100),'Estado'=>'IMPAGA','Total'=>'10.00','Periodo'=>'2026-09','Hash_Descarga'=>'do-not-expose']];

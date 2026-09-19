@@ -3,9 +3,9 @@ declare(strict_types=1);
 if(PHP_SAPI!=='cli') {http_response_code(404);exit;}
 ini_set('display_errors','0');ini_set('log_errors','0');ini_set('zend.exception_ignore_args','1');
 require __DIR__.'/Core.php';require __DIR__.'/Phantom.php';require __DIR__.'/Services.php';require __DIR__.'/Inspector.php';
-require __DIR__.'/ServiceDiagnostics.php';
+require_once __DIR__.'/ServiceDiagnostics.php';
 require __DIR__.'/AuthGetProbe.php';
-// Explicit operator-selected account only; never enumerate or search documents.
+// Explicit operator-selected account only; exact document lookup stays internal and prints metadata only.
 if(count($argv)>2) exit(1);
 $input=$argv[1]??null;
 if($input===null) {echo "Número del contrato inicial de la cuenta de prueba: ";$input=trim((string)fgets(STDIN));}
@@ -28,7 +28,7 @@ try {
         $token=\MiUsittel\inspectionAuthGetToken($c);
         $rows=(new \MiUsittel\CurlTransport($c,inspectResponseFormat:true))->post($c['phantom_url'].'?'.http_build_query([
             'action'=>'Consulta_Cliente_Avanzada','JSON'=>1,'Documento'=>$source]),['token'=>$token]);
-        $report['document_lookup']+=['performed'=>true]+\MiUsittel\documentSearchDiagnostics($rows,$source);
+        $report['document_lookup']=array_merge($report['document_lookup'],['performed'=>true],\MiUsittel\documentSearchDiagnostics($rows,$source));
     }
     $report['diagnostics']=$diagnostics;
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;

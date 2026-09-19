@@ -1,36 +1,28 @@
 # Servicios autorizados y selección
 
-## Diagnóstico real pendiente — 19/09/2026
+## Contrato real confirmado — 19/09/2026
 
-Agustín probó los contratos 1 y 5598: ambos devolvieron un servicio y association_unavailable=true. Esto NO confirma ausencia de otros contratos. Informó además que 1 y 5 comparten documento/teléfono y que Botmaker ofrece ambos. No se tomó esta información como autorización automática.
+La prueba controlada del contrato 1 confirmó que `Conexiones_Asociadas` llega como `[""]`, por lo que no aporta IDs utilizables. El registro principal expone `Cuit` como string y su contenido tiene forma de DNI. La búsqueda exacta de Phantom por ese documento devolvió dos objetos válidos, dos IDs únicos y dos coincidencias documentales, sin ambigüedad. Esto coincide con el comportamiento conocido de Botmaker para los contratos 1 y 5.
 
-El inspector ahora agrega diagnostics: etapa del fallo (estructura de asociación o reconsulta), código controlado, tipo/estructura acotada de Conexiones_Asociadas y presencia/tipo de Documento, DNI, dni, Cuit, CUIT y Cuit_Cuil. No muestra valores ni enumera claves arbitrarias; solo tres muestras por nivel, hasta dos niveles. Estos metadatos se producen únicamente para CLI y no se incorporan a la sesión ni a las respuestas del portal. No cambia las reglas de autorización.
+Mi USITTEL incorpora esa búsqueda al descubrimiento del login. No confía directamente en la lista recibida: exige lista acotada, objetos, `ID` decimal string, documento equivalente en cada resultado y presencia del contrato autenticado. Luego amplía temporalmente el alcance, reconsulta cada ID exacto y vuelve a comprobar identidad y documento antes de construir la autorización. Una falla o diferencia deja fuera todo el grupo documental; nunca conserva una parte dudosa.
 
-Requisito adicional confirmado: contemplar residencial y comercio del mismo titular. La asociación por documento sigue pendiente de confirmar los campos reales y su semántica. Un CUIT personal y un CUIT de una persona jurídica no se equiparan automáticamente; nombre/teléfono compartidos tampoco autorizan facturación. Antes de activar coincidencias normalizadas o relación DNI/CUIT se necesita evidencia backend de titularidad, no solo que una búsqueda devuelva candidatos.
+La comparación admite igualdad exacta normalizada y DNI↔CUIT personal solamente con CUIT válido, prefijo personal y DNI embebido exacto. Teléfono y nombre no autorizan. Un CUIT societario solo coincide con el mismo CUIT exacto; no se deriva una relación automática entre una persona y una sociedad. Esto permite residencial/comercio cuando ambos contratos comparten DNI, CUIT personal válido o el mismo CUIT societario, pero no inventa titularidad empresarial.
 
-El segundo resultado real confirmó que Conexiones_Asociadas es una lista con un string y que el contrato 1 expone Cuit:string. El inspector clasifica ahora ese string sin mostrarlo: longitud acotada, ID decimal, JSON serializado o separador. Además hace una búsqueda de solo lectura por el documento exacto del registro principal, como el contrato Phantom observado en Botmaker, y devuelve únicamente cantidad de candidatos, IDs únicos, coincidencias documentales y presencia de domicilio/plan. El documento queda en backend y no se imprime. La API histórica coloca Documento en la query remota, por lo que esta prueba puede quedar registrada en logs internos de Phantom; no forma parte del portal ni habilita autorizaciones.
-
-La comparación admite igualdad exacta normalizada y DNI↔CUIT personal solo con CUIT válido, prefijo personal y DNI embebido exacto. Teléfono/nombre no autorizan. Un CUIT societario solo coincide con el mismo CUIT exacto; no se deriva una relación con una persona. Resultados con objetos inválidos, IDs duplicados o documentos que no coinciden quedan ambiguous=true.
-
-Siguiente prueba única: `inspect-services.php 1`. Su resultado permitirá decidir si el formato directo o la búsqueda documental identifican de forma no ambigua los contratos 1 y 5. Hasta entonces el portal conserva únicamente el contrato autenticado.
-
-Validación del diagnóstico: 399 verificaciones locales con fixtures, incluidas ausencia de valores secretos, tipos inesperados, muestras acotadas, clasificación del string, DNI/CUIT válido e inválido, duplicados/ambigüedad y separación entre error de estructura/reconsulta. Sin consultas reales automáticas.
+El documento permanece en backend y no se agrega a sesión, HTML, JavaScript ni respuesta pública. La consulta histórica de Phantom coloca `Documento` en la query remota; por eso puede aparecer en logs internos de Phantom y debe revisarse antes de producción, al igual que las credenciales técnicas GET.
 
 ## Alcance
 
-Lectura multicontrato implementada con fixtures; pendiente de contraste real. No se consultó Phantom automáticamente ni se modificó configuración privada, Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.
+Lectura multicontrato implementada con fixtures y contrato de búsqueda contrastado con Phantom real. Falta la aceptación visual del selector con una sesión real de dos servicios. No se consultó Phantom automáticamente desde tests ni se modificó configuración privada, Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.
 
 ## Adaptación de Botmaker
 
 Se revisaron `botmaker_js/pagos/validar_contratos.js` y `context/validar_contratos.md` de la copia local de `agustinSC2034/botmaker_functions_USITTEL`. Botmaker reúne conexiones y resultados de búsquedas por documento, genera posibles CUIT, admite distintos nombres de ID y toma el primer registro principal. Mi USITTEL conserva la idea funcional de selección, pero no esos criterios de autorización.
 
-Regla implementada: credenciales exactas del contrato inicial → registro único cuyo ID coincida → Conexiones_Asociadas explícitas → deduplicar por ID → reconsultar cada ID exacto y exigir un único registro coincidente. Las direcciones, planes y estados provienen de esa reconsulta, no de entradas duplicadas posiblemente contradictorias. No se siguen asociaciones transitivas de los contratos encontrados. Un contrato suspendido puede ingresar como antes.
+Regla implementada: credenciales exactas del contrato inicial → registro único cuyo ID coincida → asociaciones explícitas y búsqueda documental exacta → deduplicar por ID → reconsultar cada ID exacto y exigir un único registro coincidente. Las direcciones, planes y estados provienen de esa reconsulta, no de entradas duplicadas posiblemente contradictorias. No se siguen asociaciones transitivas de los contratos encontrados. Un contrato suspendido puede ingresar como antes.
 
 Se acepta una lista de objetos o un nivel de sublistas (forma contemplada por Botmaker), máximo diez entradas por lista y diez IDs asociados distintos. ID debe ser string decimal positivo, hasta diez dígitos; no se usa IDAx, IDA, coincidencia parcial ni coerción de tipos. Una estructura desconocida, identidad incorrecta o consulta incompleta deja solamente el contrato autenticado, con aviso de que no se pudieron verificar otros servicios. No se concede acceso parcial a asociaciones dudosas.
 
-No se consulta por Documento/DNI/CUIT ni se convierten documentos. Resultados duplicados, aproximados o ambiguos por documento no autorizan nada. No tenemos todavía confirmados los campos y la relación de titularidad necesaria para incorporarlos a una autorización web. Si la prueba real muestra un solo servicio, esta entrega no prueba que el cliente tenga uno solo: puede faltar una asociación explícita. No se habilitará un fallback silencioso por documento.
-
-La relación explícita de Phantom se toma como la fuente de autorización entre contratos; el inspector debe confirmar que existe para la cuenta de prueba. La lista se reconstruye en cada login, no en cada lectura. Revocación inmediata de relaciones durante una sesión es una limitación pendiente; se mantienen expiración y logout.
+No se aceptan resultados aproximados, parciales o con documentos incompatibles. IDs repetidos se deduplican solamente después de validar cada fila; una repetición contradictoria invalida la fuente. La lista se reconstruye en cada login, no en cada lectura. Revocación inmediata de relaciones durante una sesión es una limitación pendiente; se mantienen expiración y logout.
 
 ## Sesión y consultas
 
@@ -45,20 +37,12 @@ POST select-service acepta únicamente serviceId string y exige CSRF, sesión y 
 
 El frontend invalida las respuestas en vuelo con una generación local, limpia datos y muestra carga antes del POST. Solo renderiza la nueva respuesta. Recarga conserva selección; logout borra lista, selección y datos. El selector usa la dirección como botón en Inicio, con chevron solo si hay varios contratos y un modal pequeño compatible con teclado en móvil/desktop. Un solo servicio conserva la presentación sin interacción.
 
-## Laboratorio y primer contraste real
+## Laboratorio y siguiente validación real
 
 El acceso inicial continúa limitado por defecto al IDA 1. Una futura habilitación privada puede declarar `service_login_idas` (lista explícita de hasta tres enteros positivos) y el mapeo lab_users ya existente para nombres personalizados. Esta opción define candidatos de login; no autoriza contratos adicionales por sí sola y no evita la comparación exacta de credenciales. No se modificó ese archivo ni se hardcodearon ejemplos del usuario.
 
-Único paso manual ahora, desde PowerShell del proyecto con las variables ya configuradas:
-
-```powershell
-& $env:MI_USITTEL_PHP autogestion/server/inspect-services.php
-```
-
-El inspector pide en la terminal el número del contrato inicial de la cuenta con dos servicios. Esa entrada explícita autoriza solo el diagnóstico de dicho contrato y sus asociaciones directas; no habilita su login ni cambia la configuración. Usa el transporte HTTPS/CA existente y solo Consulta_Cliente_Avanzada; no consulta saldos/facturas, documentos de identidad ni SIRO. Hay una consulta inicial y hasta diez reconsultas asociadas, con la renovación acotada de token ya existente si vence.
-
-Compartir únicamente el resumen: cantidad, asociación disponible y presencia de ID/dirección/plan. No imprime valores, DNI/CUIT, credenciales, token ni hashes. `association_unavailable: true` significa que no se pudo validar el mecanismo; no significa que el titular carezca de otros servicios. Esperar este resultado antes de habilitar la cuenta en la configuración privada y probar el selector real.
+El siguiente paso manual es reiniciar el servidor local para cargar este commit e ingresar normalmente con las credenciales del contrato 1. El login debe mostrar dos servicios, mantener el 1 como selección inicial y permitir pasar al 5 sin volver a autenticar. No hace falta volver a ejecutar el inspector ni compartir documentos o credenciales.
 
 ## Validación
 
-377 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, duplicados/principal repetido, IDAx distinto, campos inválidos, opcionales ausentes, documentos ignorados, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. Prueba de navegador aislada en 390×844 y 1365×900: selector, cambio, saldo, recarga, factura/PDF del segundo servicio, logout, un solo servicio y ausencia de desbordamiento/errores JS. Browser plugin no disponible; se utilizó Playwright con servidor de fixtures y bloqueo de solicitudes externas.
+409 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, asociación vacía, búsqueda exacta por documento con dos contratos, DNI↔CUIT personal válido, CUIT incompatible o inválido, raíz ausente, tipos incorrectos, duplicados, reconsulta por ID, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. La UX del selector ya fue validada en 390×844 y 1365×900 con fixtures; este cambio no altera su HTML/CSS.

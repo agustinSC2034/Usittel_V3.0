@@ -137,12 +137,19 @@ final class Phantom {
     private function read(string $action,int $ida,array $params=[]): array {
         if (!in_array($ida,$this->scope ?? ($this->config['service_login_idas']??array_values(array_intersect([1],$this->config['allowed_idas']))),true)) throw new Failure('FORBIDDEN',403);
         if (!in_array($action,['Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new Failure('FORBIDDEN',403);
+        return $this->readAuthorized($action,['IDA'=>$ida]+$params);
+    }
+    private function readAuthorized(string $action,array $params): array {
         for($attempt=0;$attempt<2;$attempt++) {
             $token=$this->token($attempt===1);
-            try { return $this->raw($action,['IDA'=>$ida]+$params,['token'=>$token]); }
+            try { return $this->raw($action,$params,['token'=>$token]); }
             catch(Failure $e) { if($e->kind!=='TOKEN_EXPIRED' || $attempt===1) throw $e; }
         }
         throw new Failure('PHANTOM_TOKEN');
+    }
+    public function customersByDocument(string $document): array {
+        if(!in_array(strlen($document),[7,8,11],true) || !ctype_digit($document)) throw new Failure('SERVICES_DOCUMENT_SCHEMA');
+        return $this->readAuthorized('Consulta_Cliente_Avanzada',['Documento'=>$document]);
     }
     public function customer(int $ida): array {
         $field=$this->config['customer_id_field']??null;

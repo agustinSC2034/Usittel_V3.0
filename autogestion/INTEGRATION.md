@@ -2,7 +2,7 @@
 
 ## Selección de contrato
 
-La etapa actual incorpora servicios asociados explícitos de Phantom y selección persistente. Ver [SERVICES.md](SERVICES.md): authenticated_ida, authorized_services y selected_ida son conceptos separados. Las consultas y descargas usan selected_ida del servidor; nunca un IDA libre del navegador. Se mantienen login inicial IDA 1 por defecto y configuración privada intacta. SIRO multicontrato bloqueado, sin nuevas escrituras. 377 verificaciones locales; contraste real multicontrato pendiente.
+La etapa actual incorpora servicios asociados de Phantom y selección persistente. Además de `Conexiones_Asociadas`, admite búsqueda exacta por DNI/CUIT con validación estricta y reconsulta individual; el contrato real confirmó dos coincidencias no ambiguas para la cuenta de laboratorio. Ver [SERVICES.md](SERVICES.md): authenticated_ida, authorized_services y selected_ida son conceptos separados. Las consultas y descargas usan selected_ida del servidor; nunca un IDA libre del navegador. Se mantienen login inicial IDA 1 por defecto y configuración privada intacta. SIRO multicontrato bloqueado, sin nuevas escrituras. 409 verificaciones locales; aceptación visual real del selector pendiente.
 
 ## Etapa actual: SIRO separado de Phantom
 

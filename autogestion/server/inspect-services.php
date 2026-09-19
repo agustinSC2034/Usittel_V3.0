@@ -3,6 +3,7 @@ declare(strict_types=1);
 if(PHP_SAPI!=='cli') {http_response_code(404);exit;}
 ini_set('display_errors','0');ini_set('log_errors','0');ini_set('zend.exception_ignore_args','1');
 require __DIR__.'/Core.php';require __DIR__.'/Phantom.php';require __DIR__.'/Services.php';require __DIR__.'/Inspector.php';
+require __DIR__.'/ServiceDiagnostics.php';
 // Explicit operator-selected account only; never enumerate or search documents.
 if(count($argv)>2) exit(1);
 $input=$argv[1]??null;
@@ -13,8 +14,13 @@ try {
     $c=\MiUsittel\config();if($c['mode']!=='phantom' || $c['customer_id_field']!=='ID') throw new \MiUsittel\Failure('CONFIGURATION');
     $c['service_login_idas']=[(int)$input];
     $ph=new \MiUsittel\Phantom($c,\MiUsittel\privateDir(),new \MiUsittel\CurlTransport($c));
-    $result=\MiUsittel\discoverServices($ph,(int)$input);
+    $diagnostics=['failure_stage'=>null,'failure_code'=>null];
+    $result=\MiUsittel\discoverServices($ph,(int)$input,static function($stage,$data) use (&$diagnostics) {
+        if($stage==='root') $diagnostics+=\MiUsittel\serviceRootDiagnostics($data);
+        else {$diagnostics['failure_stage']=$stage;$diagnostics['failure_code']=$data['code'];}
+    });
     $report=['services_found'=>count($result['services']),'association_unavailable'=>$result['servicesUnavailable'],'services'=>[]];
     foreach($result['services'] as $s) $report['services'][]=['ID_present'=>true,'address_present'=>$s['address']!==null,'plan_present'=>$s['plan']!==null];
+    $report['diagnostics']=$diagnostics;
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;
 } catch(\Throwable $e) {exit(\MiUsittel\writeInspectorFailure('servicios',$e));}

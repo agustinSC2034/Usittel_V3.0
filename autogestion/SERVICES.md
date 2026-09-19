@@ -1,5 +1,17 @@
 # Servicios autorizados y selección
 
+## Diagnóstico real pendiente — 19/09/2026
+
+Agustín probó los contratos 1 y 5598: ambos devolvieron un servicio y association_unavailable=true. Esto NO confirma ausencia de otros contratos. Informó además que 1 y 5 comparten documento/teléfono y que Botmaker ofrece ambos. No se tomó esta información como autorización automática.
+
+El inspector ahora agrega diagnostics: etapa del fallo (estructura de asociación o reconsulta), código controlado, tipo/estructura acotada de Conexiones_Asociadas y presencia/tipo de Documento, DNI, dni, Cuit, CUIT y Cuit_Cuil. No muestra valores ni enumera claves arbitrarias; solo tres muestras por nivel, hasta dos niveles. Estos metadatos se producen únicamente para CLI y no se incorporan a la sesión ni a las respuestas del portal. No cambia las reglas de autorización.
+
+Requisito adicional confirmado: contemplar residencial y comercio del mismo titular. La asociación por documento sigue pendiente de confirmar los campos reales y su semántica. Un CUIT personal y un CUIT de una persona jurídica no se equiparan automáticamente; nombre/teléfono compartidos tampoco autorizan facturación. Antes de activar coincidencias normalizadas o relación DNI/CUIT se necesita evidencia backend de titularidad, no solo que una búsqueda devuelva candidatos.
+
+Siguiente prueba única: `inspect-services.php 1`, que ahora permite distinguir el problema de formato sin solicitar documentos personales ni abrir búsquedas nuevas.
+
+Validación del diagnóstico: 389 verificaciones locales con fixtures, incluidas ausencia de valores secretos, tipos inesperados, muestras acotadas y separación entre error de estructura/reconsulta. Sin consultas reales automáticas.
+
 ## Alcance
 
 Lectura multicontrato implementada con fixtures; pendiente de contraste real. No se consultó Phantom automáticamente ni se modificó configuración privada, Apache, DNS o producción. No se amplían pagos SIRO a otros contratos: las rutas existentes los rechazan cuando la sesión tiene múltiples servicios o el seleccionado no es IDA 1.

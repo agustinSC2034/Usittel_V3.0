@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 if(getenv('MI_USITTEL_TEST')!=='1') exit(1);
 require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Services.php';
+require __DIR__.'/../server/ServiceDiagnostics.php';
 $count=0;
 function expect(bool $ok): void {global $count;if(!$ok)throw new \RuntimeException('service assertion');$count++;}
 expect(serviceCandidates([])===[]);
@@ -18,4 +19,19 @@ $s=serviceSession();expect($s['selectedServiceId']==='9');expect(!isset($_SESSIO
 $_SESSION['authorized_services']=[['id'=>'3']];
 try {serviceSession();throw new \RuntimeException('lost root accepted');}catch(Failure $e){expect($e->http===401);}
 $_SESSION=[];expect(serviceSession()['services']===[]);
+foreach([null,'fixture-private-value',7,[['ID'=>7,'secret-private-key'=>'fixture-private-value']],[['ID'=>'fixture-private-value']],[[['IDAx'=>'fixture-private-value']]]] as $value) {
+    $d=serviceRootDiagnostics(['Conexiones_Asociadas'=>$value,'DNI'=>'fixture-private-value','Autogestion_Pass'=>'fixture-private-value']);
+    expect(!str_contains(json_encode($d),'fixture-private-value') && !str_contains(json_encode($d),'secret-private-key') && !str_contains(json_encode($d),'Autogestion'));
+}
+$d=serviceRootDiagnostics(['Conexiones_Asociadas'=>[['ID'=>7]]]);expect($d['association']['shape']['sample'][0]['fields']['ID']['type']==='int');
+$d=serviceRootDiagnostics([]);expect($d['association']===['present'=>false,'type'=>'absent']);
+expect(count(serviceAssociationShape(array_fill(0,100,['ID'=>'1']))['sample'])===3);
+require __DIR__.'/../server/Phantom.php';require __DIR__.'/FixtureTransport.php';
+$dir=privateDir().'/service-diagnostic-fixtures';mkdir($dir);$c=config();
+foreach(['services-bad'=>'association_structure','services-wrong'=>'associated_customer','services-two'=>null] as $scenario=>$expected) {
+    file_put_contents($dir.'/scenario',$scenario);$stages=[];
+    $ph=new Phantom($c,$dir,new FixtureTransport($dir));
+    $result=discoverServices($ph,1,static function($stage,$data) use (&$stages) {$stages[]=$stage;});
+    expect($expected===null ? $stages===['root'] && count($result['services'])===2 : $stages===['root',$expected] && $result['servicesUnavailable']);
+}
 echo $count;

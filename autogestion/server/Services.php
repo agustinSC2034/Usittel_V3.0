@@ -19,14 +19,20 @@ function serviceCandidates(array $root): array {
     }
     return array_values($ids);
 }
-function discoverServices(Phantom $ph,int $rootId): array {
+function discoverServices(Phantom $ph,int $rootId,?callable $inspect=null): array {
     $root=$ph->customer($rootId);
+    if($inspect!==null) $inspect('root',$root);
     $rows=[$rootId=>$root];$warning=false;
+    $stage='association_structure';
     try {
         $ids=serviceCandidates($root);
         $ph->scope(array_values(array_unique([$rootId,...$ids])));
+        $stage='associated_customer';
         foreach($ids as $id) if($id!==$rootId) $rows[$id]=$ph->customer($id);
-    } catch(Failure) { $rows=[$rootId=>$root];$warning=true; }
+    } catch(Failure $e) {
+        $rows=[$rootId=>$root];$warning=true;
+        if($inspect!==null) $inspect($stage,['code'=>in_array($e->kind,['SERVICES_SCHEMA','SERVICES_LIMIT','CUSTOMER_IDENTITY','FORBIDDEN'],true)?$e->kind:'ASSOCIATED_READ_FAILED']);
+    }
     // Any ambiguous/incomplete discovery retains only the authenticated contract.
     $ph->scope(array_keys($rows));$services=[];
     foreach($rows as $id=>$record) {

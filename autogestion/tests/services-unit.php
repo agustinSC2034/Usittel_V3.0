@@ -26,6 +26,22 @@ foreach([null,'fixture-private-value',7,[['ID'=>7,'secret-private-key'=>'fixture
 $d=serviceRootDiagnostics(['Conexiones_Asociadas'=>[['ID'=>7]]]);expect($d['association']['shape']['sample'][0]['fields']['ID']['type']==='int');
 $d=serviceRootDiagnostics([]);expect($d['association']===['present'=>false,'type'=>'absent']);
 expect(count(serviceAssociationShape(array_fill(0,100,['ID'=>'1']))['sample'])===3);
+$shape=serviceAssociationShape(['123','[{"ID":"5"}]','private;value']);
+expect($shape['sample'][0]['decimal_id']===true && $shape['sample'][0]['length_bucket']==='1-10');
+expect($shape['sample'][1]['looks_like_json']===true && $shape['sample'][1]['decoded']['structure']==='list');
+expect($shape['sample'][2]['separator']==='semicolon' && !str_contains(json_encode($shape),'private'));
+expect(normalizedIdentityDocument('20-12345678-6')==='20123456786');
+expect(normalizedIdentityDocument('private')===null && normalizedIdentityDocument('12/34')===null);
+expect(validCuit('20123456786') && documentKind('20123456786')==='personal_cuit');
+expect(documentsEquivalent('12345678','20123456786'));
+expect(!documentsEquivalent('12345678','30123456780'));
+$documentReport=documentSearchDiagnostics([
+    ['ID'=>'1','Cuit'=>'20-12345678-6','Direccion'=>'Uno'],
+    ['ID'=>'5','DNI'=>'12345678','Producto_Internet'=>'Plan'],
+],'20123456786');
+expect($documentReport['records']===2 && $documentReport['unique_ids']===2 && $documentReport['document_matches']===2 && !$documentReport['ambiguous']);
+$ambiguous=documentSearchDiagnostics([['ID'=>'1','Cuit'=>'20-12345678-6'],['ID'=>'1','Cuit'=>'private']], '20123456786');
+expect($ambiguous['ambiguous'] && !str_contains(json_encode($ambiguous),'private'));
 require __DIR__.'/../server/Phantom.php';require __DIR__.'/FixtureTransport.php';
 $dir=privateDir().'/service-diagnostic-fixtures';mkdir($dir);$c=config();
 foreach(['services-bad'=>'association_structure','services-wrong'=>'associated_customer','services-two'=>null] as $scenario=>$expected) {

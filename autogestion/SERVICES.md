@@ -8,9 +8,13 @@ El inspector ahora agrega diagnostics: etapa del fallo (estructura de asociació
 
 Requisito adicional confirmado: contemplar residencial y comercio del mismo titular. La asociación por documento sigue pendiente de confirmar los campos reales y su semántica. Un CUIT personal y un CUIT de una persona jurídica no se equiparan automáticamente; nombre/teléfono compartidos tampoco autorizan facturación. Antes de activar coincidencias normalizadas o relación DNI/CUIT se necesita evidencia backend de titularidad, no solo que una búsqueda devuelva candidatos.
 
-Siguiente prueba única: `inspect-services.php 1`, que ahora permite distinguir el problema de formato sin solicitar documentos personales ni abrir búsquedas nuevas.
+El segundo resultado real confirmó que Conexiones_Asociadas es una lista con un string y que el contrato 1 expone Cuit:string. El inspector clasifica ahora ese string sin mostrarlo: longitud acotada, ID decimal, JSON serializado o separador. Además hace una búsqueda de solo lectura por el documento exacto del registro principal, como el contrato Phantom observado en Botmaker, y devuelve únicamente cantidad de candidatos, IDs únicos, coincidencias documentales y presencia de domicilio/plan. El documento queda en backend y no se imprime. La API histórica coloca Documento en la query remota, por lo que esta prueba puede quedar registrada en logs internos de Phantom; no forma parte del portal ni habilita autorizaciones.
 
-Validación del diagnóstico: 389 verificaciones locales con fixtures, incluidas ausencia de valores secretos, tipos inesperados, muestras acotadas y separación entre error de estructura/reconsulta. Sin consultas reales automáticas.
+La comparación admite igualdad exacta normalizada y DNI↔CUIT personal solo con CUIT válido, prefijo personal y DNI embebido exacto. Teléfono/nombre no autorizan. Un CUIT societario solo coincide con el mismo CUIT exacto; no se deriva una relación con una persona. Resultados con objetos inválidos, IDs duplicados o documentos que no coinciden quedan ambiguous=true.
+
+Siguiente prueba única: `inspect-services.php 1`. Su resultado permitirá decidir si el formato directo o la búsqueda documental identifican de forma no ambigua los contratos 1 y 5. Hasta entonces el portal conserva únicamente el contrato autenticado.
+
+Validación del diagnóstico: 399 verificaciones locales con fixtures, incluidas ausencia de valores secretos, tipos inesperados, muestras acotadas, clasificación del string, DNI/CUIT válido e inválido, duplicados/ambigüedad y separación entre error de estructura/reconsulta. Sin consultas reales automáticas.
 
 ## Alcance
 

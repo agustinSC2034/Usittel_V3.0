@@ -37,4 +37,12 @@ return [
         // Do not guess or overlap Phantom/Botmaker/previous POC sequences.
         'receipt_start' => null, 'receipt_end' => null,
     ],
+    // Separate, explicit laboratory gate for the irreversible Phantom write.
+    // Enable only after the read-only CRM check and controlled fixtures pass.
+    'phantom_posting' => [
+        'enabled' => false,
+        'lab_ida' => 1,
+        'crm_url' => 'https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/API_CRM.php',
+        'origin' => 'SIRO Mi USITTEL',
+    ],
 ];

@@ -345,6 +345,16 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(views,/role="tabpanel"/);
     assert.match(app,/returnAttempt[\s\S]*billingView = 'movements'/);
     assert.match(payments,/\['CONFIRMED', 'CANCELLED', 'REJECTED'\]/);
+    const components=fs.readFileSync(path.join(root,'js','components.js'),'utf8');
+    assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en reflejarse/);
+    assert.match(views,/saldo puede no incluir pagos recientes ya confirmados por SIRO/);
+    assert.match(payments,/Actualizando cuenta|actualizando tu cuenta/);
+  });
+  check('inspector CRM es sólo autenticación y no contiene acciones de escritura',()=>{
+    const inspector=fs.readFileSync(path.join(root,'server','inspect-phantom-crm.php'),'utf8');
+    assert.match(inspector,/action=autentificar/);assert.doesNotMatch(inspector,/Imputar_Pago|postToPhantom/);
+    const writer=fs.readFileSync(path.join(root,'server','PhantomPayments.php'),'utf8');
+    assert.match(writer,/action.*Imputar_Pago/);assert.doesNotMatch(writer,/permitir_importe_menor/);
   });
   clearRate();const mapping=jar();await login(mapping);
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['Autogestion_Pass']"));r=await mapping.call('overview');check('configuración no expone credenciales como perfil',()=>{assert.equal(r.status,503);assert.doesNotMatch(r.text,/00Lab-fixture/);});

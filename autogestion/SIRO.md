@@ -2,7 +2,7 @@
 
 ## Revisión SIRO1 — 19/09/2026
 
-Validación local: 450 verificaciones fixture, sintaxis PHP/JS, escaneo local de secretos y QA desktop/mobile sin errores de consola ni desborde. La prueba SIRO real de laboratorio quedó completada: intención creada, cancelación recuperada por consulta posterior, segundo intento único, pago confirmado con PagoExitoso=true y Estado=PROCESADA. No hubo imputación ni escritura en Phantom. Ver FIRST-SIRO-TEST.md.
+Validación local: 471 verificaciones fixture, sintaxis PHP/JS y compilación visual. La prueba SIRO real de laboratorio quedó completada: intención creada, cancelación recuperada por consulta posterior, segundo intento único, pago confirmado con PagoExitoso=true y Estado=PROCESADA. Esa prueba no imputó en Phantom. La etapa siguiente ya está implementada detrás de una compuerta independiente y todavía espera validar el CRM real; ver [PHANTOM-PAYMENTS.md](PHANTOM-PAYMENTS.md).
 
 La lectura multicontrato aceptada se conserva. El dominio recibe `selected_ida` del servidor, y las rutas SIRO exigen exactamente un servicio autorizado y coincidencia con `siro.lab_ida` privado (1 por defecto). IDA 1 tiene dos servicios en la instalación actual: SIRO queda bloqueado. Para probar será necesaria otra cuenta de laboratorio de un único servicio, acordada explícitamente; nunca ocultar asociaciones.
 
@@ -10,7 +10,7 @@ La lectura multicontrato aceptada se conserva. El dominio recibe `selected_ida` 
 
 Antes de reutilizar un checkout se revalidan importe y CPE de la factura actual. Si cambiaron, PAYMENT_INVOICE_CHANGED bloquea la salida y la UI actualiza la factura. Si ahora está PAGADA también se frena y recarga. Nunca se modifica el importe de un intento reservado.
 
-El retorno conserva solo el attempt_id propio como indicación de navegación. Se descarta toda query SIRO; el backend comprueba pertenencia antes de reconciliar. Si venció la sesión, luego del login vuelve a Facturas. Sin retorno también se recuperan los intentos persistidos. La API pública distingue `intent_created`, `siro_payment_confirmed` y `phantom_payment_posted=false`, además de phase SIRO_INTENT_CREATING / SIRO_PENDING / SIRO_CONFIRMED / SIRO_CANCELLED / SIRO_REJECTED / SIRO_UNKNOWN.
+El retorno conserva solo el attempt_id propio como indicación de navegación. Se descarta toda query SIRO; el backend comprueba pertenencia antes de reconciliar. Si venció la sesión, luego del login vuelve a Facturas. Sin retorno también se recuperan los intentos persistidos. La API pública distingue `intent_created`, `siro_payment_confirmed`, `phantom_posting_state` y `phantom_payment_posted`, además de phase SIRO_INTENT_CREATING / SIRO_PENDING / SIRO_CONFIRMED / SIRO_CANCELLED / SIRO_REJECTED / SIRO_UNKNOWN. No expone la referencia de imputación ni el identificador SIRO.
 
 ### Fechas de la POC
 
@@ -32,9 +32,9 @@ Contrato contrastado con la investigación local `Mi_USITTEL_SIRO_Estado_Tecnico
 | --- | --- | --- |
 | SIRO intent created | SIRO devuelve Hash y URL oficial válida | Implementado |
 | SIRO payment confirmed | Consulta autenticada, identidad e importe coincidentes, PagoExitoso booleano true Y Estado PROCESADA | Implementado |
-| Phantom payment posted | Imputación confirmada en Phantom | NO implementado; siempre false |
+| Phantom payment posted | Imputación enviada y verificada con una lectura posterior | Implementado detrás de compuerta; pendiente de prueba CRM real |
 
-No se modifica el estado de la factura ni se descuenta el saldo mostrado. “Pago confirmado” está dentro de “Pagos SIRO” y explica que no se registrará automáticamente en Phantom. Un intento confirmado bloquea otro cobro propio de esa factura aunque Phantom siga devolviendo IMPAGA.
+Antes de la verificación Phantom no se modifica el estado original ni se descuenta el saldo mostrado. La presentación superpone “Pago confirmado” y explica que la cuenta se está actualizando. Un intento confirmado bloquea otro cobro aunque Phantom todavía devuelva IMPAGA.
 
 ## Recorrido y archivos
 
@@ -71,7 +71,7 @@ Al volver a entrar se recuperan los intentos desde disco y se reconcilia automá
 
 - Solo el contrato de laboratorio configurado, con un único servicio y factura controlada IMPAGA. Se usa Total estricto de Phantom (positivo, hasta nueve enteros y dos decimales), no saldo pendiente calculado. No está resuelto el pago parcial: no probar una factura parcialmente abonada.
 - No SIRO real automático en tests/build/chequeos. Fixtures de transporte, servicio, HTTP y navegador; la prueba real manual quedó validada únicamente en laboratorio.
-- No Imputar_Pago, promesas, cambios de servicio, Wi-Fi, perfil, Apache, DNS, web pública o producción.
+- No promesas, cambios de servicio, Wi-Fi, perfil, Apache, DNS, web pública o producción. `Imputar_Pago` queda limitado por configuración a un único laboratorio y todavía no fue ejecutado desde esta implementación.
 - La sesión puede vencer durante el checkout: ingresar nuevamente recupera intentos del mismo cliente.
 - Antes de producción: certificados/CA del hosting, retornos HTTPS públicos, credenciales Phantom GET en logs remotos, permisos/backup, coordinación de comprobantes, seguridad y despliegue. Revisar también si SIRO/Phantom tienen procesos externos de imputación propios: este módulo no los controla.
 

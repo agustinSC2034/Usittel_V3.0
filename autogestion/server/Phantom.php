@@ -4,6 +4,7 @@ namespace MiUsittel;
 require_once __DIR__.'/Schema.php';
 require_once __DIR__.'/CustomerContract.php';
 require_once __DIR__.'/Invoices.php';
+require_once __DIR__.'/PhantomPayments.php';
 
 interface Transport {
     public function post(string $url, array $body): array;
@@ -107,7 +108,7 @@ final class CurlTransport implements Transport {
     }
 }
 final class Phantom {
-    public function __construct(private array $config, private string $dir, private Transport $transport) {}
+    public function __construct(private array $config, private string $dir, private Transport $transport,private ?PhantomPaymentGateway $paymentGateway=null) {}
     private function raw(string $action, array $params, array $body): array {
         $url=$this->config['phantom_url'].'?'.http_build_query(['action'=>$action,'JSON'=>1]+$params);
         $data=$action==='autentificar'?$this->transport->authenticate($url,$body):$this->transport->post($url,$body);
@@ -217,5 +218,15 @@ final class Phantom {
     public function invoices(int $ida,int $offset=0): array {
         if($offset<0 || $offset>INVOICE_MAX_OFFSET || $offset%INVOICE_PAGE_SIZE!==0) throw new Failure('BAD_REQUEST',400);
         return invoicePage($this->invoiceRows($ida,$offset),$offset,$ida);
+    }
+    public function imputePayment(int $ida,string $idt,int $cents,string $reference): void {
+        $settings=phantomPostingConfig($this->config);
+        if($settings===null || $this->paymentGateway===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_DISABLED',409);
+        if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
+        for($attempt=0;$attempt<2;$attempt++) {
+            try {$this->paymentGateway->impute($this->token($attempt===1),$idt,$cents,$settings['origin'],$reference);return;}
+            catch(Failure $e){if($e->kind!=='TOKEN_EXPIRED' || $attempt===1)throw $e;}
+        }
+        throw new Failure('PHANTOM_TOKEN');
     }
 }

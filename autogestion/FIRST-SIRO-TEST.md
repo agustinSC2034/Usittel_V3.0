@@ -41,4 +41,14 @@ Después del chequeo local, acordar una factura IMPAGA controlada del contrato d
 
 La prueba de confirmación debe mostrar “SIRO confirmó el pago” y aclarar que todavía no se registra automáticamente en Phantom. El saldo de Phantom no se modifica artificialmente. Luego se podrá validar recuperación tras cerrar el navegador; el retorno OK no es prueba de éxito.
 
+## Siguiente etapa: comprobación CRM sin escritura
+
+La confirmación SIRO real ya fue aceptada. Antes de habilitar `Imputar_Pago`, ejecutar una única autenticación segura contra el endpoint CRM:
+
+```powershell
+& $env:MI_USITTEL_PHP autogestion/server/inspect-phantom-crm.php
+```
+
+El resultado esperado es `CRM_AUTH_OK` y `Sin escritura en Phantom.`. Este inspector no recibe IDA, IDT, importe ni referencia y no invoca `Imputar_Pago`. No compartir token, credenciales, configuración privada ni respuestas crudas.
+
 Compartir solo el estado visible y, si aparece, el código seguro del error. No compartir passwords, tokens, hashes, enlaces completos de checkout/retorno, datos bancarios, JSON crudo ni archivos del runtime. El usuario completa personalmente cualquier dato de pago.

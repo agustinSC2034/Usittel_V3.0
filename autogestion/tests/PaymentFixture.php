@@ -37,6 +37,7 @@ final class PaymentFixture implements SiroGateway {
     }
     public function result(string $hash,string $id): array {
         if($hash!==str_repeat('a',64) || $id!=='11111111-1111-4111-8111-111111111111') throw new Failure('PAYMENT_MISMATCH');
+        if($this->dir && $this->requests===[]) $this->requests=[json_decode(file_get_contents($this->dir.'/siro-fixture-request.json'),true)];
         return $this->row(end($this->requests));
     }
 }

@@ -17,7 +17,8 @@ if(in_array($path,['/','/autogestion'],true)) {header('Location: /autogestion/')
 if(str_starts_with($path,'/autogestion/api/')) {
     try {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
-        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c));
+        $posting=\MiUsittel\phantomPostingConfig($c);
+        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting));
         \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')));
     } catch(\Throwable $e) {\MiUsittel\fail($e);}
 }

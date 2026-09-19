@@ -7,7 +7,14 @@ export const routes = [
   ['inicio', 'Inicio', 'home'], ['facturas', 'Facturas', 'file-text'],
   ['servicio', 'Mi servicio', 'wifi'], ['soporte', 'Soporte', 'headphones'], ['cuenta', 'Mi cuenta', 'user'],
 ];
-export const status = value => `<span class="status status-${value === 'Pagada' || value === 'Activo' ? 'success' : value === 'Vencida' || value === 'Suspendido' ? 'danger' : value === 'Pendiente' || value === 'En revisión' ? 'pending' : 'neutral'}">${escapeHTML(value)}</span>`;
+export const status = value => `<span class="status status-${['Pagada','Activo','Pago confirmado','Pago registrado'].includes(value) ? 'success' : value === 'Vencida' || value === 'Suspendido' ? 'danger' : value === 'Pendiente' || value === 'En revisión' ? 'pending' : 'neutral'}">${escapeHTML(value)}</span>`;
+const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
+export function invoiceVisibleStatus(item) {
+  const attempt = confirmedAttempt(item);
+  if (!attempt) return { label: item.status, hint: '' };
+  if (attempt.phantom_payment_posted) return { label: 'Pago registrado', hint: 'El pago ya fue registrado en tu cuenta.' };
+  return { label: 'Pago confirmado', hint: 'Estamos actualizando tu cuenta. El saldo puede tardar en reflejarse.' };
+}
 export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;
 }
@@ -21,8 +28,8 @@ export function input(label, name, { value = '', type = 'text', required = true,
 }
 export function invoicePayButton(item, attrs = '') {
   const real = runtime.mode === 'phantom';
-  const confirmed = real && runtime.paymentItems.some(a => a.idt === item.id && a.state === 'CONFIRMED');
-  return button(confirmed ? 'Confirmado en SIRO' : 'Pagar', 'pay', { iconName: confirmed ? '' : 'external-link', attrs: `data-id="${escapeHTML(item.id)}" ${attrs} ${real && (!runtime.paymentsEnabled || confirmed) ? 'disabled' : ''}` });
+  const confirmed = confirmedAttempt(item);
+  return button(confirmed ? (confirmed.phantom_payment_posted ? 'Pago registrado' : 'Pago confirmado') : 'Pagar', 'pay', { iconName: confirmed ? '' : 'external-link', attrs: `data-id="${escapeHTML(item.id)}" ${attrs} ${real && (!runtime.paymentsEnabled || confirmed) ? 'disabled' : ''}` });
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';
@@ -30,6 +37,6 @@ export function invoiceActions(item) {
 }
 export function invoiceTable(items, full = false) {
   if (!items.length) return `<p class="muted">${runtime.warnings.includes('INVOICES_UNAVAILABLE') ? 'Facturas no disponibles en este momento.' : 'No hay facturas para mostrar.'}</p>`;
-  return `<div class="invoice-table ${full ? 'invoice-table-full' : 'invoice-table-preview'}" role="table" aria-label="${full ? 'Facturas y comprobantes' : 'Últimas facturas'}"><div class="invoice-head" role="row"><span role="columnheader">Período</span><span role="columnheader">Importe</span>${full ? '<span role="columnheader">Vencimiento</span>' : ''}<span role="columnheader">Estado</span>${full ? '<span role="columnheader">Acciones</span>' : ''}</div>${items.map(item => `<div class="invoice-row" role="row"><span class="invoice-period" role="cell">${escapeHTML(item.period)}</span><span class="invoice-amount" role="cell">${money(item.amount)}</span>${full ? `<span class="invoice-due" role="cell"><span class="mobile-only">Vence el </span>${escapeHTML(item.due)}</span>` : ''}<span class="invoice-status" role="cell">${status(item.status)}</span>${full ? `<div class="invoice-action-cell" role="cell">${invoiceActions(item)}</div>` : ''}</div>`).join('')}</div>`;
+  return `<div class="invoice-table ${full ? 'invoice-table-full' : 'invoice-table-preview'}" role="table" aria-label="${full ? 'Facturas y comprobantes' : 'Últimas facturas'}"><div class="invoice-head" role="row"><span role="columnheader">Período</span><span role="columnheader">Importe</span>${full ? '<span role="columnheader">Vencimiento</span>' : ''}<span role="columnheader">Estado</span>${full ? '<span role="columnheader">Acciones</span>' : ''}</div>${items.map(item => { const visible = invoiceVisibleStatus(item); return `<div class="invoice-row" role="row"><span class="invoice-period" role="cell">${escapeHTML(item.period)}</span><span class="invoice-amount" role="cell">${money(item.amount)}</span>${full ? `<span class="invoice-due" role="cell"><span class="mobile-only">Vence el </span>${escapeHTML(item.due)}</span>` : ''}<span class="invoice-status" role="cell">${status(visible.label)}${full && visible.hint ? `<small>${escapeHTML(visible.hint)}</small>` : ''}</span>${full ? `<div class="invoice-action-cell" role="cell">${invoiceActions(item)}</div>` : ''}</div>`; }).join('')}</div>`;
 }
 export const sectionLink = (label, actionName, symbol = 'chevron-right') => `<button type="button" class="list-link" data-action="${actionName}"><span>${label}</span>${icon(symbol)}</button>`;

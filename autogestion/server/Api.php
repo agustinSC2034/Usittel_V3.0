@@ -47,12 +47,17 @@ function csrf(): void {
 function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
-    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroLabService(siroConfig($c),array_map('intval',array_column($_SESSION['authorized_services']??[],'id')),$_SESSION['selected_ida']??null)]+serviceSession());
+    if($route==='bootstrap') {
+        $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
+        jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],
+            'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
+            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected)]+serviceSession());
+    }
     if($method==='POST') csrf();
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
@@ -100,9 +105,11 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));unset($_SESSION['invoice_history']);
         jsonReply(serviceSession());
     }
-    if(in_array($route,['payments','payment-create','payment-reconcile'],true)) {
+    if(in_array($route,['payments','payment-create','payment-reconcile','payment-post'],true)) {
         $settings=siroConfig($c);
         if(!siroLabService($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
+        $posting=phantomPostingConfig($c);
+        if($route==='payment-post' && !phantomPostingLabService($posting,$ids,$ida)) throw new Failure('PHANTOM_POSTING_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
         $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);
@@ -113,6 +120,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             if(!preg_match('/^[1-9][0-9]{0,19}$/D',$b['idt'])) throw new Failure('BAD_REQUEST',400);
             jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
         }
+        if($route==='payment-post') jsonReply($payments->postToPhantom($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt),
+            fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
         jsonReply($payments->reconcile($ida,$b['attempt_id']));
     }
     $documents??=new PhantomInvoiceDocuments($c);
@@ -165,6 +174,9 @@ function fail(\Throwable $e): never {
         'SIRO_DISABLED','SIRO_CONFIGURATION'=>'Los pagos SIRO no están habilitados en este laboratorio.',
         'PAYMENT_CPE','PAYMENT_AMOUNT'=>'La factura no tiene datos válidos para iniciar el pago.',
         'PAYMENT_SEQUENCE_EXHAUSTED'=>'No se pueden crear más intentos con la configuración actual.',
+        'PAYMENT_NOT_CONFIRMED'=>'SIRO todavía no confirmó este pago.',
+        'PHANTOM_POSTING_DISABLED','PHANTOM_POSTING_CONFIGURATION'=>'La actualización en Phantom no está habilitada en este laboratorio.',
+        'PHANTOM_PAYMENT_REJECTED','PHANTOM_PAYMENT_HTTP'=>'Phantom no confirmó la actualización. El pago queda pendiente de revisión.',
         default=>'No pudimos consultar la información. Podés volver a intentar.',
     };
     if($f->http===429) header('Retry-After: 900');

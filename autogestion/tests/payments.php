@@ -96,6 +96,31 @@ ok($confirmed['phase']==='SIRO_CONFIRMED' && $confirmed['phantom_payment_posted'
 failure(fn()=>$p->create(1,'123',fn()=>array_replace(row(),['Total'=>'122.00'])),'PAYMENT_INVOICE_CHANGED');
 failure(fn()=>$p->create(1,'123',fn()=>array_replace(row(),['SIRO_CE'=>str_repeat('2',19)])),'PAYMENT_INVOICE_CHANGED');
 ok($g->creates===1 && count($p->list(1))===1);
+$confirmAttempt=function() {
+    [$p,$store,$g,$dir]=setup();$a=$p->create(1,'123',fn()=>row());$g->scenario='confirmed';$a=$p->reconcile(1,$a['attempt_id']);
+    return [$p,$store,$g,$dir,$a];
+};
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;$invoiceState='IMPAGA';
+$posted=$p->postToPhantom(1,$a['attempt_id'],function(string $idt) use (&$invoiceState){ok($idt==='123');return array_replace(row(),['Estado'=>$invoiceState]);},
+    function(string $idt,int $cents,string $reference) use (&$posts,&$invoiceState){ok($idt==='123' && $cents===12100);ok((bool)preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference));$posts++;$invoiceState='PAGADA';});
+ok($posted['phantom_payment_posted']===true && $posted['phantom_posting_state']==='POSTED' && $posts===1 && !$posted['can_post_to_phantom']);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
+$uncertain=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),function()use(&$posts){$posts++;});
+ok($uncertain['phantom_posting_state']==='POST_UNCONFIRMED' && !$uncertain['phantom_payment_posted'] && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
+$failed=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),function()use(&$posts){$posts++;throw new Failure('PHANTOM_TIMEOUT');});
+ok($failed['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
+[$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>$posts++)['phantom_posting_state']==='NEEDS_REVIEW' && $posts===0);
+[$p,$store,$g,$dir]=setup();$pending=$p->create(1,'123',fn()=>row());
+failure(fn()=>$p->postToPhantom(1,$pending['attempt_id'],fn()=>row(),fn()=>null),'PAYMENT_NOT_CONFIRMED');
+[$p,$store,$g,$dir,$a]=$confirmAttempt();
+failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00']),fn()=>null),'PAYMENT_INVOICE_CHANGED');
+failure(fn()=>$p->postToPhantom(5,$a['attempt_id'],fn()=>row(),fn()=>null),'PAYMENT_NOT_FOUND');
 $saved=file_get_contents($dir.'/siro-attempts.json');
 ok(!preg_match('/Password|api_pass|Autogestion|access_token|Request|fixture-password|fixture-token/',$saved));
 echo 'PAYMENT_CHECKS='.$count.PHP_EOL;

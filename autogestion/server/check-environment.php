@@ -4,6 +4,7 @@ if(PHP_SAPI!=='cli') {http_response_code(404);exit;}
 
 require_once __DIR__.'/Core.php';
 require_once __DIR__.'/Siro.php';
+require_once __DIR__.'/PhantomPayments.php';
 
 $root=(string)realpath(__DIR__.'/../..');
 $inside=static function(string $path) use ($root): bool {
@@ -65,9 +66,14 @@ if(!$configPath) {
                 }
                 try {
                     $si=\MiUsittel\siroConfig($config+['mode'=>'demo']);
-                    $add($si===null?'warn':'ok','SIRO laboratorio',$si===null?'deshabilitado; no se consulta SIRO':'configuración presente y rango definido; valores ocultos; falta validación real');
+                    $add($si===null?'warn':'ok','SIRO laboratorio',$si===null?'deshabilitado; no se consulta SIRO':'configuración presente y rango definido; valores ocultos');
                     if($si!==null && !getenv('MI_USITTEL_RUNTIME')) $add('fail','Persistencia SIRO','definir MI_USITTEL_RUNTIME privado y persistente; no usar carpeta temporal');
                 } catch(Throwable) {$add('fail','SIRO laboratorio','revisar estructura, credenciales privadas, retorno propio y rango reservado');}
+                try {
+                    $posting=\MiUsittel\phantomPostingConfig($config+['mode'=>'demo']);
+                    $add($posting===null?'warn':'ok','Imputación Phantom',$posting===null?'deshabilitada; no se realizan escrituras':'habilitada para un único IDA de laboratorio; valores ocultos');
+                    if($posting!==null && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de imputación','definir MI_USITTEL_RUNTIME privado y persistente');
+                } catch(Throwable) {$add('fail','Imputación Phantom','revisar HTTPS, host, ruta CRM, IDA y originante');}
                 $shapeErrors=[];
                 if(isset($config['lab_users']) && !is_array($config['lab_users'])) $shapeErrors[]='lab_users';
                 if(isset($config['service_login_idas']) && (!isset($loginIdasOk) || !$loginIdasOk)) $shapeErrors[]='service_login_idas';

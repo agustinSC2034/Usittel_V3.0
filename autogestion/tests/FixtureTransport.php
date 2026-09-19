@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/../server/InvoiceDocuments.php';
 // Deliberately synthetic schema. Never included by the production router.
-final class FixtureTransport implements Transport {
+final class FixtureTransport implements Transport,PhantomPaymentGateway {
     public function __construct(private string $dir) {}
     public function authenticate(string $url,array $credentials): array {
         parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
@@ -86,7 +86,7 @@ final class FixtureTransport implements Transport {
         if($scenario==='empty') return ['code'=>400,'message'=>'Error: No se encontró factura para el cliente (400)'];
         if($scenario==='invoices-error') return ['code'=>400,'message'=>'Some other error'];
         if($scenario==='malformed-invoices') return ['unrecognized'=>[]];
-        $row=['SIRO_CE'=>'1111111111111111111','IDT'=>123,'Estado'=>'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25',
+        $row=['SIRO_CE'=>'1111111111111111111','IDT'=>123,'Estado'=>is_file($this->dir.'/phantom-posted')?'PAGADA':'IMPAGA','Tipo'=>'Factura','Periodo'=>'2026-09','Total'=>'20000.25','Comp_ID'=>'1-123','Primer_Vto'=>'2026-09-20','Segundo_Vto'=>'2026-09-25',
             'Metadata'=>['currency'=>'ARS','items'=>[['description'=>'fixture-item','quantity'=>1]]],
             'Hash_Descarga'=>'do-not-expose','URL_PAGO'=>'https://do-not-expose.invalid'];
         if($scenario==='missing') $row=['IDT'=>123];
@@ -109,6 +109,13 @@ final class FixtureTransport implements Transport {
             return $rows;
         }
         return array_slice([$row],(int)($query['Offset']??0),(int)($query['Limit']??1));
+    }
+    public function impute(string $token,string $idt,int $cents,string $origin,string $reference): void {
+        if($token!=='fixture-technical-token' || $idt!=='123' || $cents!==2000025 || $origin!=='SIRO Mi USITTEL'
+            || !preg_match('/^SIRO [a-f0-9-]{36}$/D',$reference)) throw new \RuntimeException('invalid safe fixture payment');
+        file_put_contents($this->dir.'/phantom-post-calls','1',FILE_APPEND);
+        if(trim(@file_get_contents($this->dir.'/scenario')?:'normal')==='phantom-post-timeout') throw new Failure('PHANTOM_TIMEOUT');
+        touch($this->dir.'/phantom-posted');
     }
 }
 

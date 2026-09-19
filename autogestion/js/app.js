@@ -1,6 +1,6 @@
 import { request, invoicePdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices, planLabel, addressLabel } from './data.js';
-import { shell, routes, status, icon, button, input, invoicePayButton, escapeHTML as e } from './components.js';
+import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 
@@ -15,7 +15,7 @@ let serviceBusy = false;
 // Navigation hint only; authorization and all outcome checks remain on the server.
 let returnAttempt = /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(location.hash)?.[1] || null;
 if (returnAttempt) { runtime.billingView = 'movements'; history.replaceState(null, '', '#/facturas'); }
-function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
+function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; if (typeof data.phantom_posting_enabled === 'boolean') runtime.phantomPostingEnabled = data.phantom_posting_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
 let speedTimer;
@@ -42,7 +42,7 @@ dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
 function render() {
-  document.querySelector('.demo-strip').textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
+  document.querySelector('.demo-strip').textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.phantomPostingEnabled ? 'Desarrollo local · Laboratorio SIRO y Phantom' : runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
   clearInterval(speedTimer);
   if (dialog.open) dialog.close();
   let route = location.hash.replace('#/', '') || 'login';
@@ -57,10 +57,10 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
-      if (paymentBusy && ['pay', 'payment-check'].includes(control.dataset.action)) control.disabled = true;
+      if (paymentBusy && ['pay', 'payment-check', 'payment-post'].includes(control.dataset.action)) control.disabled = true;
     });
     const hint = document.createElement('p'); hint.className = 'field-hint';
-    hint.textContent = route === 'login' ? 'La recuperación de contraseña todavía no está habilitada.' : (runtime.paymentsEnabled ? 'Laboratorio SIRO. Los pagos no se registran en Phantom. Otras modificaciones no están habilitadas.' : 'Modo lectura. Las acciones de pago y modificación todavía no están habilitadas.');
+    hint.textContent = route === 'login' ? 'La recuperación de contraseña todavía no está habilitada.' : (runtime.phantomPostingEnabled ? 'Laboratorio de pagos. Las demás modificaciones no están habilitadas.' : runtime.paymentsEnabled ? 'Laboratorio SIRO. Otras modificaciones no están habilitadas.' : 'Modo lectura. Las acciones de pago y modificación todavía no están habilitadas.');
     app.querySelector('main').append(hint);
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
@@ -69,7 +69,7 @@ function render() {
 function getInvoice(id) { return invoices.find(item => item.id === id); }
 function invoiceDialog(item, receipt = false) {
   if (!item || (receipt && item.status !== 'Pagada')) return;
-  if (runtime.mode === 'phantom') return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' ? invoicePayButton(item, 'aria-describedby="payment-provider-note"') : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div><p class="field-hint">${runtime.paymentsEnabled ? 'Los pagos confirmados por SIRO no se registran en Phantom en esta etapa.' : (item.downloadAvailable ? 'Pagos todavía no habilitados.' : 'Pagos y descargas todavía no habilitados.')}</p>${paymentNotice}`);
+  if (runtime.mode === 'phantom') { const visible=invoiceVisibleStatus(item); return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(visible.label)}${visible.hint ? `<p class="field-hint">${e(visible.hint)}</p>` : ''}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' ? invoicePayButton(item, 'aria-describedby="payment-provider-note"') : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div>${paymentNotice}`); }
   openDialog(receipt ? 'Comprobante de pago' : 'Detalle de factura', `<p class="demo-caption">Documento de ejemplo · Sin validez fiscal</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Servicio</dt><dd>${e(planLabel(customer.plan))}</dd></div><div><dt>Domicilio</dt><dd>${e(addressLabel(customer.address))}</dd></div><div><dt>Vencimiento</dt><dd>${item.due}</dd></div>${receipt ? `<div><dt>Fecha de pago de ejemplo</dt><dd>${item.paidAt}</dd></div>` : '<div><dt>Concepto</dt><dd>Abono mensual</dd></div>'}</dl><div class="dialog-actions">${!receipt && item.status !== 'Pagada' ? button('Pagar', 'pay', { iconName: 'external-link', attrs: `data-id="${item.id}" aria-describedby="payment-provider-note"` }) : ''}${button(receipt ? 'Descargar comprobante' : 'Descargar factura', receipt ? 'download-receipt' : 'download-invoice', { secondary: !receipt && item.status !== 'Pagada', iconName: 'download', attrs: `data-id="${item.id}"` })}</div>${!receipt && item.status !== 'Pagada' ? paymentNotice : ''}`);
 }
 const help = {
@@ -111,18 +111,19 @@ document.addEventListener('click', async event => {
     document.querySelector(`[data-action="billing-tab"][data-view="${runtime.billingView}"]`)?.focus();
     return;
   }
-  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check')) {
+  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check' || action === 'payment-post')) {
     if (!runtime.paymentsEnabled || paymentBusy) return;
     paymentBusy = true; target.disabled = true; const generation = dataGeneration;
-    target.textContent = action === 'pay' ? 'Preparando pago...' : 'Consultando...';
+    target.textContent = action === 'pay' ? 'Preparando pago...' : action === 'payment-post' ? 'Actualizando cuenta...' : 'Consultando...';
     try {
-      const result = await request(action === 'pay' ? 'payment-create' : 'payment-reconcile', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
+      const route = action === 'pay' ? 'payment-create' : action === 'payment-post' ? 'payment-post' : 'payment-reconcile';
+      const result = await request(route, action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
       if (generation !== dataGeneration || !authenticated) return;
       await refreshPayments(false);
       if (result.checkout_url) {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
         window.location.assign(result.checkout_url);
-      } else { location.hash = '/facturas'; render(); }
+      } else { location.hash = '/facturas'; if (action === 'payment-post') await loadOverview(); else render(); }
     } catch (error) { if (generation === dataGeneration) {
       if (['PAYMENT_NOT_UNPAID', 'PAYMENT_INVOICE_CHANGED'].includes(error.code)) await loadOverview();
       await handleError(error);
@@ -297,8 +298,8 @@ async function boot() {
   try {
     const session = await request('bootstrap');
     runtime.backend = session.backend !== false;
-    await initialize(session.mode); applyServices(session); runtime.paymentsEnabled = session.payments_enabled === true; authenticated = session.authenticated;
-    document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
+    await initialize(session.mode); applyServices(session); runtime.paymentsEnabled = session.payments_enabled === true; runtime.phantomPostingEnabled = session.phantom_posting_enabled === true; authenticated = session.authenticated;
+    document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.phantomPostingEnabled ? 'Desarrollo local · Laboratorio SIRO y Phantom' : runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
     authenticated = false; applyServices({}); clearData();

@@ -79,7 +79,8 @@
   .invoice-table-full .invoice-head > :nth-child(2) { text-align:right; padding-right:20px; }
   .invoice-actions { display:flex; align-items:center; gap:20px; justify-content:flex-end; }
   .invoice-actions .button { min-height:44px; padding:8px 18px; font-size:14px; }
-  .invoice-actions .icon { width:18px; height:18px; }
+.invoice-actions .icon { width:18px; height:18px; }
+.invoice-status small { display:block; margin-top:4px; max-width:260px; color:var(--muted); font-size:11px; line-height:1.35; white-space:normal; }
   .all-invoices { display:flex; justify-content:center; align-items:center; gap:10px; min-height:48px; margin-top:12px; font-size:14px; }
   .all-invoices:hover { text-decoration:underline; }
   .debt-strip { padding:18px 24px; background:var(--sage); border-radius:8px; margin-bottom:32px; }
@@ -223,6 +224,7 @@
   .invoice-period { grid-column:1; grid-row:1; font-size:14px; }
   .invoice-amount { grid-column:2; grid-row:1; font-weight:600; }
   .invoice-status { grid-column:1; grid-row:2; }
+  .invoice-status small { display:block; margin-top:4px; max-width:260px; color:var(--muted); font-size:11px; line-height:1.35; white-space:normal; }
   .status { font-size:12px; }
   .all-invoices { margin-top:2px; font-size:13px; }
   .page-subtitle { margin-top:-18px; margin-bottom:23px; }

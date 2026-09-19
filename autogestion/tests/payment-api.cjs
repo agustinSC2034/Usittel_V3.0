@@ -29,8 +29,16 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   await u.call('logout',{});const recovered=jar();clearRate();await login(recovered);scenario('confirmed');
   r=await recovered.call('payment-reconcile',{attempt_id:second.attempt_id});
   check('nueva sesión recupera y confirma SIRO sin tocar Phantom',()=>{assert.equal(r.data.state,'CONFIRMED');assert.equal(r.data.siro_payment_confirmed,true);assert.equal(r.data.phantom_payment_posted,false);});
-  await recovered.call('invoices');r=await recovered.call('payment-create',{idt:'123'});check('SIRO confirmado impide volver a cobrar mientras Phantom siga impaga',()=>{assert.equal(r.data.state,'CONFIRMED');assert.equal(r.data.checkout_url,undefined);});
-  r=await recovered.call('overview');check('confirmación SIRO no altera saldo ni factura Phantom',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].status,'Pendiente');});
+  const postingConfigured=()=>configured().replace("'mode'=>'phantom'","'mode'=>'phantom','phantom_posting'=>['enabled'=>true,'lab_ida'=>1,'crm_url'=>'https://fixture.invalid/PHANTOM/Includes/CRM/API_CRM.php','origin'=>'SIRO Mi USITTEL']");
+  fs.writeFileSync(config,postingConfigured());
+  r=await recovered.call('bootstrap');check('bootstrap habilita escritura Phantom sólo con compuerta explícita',()=>assert.equal(r.data.phantom_posting_enabled,true));
+  await recovered.call('invoices');
+  r=await recovered.call('payment-post',{attempt_id:second.attempt_id},{noCsrf:true});check('imputación exige CSRF',()=>assert.equal(r.status,403));
+  r=await recovered.call('payment-post',{attempt_id:second.attempt_id});
+  check('pago confirmado se imputa una vez y se verifica leyendo Phantom',()=>{assert.equal(r.status,200,JSON.stringify(r.data));assert.equal(r.data.phantom_payment_posted,true);assert.equal(r.data.phantom_posting_state,'POSTED');assert.equal(fs.readFileSync(path.join(dir,'phantom-post-calls'),'utf8'),'1');assert.doesNotMatch(r.text,/reference|result_id|fixture-token|SIRO [a-f0-9-]{36}/);});
+  r=await recovered.call('payment-post',{attempt_id:second.attempt_id});check('doble click no repite escritura Phantom',()=>{assert.equal(r.data.phantom_payment_posted,true);assert.equal(fs.readFileSync(path.join(dir,'phantom-post-calls'),'utf8'),'1');});
+  await recovered.call('invoices');r=await recovered.call('payment-create',{idt:'123'});check('factura imputada no puede volver a cobrarse',()=>{assert.equal(r.status,409);assert.equal(r.data.error.code,'PAYMENT_NOT_UNPAID');});
+  r=await recovered.call('overview');check('imputación verificada refleja factura Phantom sin alterar saldo artificialmente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].status,'Pagada');});
   await recovered.call('logout',{});r=await recovered.call('payments');check('logout bloquea lectura de intentos',()=>assert.equal(r.status,401));
   fs.writeFileSync(config,configured(1));clearRate();const expired=jar();await login(expired);await sleep(1100);r=await expired.call('payment-create',{idt:'123'});
   check('sesión vencida no inicia pago',()=>assert.ok([401,403].includes(r.status)));

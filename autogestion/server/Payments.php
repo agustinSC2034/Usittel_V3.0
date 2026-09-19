@@ -33,8 +33,10 @@ function paymentRequest(array $a,array $s): array {
         'URL_ERROR'=>$s['return_base'].'/pago-error/'.$a['attempt_id'],'IdReferenciaOperacion'=>$a['reference']];
 }
 function paymentPublic(array $a,bool $checkout=false): array {
+    $posting=$a['posting_state']??'NOT_POSTED';
     $r=['attempt_id'=>$a['attempt_id'],'idt'=>$a['idt'],'amount'=>$a['cents']/100,'state'=>$a['state'],
-        'intent_created'=>$a['hash']!==null,'siro_payment_confirmed'=>$a['state']==='CONFIRMED','phantom_payment_posted'=>false,
+        'intent_created'=>$a['hash']!==null,'siro_payment_confirmed'=>$a['state']==='CONFIRMED','phantom_payment_posted'=>$posting==='POSTED',
+        'phantom_posting_state'=>$posting,'can_post_to_phantom'=>$a['state']==='CONFIRMED' && $posting==='NOT_POSTED',
         'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$a['state']==='PENDING' && $a['hash']!==null,
         'phase'=>match($a['state']) {'CREATING'=>'SIRO_INTENT_CREATING','PENDING'=>'SIRO_PENDING','CONFIRMED'=>'SIRO_CONFIRMED','CANCELLED'=>'SIRO_CANCELLED','REJECTED'=>'SIRO_REJECTED',default=>'SIRO_UNKNOWN'}];
     if($checkout && $r['can_resume']) $r['checkout_url']=siroCheckout($a['hash']);
@@ -87,7 +89,8 @@ final class Payments {
             do {$id=bin2hex(random_bytes(16));} while(isset($state['attempts'][$id]));
             do {$receipt=(string)random_int(100000000000000,999999999999999).str_pad((string)$next,5,'0',STR_PAD_LEFT);} while(in_array($receipt,array_column($state['attempts'],'receipt'),true));
             $now=gmdate('c');$a=['attempt_id'=>$id,'ida'=>$ida,'idt'=>$idt,'cents'=>$cents,'cpe'=>$cpe,'receipt'=>$receipt,
-                'reference'=>$idt.';'.paymentDecimal($cents).';','hash'=>null,'result_id'=>null,'state'=>'CREATING','created_at'=>$now,'updated_at'=>$now,'checked_at'=>0];
+                'reference'=>$idt.';'.paymentDecimal($cents).';','hash'=>null,'result_id'=>null,'state'=>'CREATING','posting_state'=>'NOT_POSTED',
+                'posting_reference'=>null,'posted_at'=>null,'created_at'=>$now,'updated_at'=>$now,'checked_at'=>0];
             $state['counters'][$cpe]=$next;$state['attempts'][$id]=$a;$save(); // Durable reservation BEFORE the external POST.
             try {
                 $r=$this->siro->create(paymentRequest($a,$this->s));
@@ -127,5 +130,41 @@ final class Payments {
             } catch(\Throwable) {$a['state']='UNCONFIRMED';}
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
         });
+    }
+    public function postToPhantom(int $ida,string $id,callable $invoice,callable $post): array {
+        if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
+        return $this->store->transaction(function(&$state,$save) use($ida,$id,$invoice,$post) {
+            $a=$state['attempts'][$id]??null;
+            if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
+            $a['posting_state']??='NOT_POSTED';$a['posting_reference']??=null;$a['posted_at']??=null;
+            if($a['posting_state']==='POSTED') return paymentPublic($a);
+            if($a['state']!=='CONFIRMED' || !is_string($a['hash']??null) || !is_string($a['result_id']??null)) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
+            // The browser return and the stored flag are insufficient: SIRO is checked again immediately before any Phantom write.
+            $verified=paymentResult($this->siro->result($a['hash'],$a['result_id']),$a,$this->s);
+            if($verified['state']!=='CONFIRMED' || $verified['result_id']!==$a['result_id']) throw new Failure('PAYMENT_NOT_CONFIRMED',409);
+            $row=$invoice($a['idt']);$this->assertPostingInvoice($row,$a,$ida);
+            if(($row['Estado']??null)!=='IMPAGA') {
+                $a['posting_state']=in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED'],true)?'POSTED':'NEEDS_REVIEW';
+                if($a['posting_state']==='POSTED')$a['posted_at']=gmdate('c');
+                $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
+            }
+            // An uncertain previous POST is reconciled by reading Phantom; it is never repeated blindly.
+            if(in_array($a['posting_state'],['POSTING','POST_UNCONFIRMED','NEEDS_REVIEW'],true)) return paymentPublic($a);
+            $a['posting_reference']='SIRO '.strtolower($a['result_id']);$a['posting_state']='POSTING';$a['updated_at']=gmdate('c');
+            $state['attempts'][$id]=$a;$save();
+            try {$post($a['idt'],$a['cents'],$a['posting_reference']);}
+            catch(\Throwable) {
+                $a['posting_state']='POST_UNCONFIRMED';$a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
+            }
+            try {$after=$invoice($a['idt']);$this->assertPostingInvoice($after,$a,$ida);$a['posting_state']=($after['Estado']??null)==='IMPAGA'?'POST_UNCONFIRMED':'POSTED';}
+            catch(\Throwable) {$a['posting_state']='POST_UNCONFIRMED';}
+            if($a['posting_state']==='POSTED')$a['posted_at']=gmdate('c');
+            $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
+        });
+    }
+    private function assertPostingInvoice(array $row,array $a,int $ida): void {
+        if(invoiceId($row['IDT']??null)!==$a['idt'] || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);
+        if(paymentCents($row['Total']??null)!==$a['cents']) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
+        if(!is_string($row['Estado']??null) || !in_array($row['Estado'],['IMPAGA','PAGADA'],true)) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
     }
 }

@@ -29,6 +29,8 @@ return [
     // Optional lab SIRO. Add privately, never overwrite an existing config.
     'siro' => [
         'enabled' => false,
+        // Explicit single-service laboratory account. Never hides associated services.
+        'lab_ida' => 1,
         'user' => '', 'password' => '',
         'return_base' => 'http://127.0.0.1:4174/autogestion',
         // Explicit unused five-digit suffix range reserved for this CPE/integration.

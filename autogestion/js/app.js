@@ -12,6 +12,9 @@ const paymentNotice = '<p class="field-hint" id="payment-provider-note">Al selec
 let authenticated = false;
 let paymentBusy = false;
 let serviceBusy = false;
+// Navigation hint only; authorization and all outcome checks remain on the server.
+let returnAttempt = /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(location.hash)?.[1] || null;
+if (returnAttempt) history.replaceState(null, '', '#/facturas');
 function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
@@ -39,6 +42,7 @@ dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
 function render() {
+  document.querySelector('.demo-strip').textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
   clearInterval(speedTimer);
   if (dialog.open) dialog.close();
   let route = location.hash.replace('#/', '') || 'login';
@@ -112,7 +116,10 @@ document.addEventListener('click', async event => {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
         window.location.assign(result.checkout_url);
       } else { location.hash = '/facturas'; render(); }
-    } catch (error) { if (generation === dataGeneration) await handleError(error); }
+    } catch (error) { if (generation === dataGeneration) {
+      if (['PAYMENT_NOT_UNPAID', 'PAYMENT_INVOICE_CHANGED'].includes(error.code)) await loadOverview();
+      await handleError(error);
+    } }
     finally { paymentBusy = false; if (generation === dataGeneration) render(); }
     return;
   }
@@ -221,7 +228,7 @@ document.addEventListener('submit', async event => {
     try {
       if (runtime.backend) applyServices(await request('login', { username: data.get('username'), password: data.get('password') }));
       else if (runtime.mode !== 'demo' || data.get('username') !== 'agustin.demo' || data.get('password') !== 'usittel-demo') throw new Error('Para esta prueba usá agustin.demo y usittel-demo.');
-      form.reset(); authenticated = true; location.hash = '/inicio';
+      form.reset(); authenticated = true; location.hash = returnAttempt ? '/facturas' : '/inicio';
       if (runtime.mode === 'phantom') await loadOverview(); else render();
     } catch(error) { toast(error.message); }
     finally { data.delete('password'); if (form.elements.password) form.elements.password.value = ''; submit.disabled = false; }
@@ -262,7 +269,8 @@ async function refreshPayments(reconcile = true) {
     const list = await request('payments');
     if (generation !== dataGeneration || !authenticated) return;
     runtime.paymentItems = list.items; runtime.paymentError = ''; render();
-    const pending = list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
+    const pending = list.items.find(a => a.attempt_id === returnAttempt) || list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
+    returnAttempt = null;
     if (reconcile && pending) {
       const result = await request('payment-reconcile', { attempt_id: pending.attempt_id });
       if (generation !== dataGeneration || !authenticated) return;

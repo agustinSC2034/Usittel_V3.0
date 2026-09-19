@@ -1,7 +1,9 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base})=>{
   const configured=(idle=900)=>settings('phantom',idle).replace("'mode'=>'phantom'","'mode'=>'phantom','siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70020]");
   fs.writeFileSync(config,configured());clearRate();scenario('normal');
-  const u=jar();await login(u);await u.call('invoices');
+  const u=jar();const signedIn=await login(u);await u.call('invoices');
+  check('login de servicio único habilita SIRO configurado',()=>assert.equal(signedIn.data.payments_enabled,true));
+  const restored=await u.call('bootstrap');check('bootstrap conserva habilitación SIRO',()=>assert.equal(restored.data.payments_enabled,true));
   for(const b of [{idt:'123',Importe:1},{idt:'123',IDA:5},{idt:'123',URL_OK:'https://evil.invalid'},{idt:123}]) {
     const r=await u.call('payment-create',b);check('pago rechaza campos/control cliente',()=>assert.equal(r.status,400));
   }
@@ -17,7 +19,9 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
     assert.equal(a.data.phantom_payment_posted,false);assert.doesNotMatch(a.text,/fixture-password|fixture-token|nro_comprobante|reference|cpe/);
   });
   const ret=await fetch(base.replace('/api/','/')+'pago-ok/'+a.data.attempt_id+'?IdResultado=forged&IdReferenciaOperacion=forged',{redirect:'manual'});
-  check('retorno descarta query y no confirma pago',()=>{assert.equal(ret.status,303);assert.equal(ret.headers.get('location'),'/autogestion/#/facturas');});
+  check('retorno descarta query y conserva solo attempt_id',()=>{assert.equal(ret.status,303);assert.equal(ret.headers.get('location'),'/autogestion/#/facturas?attempt='+a.data.attempt_id);});
+  const errorRet=await fetch(base.replace('/api/','/')+'pago-error/'+a.data.attempt_id+'?Estado=RECHAZADA&Importe=1&IDA=5',{redirect:'manual'});
+  check('retorno ERROR falsificado no modifica resultado',()=>{assert.equal(errorRet.status,303);assert.equal(errorRet.headers.get('location'),'/autogestion/#/facturas?attempt='+a.data.attempt_id);});
   r=await u.call('payments');check('lista privada mantiene pendiente tras retorno falso',()=>{assert.equal(r.data.items[0].state,'PENDING');assert.equal(r.data.items[0].checkout_url,undefined);});
   scenario('cancelled');r=await u.call('payment-reconcile',{attempt_id:a.data.attempt_id});check('cancelación real se consulta backend',()=>assert.equal(r.data.state,'CANCELLED'));
   scenario('normal');r=await u.call('payment-create',{idt:'123'});const second=r.data;
@@ -30,5 +34,11 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   await recovered.call('logout',{});r=await recovered.call('payments');check('logout bloquea lectura de intentos',()=>assert.equal(r.status,401));
   fs.writeFileSync(config,configured(1));clearRate();const expired=jar();await login(expired);await sleep(1100);r=await expired.call('payment-create',{idt:'123'});
   check('sesión vencida no inicia pago',()=>assert.ok([401,403].includes(r.status)));
+  fs.writeFileSync(config,configured());scenario('services-two');clearRate();const multi=jar();r=await login(multi);
+  check('SIRO configurado sigue oculto en sesión multicontrato',()=>assert.equal(r.data.payments_enabled,false));
+  for(const [route,body] of [['payments',undefined],['payment-create',{idt:'100'}],['payment-reconcile',{attempt_id:second.attempt_id}]]) {
+    r=await multi.call(route,body);check('multicontrato bloquea '+route,()=>{assert.equal(r.status,409);assert.equal(r.data.error.code,'SIRO_DISABLED');});
+  }
+  await multi.call('logout',{});
   fs.writeFileSync(config,settings());scenario('normal');
 };

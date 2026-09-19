@@ -11,7 +11,8 @@ final class PaymentFixture implements SiroGateway {
     public function create(array $request): array {
         $this->creates++;$this->requests[]=$request;
         if($this->dir) file_put_contents($this->dir.'/siro-fixture-request.json',json_encode($request));
-        if(in_array($this->scenario(),['timeout','session-error'],true)) throw new Failure('SIRO_TIMEOUT');
+        if($this->scenario()==='timeout') throw new Failure('SIRO_TIMEOUT');
+        if($this->scenario()==='session-error') throw new Failure('SIRO_SESSION');
         $hash=str_repeat('a',64);
         return ['Hash'=>$hash,'Url'=>$this->scenario()==='checkout-error'?'https://evil.invalid/':siroCheckout($hash)];
     }

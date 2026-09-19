@@ -24,6 +24,25 @@ if(($argv[2]??null)==='worker') {
     $p=new Payments(new PaymentStore($root),$gateway,['return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70001]);
     echo $p->create(1,'123',fn()=>row())['attempt_id'];exit;
 }
+// The POC uses local wall time with a literal Z, not UTC conversion.
+ok(siroLabService(['lab_ida'=>1],[1],1));
+ok(!siroLabService(['lab_ida'=>1],[1,5],1));
+ok(!siroLabService(['lab_ida'=>1],[5],5));
+ok(siroLabService(['lab_ida'=>5],[5],5));
+ok(!siroLabService(['lab_ida'=>5],[1],5));
+ok(!siroLabService(null,[1],1));
+$validConfig=['mode'=>'phantom','siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70001]];
+ok(siroConfig($validConfig)['lab_ida']===1);
+$validConfig['siro']['lab_ida']='5';failure(fn()=>siroConfig($validConfig),'SIRO_CONFIGURATION');
+$validConfig['siro']['lab_ida']=0;failure(fn()=>siroConfig($validConfig),'SIRO_CONFIGURATION');
+ok(siroDate(new \DateTimeImmutable('2026-09-19T03:01:02.345+00:00'))==='2026-09-19T00:01:02.345Z');
+ok(siroDate(new \DateTimeImmutable('2026-09-19T01:00:00+00:00'))==='2026-09-18T22:00:00.000Z');
+ok(siroDate(new \DateTimeImmutable('2026-09-19T00:01:02.345-03:00'))==='2026-09-19T00:01:02.345Z');
+$window=siroQueryWindow(['created_at'=>'2026-09-18T16:00:00+00:00'],new \DateTimeImmutable('2026-09-19T03:00:30+00:00'));
+ok($window===['FechaDesde'=>'2026-09-18T01:00:00.000Z','FechaHasta'=>'2026-09-18T23:59:30.000Z']);
+failure(fn()=>siroQueryWindow(['created_at'=>'invalid']),'SIRO_DATE');
+failure(fn()=>siroQueryWindow(['created_at'=>'2026-02-30T00:00:00+00:00']),'SIRO_DATE');
+failure(fn()=>siroQueryWindow(['created_at'=>'2026-09-20T00:00:00+00:00'],new \DateTimeImmutable('2026-09-19T00:00:00+00:00')),'SIRO_DATE');
 foreach(['CANCELLED'=>'cancelled','REJECTED'=>'rejected','CONFIRMED'=>'confirmed','PENDING'=>'pending','UNCONFIRMED'=>'processed-false'] as $expected=>$scenario) {
     [$p,$store,$g,$dir]=setup();$a=$p->create(1,'123',fn()=>row());ok($a['state']==='PENDING');
     $g->scenario=$scenario;$r=$p->reconcile(1,$a['attempt_id']);ok($r['state']===$expected);ok($r['phantom_payment_posted']===false);
@@ -47,7 +66,7 @@ $p=new Payments(new PaymentStore($dir),$g,['return_base'=>'http://127.0.0.1:4174
 $g->scenario='confirmed';ok($p->reconcile(1,$b['attempt_id'])['state']==='CONFIRMED');
 $c=$p->create(1,'123',fn()=>row());ok($c['state']==='CONFIRMED' && $g->creates===2 && !isset($c['checkout_url']));
 ok(count($p->list(1))===2 && count($p->list(5))===0);
-failure(fn()=>$p->reconcile(5,$b['attempt_id']),'FORBIDDEN');failure(fn()=>$p->reconcile(1,str_repeat('0',32)),'PAYMENT_NOT_FOUND');
+failure(fn()=>$p->reconcile(5,$b['attempt_id']),'PAYMENT_NOT_FOUND');failure(fn()=>$p->reconcile(1,str_repeat('0',32)),'PAYMENT_NOT_FOUND');
 [$p,$store,$g]=setup();
 foreach([['Estado'=>'PAGADA'],['IDA'=>'5'],['Total'=>'0'],['Total'=>'1,21'],['SIRO_CE'=>'']] as $change) {
     $expected=isset($change['Estado'])?'PAYMENT_NOT_UNPAID':(isset($change['IDA'])?'INVOICE_OWNERSHIP':(isset($change['SIRO_CE'])?'PAYMENT_CPE':'PAYMENT_AMOUNT'));
@@ -64,4 +83,19 @@ failure(fn()=>$single->create(1,'123',fn()=>row()),'PAYMENT_SEQUENCE_EXHAUSTED')
 // A crash after durable CREATING reservation is never permission to repeat the POST.
 $store->transaction(function(&$state,$save){foreach($state['attempts'] as &$a)$a['state']='CREATING';$save();});
 ok($single->create(1,'123',fn()=>row())['state']==='CREATING' && $g->creates===1);
+// Selected IDA is a domain argument from the server, not a hardcoded client.
+// HTTP still blocks multi-contract sessions and every IDA except the lab account.
+[$p,$store,$g,$dir]=setup();
+$other=$p->create(5,'123',fn()=>array_replace(row(),['IDA'=>'5']));
+ok(count($p->list(5))===1 && $p->list(1)===[]);
+failure(fn()=>$p->reconcile(1,$other['attempt_id']),'PAYMENT_NOT_FOUND');
+failure(fn()=>$p->create(5,'124',fn()=>array_replace(row(),['IDT'=>'124'])),'INVOICE_OWNERSHIP');
+$g->scenario='confirmed';$confirmed=$p->reconcile(5,$other['attempt_id']);
+ok($confirmed['phase']==='SIRO_CONFIRMED' && $confirmed['phantom_payment_posted']===false);
+[$p,$store,$g,$dir]=setup();$a=$p->create(1,'123',fn()=>row());
+failure(fn()=>$p->create(1,'123',fn()=>array_replace(row(),['Total'=>'122.00'])),'PAYMENT_INVOICE_CHANGED');
+failure(fn()=>$p->create(1,'123',fn()=>array_replace(row(),['SIRO_CE'=>str_repeat('2',19)])),'PAYMENT_INVOICE_CHANGED');
+ok($g->creates===1 && count($p->list(1))===1);
+$saved=file_get_contents($dir.'/siro-attempts.json');
+ok(!preg_match('/Password|api_pass|Autogestion|access_token|Request|fixture-password|fixture-token/',$saved));
 echo 'PAYMENT_CHECKS='.$count.PHP_EOL;

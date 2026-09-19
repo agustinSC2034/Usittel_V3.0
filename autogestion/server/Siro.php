@@ -14,7 +14,12 @@ function siroConfig(array $c): ?array {
     if(isset($p['user']) || isset($p['pass'])) throw new Failure('SIRO_CONFIGURATION');
     foreach(['receipt_start','receipt_end'] as $key) if(!is_int($s[$key]??null) || $s[$key]<0 || $s[$key]>99999) throw new Failure('SIRO_CONFIGURATION');
     if($s['receipt_start']>$s['receipt_end']) throw new Failure('SIRO_CONFIGURATION');
+    $s['lab_ida']??=1;
+    if(!is_int($s['lab_ida']) || $s['lab_ida']<1 || $s['lab_ida']>9999999999) throw new Failure('SIRO_CONFIGURATION');
     return $s;
+}
+function siroLabService(?array $s,array $ids,?int $selected): bool {
+    return $s!==null && count($ids)===1 && $selected===($s['lab_ida']??1) && in_array($selected,$ids,true);
 }
 function paymentCents(mixed $value): int {
     if(is_int($value)) $value=(string)$value;
@@ -28,6 +33,20 @@ function paymentDecimal(int $cents): string {return intdiv($cents,100).'.'.str_p
 function siroCheckout(string $hash): string {
     if(!preg_match('/^[a-f0-9]{64}$/D',$hash)) throw new Failure('SIRO_FORMAT');
     return 'https://siropagos.bancoroela.com.ar/Home/Pago/'.$hash;
+}
+// Verified POC contract: Buenos Aires wall time + milliseconds + literal Z.
+// This is SIRO's query convention, NOT an ISO UTC instant. Internal storage stays UTC.
+function siroDate(\DateTimeImmutable $date): string {
+    return $date->setTimezone(new \DateTimeZone('America/Argentina/Buenos_Aires'))->format('Y-m-d\TH:i:s.v\Z');
+}
+function siroQueryWindow(array $attempt,?\DateTimeImmutable $now=null): array {
+    $now??=new \DateTimeImmutable('now',new \DateTimeZone('UTC'));
+    $value=$attempt['created_at']??null;
+    if(!is_string($value)) throw new Failure('SIRO_DATE');
+    $created=\DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM,$value);
+    if(!$created || $created->format(\DateTimeInterface::ATOM)!==$value || $created>$now) throw new Failure('SIRO_DATE');
+    // Preserve the POC's one-minute lag. Anchor the start to creation for later recovery.
+    return ['FechaDesde'=>siroDate($created->modify('-12 hours')),'FechaHasta'=>siroDate($now->modify('-1 minute'))];
 }
 interface SiroGateway {
     public function create(array $request): array;
@@ -71,8 +90,7 @@ final class SiroHttp implements SiroGateway {
     }
     public function create(array $request): array {return $this->send('https://siropagos.bancoroela.com.ar/api/Pago',$request);}
     public function consult(array $attempt): array {
-        return $this->send('https://siropagos.bancoroela.com.ar/api/Pago/Consulta',[
-            'FechaDesde'=>gmdate('Y-m-d\TH:i:s\Z',strtotime($attempt['created_at'])-86400),'FechaHasta'=>gmdate('Y-m-d\TH:i:s\Z',time()+86400),
+        return $this->send('https://siropagos.bancoroela.com.ar/api/Pago/Consulta',siroQueryWindow($attempt)+[
             'idReferenciaOperacion'=>$attempt['reference']]);
     }
     public function result(string $hash,string $id): array {

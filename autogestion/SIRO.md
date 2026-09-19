@@ -1,5 +1,25 @@
 # SIRO de laboratorio: intención y confirmación
 
+## Revisión SIRO1 — 19/09/2026
+
+Validación local: 449 verificaciones fixture, sintaxis PHP/JS, escaneo local de secretos y QA desktop/mobile sin errores de consola ni desborde. Checkout siempre interceptado; no hubo llamadas reales a Phantom/SIRO. La primera prueba de este módulo queda pendiente y será de creación/cancelación, según FIRST-SIRO-TEST.md.
+
+La lectura multicontrato aceptada se conserva. El dominio recibe `selected_ida` del servidor, y las rutas SIRO exigen exactamente un servicio autorizado y coincidencia con `siro.lab_ida` privado (1 por defecto). IDA 1 tiene dos servicios en la instalación actual: SIRO queda bloqueado. Para probar será necesaria otra cuenta de laboratorio de un único servicio, acordada explícitamente; nunca ocultar asociaciones.
+
+`Payments` depende de la interfaz `PaymentAttempts`; `PaymentStore` implementa persistencia de laboratorio con transacción exclusiva, reserva previa al POST y escritura atómica. Producción necesitará implementar esa interfaz sobre almacenamiento transaccional con UNIQUE para attempt_id, comprobante y CPE+sufijo, además de exclusión de intentos activos por factura.
+
+Antes de reutilizar un checkout se revalidan importe y CPE de la factura actual. Si cambiaron, PAYMENT_INVOICE_CHANGED bloquea la salida y la UI actualiza la factura. Si ahora está PAGADA también se frena y recarga. Nunca se modifica el importe de un intento reservado.
+
+El retorno conserva solo el attempt_id propio como indicación de navegación. Se descarta toda query SIRO; el backend comprueba pertenencia antes de reconciliar. Si venció la sesión, luego del login vuelve a Facturas. Sin retorno también se recuperan los intentos persistidos. La API pública distingue `intent_created`, `siro_payment_confirmed` y `phantom_payment_posted=false`, además de phase SIRO_INTENT_CREATING / SIRO_PENDING / SIRO_CONFIRMED / SIRO_CANCELLED / SIRO_REJECTED / SIRO_UNKNOWN.
+
+### Fechas de la POC
+
+Fuente: tarea del proyecto “Analizar costos WhatsApp Botmaker”, función fechaSiro en el turno 361181e1-58c7-4050-9ee4-28339a4c966a y resultado manual de Consulta en 1d1c092d-8332-4e1f-939f-518d1854e7f9. No se copiaron respuestas ni identificadores de aquella transacción.
+
+La POC formatea en America/Argentina/Buenos_Aires como `yyyy-MM-dd'T'HH:mm:ss.SSS` y concatena una **Z literal**. `siroDate()` reproduce esa convención; no convierte a UTC aunque termine en Z. Los instantes internos se siguen guardando en UTC real.
+
+Se conserva el margen de un minuto en FechaHasta. FechaDesde se ancla doce horas antes de la creación del intento, en vez de doce horas antes de consultar, para recuperar intentos antiguos. Esa ampliación está cubierta con fixtures; su límite operativo real queda pendiente. Una consulta inmediata puede no incluir el resultado: esperar y consultar de nuevo, sin inferir cancelación ni habilitar otro cobro. Se rechazan fechas inválidas o futuras antes del transporte.
+
 ## Alcance y evidencia
 
 Lectura Phantom IDA 1 aceptada por Agustín en f47bb26: login, sesión, perfil, saldo, 11 facturas, detalle, PDF reciente/histórico y logout. Esta etapa conserva ese recorrido. SIRO está implementado con fixtures y deshabilitado por defecto; todavía no fue probado con credenciales reales desde este módulo.
@@ -49,7 +69,7 @@ Al volver a entrar se recuperan los intentos desde disco y se reconcilia automá
 
 ## Límites de esta etapa
 
-- Solo IDA 1 y factura controlada IMPAGA. Se usa Total estricto de Phantom (positivo, hasta nueve enteros y dos decimales), no saldo pendiente calculado. No está resuelto el pago parcial: no probar una factura parcialmente abonada.
+- Solo el contrato de laboratorio configurado, con un único servicio y factura controlada IMPAGA. Se usa Total estricto de Phantom (positivo, hasta nueve enteros y dos decimales), no saldo pendiente calculado. No está resuelto el pago parcial: no probar una factura parcialmente abonada.
 - No SIRO real automático en tests/build/chequeos. Fixtures de transporte, servicio, HTTP y navegador; prueba real pendiente.
 - No Imputar_Pago, promesas, cambios de servicio, Wi-Fi, perfil, Apache, DNS, web pública o producción.
 - La sesión puede vencer durante el checkout: ingresar nuevamente recupera intentos del mismo cliente.

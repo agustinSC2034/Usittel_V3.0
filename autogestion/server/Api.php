@@ -52,7 +52,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
-    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null && count($_SESSION['authorized_services']??[])===1 && ($_SESSION['selected_ida']??null)===1]+serviceSession());
+    if($route==='bootstrap') jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroLabService(siroConfig($c),array_map('intval',array_column($_SESSION['authorized_services']??[],'id')),$_SESSION['selected_ida']??null)]+serviceSession());
     if($method==='POST') csrf();
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
@@ -84,7 +84,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             $_SESSION['authorized_services']=$discovery['services'];$_SESSION['services_unavailable']=$discovery['servicesUnavailable'];
             $_SESSION['service_revision']=bin2hex(random_bytes(16));
         }
-        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroConfig($c)!==null && count($_SESSION['authorized_services']??[])===1 && ($_SESSION['selected_ida']??null)===1]+serviceSession());
+        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroLabService(siroConfig($c),array_map('intval',array_column($_SESSION['authorized_services']??[],'id')),$_SESSION['selected_ida']??null)]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
@@ -101,10 +101,10 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         jsonReply(serviceSession());
     }
     if(in_array($route,['payments','payment-create','payment-reconcile'],true)) {
-        if(count($ids)!==1 || $ida!==1) throw new Failure('SIRO_DISABLED',409);
+        $settings=siroConfig($c);
+        if(!siroLabService($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
-        $settings=siroConfig($c);if($settings===null) throw new Failure('SIRO_DISABLED',409);
         $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);
         if($route==='payments') jsonReply(['items'=>$payments->list($ida)]);
         $b=body();$field=$route==='payment-create'?'idt':'attempt_id';
@@ -160,6 +160,7 @@ function fail(\Throwable $e): never {
         'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         'PAYMENT_NOT_UNPAID'=>'Esta factura no está pendiente de pago.',
+        'PAYMENT_INVOICE_CHANGED'=>'La factura cambió. Actualizamos sus datos; el intento anterior necesita revisión.',
         'PAYMENT_RATE_LIMIT'=>'Esperá unos minutos antes de crear otro intento.',
         'SIRO_DISABLED','SIRO_CONFIGURATION'=>'Los pagos SIRO no están habilitados en este laboratorio.',
         'PAYMENT_CPE','PAYMENT_AMOUNT'=>'La factura no tiene datos válidos para iniciar el pago.',

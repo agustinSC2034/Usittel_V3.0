@@ -3,7 +3,11 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/Siro.php';
 
-final class PaymentStore {
+interface PaymentAttempts {
+    // Callback receives state and a durable save operation inside one exclusive transaction.
+    public function transaction(callable $callback): mixed;
+}
+final class PaymentStore implements PaymentAttempts {
     public function __construct(private string $dir) {}
     public function transaction(callable $callback): mixed {
         return locked($this->dir.'/siro-attempts.lock',function() use ($callback) {
@@ -31,7 +35,8 @@ function paymentRequest(array $a,array $s): array {
 function paymentPublic(array $a,bool $checkout=false): array {
     $r=['attempt_id'=>$a['attempt_id'],'idt'=>$a['idt'],'amount'=>$a['cents']/100,'state'=>$a['state'],
         'intent_created'=>$a['hash']!==null,'siro_payment_confirmed'=>$a['state']==='CONFIRMED','phantom_payment_posted'=>false,
-        'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$a['state']==='PENDING' && $a['hash']!==null];
+        'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$a['state']==='PENDING' && $a['hash']!==null,
+        'phase'=>match($a['state']) {'CREATING'=>'SIRO_INTENT_CREATING','PENDING'=>'SIRO_PENDING','CONFIRMED'=>'SIRO_CONFIRMED','CANCELLED'=>'SIRO_CANCELLED','REJECTED'=>'SIRO_REJECTED',default=>'SIRO_UNKNOWN'}];
     if($checkout && $r['can_resume']) $r['checkout_url']=siroCheckout($a['hash']);
     return $r;
 }
@@ -54,7 +59,7 @@ function paymentResult(array $row,array $a,array $s): array {
     return ['state'=>$state,'result_id'=>$row['IdOperacion']];
 }
 final class Payments {
-    public function __construct(private PaymentStore $store,private SiroGateway $siro,private array $s) {}
+    public function __construct(private PaymentAttempts $store,private SiroGateway $siro,private array $s) {}
     public function list(int $ida): array {
         return $this->store->transaction(function(&$state) use($ida) {
             $items=array_values(array_filter($state['attempts'],fn($a)=>$a['ida']===$ida));
@@ -62,15 +67,18 @@ final class Payments {
         });
     }
     public function create(int $ida,string $idt,callable $invoice): array {
-        if($ida!==1) throw new Failure('FORBIDDEN',403);
+        if($ida<1) throw new Failure('FORBIDDEN',403);
         return $this->store->transaction(function(&$state,$save) use($ida,$idt,$invoice) {
             // Never clear a pending/unknown/confirmed attempt merely because Phantom is still IMPAGA.
             $row=$invoice();
-            if(invoiceId($row['IDT']??null)!==$idt || (isset($row['IDA']) && !in_array($row['IDA'],[1,'1'],true))) throw new Failure('INVOICE_OWNERSHIP',403);
+            if(invoiceId($row['IDT']??null)!==$idt || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);
             if(($row['Estado']??null)!=='IMPAGA') throw new Failure('PAYMENT_NOT_UNPAID',409);
-            foreach(array_reverse($state['attempts']) as $a) if($a['ida']===$ida && $a['idt']===$idt && !in_array($a['state'],['CANCELLED','REJECTED'],true)) return paymentPublic($a,true);
             $cents=paymentCents($row['Total']??null);$cpe=$row['SIRO_CE']??null;
             if(!is_string($cpe) || !preg_match('/^[0-9]{19}$/D',$cpe)) throw new Failure('PAYMENT_CPE');
+            foreach(array_reverse($state['attempts']) as $a) if($a['ida']===$ida && $a['idt']===$idt && !in_array($a['state'],['CANCELLED','REJECTED'],true)) {
+                if($a['cents']!==$cents || $a['cpe']!==$cpe) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
+                return paymentPublic($a,true);
+            }
             if(count($state['attempts'])>=1000) throw new Failure('PAYMENT_STORAGE_LIMIT');
             $recent=array_filter($state['attempts'],fn($a)=>strtotime($a['created_at'])>time()-900);
             if(count($recent)>=5) throw new Failure('PAYMENT_RATE_LIMIT',429);
@@ -92,7 +100,7 @@ final class Payments {
         });
     }
     public function reconcile(int $ida,string $id): array {
-        if($ida!==1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
+        if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
         return $this->store->transaction(function(&$state,$save) use($ida,$id) {
             $a=$state['attempts'][$id]??null;
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);

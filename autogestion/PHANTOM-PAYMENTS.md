@@ -33,4 +33,6 @@ Esto complementa la deduplicación por referencia documentada por Phantom y evit
 
 ## Alcance pendiente
 
-El endpoint y la autenticación CRM HTTPS ya fueron comprobados en el laboratorio real sin escritura. La primera llamada real a `Imputar_Pago` continúa pendiente. Antes de considerarla debe ejecutarse `inspect-payment-posting-preflight.php`, que localiza un único intento confirmado en el runtime, revalida SIRO/REST/CRM y no llama `Imputar_Pago`. `phantom_posting.enabled` permanece `false` durante esa prueba. Producción requiere persistencia transaccional con índices únicos, política operativa de conciliación, hosting/certificados y revisión de seguridad del despliegue.
+El 19/09/2026 el preflight real devolvió `READY_FOR_CONTROLLED_POST` y se realizó una única llamada controlada a `Imputar_Pago`. La relectura inmediata no pudo confirmar el cierre simultáneo en API Rest y CRM, por lo que el intento quedó correctamente en `POST_UNCONFIRMED` y no se reenvió. Una lectura posterior mostró que el saldo de cuenta pasó de $121 a $0, mientras la factura y CRM todavía requerían conciliación. Esto es evidencia de actualización parcial o diferida, no autorización para marcar `POSTED` ni repetir la escritura.
+
+La acción de consulta posterior reutiliza el estado durable y solo relee Phantom. Producción continúa requiriendo persistencia transaccional con índices únicos, política operativa de conciliación, hosting/certificados y revisión de seguridad del despliegue.

@@ -351,10 +351,15 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(app,/returnAttempt[\s\S]*billingView = 'movements'/);
     assert.match(payments,/\['CONFIRMED', 'CANCELLED', 'REJECTED'\]/);
     const components=fs.readFileSync(path.join(root,'js','components.js'),'utf8');
-    assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en reflejarse/);
-    assert.match(views,/saldo puede no incluir pagos recientes ya confirmados por SIRO/);
-    assert.match(payments,/Actualizando cuenta|actualizando tu cuenta/);
-    assert.match(payments,/ALREADY_SETTLED[\s\S]*Mi USITTEL no realizó otra imputación/);
+    assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en actualizarse/);
+    assert.match(views,/saldo puede tardar en reflejar pagos recientes/);
+    assert.match(views,/portal de SIRO, nuestro proveedor de pagos/);
+    assert.match(payments,/Actualizar cuenta[\s\S]*movement-heading/);
+    assert.match(payments,/verificationCandidates[\s\S]*Consultar actualización/);
+    assert.match(payments,/ALREADY_SETTLED[\s\S]*Tu cuenta ya estaba actualizada/);
+    assert.doesNotMatch(payments,/respuesta|token|Phantom|SIRO confirmó|imputación/);
+    assert.doesNotMatch(views,/Historial en validación de laboratorio|Seguimiento de pagos realizados en SIRO/);
+    assert.doesNotMatch(app,/Desarrollo local · Laboratorio|Laboratorio de pagos\. Las demás modificaciones/);
   });
   check('inspector CRM es sólo autenticación y no contiene acciones de escritura',()=>{
     const inspector=fs.readFileSync(path.join(root,'server','inspect-phantom-crm.php'),'utf8');

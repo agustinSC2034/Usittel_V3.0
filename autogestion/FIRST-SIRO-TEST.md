@@ -1,6 +1,6 @@
 # Primera prueba SIRO — un único servicio
 
-La conexión real SIRO de laboratorio quedó validada el 19/09/2026 con una cuenta controlada de un solo servicio. Se creó y canceló un primer intento; la consulta posterior devolvió CANCELADA. Un segundo intento nuevo sobre la misma factura fue procesado y la reconciliación devolvió PagoExitoso=true con Estado=PROCESADA. Mi USITTEL mostró Pago confirmado, mantuvo el saldo y la factura informados por Phantom y no ejecutó ninguna imputación en Phantom.
+La conexión real SIRO de laboratorio quedó validada el 19/09/2026 con una cuenta controlada de un solo servicio. Se creó y canceló un primer intento; la consulta posterior devolvió CANCELADA. Un segundo intento nuevo sobre la misma factura fue procesado y la reconciliación devolvió PagoExitoso=true con Estado=PROCESADA. Esa etapa terminó sin escribir en Phantom. Más tarde, luego del preflight y una autorización separada, se realizó una única imputación controlada; permanece `POST_UNCONFIRMED` y no se reintentó.
 
 ## Resultado de la prueba
 
@@ -41,7 +41,7 @@ Después del chequeo local, acordar una factura IMPAGA controlada del contrato d
 
 La prueba de confirmación debe mostrar “SIRO confirmó el pago” y aclarar que todavía no se registra automáticamente en Phantom. El saldo de Phantom no se modifica artificialmente. Luego se podrá validar recuperación tras cerrar el navegador; el retorno OK no es prueba de éxito.
 
-## Autenticación CRM confirmada y preflight pendiente
+## Autenticación CRM, preflight e imputación controlada
 
 Agustín ejecutó manualmente la autenticación segura contra el endpoint CRM:
 
@@ -51,12 +51,14 @@ Agustín ejecutó manualmente la autenticación segura contra el endpoint CRM:
 
 El resultado real fue `CRM_AUTH_OK` y `Sin escritura en Phantom.`. Quedaron confirmados endpoint, credenciales técnicas, token CRM y TLS/CA/hostname. No se ejecutó `Imputar_Pago`.
 
-El siguiente y único paso manual es el preflight de solo lectura:
+El preflight de solo lectura se ejecutó con:
 
 ```powershell
 & $env:MI_USITTEL_PHP autogestion/server/inspect-payment-posting-preflight.php
 ```
 
-No recibe attempt_id, IDT, importe, referencia ni token. Busca en el runtime privado exactamente un intento `CONFIRMED` y `NOT_POSTED` para `phantom_posting.lab_ida`, revalida el resultado individual en SIRO y compara la factura exacta en API Rest y CRM `Consultar_Impagos`. Cero candidatos produce `CANDIDATE_NOT_FOUND`; más de uno, `CANDIDATE_AMBIGUOUS`; una factura ya saldada, `PHANTOM_ALREADY_SETTLED`. Solo `READY_FOR_CONTROLLED_POST` habilita discutir la primera escritura. Durante esta prueba `phantom_posting.enabled` debe seguir `false`.
+No recibe attempt_id, IDT, importe, referencia ni token. El resultado real fue `READY_FOR_CONTROLLED_POST`: SIRO confirmado, factura impaga en REST y CRM, IDA/IDT/importe coincidentes y ausencia de posting previo.
+
+Después de la autorización explícita se habilitó la compuerta privada y se pulsó una sola vez **Actualizar cuenta**. La llamada real quedó `POST_UNCONFIRMED`: las lecturas inmediatas de factura y CRM todavía no demostraron el cierre, así que Mi USITTEL no reintentó. El saldo posterior pasó de $121 a $0, pero esa señal aislada no alcanza para declarar `POSTED`. **Consultar actualización** vuelve a leer el estado sin reenviar `Imputar_Pago`.
 
 Compartir solo el estado visible y, si aparece, el código seguro del error. No compartir passwords, tokens, hashes, enlaces completos de checkout/retorno, datos bancarios, JSON crudo ni archivos del runtime. El usuario completa personalmente cualquier dato de pago.

@@ -90,8 +90,10 @@
   .billing-tabs button[aria-selected="true"] { color:var(--green); font-weight:650; }
   .billing-tabs button[aria-selected="true"]::after { content:""; position:absolute; height:2px; left:0; right:0; bottom:-1px; background:var(--green); }
   .payment-status { max-width:720px; }
+  .movement-heading { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:4px; }
+  .movement-heading h2 { margin:0; }
+  .movement-heading .button { flex-shrink:0; }
   .payment-status .commercial-option:last-of-type { border-bottom:0; }
-  .payment-provider-summary { border-top:1px solid var(--line); padding-top:18px; margin-top:24px; }
   .billing-note { color:var(--muted); font-size:13px; display:flex; gap:8px; align-items:center; margin-top:26px; }
   .two-columns { display:grid; grid-template-columns:1fr 1fr; gap:56px; }
   .second-column { border-left:1px solid var(--line); padding-left:50px; }
@@ -230,6 +232,8 @@
   .page-subtitle { margin-top:-18px; margin-bottom:23px; }
   .billing-tabs { gap:24px; margin-bottom:22px; }
   .billing-tabs button { flex:1; min-height:44px; }
+  .movement-heading { align-items:stretch; flex-direction:column; gap:12px; }
+  .movement-heading .button { width:100%; }
   .debt-strip { padding:18px; margin-bottom:17px; }
   .invoice-table-full .invoice-row { grid-template-columns:1fr auto; gap:7px 10px; padding:19px 0; }
   .invoice-table-full .invoice-period { font-size:17px; font-weight:650; }

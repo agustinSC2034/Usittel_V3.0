@@ -8,7 +8,7 @@ Selector discreto en Inicio solo cuando existen varios contratos autorizados; se
 
 Creación de intención y confirmación backend implementadas con fixtures y validadas manualmente con SIRO real en una cuenta controlada de un solo servicio: cancelación, nuevo intento y pago confirmado. La suite actual suma 493 verificaciones. Deshabilitadas por defecto fuera de esa configuración privada. Solo factura IMPAGA de una cuenta de laboratorio explícita con un único servicio autorizado, importe reconsultado en Phantom, checkout oficial, intentos persistentes y recuperación sin retorno. IDA 1 tiene dos servicios y permanece bloqueado. La UI separa Facturas de Movimientos; no mezcla los intentos SIRO con el listado principal.
 
-La UI distingue intención SIRO, confirmación SIRO e imputación Phantom; no altera el saldo. La autenticación CRM real ya fue confirmada con `CRM_AUTH_OK`, usando un token separado del token REST. `Consultar_Impagos` y el preflight de solo lectura están preparados; la primera llamada real a `Imputar_Pago` no se realizó. Las fechas de Consulta reproducen la función validada de la POC de Buenos Aires, sin sustituirla por UTC. El almacenamiento depende de PaymentAttempts para poder migrar a persistencia transaccional antes de producción. Ver [SIRO.md](SIRO.md), [PHANTOM-PAYMENTS.md](PHANTOM-PAYMENTS.md) y [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md).
+La UI distingue intención SIRO, confirmación SIRO e imputación Phantom; no altera el saldo. La autenticación CRM real fue confirmada con `CRM_AUTH_OK`, usando un token separado del token REST. El preflight real aprobó las coincidencias y se realizó una sola llamada controlada a `Imputar_Pago`. Quedó `POST_UNCONFIRMED`: el saldo real pasó de $121 a $0, pero factura y CRM todavía no confirmaron el cierre conjunto. No hubo reintento. Las fechas de Consulta reproducen la función validada de la POC de Buenos Aires, sin sustituirla por UTC. El almacenamiento depende de PaymentAttempts para poder migrar a persistencia transaccional antes de producción. Ver [SIRO.md](SIRO.md), [PHANTOM-PAYMENTS.md](PHANTOM-PAYMENTS.md) y [FIRST-SIRO-TEST.md](FIRST-SIRO-TEST.md).
 
 ## Aceptado con Phantom real
 
@@ -34,7 +34,7 @@ Diseño aprobado, navegación móvil/desktop, sesión/CSRF/vencimientos/logout, 
 
 ## Fuera de alcance
 
-Primera imputación real de pagos en Phantom, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, búsqueda universal de usuarios, web pública y producción. SIRO solo llega a confirmación independiente; su prueba real de laboratorio quedó completada. La escritura Phantom permanece detrás de una compuerta apagada y exige primero `READY_FOR_CONTROLLED_POST`. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
+Conciliación definitiva de la primera imputación real, promesas, reactivación, cambios Wi-Fi/planes/datos, tickets reales, búsqueda universal de usuarios, web pública y producción. La primera escritura quedó pendiente de confirmación y jamás debe repetirse a ciegas. Comprobantes de pago reales son distintos de las facturas y no se implementaron. Los cierres históricos siguientes corresponden a la etapa anterior de lectura.
 
 Antes de producción: riesgo de credenciales técnicas GET en logs remotos, gestión de CA/certificados del hosting, revisión de seguridad y despliegue. No tocar Apache, DNS, .htaccess ni el botón público de autogestión.
 

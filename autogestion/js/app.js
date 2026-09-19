@@ -42,7 +42,9 @@ dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
 function render() {
-  document.querySelector('.demo-strip').textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.phantomPostingEnabled ? 'Desarrollo local · Laboratorio SIRO y Phantom' : runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
+  const demoStrip = document.querySelector('.demo-strip');
+  demoStrip.textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
+  demoStrip.hidden = runtime.mode !== 'demo';
   clearInterval(speedTimer);
   if (dialog.open) dialog.close();
   let route = location.hash.replace('#/', '') || 'login';
@@ -59,9 +61,11 @@ function render() {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
       if (paymentBusy && ['pay', 'payment-check', 'payment-post'].includes(control.dataset.action)) control.disabled = true;
     });
-    const hint = document.createElement('p'); hint.className = 'field-hint';
-    hint.textContent = route === 'login' ? 'La recuperación de contraseña todavía no está habilitada.' : (runtime.phantomPostingEnabled ? 'Laboratorio de pagos. Las demás modificaciones no están habilitadas.' : runtime.paymentsEnabled ? 'Laboratorio SIRO. Otras modificaciones no están habilitadas.' : 'Modo lectura. Las acciones de pago y modificación todavía no están habilitadas.');
-    app.querySelector('main').append(hint);
+    if (route === 'login') {
+      const hint = document.createElement('p'); hint.className = 'field-hint';
+      hint.textContent = 'La recuperación de contraseña todavía no está habilitada.';
+      app.querySelector('main').append(hint);
+    }
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
   if (changed) { window.scrollTo(0, 0); app.querySelector('h1')?.focus({ preventScroll: true }); }
@@ -299,7 +303,9 @@ async function boot() {
     const session = await request('bootstrap');
     runtime.backend = session.backend !== false;
     await initialize(session.mode); applyServices(session); runtime.paymentsEnabled = session.payments_enabled === true; runtime.phantomPostingEnabled = session.phantom_posting_enabled === true; authenticated = session.authenticated;
-    document.querySelector('.demo-strip').textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : (runtime.phantomPostingEnabled ? 'Desarrollo local · Laboratorio SIRO y Phantom' : runtime.paymentsEnabled ? 'Desarrollo local · Laboratorio SIRO · Sin imputación en Phantom' : 'Desarrollo local · Cuenta de laboratorio · Solo lectura');
+    const demoStrip = document.querySelector('.demo-strip');
+    demoStrip.textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
+    demoStrip.hidden = session.mode !== 'demo';
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
     authenticated = false; applyServices({}); clearData();

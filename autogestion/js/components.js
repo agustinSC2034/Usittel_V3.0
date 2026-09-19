@@ -13,7 +13,7 @@ export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
   if (!attempt) return { label: item.status, hint: '' };
   if (attempt.phantom_payment_posted) return { label: 'Pago registrado', hint: 'El pago ya fue registrado en tu cuenta.' };
-  return { label: 'Pago confirmado', hint: 'Estamos actualizando tu cuenta. El saldo puede tardar en reflejarse.' };
+  return { label: 'Pago confirmado', hint: 'Tu saldo puede tardar en actualizarse.' };
 }
 export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;

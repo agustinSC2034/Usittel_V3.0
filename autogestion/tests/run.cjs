@@ -31,6 +31,9 @@ const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const verification=spawnSync(php,[path.join(__dirname,'posting-verification.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('diagnóstico de registro sin datos privados ni escritura',()=>{assert.equal(verification.status,0,verification.stderr);assert.equal(verification.stdout,'7');});
+  count+=6;
   for(const [name,expected] of Object.entries({ok:'SIRO_HTTP_OK',timeout:'SIRO_TIMEOUT',session:'SIRO_SESSION',redirect:'SIRO_HTTP',malformed:'SIRO_FORMAT'})) {
     const result=spawnSync(php,[path.join(__dirname,'siro-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
     check('transporte SIRO aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});

@@ -126,6 +126,7 @@
   .support-link a { display:inline-block; padding:6px 0; text-decoration:underline; }
   .speedtest-section { border-top:1px solid var(--line); margin-top:32px; padding-top:26px; }
   .speedtest-section h2 { margin-bottom:5px; }
+  .speedtest-section .speed-footer { margin-top:20px; }
   .demo-caption { font-size:12px; color:var(--muted); margin-top:8px; }
   .speed-metrics { display:grid; grid-template-columns:repeat(3,1fr); max-width:580px; margin:26px 0; gap:30px; }
   .speed-metrics span { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; }

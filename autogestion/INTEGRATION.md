@@ -128,7 +128,7 @@ QA de la etapa inicial del historial: 205 verificaciones con fixtures, chequeo l
 
 Agustín ejecutó el inspector: primera página de 10 facturas, segunda de 1, sin duplicados entre páginas, orden descendente y continuidad correcta. Las 11 presentan Hash_Descarga de tipo string. Confirmó que el historial y los detalles funcionan en el portal. La paginación y el detalle ampliado quedan aceptados para IDA 1; la descarga desde el portal fue aceptada manualmente.
 
-Ajuste de presentación solicitado: se oculta el Detalle técnico sin modificar los datos recibidos. En pantalla se quitan del plan la fecha técnica inicial y los segmentos internos de Phantom con formato `CODIGO ($) -`, incluidos `RES`, `EMP`, `COM` y `MUNI`; del domicilio se ocultan lote, manzana, referencia y barrio agregados por CRM. El selector muestra solo domicilio y plan, sin número de contrato. Gestionar mi servicio y Speedtest quedan visibles sin desplegable. Sus acciones reales continúan deshabilitadas en modo Phantom.
+Ajuste de presentación solicitado: se oculta el Detalle técnico sin modificar los datos recibidos. En pantalla se quitan del plan la fecha técnica inicial y los segmentos internos de Phantom con formato `CODIGO ($) -`, incluidos `RES`, `EMP`, `COM` y `MUNI`; del domicilio se ocultan lote, manzana, referencia y barrio agregados por CRM. El selector muestra solo domicilio y plan, sin número de contrato. Gestionar mi servicio queda visible y sus modificaciones continúan deshabilitadas en modo Phantom. La velocidad separada se omite cuando Phantom no entrega un valor confirmado. La prueba de velocidad abre `https://speed.cloudflare.com/` como sitio externo, sin iframe, proxy ni envío de datos de Mi USITTEL.
 
 ## Inspector del comprobante: evidencia Botmaker y prueba aceptada
 
@@ -158,7 +158,7 @@ Agustín respondió “listo todo ok” a la comprobación final solicitada: des
 
 ## Presentación de conectividad pendiente de contraste
 
-La pantalla muestra únicamente Estado de tu conexión, a partir de Estado_Conexion. El estado del equipo queda oculto hasta confirmar su significado y disponibilidad. Online/Offline se traducen de forma limitada; falta contrastar el resultado con un servicio conocido en funcionamiento. No se interpreta como diagnóstico de avería ni se garantiza una frecuencia de actualización.
+La pantalla muestra únicamente Conexión a internet, a partir de Estado_Conexion. El estado del equipo queda oculto hasta confirmar su significado y disponibilidad. Online/Offline se traducen de forma limitada; falta contrastar el resultado con un servicio conocido en funcionamiento. No se interpreta como diagnóstico de avería ni se garantiza una frecuencia de actualización.
 
 ## Ingreso de todos los contratos en el portal local
 

@@ -364,7 +364,9 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   });
   check('Mi servicio muestra conectividad útil sin datos internos',()=>{
     const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
-    assert.match(views,/Estado de tu conexión[\s\S]*Conexión a internet/);
+    assert.match(views,/Conexión a internet[\s\S]*Último estado informado/);
+    assert.match(views,/customer\.speed \?[^:]*Velocidad del plan/);
+    assert.match(views,/https:\/\/speed\.cloudflare\.com\/[\s\S]*Hacer prueba de velocidad/);
     assert.doesNotMatch(views,/Equipo de conexión|customer\.equipmentState/);
     assert.doesNotMatch(views,/Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion/);
   });

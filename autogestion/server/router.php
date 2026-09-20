@@ -6,7 +6,9 @@ require_once __DIR__.'/Api.php';
 ini_set('display_errors','0'); ini_set('zend.exception_ignore_args','1');
 set_error_handler(static function() {throw new \MiUsittel\Failure('INTERNAL');});
 header('X-Content-Type-Options: nosniff'); header('Referrer-Policy: no-referrer');
-header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
+$measurementOrigin='';
+try { $speed=\MiUsittel\speedtestConfig(\MiUsittel\config()); if($speed!==null) $measurementOrigin=' '.$speed['origin']; } catch(\Throwable) {}
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin."; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
 header('Cache-Control: no-store');
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 // Return is a navigation hint only. Discard all provider query fields, never mark payment here.
@@ -25,7 +27,7 @@ if(str_starts_with($path,'/autogestion/api/')) {
 if(!in_array($_SERVER['REQUEST_METHOD'],['GET','HEAD'],true)) {http_response_code(405);exit;}
 $relative=substr($path,strlen('/autogestion/'));
 if($path==='/autogestion/') $relative='index.html';
-if(!str_starts_with($path,'/autogestion/') || !preg_match('~^(index\.html|js/[a-z-]+\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
+if(!str_starts_with($path,'/autogestion/') || !preg_match('~^(index\.html|js/[a-z-]+\.js|vendor/librespeed/speedtest_worker\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
 $file=__DIR__.'/../'.$relative;
 if(!is_file($file)) {http_response_code(404);exit;}
 $types=['html'=>'text/html','css'=>'text/css','js'=>'text/javascript','png'=>'image/png','svg'=>'image/svg+xml','woff2'=>'font/woff2'];

@@ -49,6 +49,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
     $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
+    $expected+=['service-connection'=>'POST','speedtest-start'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
@@ -112,6 +113,18 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $ph->scope($ids);$ida=$_SESSION['selected_ida'];
     // A revision is a precondition, never authorization. PHP's session lock serializes selection and reads.
     if(count($ids)>1 && ($_SERVER['HTTP_X_SERVICE_REVISION']??'')!==$_SESSION['service_revision']) throw new Failure('SERVICE_CHANGED',409);
+    if($route==='service-connection') {
+        if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        serviceReadLimit('connection_checked');
+        jsonReply($ph->connection($ida));
+    }
+    if($route==='speedtest-start') {
+        if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        $speed=speedtestConfig($c);
+        if($speed===null) throw new Failure('SPEEDTEST_UNAVAILABLE',409);
+        serviceReadLimit('speedtest_started',60);
+        jsonReply(['server'=>$speed['base']]);
+    }
     if($route==='select-service') {
         $b=body();$id=$b['serviceId']??null;
         if(array_keys($b)!==['serviceId'] || !is_string($id) || !preg_match('/^[1-9][0-9]{0,9}$/D',$id)) throw new Failure('BAD_REQUEST',400);
@@ -191,6 +204,8 @@ function fail(\Throwable $e): never {
         'PAYMENT_RECEIPT_UNAVAILABLE'=>'Este movimiento no tiene un comprobante disponible.',
         'PAYMENT_RECEIPT_HTTP','PAYMENT_RECEIPT_FORMAT','PAYMENT_HISTORY_FORMAT','PAYMENT_HISTORY_SCHEMA','PAYMENT_HISTORY_DUPLICATE'=>'No pudimos consultar los movimientos. Volvé a intentar.',
         'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
+        'SERVICE_RATE_LIMIT'=>'Esperá unos segundos antes de volver a consultar.',
+        'SPEEDTEST_UNAVAILABLE','SPEEDTEST_CONFIGURATION'=>'La prueba de velocidad todavía no está disponible. Volvé a intentar más adelante.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         'PAYMENT_NOT_UNPAID'=>'Esta factura no está pendiente de pago.',
         'PAYMENT_INVOICE_CHANGED'=>'La factura cambió. Actualizamos sus datos; el intento anterior necesita revisión.',

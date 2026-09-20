@@ -1,0 +1,38 @@
+import {customer,runtime,planLabel,connectivityLabel} from './data.js';
+import {status,icon,button,escapeHTML as e} from './components.js';
+
+const commercial=(topic,label='Consultar')=>`<a class="text-action" href="https://wa.me/5492494060345?text=${encodeURIComponent('Hola, quisiera consultar por '+topic+'.')}" target="_blank" rel="noopener noreferrer">${label} ${icon('arrow-up-right')}</a>`;
+export function contractedProducts() {
+  return Array.isArray(customer.products) && customer.products.length
+    ? `<ul class="contracted-products" aria-label="Adicionales contratados">${customer.products.map(p=>`<li>${icon('check')}${e(planLabel(p))}</li>`).join('')}</ul>` : '';
+}
+export function servicePage() {
+  const detail=runtime.connectionDetails;
+  const state=detail ? (detail.modemState ?? detail.connectionState) : customer.connectionState;
+  const checked=detail?.checkedAt ? new Date(detail.checkedAt).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : null;
+  return `<h1 tabindex="-1">Mi servicio</h1>
+  <div class="service-top-grid">
+    <section class="contract-summary" aria-labelledby="plan-title"><p class="eyebrow">Tu plan contratado</p>
+      <h2 id="plan-title">${e(planLabel(customer.plan))}</h2><div class="plan-bottom">${status(customer.serviceStatus)}<button class="text-action" data-action="show-speedtest">${icon('activity')}Probar velocidad</button></div>
+      ${contractedProducts()}
+    </section>
+    <section class="connection-summary" aria-labelledby="connectivity-title">
+      <div class="section-heading"><h2 id="connectivity-title">Estado de tu conexión</h2><button class="billing-refresh" data-action="connection-refresh" aria-label="Actualizar estado de conexión" title="Actualizar estado" ${runtime.connectionRefreshing?'disabled aria-busy="true"':''}>${icon('refresh-cw',runtime.connectionRefreshing?'spinning':'')}</button></div>
+      <div class="connection-reading"><span class="connection-symbol">${icon(state==='offline'?'wifi-off':'wifi')}</span><div><p class="field-hint">${detail?.modemState ? 'Equipo de conexión' : 'Conexión a internet'}</p>${status(connectivityLabel(state))}</div></div>
+      <p class="field-hint" role="status">${runtime.connectionRefreshing?'Consultando estado…':runtime.connectionError?e(runtime.connectionError):`${checked?'Consultado a las '+e(checked)+'. ':''}Último estado informado. Puede demorar en actualizarse.`}</p>
+    </section>
+  </div>
+  <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Tu red, a tu manera</span><h2 id="wifi-title">Mis redes Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p><p class="field-hint">${runtime.mode==='demo'?'Los cambios de esta vista son de demostración.':'El cambio desde Mi USITTEL todavía no está disponible. Podemos ayudarte por WhatsApp.'}</p></div><div class="wifi-actions">${button('Configurar redes','wifi-settings',{secondary:true,iconName:'wifi'})}${commercial('cambiar el nombre y la contraseña de mi Wi-Fi','Pedir ayuda')}</div></section>
+  ${speedtestSection()}
+  <section class="service-addons" aria-labelledby="addons-title"><h2 id="addons-title">Más para tu servicio</h2>${customer.products===null?'<p class="field-hint">El detalle de tus adicionales todavía no está disponible.</p>':''}<div class="addon-options"><div>${icon('tv')}<h3>TV Sensa y packs</h3><p class="muted">Consultá por televisión y contenido adicional para tu cuenta.</p>${commercial('TV Sensa y sus packs')}</div><div>${icon('wifi')}<h3>Wi-Fi en más ambientes</h3><p class="muted">Conocé las opciones de Wi-Fi Mesh para ampliar la cobertura.</p>${commercial('Wi-Fi Mesh')}</div><div>${icon('zap')}<h3>Más velocidad</h3><p class="muted">Encontrá el plan que mejor se adapte a lo que necesitás.</p>${commercial('mejorar mi plan de internet')}</div></div><p class="field-hint">Te confirmaremos disponibilidad, precio y condiciones antes de contratar.</p></section>`;
+}
+function speedtestSection() {
+  return `<section id="service-speedtest" class="service-speedtest" aria-labelledby="speed-title" tabindex="-1">
+    <div class="speed-intro"><span class="eyebrow">Desde este dispositivo</span><h2 id="speed-title">Probá tu conexión</h2><p class="muted">Una medición de tu conexión, acá mismo.</p></div>
+    <div class="speed-test-layout"><div class="speed-instrument"><div class="speed-dial" id="speed-dial"><svg viewBox="0 0 240 140" aria-hidden="true"><path class="dial-track" d="M20 120 A100 100 0 0 1 220 120"/><path id="speed-arc" class="dial-value" d="M20 120 A100 100 0 0 1 220 120" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg><div class="dial-readout"><span id="speed-phase">Todo listo</span><strong id="speed-value">—</strong><span id="speed-unit">Mbps</span></div></div>
+      <div class="speed-metrics-live"><div><span>${icon('arrow-down')}Descarga</span><strong id="speed-down">—</strong><small>Mbps</small></div><div><span>${icon('arrow-up')}Subida</span><strong id="speed-up">—</strong><small>Mbps</small></div><div><span>${icon('activity')}Latencia</span><strong id="speed-ping">—</strong><small>ms</small></div><div><span>Variación</span><strong id="speed-jitter">—</strong><small>ms</small></div></div>
+      <div class="speed-controls">${button('Iniciar prueba','speedtest-start',{iconName:'play'})}<button class="text-action" data-action="speedtest-stop" hidden>Cancelar</button></div><p id="speed-status" class="field-hint" role="status">La prueba consume datos y puede usar gran parte de tu conexión durante unos 30 segundos.</p></div>
+      <div class="speed-guidance"><h3>Para una buena medición</h3><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba; para superar 1 Gbps necesitás puertos y equipos de mayor capacidad.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad, pero no tiene un máximo fijo de 100 Mbps.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN. Si el plan es de este domicilio, conectate a su red antes de empezar.</li></ol><p class="field-hint">El dispositivo, el Wi-Fi, otros usos y el servidor de prueba influyen. El resultado puede ser menor que la velocidad del plan.</p></div></div>
+    <p class="speed-credit">Motor de medición: <a href="https://github.com/librespeed/speedtest" target="_blank" rel="noopener noreferrer">LibreSpeed</a> · LGPL-3.0</p>
+  </section>`;
+}

@@ -1,3 +1,4 @@
+import { startSpeedTest, stopSpeedTest, validMeasurement } from './speed-test.js';
 import { request, invoicePdf, paymentReceiptPdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices, planLabel, addressLabel } from './data.js';
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
@@ -18,6 +19,7 @@ function applyServices(data) { if (typeof data.payments_enabled === 'boolean') r
 let dataGeneration = 0;
 
 let speedTimer;
+let speedBusy=false;let speedRun=0;
 let toastTimer;
 let lastTrigger;
 let activeRoute;
@@ -41,6 +43,7 @@ dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
 function render() {
+  ++speedRun;stopSpeedTest();speedBusy=false;
   const demoStrip = document.querySelector('.demo-strip');
   demoStrip.textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
   demoStrip.hidden = runtime.mode !== 'demo';
@@ -69,6 +72,12 @@ function render() {
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
   if (changed) { window.scrollTo(0, 0); app.querySelector('h1')?.focus({ preventScroll: true }); }
 }
+function updateSpeedControls(busy) {
+  const start=document.querySelector('[data-action="speedtest-start"]');const cancel=document.querySelector('[data-action="speedtest-stop"]');
+  if(start){start.disabled=busy;start.textContent=busy?'Midiendo…':'Iniciar prueba';}if(cancel)cancel.hidden=!busy;
+  document.querySelector('#speed-dial')?.classList.toggle('is-running',busy);
+}
+window.addEventListener('pagehide',()=>{++speedRun;stopSpeedTest();speedBusy=false;});
 function getInvoice(id) { return invoices.find(item => item.id === id); }
 function invoiceDialog(item, receipt = false) {
   if (!item || (receipt && item.status !== 'Pagada')) return;
@@ -92,6 +101,52 @@ document.addEventListener('click', async event => {
   if (!target || target.disabled) return;
   const action = target.dataset.action;
   const item = getInvoice(target.dataset.id);
+  if (action === 'connection-refresh') {
+    if(runtime.connectionRefreshing)return;
+    if(runtime.mode!=='phantom')return toast('Vista de demostración: no consulta un equipo real.');
+    const generation=dataGeneration;runtime.connectionRefreshing=true;runtime.connectionError='';render();
+    try { const result=await request('service-connection',{});if(generation===dataGeneration&&authenticated)runtime.connectionDetails=result; }
+    catch(error) {if(generation===dataGeneration){runtime.connectionError='No pudimos actualizar el estado. El dato anterior puede estar desactualizado.';await handleError(error);}}
+    finally {if(generation===dataGeneration){runtime.connectionRefreshing=false;render();}}
+    return;
+  }
+  if(action==='show-speedtest') {document.querySelector('#service-speedtest')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});document.querySelector('[data-action="speedtest-start"]')?.focus({preventScroll:true});return;}
+  if(action==='wifi-settings') {
+    if(runtime.mode==='demo') return openDialog('Mis redes Wi-Fi','<p>Vista de demostración. No se modifica ningún equipo.</p>');
+    openDialog('Mis redes Wi-Fi','<p>El cambio de nombre y contraseña desde Mi USITTEL todavía no está disponible.</p><p class="field-hint">Podremos configurar tus redes de 2,4 GHz y 5 GHz cuando tu equipo sea compatible. Al cambiar los datos tendrás que volver a conectar tus dispositivos.</p><div class="dialog-actions"><a class="button" href="https://wa.me/5492494060345?text=Hola%2C%20necesito%20ayuda%20para%20cambiar%20mi%20Wi-Fi" target="_blank" rel="noopener noreferrer">Pedir ayuda</a></div>');return;
+  }
+  if(action==='speedtest-stop') {++speedRun;stopSpeedTest();speedBusy=false;updateSpeedControls(false);document.querySelector('#speed-status').textContent='Prueba cancelada. Los valores parciales no son un resultado final.';return;}
+  if(action==='speedtest-start') {
+    if(speedBusy)return;
+    if(runtime.mode!=='phantom')return toast('Vista de demostración. La medición real requiere iniciar sesión en tu cuenta.');
+    const run=++speedRun;const generation=dataGeneration;speedBusy=true;updateSpeedControls(true);
+    for(const key of ['down','up','ping','jitter','value'])document.querySelector('#speed-'+key).textContent='—';
+    document.querySelector('#speed-status').textContent='Conectando con el servidor de medición…';
+    try {
+      const result=await request('speedtest-start',{});
+      if(run!==speedRun||generation!==dataGeneration||!authenticated)return;
+      await startSpeedTest(result.server,data=>{
+        if(run!==speedRun)return;
+        const phase={0:'Preparando',1:'Descarga',2:'Latencia',3:'Subida',4:'Finalizado',5:'Interrumpido'}[data.testState]||'Midiendo';
+        document.querySelector('#speed-phase').textContent=phase;
+        for(const [id,key] of [['down','dlStatus'],['up','ulStatus'],['ping','pingStatus'],['jitter','jitterStatus']]) {
+          const n=validMeasurement(data[key]);document.querySelector('#speed-'+id).textContent=n===null?'—':n.toLocaleString('es-AR',{maximumFractionDigits:1});
+        }
+        const n=validMeasurement(data[data.testState===2?'pingStatus':data.testState===3?'ulStatus':'dlStatus']);
+        document.querySelector('#speed-value').textContent=n===null?'—':n.toLocaleString('es-AR',{maximumFractionDigits:1});
+        document.querySelector('#speed-unit').textContent=data.testState===2?'ms':'Mbps';
+        const progress=Number(data[data.testState===1?'dlProgress':data.testState===3?'ulProgress':'pingProgress']);
+        document.querySelector('#speed-arc').setAttribute('stroke-dashoffset',String(100-100*Math.max(0,Math.min(1,Number.isFinite(progress)?progress:0))));
+        document.querySelector('#speed-status').textContent=phase+'…';
+      },error=>{
+        if(run!==speedRun)return;speedBusy=false;updateSpeedControls(false);
+        document.querySelector('#speed-status').textContent=error||'Prueba finalizada. Este resultado corresponde a este dispositivo y a este momento.';
+      });
+    } catch(error) {
+      if(run===speedRun){stopSpeedTest();speedBusy=false;updateSpeedControls(false);document.querySelector('#speed-status').textContent=error.status?error.message:'No pudimos conectar con el servidor de medición. Volvé a intentar.';if(error.status===401||error.code==='SERVICE_CHANGED')await handleError(error);}
+    }
+    return;
+  }
   if (action === 'choose-service') {
     if (serviceBusy || runtime.services.length < 2) return;
     openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${e(addressLabel(s.address) || 'No disponible')}</strong><span>${e(planLabel(s.plan) || 'No disponible')}</span></button>`).join('')}</div>`);
@@ -233,6 +288,7 @@ document.addEventListener('click', async event => {
   if (action === 'contact') return openDialog('Editar datos de contacto', `<form id="contact-form">${input('Correo electrónico', 'email', { value: customer.email, type: 'email', extra: 'maxlength="120"' })}${input('Teléfono', 'phone', { value: customer.phone, type: 'tel', required: false, extra: 'maxlength="30"' })}<p class="field-hint">Usá datos ficticios. Los cambios duran hasta que recargues la página.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'password') return openDialog('Cambiar contraseña', `<form id="password-form">${input('Contraseña actual', 'current-password', { type: 'password', autocomplete: 'off' })}${input('Nueva contraseña', 'new-password', { type: 'password', autocomplete: 'off', extra: 'minlength="8"', hint: 'Para esta demostración, usá al menos 8 caracteres.' })}${input('Repetir nueva contraseña', 'confirm-password', { type: 'password', autocomplete: 'off' })}<p class="field-hint">Usá valores de prueba. Ninguna contraseña se guarda ni se envía.</p>${button('Probar cambio', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
+    ++speedRun;stopSpeedTest();speedBusy=false;
     dataGeneration++;
     target.disabled = true;
     try {

@@ -16,6 +16,10 @@ return [
     'max_seconds' => 28800,
     'timeout_seconds' => 10,
     'connect_timeout_seconds' => 4,
+    // Optional, after validating actual product fields; see MI-SERVICIO.md.
+    'service_product_fields' => [],
+    // HTTPS base containing LibreSpeed garbage.php/empty.php; never localhost.
+    'speedtest_server' => null,
     // null uses the explicit laboratory mappings (see INTEGRATION.md).
     // Optional overrides are exact public paths, never credential fields.
     'profile_fields' => [

@@ -30,6 +30,7 @@ const scenario = value => fs.writeFileSync(path.join(dir,'scenario'),value);
 const clearRate = () => {const f=path.join(dir,'attempts.json');if(fs.existsSync(f)) fs.unlinkSync(f);};
 async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call('bootstrap');return j.call('login',{username:user,password});}
 (async()=>{
+  await require('./speed-test.cjs')({check,assert,fs,path,root});
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
   const verification=spawnSync(php,[path.join(__dirname,'posting-verification.php')],{env:fixtureEnv,encoding:'utf8'});
   check('diagnóstico de registro sin datos privados ni escritura',()=>{assert.equal(verification.status,0,verification.stderr);assert.equal(verification.stdout,'7');});
@@ -43,6 +44,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const result=spawnSync(php,[path.join(__dirname,'crm-http.php'),name],{env:{...fixtureEnv,MI_USITTEL_RUNTIME:crmDir},encoding:'utf8'});
     check('transporte CRM aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
   }
+  const featureTests=spawnSync(php,[path.join(__dirname,'service-features.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('productos públicos y configuración de medición segura',()=>{assert.equal(featureTests.status,0,featureTests.stderr);assert.match(featureTests.stdout,/^[0-9]+$/);});count+=Number(featureTests.stdout)-1;
   const serviceTests=spawnSync(php,[path.join(__dirname,'services-unit.php')],{env:fixtureEnv,encoding:'utf8'});
   check('reglas de asociación y recuperación de selección',()=>{assert.equal(serviceTests.status,0,serviceTests.stderr);assert.match(serviceTests.stdout,/^[0-9]+$/);});
   count+=Number(serviceTests.stdout)-1;
@@ -362,13 +365,10 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.equal(presentation.connectivityLabel('SYNCING'),'No disponible');
     assert.equal(presentation.connectivityLabel(null),'No disponible');
   });
-  check('Mi servicio muestra conectividad útil sin datos internos',()=>{
-    const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
-    assert.match(views,/Conexión a internet[\s\S]*Último estado informado/);
-    assert.match(views,/customer\.speed \?[^:]*Velocidad del plan/);
-    assert.match(views,/https:\/\/speed\.cloudflare\.com\/[\s\S]*Hacer prueba de velocidad/);
-    assert.doesNotMatch(views,/Equipo de conexión|customer\.equipmentState/);
-    assert.doesNotMatch(views,/Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion/);
+  check('Mi servicio usa solo datos públicos y separa consulta y medición',()=>{
+    const views=fs.readFileSync(path.join(root,'js','service-view.js'),'utf8');
+    assert.doesNotMatch(views,/customer\.equipmentState|Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion|speed\.cloudflare/);
+    assert.doesNotMatch(views,/Domicilio de instalación|Velocidad del plan/);
   });
   check('Facturas separa comprobantes y movimientos con pestañas accesibles',()=>{
     const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
@@ -413,6 +413,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
+  await require('./service-features-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

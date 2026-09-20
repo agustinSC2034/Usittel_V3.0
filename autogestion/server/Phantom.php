@@ -5,6 +5,7 @@ require_once __DIR__.'/Schema.php';
 require_once __DIR__.'/CustomerContract.php';
 require_once __DIR__.'/Invoices.php';
 require_once __DIR__.'/PhantomPayments.php';
+require_once __DIR__.'/ServiceFeatures.php';
 
 interface Transport {
     public function post(string $url, array $body): array;
@@ -167,6 +168,11 @@ final class Phantom {
     public function profile(int $ida): array {
         return $this->publicProfile($this->customer($ida));
     }
+    public function connection(int $ida): array {
+        $raw=resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida,['InfoFTTH'=>1]),$ida,'ID');
+        return ['connectionState'=>$this->publicConnectivityState($raw['Estado_Conexion']??null),
+            'modemState'=>$this->publicConnectivityState($raw['ONU_Status']??null),'checkedAt'=>gmdate('c')];
+    }
     public function publicProfile(array $raw): array {
         $out=[];
         $defaults=['name'=>['join'=>[['Nombre'],['Apellido']]],'address'=>['join'=>[['Direccion'],['Dir_Numero']]],
@@ -185,6 +191,7 @@ final class Phantom {
         $out['connectionState']=$this->publicConnectivityState($raw['Estado_Conexion']??null);
         $out['equipmentState']=$this->publicConnectivityState($raw['Estado_ONU']??null);
         $out['network']=null; $out['speed']=null;
+        $out['products']=serviceProducts($raw,$this->config);
         return $out;
     }
     private function publicConnectivityState(mixed $value): ?string {

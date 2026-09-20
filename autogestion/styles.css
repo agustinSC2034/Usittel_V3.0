@@ -4,6 +4,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mi servicio: a quiet contract summary, clear controls and a live instrument. */
+.service-top-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:40px; margin-bottom:32px; }
+.contract-summary h2 { font-size:28px; max-width:570px; margin:10px 0 18px; line-height:1.4; }
+.plan-bottom { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.connection-summary { border-left:1px solid var(--line); padding-left:36px; }
+.connection-summary .section-heading { margin-bottom:15px; }
+.connection-reading { display:flex; gap:14px; align-items:center; margin-bottom:18px; }
+.connection-reading .status { font-size:20px; }
+.connection-symbol { display:grid; place-items:center; background:var(--sage); border-radius:50%; width:54px; height:54px; }
+.connection-symbol .icon { width:27px; height:27px; color:var(--green); }
+.contracted-products { display:flex; flex-wrap:wrap; gap:10px 18px; margin-top:14px; padding:0; list-style:none; }
+.contracted-products li { display:flex; align-items:center; gap:6px; color:var(--green); font-size:14px; }
+.service-wifi { border-top:1px solid var(--line); padding:28px 0; display:flex; justify-content:space-between; align-items:center; gap:24px; }
+.service-wifi h2 { margin:5px 0 7px; }
+.wifi-actions { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.service-speedtest { border:1px solid #dce8df; border-radius:20px; padding:30px; background:linear-gradient(145deg,#edf5ee,#fff 65%); scroll-margin-top:24px; }
+.speed-intro h2 { font-size:25px; margin:5px 0; }
+.speed-test-layout { display:grid; grid-template-columns:1.1fr 1fr; align-items:center; gap:42px; margin-top:24px; }
+.speed-instrument { text-align:center; min-width:0; }
+.speed-dial { position:relative; max-width:320px; margin:0 auto 18px; }
+.speed-dial svg { width:100%; overflow:visible; }
+.dial-track,.dial-value { fill:none; stroke-width:12; stroke-linecap:round; }
+.dial-track { stroke:#dce8df; }
+.dial-value { stroke:var(--green); transition:stroke-dashoffset .3s ease; }
+.dial-readout { position:absolute; inset:36% 0 0; display:flex; align-items:center; flex-direction:column; line-height:1.25; }
+.dial-readout span { font-size:13px; color:var(--muted); }
+.dial-readout strong { font-size:42px; font-variant-numeric:tabular-nums; letter-spacing:-1.5px; margin:2px 0; }
+.is-running .dial-value { animation:dial-glow 1.5s ease-in-out infinite alternate; }
+.speed-metrics-live { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:10px 0 24px; }
+.speed-metrics-live div { display:flex; align-items:center; flex-direction:column; }
+.speed-metrics-live span { display:flex; align-items:center; gap:3px; color:var(--muted); font-size:12px; }
+.speed-metrics-live .icon { width:14px; height:14px; }
+.speed-metrics-live strong { font-size:22px; font-variant-numeric:tabular-nums; margin-top:4px; }
+.speed-metrics-live small { color:var(--muted); }
+.speed-controls { display:flex; gap:14px; justify-content:center; }
+.speed-controls [hidden] { display:none; }
+.speed-guidance ol { padding-left:20px; margin:16px 0; }
+.speed-guidance li { padding-left:5px; margin:0 0 16px; font-size:14px; color:var(--muted); }
+.speed-guidance strong { color:var(--ink); }
+.speed-credit { font-size:11px; color:var(--muted); margin-top:24px; }
+.service-addons { margin-top:36px; }
+.addon-options { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; padding:18px 0; }
+.addon-options>div>.icon { color:var(--green); margin-bottom:10px; }
+.addon-options h3 { margin:0 0 8px; }
+.addon-options p { font-size:14px; }
+.addon-options .text-action { margin-top:10px; }
+.spinning { animation:service-spin 1s linear infinite; }
+@keyframes service-spin { to { transform:rotate(360deg); } }
+@keyframes dial-glow { to { stroke:#40af80; } }
+@media(max-width:700px) {
+ .service-top-grid,.speed-test-layout { grid-template-columns:1fr; gap:26px; }
+ .contract-summary h2 { font-size:24px; }
+ .connection-summary { border-left:0; border-top:1px solid var(--line); padding:24px 0 0; }
+ .service-wifi { flex-direction:column; align-items:stretch; }
+ .wifi-actions { align-items:flex-start; }
+ .service-speedtest { padding:24px 16px; }
+ .speed-dial { max-width:270px; }
+ .dial-readout strong { font-size:36px; }
+ .speed-guidance { border-top:1px solid var(--line); padding-top:24px; }
+ .addon-options { grid-template-columns:1fr; gap:20px; }
+ .addon-options>div { border-bottom:1px solid var(--line); padding-bottom:12px; }
+}
+@media(prefers-reduced-motion:reduce) { .is-running .dial-value,.spinning { animation:none; }.dial-value { transition:none; } }
+@media(max-width:380px) { .speed-metrics-live { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } }
+
 @layer base {
   :root { --bg:#f7f8f7; --ink:#101c35; --muted:#647084; --green:#147952; --green-hover:#106343; --sage:#e8f1e9; --line:#dce2e3; }
   body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,system-ui,sans-serif; font-size:15px; line-height:1.55; }

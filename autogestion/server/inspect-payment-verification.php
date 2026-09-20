@@ -16,6 +16,7 @@ try {
     $phantom->scope([$ida]);
     $report=MiUsittel\postingVerificationReport($idt,$ida,
         fn()=>$phantom->invoiceById($ida,$idt),fn()=>$phantom->crmUnpaidRows($ida,$idt));
+    if(($report['crm_error']??null)==='PHANTOM_CRM_FORMAT' && $crm->formatDiagnostic()!==null) $report['crm_format']=$crm->formatDiagnostic();
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR)."\nSin escritura en Phantom.\n";
 } catch(Throwable $error) {
     $code=$error instanceof Failure?$error->kind:'UNEXPECTED';

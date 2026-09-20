@@ -51,9 +51,13 @@ function phantomCrmUnpaidRecord(array $rows,string $idt,int $ida,int $cents): ar
 }
 
 final class PhantomCrmHttp implements PhantomCrmGateway {
+    private ?array $formatDiagnostic=null;
+    // Metadata only, consumed by the CLI inspector; never returned by the portal.
+    public function formatDiagnostic(): ?array {return $this->formatDiagnostic;}
     public function __construct(private array $config,private array $settings,private string $dir) {}
     public function authenticate(bool $refresh=false): void {$this->token($refresh);}
     public function unpaid(string $idt): array {
+        $this->formatDiagnostic=null;
         if(!preg_match('/^[1-9][0-9]{0,19}$/D',$idt)) throw new Failure('PHANTOM_PAYMENT_REQUEST');
         return $this->authorized('Consultar_Impagos',['IDT'=>$idt],true);
     }
@@ -115,8 +119,15 @@ final class PhantomCrmHttp implements PhantomCrmGateway {
         if($code<200 || $code>=300) throw new Failure('PHANTOM_CRM_HTTP',503,$code);
         if(!$json) return phantomCrmAcknowledgement($response);
         if(str_starts_with($response,"\xEF\xBB\xBF"))$response=substr($response,3);
-        try {$decoded=json_decode($response,true,32,JSON_THROW_ON_ERROR);} catch(\Throwable){throw new Failure('PHANTOM_CRM_FORMAT');}
-        if(!is_array($decoded)) throw new Failure('PHANTOM_CRM_FORMAT');
+        try {$decoded=json_decode($response,true,32,JSON_THROW_ON_ERROR);} catch(\Throwable){
+            if(!$get) $this->formatDiagnostic=['http'=>$code,'bytes'=>strlen($response),'empty'=>trim($response)==='',
+                'format'=>preg_match('/^\s*(?:<!doctype\s+html|<html\b)/i',$response)?'html':'non_json'];
+            throw new Failure('PHANTOM_CRM_FORMAT');
+        }
+        if(!is_array($decoded)) {
+            if(!$get) $this->formatDiagnostic=['http'=>$code,'bytes'=>strlen($response),'empty'=>false,'format'=>'json_'.get_debug_type($decoded)];
+            throw new Failure('PHANTOM_CRM_FORMAT');
+        }
         return $decoded;
     }
 }

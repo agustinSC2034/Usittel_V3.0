@@ -88,16 +88,9 @@
 
   function renderLocation(location, address) {
     if (marker) map.removeLayer(marker);
-    const label = location.precision === 'exact'
-      ? `${address.street} ${address.number}, Tandil`
-      : `${address.street}, Tandil · Ubicación aproximada de la calle, no del domicilio`;
-    // Leaflet receives a DOM node, never interpolated user HTML.
     marker = L.marker([location.lat, location.lon]).addTo(map);
-    marker.bindPopup(textElement('span', label)).openPopup();
-    map.setView([location.lat, location.lon], location.precision === 'exact' ? 16 : 14);
-    mapStatus.textContent = location.precision === 'exact'
-      ? 'Dirección ubicada en el mapa. La cobertura se determina por calle y altura.'
-      : 'Ubicación aproximada de la calle. No pudimos ubicar la altura exacta; el resultado de cobertura no cambia.';
+    map.setView([location.lat, location.lon], 16);
+    mapStatus.textContent = '';
   }
 
   async function locate(address, id) {
@@ -114,28 +107,65 @@
     }
     const request = new AbortController();
     controller = request;
-    const timer = setTimeout(() => request.abort(), 9000);
+    let timer;
     mapStatus.textContent = 'Ubicando la dirección en el mapa…';
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST', signal: request.signal, credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(address)
-      });
-      if (!response.ok) throw new Error(response.status === 429 ? 'busy' : 'unavailable');
-      const body = await response.json();
-      if (!Array.isArray(body.results)) throw new Error('invalid');
-      if (id !== revision || request.signal.aborted) return;
-      const location = core.selectLocation(body.results, address);
+      let location = null;
+      const offsets = [0, 1, -1, 2, -2, 3, -3, 5, -5, 10, -10];
+      for (const offset of offsets) {
+        const number = address.number + offset;
+        if (number < 1 || number > 999999) continue;
+        if (offset !== 0) {
+          await new Promise(resolve => {
+            const finish = () => {
+              clearTimeout(pause);
+              request.signal.removeEventListener('abort', finish);
+              resolve();
+            };
+            const pause = setTimeout(finish, 1200);
+            request.signal.addEventListener('abort', finish, { once: true });
+          });
+        }
+        if (id !== revision || request.signal.aborted) return;
+        timer = setTimeout(() => request.abort(), 9000);
+        const response = await fetch(endpoint, {
+          method: 'POST', signal: request.signal, credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ ...address, number })
+        });
+        if (!response.ok) {
+          const failure = await response.json().catch(() => ({}));
+          const reason = response.status === 429 ? 'busy' : failure.error;
+          throw new Error(['busy', 'provider', 'storage', 'configuration', 'origin'].includes(reason) ? reason : 'unavailable');
+        }
+        const body = await response.json();
+        clearTimeout(timer);
+        if (!Array.isArray(body.results)) throw new Error('invalid');
+        if (id !== revision || request.signal.aborted) return;
+        location = core.selectLocation(body.results, address);
+        if (location) break;
+      }
       if (cache.size >= 100) cache.delete(cache.keys().next().value);
       cache.set(key, { location, expires: Date.now() + (location ? 3600000 : 300000) });
       if (location) renderLocation(location, address);
       else mapStatus.textContent = 'No pudimos ubicar ese domicilio en el mapa. El resultado de cobertura no cambia.';
     } catch (error) {
       if (id !== revision) return;
-      mapStatus.textContent = error.message === 'busy'
-        ? 'El mapa está ocupado. Podés volver a consultar en unos segundos; la cobertura ya está resuelta.'
-        : 'No pudimos cargar la ubicación. El resultado de cobertura no cambia.';
+      const messages = {
+        busy: 'El servicio de ubicación está ocupado. Volvé a consultar en unos segundos.',
+        provider: 'El proveedor del mapa no respondió correctamente. Volvé a consultar en un minuto.',
+        storage: 'El servidor no pudo preparar la consulta del mapa.',
+        configuration: 'El servicio de ubicación necesita una corrección de configuración.',
+        origin: 'El servidor rechazó la consulta desde esta página.',
+        invalid: 'El servicio de ubicación devolvió una respuesta inválida.',
+        unavailable: 'El servicio de ubicación no está disponible.'
+      };
+      const explanation = request.signal.aborted
+        ? 'La consulta del mapa tardó demasiado. Volvé a consultar.'
+        : error instanceof TypeError
+          ? 'No se pudo conectar con el servicio de ubicación. Volvé a consultar.'
+          : messages[error.message] || 'No pudimos cargar la ubicación. Volvé a consultar.';
+      mapStatus.textContent = `${explanation} El resultado de cobertura no cambia.`;
     } finally {
       clearTimeout(timer);
       if (controller === request) controller = null;

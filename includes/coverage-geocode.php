@@ -78,8 +78,11 @@ curl_setopt_array($curl, [
 ]);
 $ok = curl_exec($curl);
 $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+$transportError = function_exists('curl_errno') ? curl_errno($curl) : 0;
 curl_close($curl);
 if ($ok === false || $status !== 200) {
+    // Operational diagnostics only: never log submitted addresses or provider URLs.
+    error_log(sprintf('Coverage geocoder failed: http=%d curl=%d', $status, $transportError));
     // Back off globally after a provider rejection or outage; never retry in a loop.
     rewind($lock); ftruncate($lock, 0); fwrite($lock, (string) (microtime(true) + 30)); fflush($lock);
     coverageReply(503, ['error' => 'provider']);

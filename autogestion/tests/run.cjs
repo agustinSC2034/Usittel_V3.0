@@ -415,5 +415,6 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
   await require('./service-features-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
+  await require('./wifi-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

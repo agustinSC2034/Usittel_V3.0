@@ -5,6 +5,7 @@ require_once __DIR__.'/InvoiceDocuments.php';
 require_once __DIR__.'/Payments.php';
 require_once __DIR__.'/Services.php';
 require_once __DIR__.'/PaymentHistory.php';
+require_once __DIR__.'/Wifi.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -50,6 +51,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $method=$_SERVER['REQUEST_METHOD'];
     $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
     $expected+=['service-connection'=>'POST','speedtest-start'=>'POST'];
+    $expected+=['wifi-prepare'=>'POST','wifi-change'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
@@ -117,6 +119,30 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
         serviceReadLimit('connection_checked');
         jsonReply($ph->connection($ida));
+    }
+    if($route==='wifi-prepare') {
+        if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        serviceReadLimit('wifi_prepared',10);
+        $model=wifiModel($ph->serviceRecord($ida));
+        if(!wifiGate($c,$ida,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
+        $challenge=['id'=>bin2hex(random_bytes(16)),'ida'=>$ida,'model'=>$model,'until'=>time()+600];
+        $_SESSION['wifi_challenge']=$challenge;
+        jsonReply(['requestId'=>$challenge['id']]);
+    }
+    if($route==='wifi-change') {
+        $b=body();$settings=wifiInput($b);$challenge=$_SESSION['wifi_challenge']??[];
+        if(($challenge['id']??null)!==$b['requestId'] || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('WIFI_EXPIRED',409);
+        $model=wifiModel($ph->serviceRecord($ida));
+        if($model!==$challenge['model'] || !wifiGate($c,$ida,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
+        $identity=$_SESSION['authenticated_ida'];$remote=$_SERVER['REMOTE_ADDR']??'unknown';
+        rateLimitBegin($dir,'wifi',$remote,$identity);
+        try { $account=$ph->customer($identity); }
+        catch(\Throwable $error) {rateLimitRelease($dir,'wifi',$remote,$identity);throw $error;}
+        if(!is_string($account['Autogestion_Pass']??null) || !hash_equals($account['Autogestion_Pass'],$b['accountPassword'])) throw new Failure('WIFI_AUTH',403);
+        rateLimitRelease($dir,'wifi',$remote,$identity);unset($account,$b['accountPassword']);
+        $payloadHash=hash_hmac('sha256',json_encode($settings,JSON_THROW_ON_ERROR),$c['api_pass']);
+        $result=applyWifiOnce($dir,$ida,$b['requestId'],$payloadHash,fn()=>$ph->configureWifi($ida,$settings));
+        unset($b,$settings);jsonReply($result);
     }
     if($route==='speedtest-start') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
@@ -204,6 +230,12 @@ function fail(\Throwable $e): never {
         'PAYMENT_RECEIPT_UNAVAILABLE'=>'Este movimiento no tiene un comprobante disponible.',
         'PAYMENT_RECEIPT_HTTP','PAYMENT_RECEIPT_FORMAT','PAYMENT_HISTORY_FORMAT','PAYMENT_HISTORY_SCHEMA','PAYMENT_HISTORY_DUPLICATE'=>'No pudimos consultar los movimientos. Volvé a intentar.',
         'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
+        'WIFI_UNAVAILABLE'=>'El cambio de Wi-Fi todavía no está habilitado para este equipo. Podemos ayudarte por WhatsApp.',
+        'WIFI_INPUT'=>'Usá de 8 a 20 caracteres: letras, números, @, _ o punto. La clave también admite # y $. Sin espacios.',
+        'WIFI_AUTH'=>'La contraseña de Mi USITTEL no es correcta.',
+        'WIFI_EXPIRED'=>'Volvé a abrir la configuración de Wi-Fi para continuar.',
+        'WIFI_REVIEW'=>'No pudimos confirmar el cambio anterior. Contactanos antes de volver a intentarlo.',
+        'WIFI_RATE_LIMIT'=>'Esperá cinco minutos antes de realizar otro cambio de Wi-Fi.',
         'SERVICE_RATE_LIMIT'=>'Esperá unos segundos antes de volver a consultar.',
         'SPEEDTEST_UNAVAILABLE','SPEEDTEST_CONFIGURATION'=>'La prueba de velocidad todavía no está disponible. Volvé a intentar más adelante.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',

@@ -13,10 +13,18 @@ final class FixtureTransport implements Transport {
     public function post(string $url,array $body): array {
         parse_str(parse_url($url,PHP_URL_QUERY),$query);
         $action=$query['action'];
-        if(!in_array($action,['autentificar','Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new \RuntimeException('Non-read action');
+        if(!in_array($action,['autentificar','Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta','Configurar_Wifi'],true)) throw new \RuntimeException('Unexpected fixture action');
         file_put_contents($this->dir.'/trace.txt',$action.':'.($query['IDA']??'-')."\n",FILE_APPEND);
         if(isset($query['InfoFTTH'])) file_put_contents($this->dir.'/trace.txt','InfoFTTH:'.$query['InfoFTTH']."\n",FILE_APPEND);
         $scenario=trim(@file_get_contents($this->dir.'/scenario')?:'normal');
+        if($action==='Configurar_Wifi') {
+            if(($query['IDA']??null)!=='1' || array_keys($body)!==['token','Ticket','SSID','SSID_5G','Password'] || $body['Ticket']!==0) throw new \RuntimeException('Invalid fixture Wi-Fi contract');
+            if($scenario==='wifi-timeout') throw new Failure('PHANTOM_TIMEOUT',504);
+            if($scenario==='wifi-expired') throw new Failure('TOKEN_EXPIRED');
+            if($scenario==='wifi-ticket') return ['code'=>200,'message'=>'Ticket para cambio de Wifi generado correctamente'];
+            if($scenario==='wifi-malformed') return ['ok'=>true];
+            return ['code'=>200,'message'=>'Cambio Wifi aplicado exitosamente'];
+        }
         if($scenario==='auth-failure' && $action==='autentificar') throw new Failure('PHANTOM_AUTH_TEST');
         if($scenario==='timeout') throw new Failure('PHANTOM_TIMEOUT',504);
         if($scenario==='http') return CurlTransport::decodeHttpResponse(502,'Private upstream failure');
@@ -55,7 +63,7 @@ final class FixtureTransport implements Transport {
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
             $record=['ID'=>'1','IDAx'=>'99','Autogestion_User'=>$scenario==='custom-user'?'laboratorio':'000001', 'Autogestion_Pass'=>' 00Lab-fixture! ',
-                'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline',
+                'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline','ONU_Modelo'=>$scenario==='wifi-unknown-model'?'Other-ONU':'Fixture-ONU',
                 'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
                 'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
                 'Email'=>'cliente@example.invalid','Telefono'=>'fixture-phone','Balance_CC'=>'9999999',

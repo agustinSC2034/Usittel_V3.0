@@ -8,7 +8,7 @@ set_error_handler(static function() {throw new \MiUsittel\Failure('INTERNAL');})
 header('X-Content-Type-Options: nosniff'); header('Referrer-Policy: no-referrer');
 $measurementOrigin='';
 try { $speed=\MiUsittel\speedtestConfig(\MiUsittel\config()); if($speed!==null) $measurementOrigin=' '.$speed['origin']; } catch(\Throwable) {}
-header("Content-Security-Policy: default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin."; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin."; object-src 'none'; frame-src https://openspeedtest.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
 header('Cache-Control: no-store');
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 // Return is a navigation hint only. Discard all provider query fields, never mark payment here.

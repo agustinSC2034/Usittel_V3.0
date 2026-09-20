@@ -5,6 +5,12 @@
 @tailwind utilities;
 
 /* Mi servicio: a quiet contract summary, clear controls and a live instrument. */
+.speed-embed-placeholder { margin:24px 0; text-align:center; }
+.speed-embed-placeholder iframe { border:0; width:100%; height:480px; background:white; border-radius:12px; }
+.speed-provider { color:var(--muted); font-size:12px; margin-bottom:24px; }
+.wifi-confirm { display:flex; align-items:flex-start; gap:10px; font-size:14px; margin:20px 0; }
+.wifi-confirm input { width:18px; height:18px; flex-shrink:0; margin-top:3px; }
+@media(max-width:500px) { .speed-embed-placeholder iframe { height:400px; } }
 .service-top-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:40px; margin-bottom:32px; }
 .contract-summary h2 { font-size:28px; max-width:570px; margin:10px 0 18px; line-height:1.4; }
 .plan-bottom { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }

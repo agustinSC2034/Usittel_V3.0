@@ -58,13 +58,22 @@ const address = { street: 'San Martín', number: 1000 };
 const location = overrides => ({ lat: '-37.32', lon: '-59.13', address: { city: 'Tandil', road: 'San Martín', house_number: '1000', ...overrides } });
 test('map accepts only same street/city/number; nearby houses are not exact matches', () => {
   assert.equal(core.selectLocation([location({})], address).precision, 'exact');
-  assert.equal(core.selectLocation([location({ house_number: '1001' })], address), null);
+  assert.equal(core.selectLocation([location({ house_number: '1001' })], address).precision, 'nearby');
   assert.equal(core.selectLocation([location({ road: 'Paz' })], address), null);
   assert.equal(core.selectLocation([location({ city: 'Azul' })], address), null);
   assert.equal(core.selectLocation([{ ...location({}), lat: 'invalid' }], address), null);
   assert.equal(core.selectLocation([{ ...location({}), lon: '-61' }], address), null);
-  assert.equal(core.selectLocation([location({ house_number: undefined })], address).precision, 'street');
+  assert.equal(core.selectLocation([location({ house_number: undefined })], address), null);
   assert.equal(core.selectLocation({ error: 'rate limit' }, address), null);
+});
+
+test('nearby numbered references are bounded and exact addresses take priority', () => {
+  assert.equal(core.selectLocation([location({ house_number: '1011' })], address), null);
+  assert.equal(core.selectLocation([location({ house_number: '990' })], address).precision, 'nearby');
+  const close = { ...location({ house_number: '1002' }), lat: '-37.33' };
+  assert.equal(core.selectLocation([location({ house_number: '1009' }), close], address).lat, -37.33);
+  assert.equal(core.selectLocation([close, location({})], address).precision, 'exact');
+  assert.equal(core.selectLocation([location({ house_number: '1001', road: 'Otra' })], address), null);
 });
 
 // Minimal DOM/Leaflet doubles exercise controller concurrency without network or browser automation.
@@ -94,6 +103,31 @@ function harness() {
   return { elements, requests, markers, search, status };
 }
 const tick = () => new Promise(resolve => setImmediate(resolve));
+
+test('missing address tries a nearby number and caches it for the original query', async () => {
+  const h = harness(); h.search('San Martín 1000');
+  h.requests[0].resolve({ ok: true, json: async () => ({ results: [location({ house_number: undefined })] }) });
+  await new Promise(resolve => setTimeout(resolve, 1300));
+  assert.equal(h.requests.length, 2);
+  assert.equal(JSON.parse(h.requests[1].options.body).number, 1001);
+  h.requests[1].resolve({ ok: true, json: async () => ({ results: [location({ house_number: '1001' })] }) });
+  await tick();
+  assert.equal(h.markers.length, 1);
+  assert.equal(h.status(), 'available');
+  assert.equal(h.elements['coverage-map'].after.textContent, '');
+  h.search('San Martín 1000');
+  assert.equal(h.requests.length, 2);
+});
+
+test('editing during fallback pause cancels the remaining queries', async () => {
+  const h = harness(); h.search('San Martín 1000');
+  h.requests[0].resolve({ ok: true, json: async () => ({ results: [] }) });
+  await tick();
+  h.elements['address-input'].handlers.input();
+  await tick();
+  assert.equal(h.requests.length, 1);
+  assert.equal(h.markers.length, 0);
+});
 test('local answer is immediate even when the map is pending or unavailable', async () => {
   const h = harness(); h.search('San Martín 1000');
   assert.equal(h.status(), 'available');
@@ -109,6 +143,22 @@ test('unknown/invalid data makes no geocoding requests', () => {
   h.search('Novoa 800'); assert.equal(h.status(), 'review');
   h.search('Paz'); assert.equal(h.status(), 'invalid');
   assert.equal(h.requests.length, 0);
+});
+
+test('map failures identify provider and server errors without changing coverage', async () => {
+  for (const [status, error, expected] of [
+    [503, 'provider', /proveedor del mapa/],
+    [503, 'storage', /servidor no pudo/],
+    [403, 'origin', /rechazó/],
+    [429, 'busy', /ocupado/]
+  ]) {
+    const h = harness(); h.search('Montiel 1200');
+    h.requests[0].resolve({ ok: false, status, json: async () => ({ error }) });
+    await tick();
+    assert.equal(h.status(), 'available');
+    assert.match(h.elements['coverage-map'].after.textContent, expected);
+    assert.equal(h.markers.length, 0);
+  }
 });
 test('late replies cannot overwrite a newer query, and typing cancels stale locations', async () => {
   const h = harness(); h.search('San Martín 1000'); h.search('Paz 100');

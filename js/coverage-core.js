@@ -72,9 +72,13 @@
     });
     const exact = matches.find(item => String(item.address.house_number) === String(address.number));
     if (exact) return { lat: Number(exact.lat), lon: Number(exact.lon), precision: 'exact' };
-    // A road centroid is useful, but a different house number is never substituted.
-    const road = matches.find(item => !item.address.house_number);
-    return road ? { lat: Number(road.lat), lon: Number(road.lon), precision: 'street' } : null;
+    // Use only numbered results on this street, within ten address numbers.
+    // Number proximity is not a guarantee of geographic distance or an exact address.
+    const nearby = matches.filter(item => /^\d+$/.test(String(item.address.house_number)))
+      .map(item => ({ item, difference: Math.abs(Number(item.address.house_number) - address.number) }))
+      .filter(candidate => candidate.difference <= 10)
+      .sort((a, b) => a.difference - b.difference)[0]?.item;
+    return nearby ? { lat: Number(nearby.lat), lon: Number(nearby.lon), precision: 'nearby' } : null;
   }
 
   const api = { normalizeStreet, parseAddress, compile, classify, selectLocation };

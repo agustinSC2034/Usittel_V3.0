@@ -173,6 +173,16 @@ final class Phantom {
         return ['connectionState'=>$this->publicConnectivityState($raw['Estado_Conexion']??null),
             'modemState'=>$this->publicConnectivityState($raw['ONU_Status']??null),'checkedAt'=>gmdate('c')];
     }
+    public function serviceRecord(int $ida): array {
+        return resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida,['InfoFTTH'=>1]),$ida,'ID');
+    }
+    public function configureWifi(int $ida,array $settings): array {
+        if($this->scope===null || !in_array($ida,$this->scope,true)) throw new Failure('FORBIDDEN',403);
+        if(($this->config['wifi']['enabled']??false)!==true || ($this->config['wifi']['lab_ida']??null)!==$ida) throw new Failure('WIFI_UNAVAILABLE',409);
+        if(array_keys($settings)!==['SSID','SSID_5G','Password']) throw new Failure('BAD_REQUEST',400);
+        // Deliberately no readAuthorized retry loop for this write.
+        return $this->raw('Configurar_Wifi',['IDA'=>$ida],['token'=>$this->token(),'Ticket'=>0]+$settings);
+    }
     public function publicProfile(array $raw): array {
         $out=[];
         $defaults=['name'=>['join'=>[['Nombre'],['Apellido']]],'address'=>['join'=>[['Direccion'],['Dir_Numero']]],

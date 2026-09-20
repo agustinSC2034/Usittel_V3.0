@@ -20,6 +20,9 @@ return [
     'service_product_fields' => [],
     // HTTPS base containing LibreSpeed garbage.php/empty.php; never localhost.
     'speedtest_server' => null,
+    // Controlled Wi-Fi trial only. Exact models from a read-only inspection.
+    // SSID/SSID_5G/Password in JSON body; confirm this contract in the first trial.
+    'wifi' => ['enabled'=>false, 'lab_ida'=>null, 'models'=>[]],
     // null uses the explicit laboratory mappings (see INTEGRATION.md).
     // Optional overrides are exact public paths, never credential fields.
     'profile_fields' => [

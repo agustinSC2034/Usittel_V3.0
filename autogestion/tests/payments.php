@@ -124,6 +124,7 @@ ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PA
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;
 $uncertain=$p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),function()use(&$posts){$posts++;return 'UNKNOWN';});
 ok($uncertain['phantom_posting_state']==='POST_UNCONFIRMED' && !$uncertain['phantom_payment_posted'] && $posts===1);
+ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>throw new Failure('PHANTOM_CRM_FORMAT'),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
 ok($p->postToPhantom(1,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>$posts++)['phantom_posting_state']==='POST_UNCONFIRMED' && $posts===1);
 ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA']),fn()=>[],fn()=>$posts++)['phantom_payment_posted']===true && $posts===1);
 [$p,$store,$g,$dir,$a]=$confirmAttempt();$posts=0;

@@ -27,7 +27,9 @@ function curl_exec(\CurlHandle $ch): bool {
     $body=($query['action']??null)==='autentificar'?json_encode(['token'=>'crm-fixture-'.$GLOBALS['authCalls']]):json_encode([['123','Fixture','1','2026-09-01','2026-09','1-123','121.00']]);
     if($GLOBALS['scenario']==='malformed' && ($query['action']??null)==='Consultar_Impagos')$body='<html>private</html>';
     if(($query['action']??null)==='Consultar_Impagos') $body=match($GLOBALS['scenario']) {
-        'empty'=>'','null'=>'null','text'=>'Error private-secret','string'=>'"private-secret"',default=>$body
+        'empty'=>'','null'=>'null','text'=>'Error private-secret','string'=>'"private-secret"',
+        'settled'=>json_encode('No se encuentran comprobantes pendientes de pago para el criterio de busqueda.'),
+        'near-settled'=>json_encode('Error: No se encuentran comprobantes pendientes de pago para el criterio de busqueda.'),default=>$body
     };
     $GLOBALS['opts'][spl_object_id($ch)][CURLOPT_WRITEFUNCTION]($ch,$body);return true;
 }
@@ -45,10 +47,11 @@ try {
     $crm=new PhantomCrmHttp($config,$settings,$dir);$rows=$crm->unpaid('123');
     if($scenario==='ok' && ($authCalls!==1 || $unpaidCalls!==1 || count($rows)!==1)) throw new \RuntimeException('CRM cache/request failure');
     if($scenario==='expired' && ($authCalls!==2 || $unpaidCalls!==2 || count($rows)!==1)) throw new \RuntimeException('CRM renewal failure');
+    if($scenario==='settled' && ($rows!==[] || $unpaidCalls!==1 || $crm->formatDiagnostic()!==null)) throw new \RuntimeException('CRM settled contract');
     echo 'CRM_HTTP_OK';
 } catch(Failure $e) {
-    if(in_array($scenario,['malformed','empty','null','text','string'],true)) {
-        $expected=match($scenario) {'malformed'=>'html','empty','text'=>'non_json','null'=>'json_null','string'=>'json_string'};
+    if(in_array($scenario,['malformed','empty','null','text','string','near-settled'],true)) {
+        $expected=match($scenario) {'malformed'=>'html','empty','text'=>'non_json','null'=>'json_null','string','near-settled'=>'json_string'};
         $diagnostic=$crm->formatDiagnostic();
         if(($diagnostic['format']??null)!==$expected || $diagnostic['http']!==200 || $diagnostic['empty']!==($scenario==='empty')
             || str_contains(json_encode($diagnostic),'private')) throw new \RuntimeException('unsafe or incorrect metadata');

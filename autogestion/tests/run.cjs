@@ -38,7 +38,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const result=spawnSync(php,[path.join(__dirname,'siro-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
     check('transporte SIRO aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
   }
-  for(const [name,expected] of Object.entries({ok:'CRM_HTTP_OK',expired:'CRM_HTTP_OK',timeout:'PHANTOM_TIMEOUT',malformed:'PHANTOM_CRM_FORMAT',empty:'PHANTOM_CRM_FORMAT',null:'PHANTOM_CRM_FORMAT',text:'PHANTOM_CRM_FORMAT',string:'PHANTOM_CRM_FORMAT'})) {
+  for(const [name,expected] of Object.entries({ok:'CRM_HTTP_OK',settled:'CRM_HTTP_OK','near-settled':'PHANTOM_CRM_FORMAT',expired:'CRM_HTTP_OK',timeout:'PHANTOM_TIMEOUT',malformed:'PHANTOM_CRM_FORMAT',empty:'PHANTOM_CRM_FORMAT',null:'PHANTOM_CRM_FORMAT',text:'PHANTOM_CRM_FORMAT',string:'PHANTOM_CRM_FORMAT'})) {
     const crmDir=path.join(dir,'crm-'+name);fs.mkdirSync(crmDir);
     const result=spawnSync(php,[path.join(__dirname,'crm-http.php'),name],{env:{...fixtureEnv,MI_USITTEL_RUNTIME:crmDir},encoding:'utf8'});
     check('transporte CRM aislado '+name,()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});

@@ -124,6 +124,9 @@ final class PhantomCrmHttp implements PhantomCrmGateway {
                 'format'=>preg_match('/^\s*(?:<!doctype\s+html|<html\b)/i',$response)?'html':'non_json'];
             throw new Failure('PHANTOM_CRM_FORMAT');
         }
+        // Phantom CRM PH24, PDF p.8: exact no-unpaid result, not a generic error.
+        // Only Consultar_Impagos uses JSON POST; authentication and writes cannot take this branch.
+        if(!$get && $decoded==='No se encuentran comprobantes pendientes de pago para el criterio de busqueda.') return [];
         if(!is_array($decoded)) {
             if(!$get) $this->formatDiagnostic=['http'=>$code,'bytes'=>strlen($response),'empty'=>false,'format'=>'json_'.get_debug_type($decoded)];
             throw new Failure('PHANTOM_CRM_FORMAT');

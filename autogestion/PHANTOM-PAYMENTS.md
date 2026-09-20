@@ -4,7 +4,7 @@
 
 1. **SIRO intent created**: existe una intención durable y el checkout puede abrirse.
 2. **SIRO payment confirmed**: SIRO devolvió `PagoExitoso=true` y `Estado=PROCESADA`, y el resultado individual volvió a validarse.
-3. **Phantom payment posted**: el backend envió `Imputar_Pago` y una lectura posterior mostró que la factura ya no está `IMPAGA`.
+3. **Phantom payment posted**: el backend intentó `Imputar_Pago`, REST confirma `PAGADA` para la factura esperada y CRM confirma ausencia de impagos para ese IDT.
 
 La interfaz muestra **Pago confirmado** entre los puntos 2 y 3. Conserva el saldo real de Phantom y aclara que puede tardar en reflejarse. No publica un plazo de 48 horas porque todavía no existe un SLA confirmado.
 
@@ -24,7 +24,7 @@ La compuerta `phantom_posting` está deshabilitada por defecto y acepta un solo 
 
 El intento se marca durablemente `POSTING` antes de la llamada externa. La respuesta textual se clasifica como reconocimiento de éxito, error explícito o texto desconocido, pero nunca es la fuente final de verdad. Después de todo intento se releen API Rest y CRM. Si hay timeout, desconexión o una respuesta no confirmada, pasa a `POST_UNCONFIRMED`. Ese estado no reenvía la escritura. Primero vuelve a consultar Phantom:
 
-- si la factura ya no está impaga, pasa a `POSTED`;
+- si REST informa `PAGADA` y CRM confirma ausencia de impagos para ese IDT, pasa a `POSTED`;
 - si continúa impaga, queda pendiente de revisión;
 - si la factura cambió antes del primer envío, pasa a `NEEDS_REVIEW` sin escribir;
 - si antes del primer envío Phantom ya la muestra pagada, pasa a `ALREADY_SETTLED`: no se atribuye esa imputación a Mi USITTEL.
@@ -38,3 +38,5 @@ El 19/09/2026 el preflight real devolvió `READY_FOR_CONTROLLED_POST` y se reali
 La acción de consulta posterior reutiliza el estado durable y solo relee Phantom. Producción continúa requiriendo persistencia transaccional con índices únicos, política operativa de conciliación, hosting/certificados y revisión de seguridad del despliegue.
 
 El 20/09/2026 la prueba manual de `inspect-payment-verification.php` confirmó `rest_state=PAGADA` y `crm_error=PHANTOM_CRM_FORMAT`. La captura administrativa muestra el pago y saldo de factura cero. La conciliación automática permanece pendiente: no se transforma un error de formato en ausencia de impagos. El mismo inspector ahora agrega exclusivamente HTTP, cantidad de bytes, indicador de vacío y clase de formato ante ese error. No imprime contenido, tokens ni URLs, no consulta SIRO y no realiza imputaciones. Botmaker contempla respuestas vacías/textuales, pero esa heurística no se usa como autorización para cerrar un intento en Mi USITTEL.
+
+La siguiente prueba informó HTTP 200, JSON string y 80 bytes. La revisión visual del PDF original `botmaker_functions_USITTEL/apis/api_imputar_pago/Phantom_API_CRM3_Pronto_Pago.pdf`, página 8 (Rev. ENE 25), recuperó el ejemplo que falta en su extracción Markdown: `"No se encuentran comprobantes pendientes de pago para el criterio de busqueda."`. Esa representación JSON tiene 80 bytes; la longitud sola no confirma identidad. El adaptador reconoce exclusivamente la igualdad exacta del mensaje decodificado en Consultar_Impagos como lista vacía. Otros textos, errores, HTML, null o cuerpo vacío siguen rechazados. No cambia la protección contra repetir una imputación. Resta validar manualmente la conciliación con esta interpretación documentada.

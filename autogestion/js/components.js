@@ -33,7 +33,7 @@ export function invoicePayButton(item, attrs = '') {
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';
-  return `<div class="invoice-actions">${action('Ver', 'invoice', item.id, 'file-text')}${real && !item.downloadAvailable ? '<button class="text-action" disabled title="Las descargas todavía no están habilitadas">Descargar</button>' : action('Descargar', 'download-invoice', item.id, 'download')}${(real ? item.status === 'Pendiente' : item.status !== 'Pagada') ? invoicePayButton(item) : real ? '<button class="text-action" disabled title="Comprobantes todavía no habilitados">Comprobante</button>' : action('Comprobante', 'receipt', item.id, 'check-circle')}</div>`;
+  return `<div class="invoice-actions">${action('Ver factura', 'invoice', item.id, 'file-text')}${real && !item.downloadAvailable ? `<button class="text-action" disabled title="La descarga de esta factura no está disponible">${icon('download')}Descargar factura</button>` : action('Descargar factura', 'download-invoice', item.id, 'download')}${(real ? item.status === 'Pendiente' : item.status !== 'Pagada') ? invoicePayButton(item) : ''}</div>`;
 }
 export function invoiceTable(items, full = false) {
   if (!items.length) return `<p class="muted">${runtime.warnings.includes('INVOICES_UNAVAILABLE') ? 'Facturas no disponibles en este momento.' : 'No hay facturas para mostrar.'}</p>`;

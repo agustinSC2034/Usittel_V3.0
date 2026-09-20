@@ -77,7 +77,7 @@
   .invoice-table-full .invoice-row { min-height:87px; }
   .invoice-table-full .invoice-amount { text-align:right; padding-right:20px; }
   .invoice-table-full .invoice-head > :nth-child(2) { text-align:right; padding-right:20px; }
-  .invoice-actions { display:flex; align-items:center; gap:20px; justify-content:flex-end; }
+  .invoice-actions { display:flex; align-items:center; flex-wrap:wrap; gap:20px; justify-content:flex-end; }
   .invoice-actions .button { min-height:44px; padding:8px 18px; font-size:14px; }
 .invoice-actions .icon { width:18px; height:18px; }
 .invoice-status small { display:block; margin-top:4px; max-width:260px; color:var(--muted); font-size:11px; line-height:1.35; white-space:normal; }
@@ -94,6 +94,7 @@
   .movement-heading h2 { margin:0; }
   .movement-heading .button { flex-shrink:0; }
   .payment-status .commercial-option:last-of-type { border-bottom:0; }
+  .payment-receipt-action { margin-top:8px; }
   .billing-note { color:var(--muted); font-size:13px; display:flex; gap:8px; align-items:center; margin-top:26px; }
   .two-columns { display:grid; grid-template-columns:1fr 1fr; gap:56px; }
   .second-column { border-left:1px solid var(--line); padding-left:50px; }

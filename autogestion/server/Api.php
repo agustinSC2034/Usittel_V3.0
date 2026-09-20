@@ -4,6 +4,7 @@ namespace MiUsittel;
 require_once __DIR__.'/InvoiceDocuments.php';
 require_once __DIR__.'/Payments.php';
 require_once __DIR__.'/Services.php';
+require_once __DIR__.'/PaymentHistory.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -12,7 +13,7 @@ function startSession(array $c,string $dir): void {
     session_set_cookie_params(['lifetime'=>0,'path'=>'/autogestion/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
     session_start();
     $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
-        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,$c['service_login_idas']??[1],'services-v1']));
+        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,$c['service_login_idas']??[1],'services-v2-payment-history']));
     $now=time();
     if (isset($_SESSION['ida']) && (($_SESSION['config']??'')!==$fingerprint || $now-($_SESSION['last']??0)>=$c['idle_seconds'] || $now-($_SESSION['started']??0)>=$c['max_seconds'])) {
         $_SESSION=[]; session_regenerate_id(true);
@@ -44,19 +45,20 @@ function csrf(): void {
     }
     if(($_SERVER['HTTP_SEC_FETCH_SITE']??'')==='cross-site') throw new Failure('CSRF',403);
 }
-function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null): never {
+function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null,?PaymentHistorySource $paymentHistory=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
-    $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document'=>['id'],default=>[]};
+    $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
     if(array_diff(array_keys($_GET),$allowedQuery)) throw new Failure('BAD_REQUEST',400);
     if($route==='bootstrap') {
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],
             'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
-            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected)]+serviceSession());
+            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected),
+            'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if($method==='POST') csrf();
     if($route==='logout') {
@@ -82,6 +84,11 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         }
         if(!$valid) { unset($b); throw new Failure('INVALID_CREDENTIALS',401); }
         rateLimitRelease($dir,$b['username'],$remote,$candidate);
+        $portalState=null;
+        if($c['mode']==='phantom' && $paymentHistory!==null) {
+            try {$portalState=$paymentHistory->authenticate($b['username'],$b['password']);}
+            catch(\Throwable $e) {diagnostic($e instanceof Failure?$e:new Failure('PAYMENT_PORTAL_AUTH'));}
+        }
         unset($b);
         $discovery=$c['mode']==='phantom'?discoverServices($ph,$candidate):['services'=>[],'servicesUnavailable'=>false];
         $fingerprint=$_SESSION['config']; $_SESSION=[]; session_regenerate_id(true);
@@ -90,11 +97,13 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             $_SESSION['authenticated_ida']=$candidate;$_SESSION['selected_ida']=$candidate;
             $_SESSION['authorized_services']=$discovery['services'];$_SESSION['services_unavailable']=$discovery['servicesUnavailable'];
             $_SESSION['service_revision']=bin2hex(random_bytes(16));
+            if(is_array($portalState)) $_SESSION['payment_portal']=['ida'=>$candidate,'state'=>$portalState];
         }
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],
             'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
-            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected)]+serviceSession());
+            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected),
+            'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
@@ -108,7 +117,13 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(array_keys($b)!==['serviceId'] || !is_string($id) || !preg_match('/^[1-9][0-9]{0,9}$/D',$id)) throw new Failure('BAD_REQUEST',400);
         if(!in_array((int)$id,$ids,true)) throw new Failure('FORBIDDEN',403);
         $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));unset($_SESSION['invoice_history']);
-        jsonReply(serviceSession());
+        jsonReply(['payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
+    }
+    if(in_array($route,['payment-history','payment-receipt'],true)) {
+        if($paymentHistory===null) throw new Failure('PAYMENT_HISTORY_DISABLED',409);
+        if($route==='payment-history') jsonReply(['items'=>paymentHistoryForSession($paymentHistory)]);
+        $id=$_GET['id']??null;if(!is_string($id))throw new Failure('BAD_REQUEST',400);
+        paymentPdfReply($id,paymentReceiptForSession($paymentHistory,$id));
     }
     if(in_array($route,['payments','payment-create','payment-reconcile','payment-post'],true)) {
         $settings=siroConfig($c);
@@ -171,6 +186,10 @@ function fail(\Throwable $e): never {
         'INVOICE_NOT_FOUND'=>'La factura no pertenece al historial consultado en esta sesión.',
         'DOCUMENT_NOT_CONFIGURED'=>'La descarga real todavía espera confirmar el endpoint de Phantom.',
         'DOCUMENT_UNAVAILABLE'=>'Esta factura no tiene un documento disponible.',
+        'PAYMENT_HISTORY_DISABLED'=>'Los movimientos no están disponibles para este servicio.',
+        'PAYMENT_PORTAL_EXPIRED'=>'Tu sesión venció. Volvé a ingresar.',
+        'PAYMENT_RECEIPT_UNAVAILABLE'=>'Este movimiento no tiene un comprobante disponible.',
+        'PAYMENT_RECEIPT_HTTP','PAYMENT_RECEIPT_FORMAT','PAYMENT_HISTORY_FORMAT','PAYMENT_HISTORY_SCHEMA','PAYMENT_HISTORY_DUPLICATE'=>'No pudimos consultar los movimientos. Volvé a intentar.',
         'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
         'BAD_REQUEST','FORBIDDEN'=>'La consulta no está permitida.',
         'PAYMENT_NOT_UNPAID'=>'Esta factura no está pendiente de pago.',

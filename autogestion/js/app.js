@@ -1,4 +1,4 @@
-import { request, invoicePdf } from './api.js';
+import { request, invoicePdf, paymentReceiptPdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices, planLabel, addressLabel } from './data.js';
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
@@ -14,7 +14,7 @@ let serviceBusy = false;
 // Navigation hint only; authorization and all outcome checks remain on the server.
 let returnAttempt = /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(location.hash)?.[1] || null;
 if (returnAttempt) { runtime.billingView = 'movements'; history.replaceState(null, '', '#/facturas'); }
-function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; if (typeof data.phantom_posting_enabled === 'boolean') runtime.phantomPostingEnabled = data.phantom_posting_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
+function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; if (typeof data.phantom_posting_enabled === 'boolean') runtime.phantomPostingEnabled = data.phantom_posting_enabled; if (typeof data.payment_history_enabled === 'boolean') runtime.paymentHistoryEnabled = data.payment_history_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
 let speedTimer;
@@ -58,7 +58,7 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
-      if (paymentBusy && ['pay', 'payment-check', 'payment-post', 'billing-refresh'].includes(control.dataset.action)) control.disabled = true;
+      if (paymentBusy && ['pay', 'payment-check', 'payment-post', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
     });
     if (route === 'login') {
       const hint = document.createElement('p'); hint.className = 'field-hint';
@@ -182,6 +182,19 @@ document.addEventListener('click', async event => {
     finally { target.disabled = false; }
     return;
   }
+  if (action === 'download-payment-receipt') {
+    const id = target.dataset.paymentId;
+    if (!runtime.paymentHistoryEnabled || !/^\d{1,20}$/.test(id || '')) return;
+    const generation = dataGeneration; target.disabled = true;
+    try {
+      const blob = await paymentReceiptPdf(id);
+      if (generation !== dataGeneration || !authenticated) return;
+      const url = URL.createObjectURL(blob); const link = document.createElement('a');
+      link.href = url; link.download = `comprobante-pago-${id}.pdf`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch(error) { if (generation === dataGeneration) await handleError(error); }
+    finally { target.disabled = false; }
+    return;
+  }
   if (action === 'receipt') return invoiceDialog(item, true);
   if (action === 'download-invoice' || action === 'download-receipt') {
     if (!item || (action === 'download-receipt' && item.status !== 'Pagada')) return;
@@ -216,7 +229,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
-      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
+      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
     return;
@@ -284,27 +297,34 @@ async function handleError(error) {
   if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
     dataGeneration++;
-    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
+    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
     render(); toast(error.message);
   } else toast(error.message);
 }
 async function refreshPayments(reconcile = true) {
-  if (!runtime.paymentsEnabled || !authenticated) return;
+  if ((!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) || !authenticated) return;
   const generation = dataGeneration;
-  try {
-    const list = await request('payments');
-    if (generation !== dataGeneration || !authenticated) return;
-    runtime.paymentItems = list.items; runtime.paymentError = ''; render();
-    const pending = list.items.find(a => a.attempt_id === returnAttempt) || list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
-    returnAttempt = null;
-    if (reconcile && pending) {
-      const result = await request('payment-reconcile', { attempt_id: pending.attempt_id });
+  if (runtime.paymentHistoryEnabled) {
+    try { const list=await request('payment-history'); if(generation!==dataGeneration||!authenticated)return;runtime.paymentHistoryItems=list.items;runtime.paymentHistoryError=''; }
+    catch { if(generation===dataGeneration) runtime.paymentHistoryError='No pudimos consultar los movimientos registrados. Volvé a intentar.'; }
+  }
+  if (runtime.paymentsEnabled) {
+    try {
+      const list = await request('payments');
       if (generation !== dataGeneration || !authenticated) return;
-      runtime.paymentItems = runtime.paymentItems.map(a => a.attempt_id === result.attempt_id ? result : a); render();
-    }
-  } catch (error) { if (generation === dataGeneration) { runtime.paymentError = 'No pudimos consultar los intentos de pago. Volvé a intentar.'; await handleError(error); render(); } }
+      runtime.paymentItems = list.items; runtime.paymentError = '';
+      const pending = list.items.find(a => a.attempt_id === returnAttempt) || list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
+      returnAttempt = null;
+      if (reconcile && pending) {
+        const result = await request('payment-reconcile', { attempt_id: pending.attempt_id });
+        if (generation !== dataGeneration || !authenticated) return;
+        runtime.paymentItems = runtime.paymentItems.map(a => a.attempt_id === result.attempt_id ? result : a);
+      }
+    } catch (error) { if (generation === dataGeneration) { runtime.paymentError = 'No pudimos consultar los intentos de pago. Volvé a intentar.'; await handleError(error); } }
+  }
+  if (generation === dataGeneration) render();
 }
 async function loadOverview() {
   const generation = ++dataGeneration;
@@ -318,13 +338,13 @@ async function boot() {
   try {
     const session = await request('bootstrap');
     runtime.backend = session.backend !== false;
-    await initialize(session.mode); applyServices(session); runtime.paymentsEnabled = session.payments_enabled === true; runtime.phantomPostingEnabled = session.phantom_posting_enabled === true; authenticated = session.authenticated;
+    await initialize(session.mode); applyServices(session); authenticated = session.authenticated;
     const demoStrip = document.querySelector('.demo-strip');
     demoStrip.textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
     demoStrip.hidden = session.mode !== 'demo';
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
-    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData();
+    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData();
     app.innerHTML = `<main id="main" class="page"><h1>Mi USITTEL</h1><p role="alert">${e(error.message)}</p><div class="dialog-actions">${button('Volver a intentar','boot-retry')}</div></main>`;
   }
 }

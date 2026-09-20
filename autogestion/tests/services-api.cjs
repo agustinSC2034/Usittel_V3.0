@@ -19,7 +19,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
     r=await u.call('select-service',body);check('selección formato/campos cerrados',()=>assert.equal(r.status,400));
   }
   const oldRevision=u.serviceRevision;
-  r=await u.call('select-service',{serviceId:'5'});check('selección válida sin nuevo login',()=>assert.equal(r.data.selectedServiceId,'5'));
+  r=await u.call('select-service',{serviceId:'5'});check('selección válida sin nuevo login',()=>{assert.equal(r.data.selectedServiceId,'5');assert.equal(r.data.payment_history_enabled,false);});
   r=await u.call('overview',undefined,{headers:{'X-Service-Revision':oldRevision}});check('pestaña con revisión anterior rechazada',()=>assert.equal(r.status,409));
   r=await u.call('invoice-document?id=100');check('descarga A rechazada con B seleccionado',()=>assert.equal(r.status,404));
   r=await u.call('invoice?id=100');check('detalle A rechazado con B seleccionado',()=>assert.equal(r.status,404));
@@ -28,6 +28,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await u.call('invoice-document?id=500');check('descarga de B autorizada',()=>{assert.equal(r.status,200);assert.match(r.text,/^%PDF/);});
   r=await u.call('overview?IDA=1');check('IDA de navegador no autoriza consulta',()=>assert.equal(r.status,400));
   r=await u.call('payment-create',{idt:'500'});check('SIRO multicontrato deshabilitado',()=>assert.equal(r.status,409));
+  r=await u.call('payment-history');check('historial del contrato autenticado no se cruza con el asociado',()=>assert.equal(r.status,409));
   r=await u.call('bootstrap');check('recarga conserva selección B y lista',()=>{assert.equal(r.data.selectedServiceId,'5');assert.equal(r.data.services.length,2);});
   await u.call('logout',{});r=await u.call('bootstrap');check('logout borra lista y selección',()=>{assert.deepEqual(r.data.services,[]);assert.equal(r.data.selectedServiceId,null);assert.equal(r.data.authenticated,false);});
   r=await u.call('invoice-document?id=500');check('logout revoca descarga',()=>assert.equal(r.status,401));

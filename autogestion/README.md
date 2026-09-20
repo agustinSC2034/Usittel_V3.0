@@ -53,6 +53,7 @@ Los datos personales/productos y saldo requieren confirmar claves, tipos y semá
 | server/Core.php | Configuración, almacenamiento privado, intentos y normalización |
 | server/Phantom.php | HTTPS, token técnico, lecturas y campos públicos permitidos |
 | server/Api.php | Sesiones, CSRF, login/logout, Inicio y facturas |
+| server/PaymentHistory.php | Sesión aislada del portal, movimientos reales y comprobantes PDF sin exponer capabilities |
 | server/router.php, start-php.cjs | Servidor PHP local con rutas/archivos permitidos explícitamente |
 | server/config.example.php, server/Inspector.php, server/inspect-schema.php | Plantilla sin secretos y diagnóstico por etapas de cliente/cuenta/factura sin valores |
 | check.cjs, server/check-environment.php | Chequeo local de PHP, configuración, runtime y secretos; sin red |

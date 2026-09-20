@@ -50,6 +50,9 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('servicio SIRO con fixtures: identidad, intentos, importes y recuperación',()=>{assert.equal(paymentTests.status,0,paymentTests.stdout+paymentTests.stderr);assert.match(paymentTests.stdout,/PAYMENT_CHECKS=/);});
   count+=Number(paymentTests.stdout.match(/PAYMENT_CHECKS=(\d+)/)[1])-1;
   console.log(paymentTests.stdout.trim());
+  const paymentHistoryTests=spawnSync(php,[path.join(__dirname,'payment-history.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('historial y comprobantes de pago con fixtures seguros',()=>{assert.equal(paymentHistoryTests.status,0,paymentHistoryTests.stdout+paymentHistoryTests.stderr);assert.match(paymentHistoryTests.stdout,/PAYMENT_HISTORY_CHECKS=/);});
+  count+=Number(paymentHistoryTests.stdout.match(/PAYMENT_HISTORY_CHECKS=(\d+)/)[1])-1;
   const concurrentDir=path.join(dir,'concurrent-payments');fs.mkdirSync(concurrentDir);
   const worker=()=>new Promise((resolve,reject)=>{let out='',err='';const child=spawn(php,[path.join(__dirname,'payments.php'),concurrentDir,'worker'],{env:fixtureEnv});child.stdout.on('data',v=>out+=v);child.stderr.on('data',v=>err+=v);child.on('error',reject);child.on('exit',code=>code===0?resolve(out):reject(new Error(err)));});
   const workers=await Promise.all([worker(),worker()]);
@@ -295,6 +298,10 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const oldCookie=a.cookie;r=await login(a);check('login fixture suspendido y regeneración',()=>{assert.equal(r.status,200);assert.notEqual(a.cookie,oldCookie);});
   r=await a.call('bootstrap');check('sesión persiste al recargar',()=>assert.equal(r.data.authenticated,true));
   r=await a.call('overview');check('whitelist, conectividad pública y saldo independiente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
+  r=await a.call('payment-history');check('movimientos reales públicos omiten cookie y capability',()=>{assert.equal(r.status,200);assert.equal(r.data.items.length,2);assert.equal(r.data.items[1].method,'Efectivo');assert.doesNotMatch(r.text,/opaque-session|MDEyMzQ1Njc4OWFiY2RlZg/);});
+  r=await a.call('payment-receipt?id=00053321');check('comprobante de pago PDF ligado al movimiento exacto',()=>{assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^application\/pdf/);assert.match(r.text,/^%PDF-1\.7/);});
+  r=await a.call('payment-receipt?id=00052001');check('capability de otro movimiento no se sustituye',()=>assert.equal(r.status,404));
+  r=await a.call('payment-receipt?IDT=private');check('navegador no puede enviar capability de comprobante',()=>assert.equal(r.status,400));
   scenario('unknown-connectivity');r=await a.call('overview');check('estados técnicos desconocidos no se interpretan ni se exponen',()=>{assert.equal(r.data.customer.connectionState,null);assert.equal(r.data.customer.equipmentState,null);assert.doesNotMatch(r.text,/SYNCING|unexpected/);});scenario('normal');
   scenario('wrong-identity');r=await a.call('overview');check('identidad incorrecta después de login no devuelve perfil ajeno',()=>{assert.equal(r.status,503);assert.equal(r.data.customer,undefined);});scenario('normal');
   scenario('invalid-invoice-id');r=await a.call('overview');check('identificador de factura booleano no se convierte y no bloquea perfil',()=>{assert.equal(r.status,200);assert.equal(r.data.customer.name,'Cliente de pruebas');assert.ok(r.data.warnings.includes('INVOICES_UNAVAILABLE'));});scenario('normal');

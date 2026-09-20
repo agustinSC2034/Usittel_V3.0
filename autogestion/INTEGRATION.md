@@ -86,15 +86,27 @@ PhantomInvoiceDocuments es la fuente del portal. DocumentTransport.php comparte 
 
 El PDF se entrega como attachment con nombre derivado del IDT validado, no-store/private, nosniff y CSP sandbox, sin reenviar headers externos. No se guarda en disco, no se exponen hashes/URLs al frontend. El navegador descarga mediante Blob con límite de tamaño. Si el hash falta o el archivo falla, se informa error sin documento ficticio. El listado indica disponibilidad del servicio de descarga; cada petición verifica el documento específico nuevamente.
 
-El doble FixtureDocuments solo se inyecta desde tests/router.php. UnconfirmedInvoiceDocuments queda como fuente cerrada alternativa, no como default del portal. No se habilitaron comprobantes de pago ni SIRO.
+El doble FixtureDocuments solo se inyecta desde tests/router.php. UnconfirmedInvoiceDocuments queda como fuente cerrada alternativa, no como default del portal. Los comprobantes de pago usan el flujo separado que se describe a continuación; SIRO conserva sus propias compuertas privadas.
+
+### Movimientos y comprobantes de pago
+
+La pestaña Movimientos combina dos fuentes con significados distintos. Los intentos propios de SIRO conservan sus estados de preparación, cancelación o confirmación. El historial definitivo se lee desde `CRM_APP/estado_cuenta.php?filter=P*` y puede incluir otros medios, como efectivo. Cada fila pública contiene únicamente número de comprobante, período, fecha, importe, medio de pago y disponibilidad de descarga.
+
+Al validar las credenciales de autogestión, el backend abre además una sesión separada en el portal CRM_APP. La contraseña se usa durante esa solicitud y se descarta; no se guarda. Solo la cookie opaca de Phantom queda en la sesión PHP privada y desaparece con logout o vencimiento. Si el portal no está disponible, el login principal sigue funcionando y Movimientos queda temporalmente no disponible.
+
+El historial CRM_APP observado no declara un IDA. Por eso se autoriza únicamente mientras `selected_ida` coincide con `authenticated_ida`. Cambiar a un servicio asociado deshabilita ese historial en vez de reutilizar una sesión cuya pertenencia no puede demostrarse. Esta limitación evita cruzar movimientos entre contratos.
+
+La descarga usa `/PHANTOM/Includes/CRM/Comprobante_Pago.php?IDT=<capability>`. El navegador nunca recibe ni envía esa capability: solicita solo el número público del comprobante, el backend vuelve a leer el historial de la sesión, exige una coincidencia exacta y construye el GET internamente. Solo entrega HTTP 200 `application/pdf`, firma PDF válida, cierre EOF y hasta 10 MiB, con headers privados de descarga. La prueba real confirmó que el endpoint responde `application/pdf`; su contenido no fue inspeccionado.
+
+Los parsers fallan cerrados ante estructura, etiquetas, fechas, importes, identificadores, capabilities o duplicados inesperados. No se deduce una relación factura-pago por coincidencia de importe o período. Por eso el comprobante se descarga desde el movimiento real y no desde una factura elegida arbitrariamente.
 
 ## API e interfaz
 
-El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login, overview, invoices, invoice, invoice-document y logout. Bloquea acceso HTTP a server/tests/configuración. La web comercial permanece intacta.
+El router local sirve /autogestion/ y la API del mismo origen: bootstrap, login, overview, invoices, invoice, invoice-document, payment-history, payment-receipt y logout, además de las rutas SIRO habilitadas por configuración. Bloquea acceso HTTP a server/tests/configuración. La web comercial permanece intacta.
 
 Inicio recibe perfil, estado administrativo, saldo y la primera página de facturas; muestra solo las tres más recientes. Facturas y su detalle muestran solamente el DTO público. Un fallo de cuenta o factura no oculta el perfil confirmado y no se transforma en cero. Un fallo de identidad impide entregar el perfil. El frontend limpia datos al fallar y nunca importa demo-data en modo Phantom. Datos opcionales ausentes muestran No disponible.
 
-Mi servicio y Mi cuenta reutilizan el perfil de lectura. Mi servicio muestra la conexión a internet desde `Estado_Conexion`. El DTO también normaliza `Estado_ONU`, pero su presentación está oculta hasta validar su significado. Solo `Online` y `Offline` se convierten a estados públicos; valores ausentes o no reconocidos se muestran como No disponible. No se exponen IP, MAC/GPON, PPPoE, router, OLT, NAP, coordenadas ni topología interna. Soporte no inventa tickets. Pagos, promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom.
+Mi servicio y Mi cuenta reutilizan el perfil de lectura. Mi servicio muestra la conexión a internet desde `Estado_Conexion`. El DTO también normaliza `Estado_ONU`, pero su presentación está oculta hasta validar su significado. Solo `Online` y `Offline` se convierten a estados públicos; valores ausentes o no reconocidos se muestran como No disponible. No se exponen IP, MAC/GPON, PPPoE, router, OLT, NAP, coordenadas ni topología interna. Soporte no inventa tickets. Promesas, Wi-Fi, planes, datos personales y tickets siguen deshabilitados en Phantom.
 
 ## Configuración y ejecución
 

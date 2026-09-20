@@ -19,7 +19,7 @@ if(str_starts_with($path,'/autogestion/api/')) {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
         $posting=\MiUsittel\phantomPostingConfig($c);
         $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting,$dir));
-        \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')));
+        \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')),null,null,new \MiUsittel\PhantomPaymentHistory($c));
     } catch(\Throwable $e) {\MiUsittel\fail($e);}
 }
 if(!in_array($_SERVER['REQUEST_METHOD'],['GET','HEAD'],true)) {http_response_code(405);exit;}

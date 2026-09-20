@@ -12,17 +12,25 @@ function wifiModel(array $record): string {
     $value=$record['ONU_Modelo']??null;
     return is_string($value) && preg_match('/^[a-zA-Z0-9][a-zA-Z0-9 ._()+\/-]{0,79}$/D',$value) ? $value : '';
 }
-function wifiInput(array $body): array {
+function wifiDualBand(array $config,string $model): bool {
+    $models=$config['wifi']['dual_band_models']??[];
+    return is_array($models) && in_array($model,$models,true);
+}
+function wifiInput(array $body,bool $dualBand=true): array {
     $keys=['requestId','ssid','ssid5','password','accountPassword','confirmed'];
     if(array_diff(array_keys($body),$keys) || count($body)!==count($keys)
         || !is_string($body['requestId']??null) || !preg_match('/^[a-f0-9]{32}$/D',$body['requestId'])
         || ($body['confirmed']??null)!==true) throw new Failure('BAD_REQUEST',400);
     foreach(['ssid','ssid5','password'] as $key) {
+        if($key==='ssid5' && !$dualBand) {
+            if($body[$key]!=='') throw new Failure('WIFI_INPUT',400);
+            continue;
+        }
         $pattern=$key==='password'?'/^[a-zA-Z0-9@_.#$]{8,20}$/D':'/^[a-zA-Z0-9@_.]{8,20}$/D';
         if(!is_string($body[$key]??null) || !preg_match($pattern,$body[$key])) throw new Failure('WIFI_INPUT',400);
     }
     if(!is_string($body['accountPassword']) || $body['accountPassword']==='' || strlen($body['accountPassword'])>512) throw new Failure('WIFI_INPUT',400);
-    return ['SSID'=>$body['ssid'],'SSID_5G'=>$body['ssid5'],'Password'=>$body['password']];
+    return ['SSID'=>$body['ssid']]+($dualBand?['SSID_5G'=>$body['ssid5']]:[])+['Password'=>$body['password']];
 }
 
 // Shared per-contract lock and durable outcome. Never store SSIDs or passwords.

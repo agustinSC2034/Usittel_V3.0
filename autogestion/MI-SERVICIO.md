@@ -25,69 +25,66 @@ indica lista vacía confirmada por los campos configurados. No se deduce que un
 cliente carece de Sensa por la ausencia de un campo. El mapper acepta campos
 seleccionados por el operador mediante service_product_fields, de una lista
 cerrada: Productos_Television, Producto_Television, Productos_Telefonia,
-Producto_Telefonia, Productos_Otros. Solo texto o listas de textos acotados; no
+Producto_Telefonia, Productos_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Solo texto o listas de textos acotados; no
 se extraen valores recursivamente de objetos desconocidos.
 
 La documentación histórica nombra Productos_Television, pero el formato de la
 instalación debe verificarse antes de configurar el mapper. Inspector manual:
 `inspect-service-features.php <IDA>`: una lectura, solo presencia/tipos/cantidad.
 No imprime nombres, direcciones, documentos, contraseñas ni valores de productos.
+También informa ONU_Modelo saneado. Para listas de objetos se admite descriptor
+explícito {field, label, quantity}; label debe ser una clave permitida y quantity
+Cantidad. Cantidades entre 1 y 99; estructuras inválidas quedan desconocidas.
+Ejemplo PHP: ['field'=>'Set_Top_Box','label'=>'Nombre','quantity'=>'Cantidad'].
+Los campos de Sensa, packs y STB deben confirmarse con el inspector antes de activar
+su mapeo; no se mezclan productos potenciales con servicios contratados.
 Los enlaces comerciales abren el WhatsApp ya publicado de USITTEL sin adjuntar
 datos personales. No contratan, envían mensajes ni cambian el abono automáticamente.
 
 ## Wi-Fi
 
-Sección propia y explicación de 2,4/5 GHz. Guardado real pendiente. El documento
-histórico describe Configurar_Wifi, SSID/SSID_5G/Password, restricciones 8–20 y
-compatibilidad OMCI/TR069; no conserva un request completo ni confirma equipos
-compatibles. No es suficiente para implementar escrituras fiables. No existe
-ruta nueva de escritura ni captura de claves reales. La UI ofrece ayuda al cliente.
-Antes de habilitar: comprobar request/respuesta y compatibilidad, selected_ida,
-CSRF, reautenticación/confirmación apropiada, límite de cambios, gestión de timeout
-sin reintento ciego y nunca Ticket=1 de forma implícita.
+Implementados POST wifi-prepare y wifi-change con sesión, CSRF y selected_ida.
+Deshabilitado por defecto: wifi.enabled, lab_ida único y lista exacta models.
+ONU_Modelo se consulta con InfoFTTH=1; dual_band_models habilita SSID_5G solo
+para modelos validados. No se infiere soporte a partir del nombre del plan.
 
-## Speedtest interno
+Exige clave actual de autogestión, confirmación y nombres/claves validados.
+Un nonce vincula servicio y modelo durante 10 minutos. El bloqueo persistente
+por contrato evita doble envío entre sesiones. Se conserva solo HMAC del payload,
+nonce, fecha y estado; nunca claves ni nombres de red. Resultado incierto bloquea
+nuevos cambios hasta revisión del operador. No se reintenta una escritura al vencer
+el token. Ticket=0; solo el mensaje exacto de cambio aplicado confirma éxito.
 
-Motor LibreSpeed local con UI propia, arco animado de progreso, valores reales de
-descarga/subida/latencia/jitter, cancelación, timeout y movimiento reducido.
-No hay resultado simulado en modo Phantom ni salida a un sitio de medición.
-El servidor remoto recibe únicamente tráfico de prueba; no cookies de Mi USITTEL,
-IDA, nombre, plan ni referencias. Como todo servidor de red ve la IP del dispositivo;
-Mi USITTEL no consulta geolocalización/ISP ni persiste resultados. El motor tiene
-telemetría apagada y no ejecuta getIP.php. Descargar/subir datos puede consumir
-mucho tráfico y afectar otras actividades durante la prueba.
+La documentación describe Configurar_Wifi pero no conserva el request completo.
+El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren
+prueba controlada real. No habilitar globalmente antes de esa prueba. No se cambió
+configuración privada ni ninguna ONU en esta entrega.
 
-El operador configura en el archivo privado `speedtest_server` con la URL HTTPS
-base que contiene backend/garbage.php y backend/empty.php (por ejemplo, una base
-terminada en /speedtest/backend/). No poner una URL de página ni localhost. Solo
-HTTPS y host explícito; CSP permite ese único origen, worker local. No se modifica
-la configuración privada automáticamente. POST speedtest-start exige sesión,
-CSRF y revisión, no recibe URL desde navegador y limita inicio a uno/minuto.
-El límite protege el inicio en la app; el servidor de medición debe tener sus
-propios límites de tráfico, concurrencia y abuso. No usar el router PHP monohilo
-ni un proxy del portal como punto de prueba de capacidad.
+## Speedtest integrado
 
-Revisión 2026-09-20: http://velocidad.usittel.com.ar/speedtest/ responde 200 y usa
-LibreSpeed; HTTPS rechaza la conexión. No se ejecutó una medición. Pendiente
-habilitar HTTPS y comprobar CORS de empty.php y garbage.php para el origen del
-portal; en ningún caso deshabilitar TLS ni integrar contenido mixto. Se reutiliza
-el servidor de USITTEL existente cuando cumpla estas condiciones. No se tocó
-Apache/DNS/producción. El test mide la red del dispositivo, no necesariamente el
-contrato seleccionado; se recuerda conectarse a la red del domicilio.
+Se carga a pedido el widget oficial de Meter.net dentro de Mi servicio, sin
+servidor propio ni proxy de tráfico. Fuente y condiciones:
+https://www.meter.net/web-plugin/
+Se conserva íntegro el snippet publicado y su atribución. CSP permite únicamente
+el origen de ese iframe y hashes de sus estilos inline, sin habilitar scripts
+inline en el portal. Cerrar prueba elimina el iframe. No se envía IDA, identidad,
+plan ni sesión al proveedor; Referrer-Policy es no-referrer. El proveedor conoce
+la IP de conexión y controla sus servidores, contenido y resultados. Su versión
+gratuita puede incluir publicidad. La app no guarda ni interpreta sus resultados.
 
-Ayuda: Cat 5e+ con puertos Gigabit hasta 1 Gbps; conexiones mayores requieren
-equipos adecuados; diferencias por protocolos/carga son esperables. Wi-Fi 5 GHz
-cerca del router suele favorecer velocidad; 2,4 GHz no tiene máximo universal
-de 100 Mbps. Fuentes: https://github.com/librespeed/speedtest y
-https://www.intel.com/content/www/us/en/products/docs/wireless/2-4-vs-5ghz.html.
+La implementación LibreSpeed anterior permanece disponible en código como opción
+futura; la UI actual no la inicia. El servidor USITTEL requiere HTTPS para poder
+integrarse desde un portal HTTPS, pero no hace falta modificarlo para este widget.
 
-## Validación de esta entrega
+## Validación
 
-603 verificaciones de la suite completa con fixtures, sin Phantom/SIRO ni tráfico
-de medición real. Incluye sesión/CSRF, IDA manipulado, selección/revisión de
-contrato, estados desconocidos, timeout, límites, whitelist de productos,
-configuración HTTPS, errores y cancelación del worker. Build y sintaxis PHP
-correctos. Revisión en navegador aislado a 1365, 390 y 320 px: actualización,
-mensaje de medición no disponible, diálogo Wi-Fi y ausencia de desborde horizontal.
-Sin errores JavaScript observados. Medición real y configuración Wi-Fi aún no
-validadas contra equipos reales; no se alteró configuración privada.
+647 verificaciones con fixtures, sin Phantom/SIRO real. Incluye Wi-Fi deshabilitado,
+CSRF, reautenticación, pertenencia/modelo, datos inválidos, doble envío, cooldown
+entre sesiones y resultados inciertos sin reintentos. Build correcto.
+La medición externa y los equipos reales requieren validación manual; no se afirma
+compatibilidad real a partir de fixtures.
+
+Widget verificado cargado dentro de Chrome, con controles de descarga/subida/ping
+y sin errores de consola. Sin desborde horizontal a anchos CSS 390 y 1365; cerrar
+quita el iframe. No se inició una transferencia de medición. El navegador integrado
+de Codex dejó el iframe en blanco durante la revisión; verificar en navegador normal.

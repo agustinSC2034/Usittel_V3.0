@@ -30,7 +30,7 @@ function speedtestSection() {
   return `<section id="service-speedtest" class="service-speedtest" aria-labelledby="speed-title" tabindex="-1">
     <div class="speed-intro"><span class="eyebrow">Desde este dispositivo</span><h2 id="speed-title">Probá tu conexión</h2><p class="muted">Una medición de tu conexión, acá mismo.</p></div>
     <div class="speed-embed-placeholder" id="speed-embed"><button class="button" data-action="speedtest-open">Abrir prueba de velocidad</button></div>
-    <p class="speed-provider">Prueba provista por OpenSpeedTest.</p>
+
       <div class="speed-guidance"><h3>Para una buena medición</h3><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN.</li></ol></div>
   </section>`;
 }

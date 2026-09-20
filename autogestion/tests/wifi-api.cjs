@@ -1,5 +1,5 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings})=>{
-  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'lab_ida'=>1,'models'=>['Fixture-ONU']],'mode'=>'phantom'");
+  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'lab_ida'=>1,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'");
   const marker=path.join(dir,'wifi-change-1.json');
   const reset=()=>{if(fs.existsSync(marker))fs.unlinkSync(marker);clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
@@ -10,7 +10,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await u.call('wifi-prepare',{}, {noCsrf:true});check('preparar Wi-Fi exige CSRF',()=>assert.equal(r.status,403));
   r=await u.call('wifi-prepare',{IDA:5});check('preparación no admite IDA',()=>assert.equal(r.status,400));
   r=await u.call('wifi-prepare',{});const id=r.data.requestId;
-  check('preparación devuelve solo nonce sin datos del equipo',()=>{assert.equal(r.status,200);assert.deepEqual(Object.keys(r.data),['requestId']);assert.match(id,/^[a-f0-9]{32}$/);});
+  check('preparación devuelve solo nonce sin datos del equipo',()=>{assert.equal(r.status,200);assert.deepEqual(Object.keys(r.data),['requestId','dualBand']);assert.equal(r.data.dualBand,true);assert.match(id,/^[a-f0-9]{32}$/);});
   const before=writes();
   r=await u.call('wifi-change',payload(id),{noCsrf:true});check('cambio Wi-Fi exige CSRF',()=>assert.equal(r.status,403));
   for(const override of [{IDA:5},{Ticket:1},{confirmed:false},{ssid:'red con espacios'},{ssid5:'short'},{password:'bad password'},{requestId:'f'.repeat(32)}]) {
@@ -38,5 +38,10 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   await multi.call('select-service',{serviceId:'5'});r=await multi.call('wifi-change',payload(old));check('cambio de contrato invalida la preparación',()=>assert.equal(r.status,409));
   r=await multi.call('wifi-prepare',{});check('otro servicio no hereda habilitación Wi-Fi',()=>assert.equal(r.status,409));
   await multi.call('logout',{});await multi.call('bootstrap');r=await multi.call('wifi-change',payload(old));check('logout impide cambio Wi-Fi',()=>assert.equal(r.status,401));
+  reset();fs.writeFileSync(config,enabled().replace("'dual_band_models'=>['Fixture-ONU']","'dual_band_models'=>[]"));
+  const single=jar();await login(single);r=await single.call('wifi-prepare',{});const singleId=r.data.requestId;
+  check('modelo sin doble banda no ofrece red 5 GHz',()=>assert.equal(r.data.dualBand,false));
+  r=await single.call('wifi-change',payload(singleId));check('no admite inyectar SSID 5 GHz',()=>assert.equal(r.status,400));
+  r=await single.call('wifi-change',{...payload(singleId),ssid5:''});check('cambio de una sola banda omite SSID_5G',()=>assert.deepEqual(r.data,{state:'APPLIED'}));
   reset();fs.writeFileSync(config,settings());
 };

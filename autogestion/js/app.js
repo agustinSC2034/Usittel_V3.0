@@ -82,11 +82,11 @@ const help = {
   'help-wifi': ['Problemas con el Wi-Fi', 'Probá acercarte al equipo y verificá si el problema ocurre en más de un dispositivo. Si tenés conexión por cable, compará su funcionamiento con el Wi-Fi.'],
   'help-invoice': ['Consultas sobre facturas', 'En Facturas podés consultar tus períodos, descargar los documentos y ver los comprobantes de los pagos registrados. El botón Pagar te llevará al portal de SIRO cuando el servicio esté habilitado.'],
 };
-function wifiForm(requestId) {
+function wifiForm(requestId,dualBand) {
   return `<form id="wifi-live-form" data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
     ${input('Nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
-    ${input('Nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
-    ${input('Nueva contraseña de Wi-Fi','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"',hint:'De 8 a 20 caracteres. Letras, números, @, _, punto, # y $. Sin espacios. La misma clave para ambas redes.'})}
+    ${dualBand?input('Nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
+    ${input('Nueva contraseña de Wi-Fi','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"',hint:'De 8 a 20 caracteres. Letras, números, @, _, punto, # y $. Sin espacios.'+(dualBand?' La misma clave para ambas redes.':'')})}
     ${input('Repetí la nueva contraseña','wifi-repeat',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"'})}
     ${input('Tu contraseña de Mi USITTEL','wifi-account-password',{type:'password',autocomplete:'current-password'})}
     <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que conectarlos con los nuevos datos.</label>
@@ -101,7 +101,7 @@ async function submitWifi(form,data) {
   submit.disabled=true;const generation=Number(form.dataset.generation);
   result.textContent='Aplicando cambios…';
   try {
-    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:data.get('ssid'),ssid5:data.get('ssid5'),password:data.get('wifi-new-password'),accountPassword:data.get('wifi-account-password'),confirmed:data.get('confirmed')==='on'});
+    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:data.get('ssid'),ssid5:data.get('ssid5')||'',password:data.get('wifi-new-password'),accountPassword:data.get('wifi-account-password'),confirmed:data.get('confirmed')==='on'});
     if(generation!==dataGeneration||!authenticated||!form.isConnected)return;
     form.reset();
     result.textContent=response.state==='APPLIED'?'Los nuevos datos de Wi-Fi se aplicaron. Volvé a conectar tus dispositivos.':'No pudimos confirmar el cambio. Revisá tu conexión y contactanos antes de volver a intentarlo.';
@@ -139,7 +139,7 @@ document.addEventListener('click', async event => {
   if(action==='show-speedtest') {document.querySelector('#service-speedtest')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});document.querySelector('[data-action="speedtest-open"]')?.focus({preventScroll:true});return;}
   if(action==='speedtest-open') {
     const host=document.querySelector('#speed-embed');
-    host.innerHTML='<iframe title="Prueba de velocidad OpenSpeedTest" src="https://openspeedtest.com/speedtest" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin" loading="eager"></iframe><button class="text-action" data-action="speedtest-close">Cerrar prueba</button>';
+    host.innerHTML="<div style=\"text-align:right;\"><div style=\"min-height:360px;\"><div style=\"width:100%;height:0;padding-bottom:50%;position:relative;\"><iframe style=\"border:none;position:absolute;top:0;left:0;width:100%;height:100%;min-height:360px;border:none;overflow:hidden !important;\" src=\"https://www.metercustom.net/plugin/\"></iframe></div></div>Provided by <a href=\"https://www.meter.net\">Meter.net</a></div><button class=\"text-action\" data-action=\"speedtest-close\">Cerrar prueba</button>";
     return;
   }
   if(action==='speedtest-close') {document.querySelector('#speed-embed').innerHTML='<button class="button" data-action="speedtest-open">Abrir prueba de velocidad</button>';return;}
@@ -149,7 +149,7 @@ document.addEventListener('click', async event => {
     try {
       const preparation=await request('wifi-prepare',{});
       if(generation!==dataGeneration||!authenticated)return;
-      openDialog('Configurar Wi-Fi',wifiForm(preparation.requestId));
+      openDialog('Configurar Wi-Fi',wifiForm(preparation.requestId,preparation.dualBand===true));
     } catch(error) {if(generation===dataGeneration)await handleError(error);}
     finally {if(target.isConnected)target.disabled=false;}
     return;

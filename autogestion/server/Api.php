@@ -122,18 +122,19 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     if($route==='wifi-prepare') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        if(($c['wifi']['enabled']??false)!==true || ($c['wifi']['lab_ida']??null)!==$ida) throw new Failure('WIFI_UNAVAILABLE',409);
         serviceReadLimit('wifi_prepared',10);
         $model=wifiModel($ph->serviceRecord($ida));
         if(!wifiGate($c,$ida,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
-        $challenge=['id'=>bin2hex(random_bytes(16)),'ida'=>$ida,'model'=>$model,'until'=>time()+600];
+        $challenge=['id'=>bin2hex(random_bytes(16)),'ida'=>$ida,'model'=>$model,'dualBand'=>wifiDualBand($c,$model),'until'=>time()+600];
         $_SESSION['wifi_challenge']=$challenge;
-        jsonReply(['requestId'=>$challenge['id']]);
+        jsonReply(['requestId'=>$challenge['id'],'dualBand'=>$challenge['dualBand']]);
     }
     if($route==='wifi-change') {
-        $b=body();$settings=wifiInput($b);$challenge=$_SESSION['wifi_challenge']??[];
+        $b=body();$challenge=$_SESSION['wifi_challenge']??[];$settings=wifiInput($b,$challenge['dualBand']??false);
         if(($challenge['id']??null)!==$b['requestId'] || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('WIFI_EXPIRED',409);
         $model=wifiModel($ph->serviceRecord($ida));
-        if($model!==$challenge['model'] || !wifiGate($c,$ida,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
+        if($model!==$challenge['model'] || !wifiGate($c,$ida,$model) || wifiDualBand($c,$model)!==$challenge['dualBand']) throw new Failure('WIFI_UNAVAILABLE',409);
         $identity=$_SESSION['authenticated_ida'];$remote=$_SERVER['REMOTE_ADDR']??'unknown';
         rateLimitBegin($dir,'wifi',$remote,$identity);
         try { $account=$ph->customer($identity); }

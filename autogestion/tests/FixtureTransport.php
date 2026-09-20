@@ -18,7 +18,7 @@ final class FixtureTransport implements Transport {
         if(isset($query['InfoFTTH'])) file_put_contents($this->dir.'/trace.txt','InfoFTTH:'.$query['InfoFTTH']."\n",FILE_APPEND);
         $scenario=trim(@file_get_contents($this->dir.'/scenario')?:'normal');
         if($action==='Configurar_Wifi') {
-            if(($query['IDA']??null)!=='1' || array_keys($body)!==['token','Ticket','SSID','SSID_5G','Password'] || $body['Ticket']!==0) throw new \RuntimeException('Invalid fixture Wi-Fi contract');
+            if(($query['IDA']??null)!=='1' || !in_array(array_keys($body),[['token','Ticket','SSID','SSID_5G','Password'],['token','Ticket','SSID','Password']],true) || $body['Ticket']!==0) throw new \RuntimeException('Invalid fixture Wi-Fi contract');
             if($scenario==='wifi-timeout') throw new Failure('PHANTOM_TIMEOUT',504);
             if($scenario==='wifi-expired') throw new Failure('TOKEN_EXPIRED');
             if($scenario==='wifi-ticket') return ['code'=>200,'message'=>'Ticket para cambio de Wifi generado correctamente'];
@@ -54,7 +54,7 @@ final class FixtureTransport implements Transport {
                 return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
                     'Autogestion_User'=>$ida===6?'000006':'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
                     'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
-                    'Estado_Servicio'=>'Activo','Conexiones_Asociadas'=>$ida===1?$links:[],
+                    'Estado_Servicio'=>'Activo','ONU_Modelo'=>'Fixture-ONU','Conexiones_Asociadas'=>$ida===1?$links:[],
                     'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout','services-document-only-timeout'],true)?'12345678':null]];
             }
             if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];

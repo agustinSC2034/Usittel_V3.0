@@ -136,13 +136,7 @@ document.addEventListener('click', async event => {
     finally {if(generation===dataGeneration){runtime.connectionRefreshing=false;render();}}
     return;
   }
-  if(action==='show-speedtest') {document.querySelector('#service-speedtest')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});document.querySelector('[data-action="speedtest-open"]')?.focus({preventScroll:true});return;}
-  if(action==='speedtest-open') {
-    const host=document.querySelector('#speed-embed');
-    host.innerHTML="<div style=\"text-align:right;\"><div style=\"min-height:360px;\"><div style=\"width:100%;height:0;padding-bottom:50%;position:relative;\"><iframe style=\"border:none;position:absolute;top:0;left:0;width:100%;height:100%;min-height:360px;border:none;overflow:hidden !important;\" src=\"https://www.metercustom.net/plugin/\"></iframe></div></div>Provided by <a href=\"https://www.meter.net\">Meter.net</a></div><button class=\"text-action\" data-action=\"speedtest-close\">Cerrar prueba</button>";
-    return;
-  }
-  if(action==='speedtest-close') {document.querySelector('#speed-embed').innerHTML='<button class="button" data-action="speedtest-open">Abrir prueba de velocidad</button>';return;}
+  if(action==='show-speedtest') {document.querySelector('#service-speedtest')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});document.querySelector('#speedtest-link')?.focus({preventScroll:true});return;}
   if(action==='wifi-settings') {
     if(runtime.mode!=='phantom')return toast('La configuración real requiere iniciar sesión en tu cuenta.');
     target.disabled=true;const generation=dataGeneration;

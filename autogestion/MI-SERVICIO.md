@@ -60,21 +60,12 @@ El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren
 prueba controlada real. No habilitar globalmente antes de esa prueba. No se cambió
 configuración privada ni ninguna ONU en esta entrega.
 
-## Speedtest integrado
+## Speedtest
 
-Se carga a pedido el widget oficial de Meter.net dentro de Mi servicio, sin
-servidor propio ni proxy de tráfico. Fuente y condiciones:
-https://www.meter.net/web-plugin/
-Se conserva íntegro el snippet publicado y su atribución. CSP permite únicamente
-el origen de ese iframe y hashes de sus estilos inline, sin habilitar scripts
-inline en el portal. Cerrar prueba elimina el iframe. No se envía IDA, identidad,
-plan ni sesión al proveedor; Referrer-Policy es no-referrer. El proveedor conoce
-la IP de conexión y controla sus servidores, contenido y resultados. Su versión
-gratuita puede incluir publicidad. La app no guarda ni interpreta sus resultados.
-
-La implementación LibreSpeed anterior permanece disponible en código como opción
-futura; la UI actual no la inicia. El servidor USITTEL requiere HTTPS para poder
-integrarse desde un portal HTTPS, pero no hace falta modificarlo para este widget.
+La UI abre https://www.speedtest.net/ en otra pestaña con noopener/noreferrer.
+Se retiró Meter.net y sus excepciones CSP; no hay iframe ni medición automática.
+El módulo LibreSpeed local se conserva inactivo para futura integración propia.
+Requisitos del servidor: [SPEEDTEST-USITTEL.md](SPEEDTEST-USITTEL.md).
 
 ## Validación
 
@@ -83,11 +74,6 @@ CSRF, reautenticación, pertenencia/modelo, datos inválidos, doble envío, cool
 entre sesiones y resultados inciertos sin reintentos. Build correcto.
 La medición externa y los equipos reales requieren validación manual; no se afirma
 compatibilidad real a partir de fixtures.
-
-Widget verificado cargado dentro de Chrome, con controles de descarga/subida/ping
-y sin errores de consola. Sin desborde horizontal a anchos CSS 390 y 1365; cerrar
-quita el iframe. No se inició una transferencia de medición. El navegador integrado
-de Codex dejó el iframe en blanco durante la revisión; verificar en navegador normal.
 
 ## Inicio
 

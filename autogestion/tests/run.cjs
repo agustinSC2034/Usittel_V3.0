@@ -383,6 +383,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(views,/billing-heading[\s\S]*billing-refresh/);
     assert.doesNotMatch(payments,/headingAction|Consultar actualización/);
     assert.match(payments,/ALREADY_SETTLED[\s\S]*Tu cuenta ya estaba actualizada/);
+    assert.match(payments,/MOVEMENTS_PER_PAGE = 10[\s\S]*movement-pagination[\s\S]*Página \$\{page\+1\} de \$\{pages\}/);
+    assert.match(app,/action === 'movement-page'[\s\S]*runtime\.movementPage = page/);
     assert.doesNotMatch(payments,/respuesta|token|Phantom|SIRO confirmó|imputación/);
     assert.doesNotMatch(views,/Historial en validación de laboratorio|Seguimiento de pagos realizados en SIRO/);
     assert.doesNotMatch(app,/Desarrollo local · Laboratorio|Laboratorio de pagos\. Las demás modificaciones/);

@@ -195,6 +195,14 @@ document.addEventListener('click', async event => {
     finally { target.disabled = false; }
     return;
   }
+  if (action === 'movement-page') {
+    const page = Number(target.dataset.page);
+    if (!Number.isInteger(page) || page < 0) return;
+    runtime.movementPage = page;
+    render();
+    document.querySelector('.movement-heading')?.scrollIntoView({ block: 'start' });
+    return;
+  }
   if (action === 'receipt') return invoiceDialog(item, true);
   if (action === 'download-invoice' || action === 'download-receipt') {
     if (!item || (action === 'download-receipt' && item.status !== 'Pagada')) return;

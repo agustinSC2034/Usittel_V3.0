@@ -59,7 +59,7 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
-      if (paymentBusy && ['pay', 'payment-check', 'payment-post'].includes(control.dataset.action)) control.disabled = true;
+      if (paymentBusy && ['pay', 'payment-check', 'payment-post', 'billing-refresh'].includes(control.dataset.action)) control.disabled = true;
     });
     if (route === 'login') {
       const hint = document.createElement('p'); hint.className = 'field-hint';
@@ -108,6 +108,23 @@ document.addEventListener('click', async event => {
   }
   if (runtime.mode === 'phantom' && unavailable.includes(action)) return toast('Esta función todavía no está disponible.');
   if (action === 'payment-invoices') { location.hash = '/facturas'; return; }
+  if (action === 'billing-refresh') {
+    if (runtime.mode !== 'phantom' || paymentBusy || runtime.billingRefreshing) return;
+    paymentBusy = true; runtime.billingRefreshing = true; render();
+    const generation = dataGeneration;
+    try {
+      await refreshPayments(false);
+      if (generation !== dataGeneration || !authenticated) return;
+      const pending = runtime.paymentItems.filter(a => runtime.phantomPostingEnabled && ['POSTING', 'POST_UNCONFIRMED'].includes(a.phantom_posting_state));
+      for (const attempt of pending) {
+        if (generation !== dataGeneration || !authenticated) return;
+        await request('payment-post', { attempt_id: attempt.attempt_id });
+      }
+      if (generation === dataGeneration && authenticated) await loadOverview();
+    } catch (error) { if (generation === dataGeneration) await handleError(error); }
+    finally { paymentBusy = false; runtime.billingRefreshing = false; render(); }
+    return;
+  }
   if (action === 'billing-tab') {
     if (!['invoices', 'movements'].includes(target.dataset.view)) return;
     runtime.billingView = target.dataset.view;

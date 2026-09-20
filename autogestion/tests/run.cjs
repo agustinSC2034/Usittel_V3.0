@@ -373,8 +373,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en actualizarse/);
     assert.match(views,/saldo puede tardar en reflejar pagos recientes/);
     assert.match(views,/portal de SIRO, nuestro proveedor de pagos/);
-    assert.match(payments,/Actualizar cuenta[\s\S]*movement-heading/);
-    assert.match(payments,/verificationCandidates[\s\S]*Consultar actualización/);
+    assert.match(views,/billing-heading[\s\S]*billing-refresh/);
+    assert.doesNotMatch(payments,/headingAction|Consultar actualización/);
     assert.match(payments,/ALREADY_SETTLED[\s\S]*Tu cuenta ya estaba actualizada/);
     assert.doesNotMatch(payments,/respuesta|token|Phantom|SIRO confirmó|imputación/);
     assert.doesNotMatch(views,/Historial en validación de laboratorio|Seguimiento de pagos realizados en SIRO/);

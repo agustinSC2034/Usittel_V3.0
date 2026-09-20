@@ -306,3 +306,11 @@
 .service-option { display:grid; gap:.3rem; text-align:left; background:transparent; border:0; border-bottom:1px solid #dde3e5; padding:1rem 0; color:inherit; cursor:pointer; }
 .service-option span,.service-option small { color:#657488; }
 .service-option[aria-pressed="true"] strong { color:#147956; }
+
+.billing-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+.billing-refresh { flex:0 0 44px; width:44px; height:44px; display:grid; place-items:center; color:#117c59; border-radius:50%; background:transparent; border:0; cursor:pointer; }
+.billing-refresh:hover { background:#e4f0e8; }
+.billing-refresh:focus-visible { outline:2px solid #117c59; outline-offset:3px; }
+.billing-refresh[aria-busy="true"] .icon { animation:billing-spin 1s linear infinite; }
+@keyframes billing-spin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce) { .billing-refresh[aria-busy="true"] .icon { animation:none; } }

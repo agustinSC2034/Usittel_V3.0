@@ -11,8 +11,8 @@ export const status = value => `<span class="status status-${['Pagada','Activo',
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
-  if (!attempt) return { label: item.status, hint: '' };
-  if (attempt.phantom_payment_posted) return { label: 'Pago registrado', hint: 'El pago ya fue registrado en tu cuenta.' };
+  if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
+  if (attempt.phantom_payment_posted) return { label: 'Pagada', hint: '' };
   return { label: 'Pago confirmado', hint: 'Tu saldo puede tardar en actualizarse.' };
 }
 export function navigation(active, mobile = false) {

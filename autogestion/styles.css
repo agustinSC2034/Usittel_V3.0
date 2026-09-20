@@ -387,3 +387,16 @@
 .billing-refresh[aria-busy="true"] .icon { animation:billing-spin 1s linear infinite; }
 @keyframes billing-spin { to { transform:rotate(360deg); } }
 @media (prefers-reduced-motion:reduce) { .billing-refresh[aria-busy="true"] .icon { animation:none; } }
+
+/* Inicio: shortcuts complement the account summary without inventing activity. */
+.home-shortcuts { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin:0 0 30px; }
+.home-shortcuts a { display:flex; align-items:center; gap:14px; padding:18px 0; border-top:1px solid var(--line); color:var(--navy); }
+.home-shortcuts a > .icon { color:var(--green); flex-shrink:0; }
+.home-shortcuts a > .icon:last-child { margin-left:auto; }
+.home-shortcuts strong,.home-shortcuts small { display:block; }
+.home-shortcuts small { color:var(--muted); margin-top:4px; font-size:13px; }
+.home-shortcuts a:hover strong { color:var(--green); }
+@media(max-width:767px) {
+  .home-shortcuts { grid-template-columns:1fr; gap:0; margin-bottom:24px; }
+  .page-inicio .balance-content { grid-template-columns:1fr; }
+}

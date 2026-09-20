@@ -88,3 +88,15 @@ Widget verificado cargado dentro de Chrome, con controles de descarga/subida/pin
 y sin errores de consola. Sin desborde horizontal a anchos CSS 390 y 1365; cerrar
 quita el iframe. No se inició una transferencia de medición. El navegador integrado
 de Codex dejó el iframe en blanco durante la revisión; verificar en navegador normal.
+
+## Inicio
+
+Inicio presenta Servicios contratados (plan y adicionales públicos confirmados),
+estado de cuenta sin próximo vencimiento y accesos a Mi servicio y Soporte.
+Muestra hasta dos facturas recientes y enlaza al módulo completo de facturas/pagos.
+Si products es null se informa que el detalle no está disponible: no equivale a
+que el cliente no tenga adicionales. Completar Sensa/STB reales sigue pendiente
+de confirmar el mapeo con el inspector; esta entrega no modifica configuración
+privada ni autoriza campos nuevos por su nombre.
+No se presenta como historial general de actividad: tickets, conversaciones y
+cambios de cuenta todavía no tienen una fuente de eventos integrada.

@@ -3,6 +3,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   fs.writeFileSync(config,configured());clearRate();scenario('normal');
   const u=jar();const signedIn=await login(u);await u.call('invoices');
   check('login de servicio único habilita SIRO configurado',()=>assert.equal(signedIn.data.payments_enabled,true));
+  check('login mantiene imputación deshabilitada por configuración',()=>assert.equal(signedIn.data.phantom_posting_enabled,false));
   const restored=await u.call('bootstrap');check('bootstrap conserva habilitación SIRO',()=>assert.equal(restored.data.payments_enabled,true));
   for(const b of [{idt:'123',Importe:1},{idt:'123',IDA:5},{idt:'123',URL_OK:'https://evil.invalid'},{idt:123}]) {
     const r=await u.call('payment-create',b);check('pago rechaza campos/control cliente',()=>assert.equal(r.status,400));
@@ -31,6 +32,12 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   check('nueva sesión recupera y confirma SIRO sin tocar Phantom',()=>{assert.equal(r.data.state,'CONFIRMED');assert.equal(r.data.siro_payment_confirmed,true);assert.equal(r.data.phantom_payment_posted,false);});
   const postingConfigured=()=>configured().replace("'mode'=>'phantom'","'mode'=>'phantom','phantom_posting'=>['enabled'=>true,'lab_ida'=>1,'crm_url'=>'https://fixture.invalid/PHANTOM/Includes/CRM/API_CRM.php','origin'=>'SIRO Mi USITTEL']");
   fs.writeFileSync(config,postingConfigured());
+  const fresh=jar();clearRate();const freshLogin=await login(fresh);
+  check('login habilita consulta de imputación sin necesitar recargar',()=>assert.equal(freshLogin.data.phantom_posting_enabled,true));
+  const freshBootstrap=await fresh.call('bootstrap');
+  check('login y recarga conservan las mismas habilitaciones',()=>{assert.equal(freshLogin.data.phantom_posting_enabled,freshBootstrap.data.phantom_posting_enabled);assert.equal(freshLogin.data.payments_enabled,freshBootstrap.data.payments_enabled);});
+  await fresh.call('logout',{});const signedOut=await fresh.call('bootstrap');
+  check('logout elimina ambas habilitaciones',()=>{assert.equal(signedOut.data.phantom_posting_enabled,false);assert.equal(signedOut.data.payments_enabled,false);});
   r=await recovered.call('bootstrap');check('bootstrap habilita escritura Phantom sólo con compuerta explícita',()=>assert.equal(r.data.phantom_posting_enabled,true));
   await recovered.call('invoices');
   r=await recovered.call('payment-post',{attempt_id:second.attempt_id},{noCsrf:true});check('imputación exige CSRF',()=>assert.equal(r.status,403));

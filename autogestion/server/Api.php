@@ -91,7 +91,10 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             $_SESSION['authorized_services']=$discovery['services'];$_SESSION['services_unavailable']=$discovery['servicesUnavailable'];
             $_SESSION['service_revision']=bin2hex(random_bytes(16));
         }
-        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],'payments_enabled'=>siroLabService(siroConfig($c),array_map('intval',array_column($_SESSION['authorized_services']??[],'id')),$_SESSION['selected_ida']??null)]+serviceSession());
+        $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
+        jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],
+            'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
+            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected)]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);

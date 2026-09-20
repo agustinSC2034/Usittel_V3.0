@@ -200,7 +200,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
-      authenticated = false; applyServices({}); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
+      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
     return;
@@ -268,7 +268,7 @@ async function handleError(error) {
   if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
     dataGeneration++;
-    authenticated = false; applyServices({}); clearData(); runtime.error = ''; location.hash = '/login';
+    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
     render(); toast(error.message);
@@ -308,7 +308,7 @@ async function boot() {
     demoStrip.hidden = session.mode !== 'demo';
     if (authenticated && runtime.mode === 'phantom') await loadOverview(); else render();
   } catch(error) {
-    authenticated = false; applyServices({}); clearData();
+    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false }); clearData();
     app.innerHTML = `<main id="main" class="page"><h1>Mi USITTEL</h1><p role="alert">${e(error.message)}</p><div class="dialog-actions">${button('Volver a intentar','boot-retry')}</div></main>`;
   }
 }

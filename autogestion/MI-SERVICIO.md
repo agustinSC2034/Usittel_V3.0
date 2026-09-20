@@ -62,7 +62,8 @@ configuración privada ni ninguna ONU en esta entrega.
 
 ## Speedtest
 
-La UI abre https://www.speedtest.net/ en otra pestaña con noopener/noreferrer.
+La UI abre http://velocidad.usittel.com.ar/speedtest/ en otra pestaña con
+noopener/noreferrer. Es el test actual de USITTEL y todavía funciona por HTTP.
 Se retiró Meter.net y sus excepciones CSP; no hay iframe ni medición automática.
 El módulo LibreSpeed local se conserva inactivo para futura integración propia.
 Requisitos del servidor: [SPEEDTEST-USITTEL.md](SPEEDTEST-USITTEL.md).

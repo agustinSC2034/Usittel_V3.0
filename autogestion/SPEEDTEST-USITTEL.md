@@ -25,6 +25,6 @@ terminada. El tráfico debe ir directamente navegador-servidor de medición, nun
 por el backend de Mi USITTEL. Telemetría y consulta de IP/ISP permanecen apagadas.
 No hace falta permitir iframes si usamos el motor local y esos endpoints.
 
-Hasta esa validación, Mi servicio ofrece Abrir Speedtest en una pestaña nueva.
+Hasta esa validación, Mi servicio abre el test actual de USITTEL en una pestaña nueva.
 
 Referencia: https://github.com/librespeed/speedtest/blob/master/doc.md

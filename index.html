@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -20,18 +20,15 @@
   <!-- Tailwind CSS (build de producción) -->
   <link rel="stylesheet" href="assets/css/tailwind.output.css">
 
-  <!-- Google Fonts: Poppins & Inter -->
+  <!-- Typography shared across the renewed home -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
 
   <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- Three.js Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -40,687 +37,6 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-  <!-- reCAPTCHA -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-  <style>
-    /* ================================== */
-    /* ===    PROMO BAR STYLES        === */
-    /* ================================== */
-    .promo-bar {
-      animation: slideDown 0.5s ease-out;
-    }
-
-    @keyframes slideDown {
-      from {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* Navbar sticky arriba cuando se hace scroll */
-    header.navbar-section {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background-color: white;
-    }
-
-    /* ================================== */
-    /* ===         NAV.CSS            === */
-    /* ================================== */
-    .navbar-section *,
-    .navbar-section *::before,
-    .navbar-section *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    .navbar-section {
-      font-family: "Poppins", "Segoe UI", sans-serif;
-      font-size: 17px;
-      color: #3c4043;
-    }
-
-    .navbar {
-      background-color: white;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-      position: sticky;
-      top: 0;
-      width: 100%;
-      z-index: 999;
-    }
-
-    .navbar-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 34px;
-      height: 69px;
-      width: 100%;
-      max-width: 1500px;
-      margin: 0 auto;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      padding: 6px;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .logo:hover {
-      background-color: rgba(60, 64, 67, 0.08);
-    }
-
-    .logo img {
-      height: 39px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 12px;
-      list-style: none;
-    }
-
-    .nav-links li a {
-      text-decoration: none;
-      color: #60666b;
-      font-size: 17px;
-      font-weight: 500;
-      padding: 13px 17px;
-      border-radius: 8px;
-      transition: background-color 0.2s ease, color 0.2s ease;
-    }
-
-    .nav-links li a:hover {
-      background-color: rgba(60, 64, 67, 0.06);
-      color: #202020;
-    }
-
-    .nav-links li a.active {
-      color: #1a73e8;
-      font-weight: 600;
-    }
-
-    .nav-links .dropdown {
-      position: relative;
-    }
-
-    .nav-links .dropdown-menu {
-      position: absolute;
-      top: 110%;
-      left: 0;
-      background-color: white;
-      padding: 8px 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      list-style: none;
-      min-width: 180px;
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .nav-links .dropdown-menu li a {
-      display: block;
-      padding: 11px 17px;
-      color: #3c4043;
-      font-size: 16px;
-      border-radius: 4px;
-    }
-
-    .nav-links .dropdown:hover .dropdown-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-button,
-    .nav-button2,
-    .nav-button-green {
-      font-size: 16px;
-      padding: 11px 22px;
-      border-radius: 999px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-    }
-
-    .nav-button-green {
-      background-color: #30a172;
-      color: white !important;
-    }
-
-    .nav-button-green:hover {
-      background-color: #188b48;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-button2 {
-      background-color: #1a73e8;
-      color: white !important;
-    }
-
-    .nav-button2:hover {
-      background-color: #175ca7;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    .hamburger span {
-      width: 24px;
-      height: 3px;
-      background-color: #3c4043;
-      border-radius: 2px;
-    }
-
-    .mobile-menu-slide {
-      position: fixed;
-      top: 0;
-      left: -300px;
-      width: 280px;
-      height: 100vh;
-      background-color: white;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
-      gap: 16px;
-      transition: left 0.3s ease-in-out;
-      z-index: 1001;
-    }
-
-    .mobile-menu-slide.show {
-      left: 0;
-    }
-
-    .mobile-menu-slide a {
-      text-decoration: none;
-      color: #3c4043;
-      font-size: 16px;
-      padding: 10px 8px;
-      border-radius: 6px;
-    }
-
-    .mobile-menu-slide a.active {
-      color: #1a73e8;
-      font-weight: 600;
-    }
-
-    .mobile-menu-slide .nav-button-green,
-    .mobile-menu-slide .nav-button2 {
-      padding: 12px 18px;
-      margin-top: 8px;
-      text-align: center;
-      display: block;
-    }
-
-    .mobile-menu-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mobile-menu-header img {
-      height: 32px;
-    }
-
-    .close-menu {
-      background: none;
-      border: none;
-      font-size: 28px;
-      color: #3c4043;
-      cursor: pointer;
-      padding: 0;
-      line-height: 1;
-    }
-
-    .mobile-menu-slide hr {
-      border: none;
-      border-top: 1px solid #ddd;
-      margin-bottom: 16px;
-    }
-
-    .submenu-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .submenu-toggle {
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: 16px;
-      text-align: left;
-      color: #3c4043;
-      padding: 10px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 400;
-    }
-
-    .submenu {
-      display: none;
-      flex-direction: column;
-      padding-left: 12px;
-      margin-top: -4px;
-    }
-
-    .submenu.show {
-      display: flex;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-    }
-
-    .overlay.show {
-      display: block;
-    }
-
-    .desktop-only {
-      display: flex;
-    }
-
-    .mobile-only {
-      display: none;
-    }
-
-    .mobile-header-bar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .navbar.sticky-shadow {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 1024px) {
-      .navbar-container {
-        padding: 0 24px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .mobile-only {
-        display: flex !important;
-      }
-
-      .desktop-only {
-        display: none;
-      }
-
-      .hamburger {
-        display: flex;
-      }
-
-      .mobile-header-bar {
-        display: flex;
-      }
-
-      /* Mejoras para botones CTA en móviles */
-      .hero-content .cta-button {
-        font-size: 16px;
-        padding: 14px 24px !important;
-        min-height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-        border-radius: 25px;
-      }
-
-      .hero-content .flex {
-        gap: 12px;
-        padding: 0 16px;
-      }
-
-      /* Asegurar que los botones no se rompan en pantallas muy pequeñas */
-      @media (max-width: 480px) {
-        .hero-content .cta-button {
-          font-size: 15px;
-          padding: 12px 20px !important;
-          min-height: 48px;
-        }
-
-        .hero-content h1 {
-          font-size: 2rem !important;
-          line-height: 1.2;
-        }
-
-        .hero-content p {
-          font-size: 1rem !important;
-          margin-bottom: 2rem !important;
-        }
-      }
-    }
-
-    /* ================================== */
-    /* ===       CUSTOM STYLES        === */
-    /* ================================== */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      background-color: #f8f9fa;
-    }
-
-    #hero-container {
-      position: relative;
-      background-color: #0c0c1d;
-      /* Fallback color */
-    }
-
-    #hero-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      /* Ensure content is above canvas */
-    }
-
-    .cta-button {
-      transition: all 0.3s ease;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    .plan-toggle {
-      display: inline-flex;
-      background-color: #e9e9e9;
-      border-radius: 999px;
-      padding: 6px;
-    }
-
-    .plan-toggle button {
-      padding: 10px 24px;
-      border: none;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      background-color: transparent;
-      color: #5f6368;
-      transition: all 0.3s ease;
-    }
-
-    .plan-toggle button.active {
-      background-color: #1a73e8;
-      color: white;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    h1,
-    h2,
-    h3 {
-      font-family: "Poppins", sans-serif;
-    }
-
-    .faq-answer {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out,
-        padding 0.5s ease-in-out;
-      padding: 0;
-    }
-
-    .faq-question.open+.faq-answer {
-      padding-top: 0;
-      padding-bottom: 0;
-      opacity: 1;
-    }
-
-    .faq-icon {
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .faq-question.open .faq-icon {
-      transform: rotate(45deg);
-    }
-
-    .whatsapp-float {
-      position: left;
-      bottom: 15px;
-      right: 15px;
-      width: 50px;
-      height: 50px;
-      background-color: #25d366;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 35px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-      transition: transform 0.2s ease;
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-
-    .mesh-carousel-container {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .mesh-slide {
-      display: none;
-    }
-
-    .mesh-slide.active {
-      display: block;
-    }
-
-    .mesh-dots-container {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .mesh-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background-color: #ccc;
-      border-radius: 50%;
-      margin: 0 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .mesh-dot.active {
-      background-color: #1a73e8;
-    }
-
-    /* ================================== */
-    /* ===     NUEVO EFECTO HOVER     === */
-    /* ================================== */
-    .hover-glow-card {
-      position: relative;
-      border: 2px solid transparent;
-      transition: transform 0.3s ease, border-color 0.3s ease,
-        box-shadow 0.3s ease;
-    }
-
-    .hover-glow-card:hover {
-      transform: translateY(-5px);
-      border-color: #30a172;
-      /* Verde de Usittel */
-      box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
-        0 8px 10px -6px rgba(48, 161, 114, 0.15);
-    }
-
-    /* ESTILOS PARA EL MAPA (NUEVO) */
-    #coverage-map {
-      height: 600px;
-      width: 100%;
-      border-radius: 12px;
-    }
-
-    /* CONTENEDOR RESPONSIVE PARA MAPA Y VALIDADOR */
-    .coverage-container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 1024px) {
-      .coverage-container {
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-      }
-    }
-
-    .coverage-validator {
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e5e7eb;
-    }
-
-    .coverage-map-container {
-      background: white;
-      padding: 1rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e5e7eb;
-    }
-
-    /* ANIMACIONES PARA EL VALIDADOR DE COBERTURA */
-    @keyframes buttonPulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-      }
-
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-      }
-
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-      }
-    }
-
-    @keyframes inputShake {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      25% {
-        transform: translateX(-5px);
-      }
-
-      75% {
-        transform: translateX(5px);
-      }
-    }
-
-    @keyframes resultFadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes spinnerRotate {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .button-animate {
-      animation: buttonPulse 0.6s ease-out;
-    }
-
-    .input-shake {
-      animation: inputShake 0.5s ease-in-out;
-    }
-
-    .result-animate {
-      animation: resultFadeIn 0.8s ease-out;
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #ffffff;
-      animation: spinnerRotate 1s ease-in-out infinite;
-    }
-  </style>
 
   <!-- Meta Tags -->
   <meta name="description"
@@ -737,17 +53,23 @@
   <meta name="twitter:description"
     content="Internet por fibra óptica, WiFi Mesh y TV digital en Tandil. Planes para hogares y empresas. Atención personalizada y soporte local." />
   <meta name="twitter:image" content="/assets/img/logos/usittel-logo_and_name.png" />
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  <script src="js/site.js" defer></script>
+  <script src="js/home.js" defer></script>
+  <script src="js/home-plans.js" defer></script>
+  <link rel="stylesheet" href="assets/css/coverage.css">
+  <script src="js/office-map.js" defer></script>
 </head>
 
-<body class="text-gray-800">
+<body class="public-page home-page text-gray-800">
+  <a class="skip-link" href="#main-content">Ir al contenido</a>
   <!-- =========== Header / Navigation =========== -->
   <header class="navbar-section">
     <nav class="navbar">
       <div class="navbar-container">
         <div class="mobile-header-bar mobile-only">
-          <div class="hamburger" id="hamburger">
-            <span></span><span></span><span></span>
-          </div>
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
           <a href="index.html" class="logo">
             <img src="assets/icons/usittel-logo.png" alt="Usittel Logo" />
           </a>
@@ -760,7 +82,7 @@
             </picture>
           </a>
           <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#" class="active" aria-current="page">Home</a></li>
             <li class="dropdown">
               <a href="#plans">Productos ▾</a>
               <ul class="dropdown-menu">
@@ -780,15 +102,15 @@
         </div>
       </div>
       <div class="overlay" id="overlay"></div>
-      <div class="mobile-menu-slide" id="mobileMenu">
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
         <div class="mobile-menu-header">
           <img src="assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
-          <button class="close-menu" id="closeMenu">&times;</button>
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
         </div>
         <hr />
-        <a href="#" class="active">Home</a>
+        <a href="#" class="active" aria-current="page">Home</a>
         <div class="submenu-container">
-          <button class="submenu-toggle" id="toggleProducts">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
             Productos ▾
           </button>
           <div class="submenu" id="productsSubmenu">
@@ -803,26 +125,18 @@
     </nav>
   </header>
 
-  <!-- Barra de Promociones -->
-  <div
-    class="promo-bar bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 text-white py-2.5 text-center relative overflow-hidden">
-    <div class="container mx-auto px-4 flex items-center justify-center gap-3 text-sm md:text-base">
-      <i class="fas fa-gift animate-bounce hidden sm:inline"></i>
-      <span class="font-semibold">NUEVO LANZAMIENTO:</span>
-      <span class="font-medium">¡Llegaron los 1000 MEGAS a Tandil! Simétricos y con Wi-Fi 6.</span>
-      <a href="#plans"
-        class="ml-2 bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold hover:bg-gray-100 transition-colors hidden md:inline-block">
-        Ver planes
-      </a>
-    </div>
-  </div>
-
-  <main>
+  <main id="main-content">
     <!-- =========== HERO SECTION =========== -->
     <section id="hero-container" class="relative flex items-center justify-center text-white text-center px-4 sm:px-6"
-      style="background-size: cover; min-height: calc(100vh - 0px)">
-      <!-- Ajuste: Menos opacidad para ver más la imagen de fondo -->
-      <div class="absolute inset-0 bg-black" style="opacity:0.32"></div>
+      aria-label="Internet por fibra óptica en Tandil">
+      <!-- Responsive first image is discovered before JavaScript loads. -->
+      <div id="hero-carousel-container" aria-hidden="true">
+        <picture class="hero-carousel-bg active">
+          <source media="(max-width: 900px)" srcset="assets/img/hero/mobile/hero_mobile.webp">
+          <img src="assets/img/hero/web/hero_final_1.webp" alt="" width="1408" height="768" fetchpriority="high">
+        </picture>
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content relative z-10 max-w-4xl mx-auto">
         <picture>
           <source srcset="assets/img/logos/USITTEL_BLACK-removebg-preview.webp" type="image/webp"><img
@@ -846,165 +160,6 @@
         </div>
       </div>
     </section>
-    <script>
-      // HERO: Carrusel para web, fondo fijo aleatorio para mobile
-      document.addEventListener("DOMContentLoaded", function () {
-        const heroImagesDesktop = [
-          "assets/img/hero/web/hero_final_1.webp",
-          "assets/img/hero/web/hero_final_2.webp",
-          "assets/img/hero/web/hero_final_4.webp",
-          "assets/img/hero/web/hero_final_5.webp",
-          "assets/img/hero/web/hero_final_6.webp",
-          "assets/img/hero/web/hero_final_8.webp",
-          "assets/img/hero/web/hero_final_10.webp",
-        ];
-        const heroImagesMobile = [
-          "assets/img/hero/mobile/hero_mobile.webp",
-          "assets/img/hero/mobile/hero_mobile.webp",
-          "assets/img/hero/mobile/hero_final_7.webp",
-          "assets/img/hero/mobile/hero_mobile_final_4.webp",
-        ];
-
-        function isMobile() {
-          return window.innerWidth <= 900;
-        }
-
-        const heroContainer = document.getElementById("hero-container");
-        let carouselInterval;
-        let currentSlide = 0;
-
-        function initHero() {
-          if (!heroContainer) return;
-
-          // Limpiar todo lo anterior
-          const existingBgs = document.getElementById('hero-carousel-container');
-          if (existingBgs) existingBgs.remove();
-          const existingControls = document.querySelectorAll('.hero-carousel-control');
-          existingControls.forEach(el => el.remove());
-          clearInterval(carouselInterval);
-          heroContainer.style.backgroundImage = 'none';
-
-          if (isMobile()) {
-            // Lógica original para mobile
-            const lastImgKey = "lastHeroImgMobile";
-            const lastImg = sessionStorage.getItem(lastImgKey);
-            const availableImages = heroImagesMobile.filter((img) => img !== lastImg);
-            const pool = availableImages.length > 0 ? availableImages : heroImagesMobile;
-            const randomImg = pool[Math.floor(Math.random() * pool.length)];
-            heroContainer.style.backgroundImage = `url('${randomImg}')`;
-            sessionStorage.setItem(lastImgKey, randomImg);
-
-            heroContainer.classList.remove('group');
-          } else {
-            // Lógica de carrusel para desktop
-            const startIdx = Math.floor(Math.random() * heroImagesDesktop.length);
-            currentSlide = startIdx;
-
-            const carouselContainer = document.createElement('div');
-            carouselContainer.id = 'hero-carousel-container';
-            carouselContainer.className = 'absolute inset-0 z-0 overflow-hidden rounded-[inherit]';
-
-            // Contenedor de fondos
-            heroImagesDesktop.forEach((img, index) => {
-              const bgDiv = document.createElement('div');
-              bgDiv.className = `hero-carousel-bg absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`;
-              bgDiv.style.backgroundImage = `url('${img}')`;
-              carouselContainer.appendChild(bgDiv);
-            });
-
-            // Contenedor de controles (indicadores) se saca del carouselContainer 
-            // para evitar que queden detras de las capas de oscurecimiento
-            const controlsContainer = document.createElement('div');
-            controlsContainer.className = 'hero-carousel-control absolute bottom-12 left-0 right-0 flex justify-center gap-3 z-30 pointer-events-auto';
-            heroImagesDesktop.forEach((_, index) => {
-              const dot = document.createElement('div');
-              dot.className = `carousel-dot w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${index === currentSlide ? 'bg-white' : 'bg-white/50 hover:bg-white/80'} shadow-md`;
-              dot.addEventListener('click', (e) => {
-                e.stopPropagation();
-                goToSlide(index);
-              });
-              controlsContainer.appendChild(dot);
-            });
-
-            // Flechas
-            const createArrow = (isPrev) => {
-              const arrow = document.createElement('button');
-              arrow.className = `hero-carousel-control absolute top-1/2 -translate-y-1/2 ${isPrev ? 'left-4 sm:left-10' : 'right-4 sm:right-10'} w-12 h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center z-30 transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-lg border-none pointer-events-auto`;
-              arrow.innerHTML = `<i class="fas fa-chevron-${isPrev ? 'left' : 'right'} text-xl"></i>`;
-              arrow.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evitar problemas de click con capas subyacentes
-                if (isPrev) goToSlide(currentSlide === 0 ? heroImagesDesktop.length - 1 : currentSlide - 1);
-                else goToSlide((currentSlide + 1) % heroImagesDesktop.length);
-              });
-              return arrow;
-            };
-
-            heroContainer.classList.add('group');
-
-            // Insertar carrusel al principio del contenedor hero
-            heroContainer.insertBefore(carouselContainer, heroContainer.firstChild);
-
-            // Los controles y flechas van al final del heroContainer para asegurar que están por encima de todos los elementos oscuros
-            heroContainer.appendChild(controlsContainer);
-            heroContainer.appendChild(createArrow(true));
-            heroContainer.appendChild(createArrow(false));
-
-            // Iniciar intervalo más rápido
-            carouselInterval = setInterval(() => {
-              goToSlide((currentSlide + 1) % heroImagesDesktop.length);
-            }, 4500); // 4.5 segundos
-          }
-        }
-
-        function goToSlide(index) {
-          if (isMobile()) return;
-          const container = document.getElementById('hero-carousel-container');
-          if (!container) return;
-
-          const bgs = container.querySelectorAll('.hero-carousel-bg');
-
-          // Buscar en document ya que los controles ya no están dentro de container
-          const dots = document.querySelectorAll('.carousel-dot');
-
-          if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-100', 'opacity-0');
-          if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white', 'bg-white/50');
-
-          currentSlide = index;
-
-          if (bgs[currentSlide]) bgs[currentSlide].classList.replace('opacity-0', 'opacity-100');
-          if (dots[currentSlide]) dots[currentSlide].classList.replace('bg-white/50', 'bg-white');
-
-          // Reiniciar intervalo
-          clearInterval(carouselInterval);
-          carouselInterval = setInterval(() => {
-            goToSlide((currentSlide + 1) % heroImagesDesktop.length);
-          }, 4500);
-        }
-
-        let wasMobile = isMobile();
-
-        // Ajustar altura del hero para ocupar el 100vh menos la altura del nav
-        function setHeroHeight() {
-          const nav = document.querySelector(".navbar-section");
-          if (nav && heroContainer) {
-            const navHeight = nav.offsetHeight;
-            heroContainer.style.minHeight = `calc(100vh - ${navHeight}px)`;
-          }
-        }
-
-        initHero();
-        setHeroHeight();
-
-        window.addEventListener("resize", function () {
-          const isNowMobile = isMobile();
-          if (isNowMobile !== wasMobile) {
-            wasMobile = isNowMobile;
-            initHero();
-          }
-          setHeroHeight();
-        });
-      });
-    </script>
 
     <!-- =========== Services Section =========== -->
     <section class="py-16 md:py-24 bg-white" id="tv-section">
@@ -1019,9 +174,9 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
+          <div class="service-item">
             <div class="text-blue-600 mb-4">
-              <i class="fas fa-tv fa-3x"></i>
+              <i aria-hidden="true" class="fas fa-tv fa-3x"></i>
             </div>
             <h3 class="text-2xl font-bold mb-3">USITTEL TV</h3>
             <p class="text-gray-600">
@@ -1031,9 +186,9 @@
             </p>
           </div>
 
-          <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
+          <div class="service-item">
             <div class="text-blue-600 mb-4">
-              <i class="fas fa-rocket fa-3x"></i>
+              <i aria-hidden="true" class="fas fa-wifi fa-3x"></i>
             </div>
             <h3 class="text-2xl font-bold mb-3">Internet Fibra Óptica</h3>
             <p class="text-gray-600">
@@ -1042,9 +197,9 @@
             </p>
           </div>
 
-          <div class="bg-gray-50 px-12 py-10 rounded-xl text-center hover-glow-card">
+          <div class="service-item">
             <div class="text-blue-600 mb-4">
-              <i class="fas fa-wifi fa-3x"></i>
+              <i aria-hidden="true" class="fas fa-wifi fa-3x"></i>
             </div>
             <h3 class="text-2xl font-bold mb-3">WiFi Mesh</h3>
             <p class="text-gray-600">
@@ -1068,7 +223,7 @@
           </p>
         </div>
         <div class="flex justify-center mb-8 md:mb-10">
-          <div class="plan-toggle scale-90">
+          <div class="plan-toggle" role="group" aria-label="Tipo de plan">
             <button id="internet-only-btn" class="active">
               Solo Internet
             </button>
@@ -1080,115 +235,22 @@
         <!-- Contenedor para la vista por defecto (Internet y Combos) -->
         <div id="default-plans-view">
 
-          <div id="premium-giga-container" class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
-            <style>
-              @keyframes slideFadePromo {
-
-                0%,
-                25% {
-                  opacity: 1;
-                  transform: scale(1.05) translateY(2%);
-                }
-
-                33%,
-                92% {
-                  opacity: 0;
-                  transform: scale(1.1) translateY(2%);
-                }
-
-                100% {
-                  opacity: 1;
-                  transform: scale(1.05) translateY(2%);
-                }
-              }
-
-              .promo-slideshow {
-                -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                -webkit-mask-composite: source-in;
-                mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                mask-composite: intersect;
-              }
-
-              .promo-slideshow img {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center 20%;
-              }
-
-              .promo-slideshow img:nth-child(1) {
-                animation: slideFadePromo 9s infinite 0s;
-              }
-
-              .promo-slideshow img:nth-child(2) {
-                animation: slideFadePromo 9s infinite 3s;
-                opacity: 0;
-              }
-
-              .promo-slideshow img:nth-child(3) {
-                animation: slideFadePromo 9s infinite 6s;
-                opacity: 0;
-              }
-            </style>
-            <div
-              class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-              <div
-                class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
-                NUEVA VELOCIDAD
-              </div>
-
-              <div
-                class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
-                <div class="flex-1 w-full text-left relative z-20">
-                  <div
-                    class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
-                    TECNOLOGÍA WI-FI 6
-                  </div>
-                  <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">1000
-                    MEGAS</h3>
-                  <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y disfrutá sin
-                    interrupciones. La máxima experiencia de conectividad en Tandil.</p>
-
-                  <div class="my-6">
-                    <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$54.999</span>
-                    <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
-                    <p class="text-sm text-gray-300 mt-1 drop-shadow-md">A partir del 1er mes.</p>
-                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274; Sin promoción temporal.</p>
-                  </div>
-
-                  <ul class="space-y-3 mb-8 relative z-20">
-                    <li class="flex items-start"><i
-                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                        class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6 (802.11ax):</strong> Mayor alcance y
-                        capacidad para múltiples dispositivos sin lag.</span></li>
-                    <li class="flex items-start"><i
-                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                        class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para <strong>Gaming competitivo
-                          y Streaming 4K/8K</strong>.</span></li>
-                    <li class="flex items-start"><i
-                        class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                        class="text-gray-100 drop-shadow-md"><strong>Soporte prioritario:</strong> Atención por WhatsApp
-                        y técnica exclusiva.</span></li>
-                  </ul>
-
-                  <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                    class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
-                    <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
-                  </a>
-                </div>
-
-                <div
-                  class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
-                  <div class="promo-slideshow absolute inset-0">
-                    <img src="assets/img/imagen1000_nuevo.JPG" alt="1000 Megas" />
-                    <img src="assets/img/nueva_imagen1000_2.JPG" alt="1000 Megas" />
-                    <img src="assets/img/Nueva_imagen1000_3.JPG" alt="1000 Megas" />
-                  </div>
-                </div>
-              </div>
+          <div id="premium-giga-container" class="giga-offer">
+            <div class="giga-copy">
+              <p class="giga-eyebrow">NUEVA VELOCIDAD</p>
+              <p class="giga-technology">TECNOLOGÍA WI-FI 6</p>
+              <h3>1000 MEGAS</h3>
+              <p>Jugá, creá y disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.</p>
+              <div class="giga-price"><strong>$54.999</strong> <span>/mes</span></div>
+              <p class="giga-terms">A partir del 1er mes.<br><i class="fas fa-lock" aria-hidden="true"></i> Sin promoción temporal.</p>
+              <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="home-button">Solicitar Plan 1000 Megas</a>
             </div>
+            <img class="giga-photo" src="assets/img/home/gaming-1000.webp" alt="Jugador disfrutando de videojuegos en un espacio con iluminación azul y verde" width="1400" height="1000" loading="lazy" decoding="async">
+            <ul class="giga-benefits">
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i><span><strong>Wi-Fi 6 (802.11ax):</strong> Mayor alcance y capacidad para múltiples dispositivos sin lag.</span></li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i><span>Latencia ultra baja, ideal para <strong>Gaming competitivo y Streaming 4K/8K.</strong></span></li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i><span><strong>Soporte prioritario:</strong> Atención por WhatsApp y técnica exclusiva.</span></li>
+            </ul>
           </div>
 
           <div id="plan-cards-container"
@@ -1262,7 +324,7 @@
           <!-- Leyenda Aclaratoria -->
           <div class="text-center mt-12 pt-8 border-t border-gray-200">
             <p class="text-sm text-gray-500 max-w-2xl mx-auto">
-              <i class="fas fa-info-circle mr-1 text-blue-500"></i>Importante:
+              <i aria-hidden="true" class="fas fa-info-circle mr-1 text-blue-500"></i>Importante:
               La contratación de los packs premium requiere contar con un
               abono básico de Televisión activo. No pueden ser adquiridos de
               forma individual.
@@ -1291,29 +353,29 @@
             </p>
           </div>
           <!-- 2. Carrusel (mobile: segundo | desktop: col-2, abarca 2 filas) -->
-          <div class="w-full max-w-sm md:max-w-md mx-auto lg:row-span-2">
+          <div class="mesh-visual">
             <div class="mesh-carousel-container rounded-large">
               <div class="mesh-slide active">
                 <picture>
-                  <source srcset="assets/img/mesh/mesh1.webp" type="image/webp"><img src="assets/img/mesh/mesh1.png"
+                  <source srcset="assets/img/mesh/mesh1.webp" type="image/webp"><img loading="lazy" decoding="async" src="assets/img/mesh/mesh1.png"
                     class="rounded-xl w-full" alt="Equipo WiFi Mesh 1" />
                 </picture>
               </div>
               <div class="mesh-slide">
                 <picture>
-                  <source srcset="assets/img/mesh/mesh2.webp" type="image/webp"><img src="assets/img/mesh/mesh2.png"
+                  <source srcset="assets/img/mesh/mesh2.webp" type="image/webp"><img loading="lazy" decoding="async" src="assets/img/mesh/mesh2.png"
                     class="rounded-xl w-full" alt="Equipo WiFi Mesh 2" />
                 </picture>
               </div>
               <div class="mesh-slide">
                 <picture>
-                  <source srcset="assets/img/mesh/mesh3.webp" type="image/webp"><img src="assets/img/mesh/mesh3.png"
+                  <source srcset="assets/img/mesh/mesh3.webp" type="image/webp"><img loading="lazy" decoding="async" src="assets/img/mesh/mesh3.png"
                     class="rounded-xl w-full" alt="Equipo WiFi Mesh 3" />
                 </picture>
               </div>
               <div class="mesh-slide">
                 <picture>
-                  <source srcset="assets/img/mesh/mesh4.webp" type="image/webp"><img src="assets/img/mesh/mesh4.png"
+                  <source srcset="assets/img/mesh/mesh4.webp" type="image/webp"><img loading="lazy" decoding="async" src="assets/img/mesh/mesh4.png"
                     class="rounded-xl w-full" alt="Equipo WiFi Mesh 4" />
                 </picture>
               </div>
@@ -1322,12 +384,7 @@
           </div>
           <!-- 3. Card de precio (mobile: tercero | desktop: col-1 fila-2) -->
           <div
-            class="bg-gray-50 p-5 rounded-lg hover-glow-card transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-lg"
-            style="
-                border-color: #30a172;
-                box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15),
-                  0 8px 10px -6px rgba(48, 161, 114, 0.15);
-              ">
+            class="mesh-offer">
             <h3 class="text-xl md:text-2xl font-bold">Plan USITTEL MESH</h3>
             <p class="text-3xl md:text-4xl font-extrabold text-gray-900 my-3">
               $6.999
@@ -1335,21 +392,21 @@
             </p>
             <ul class="space-y-2 text-gray-600 mb-5">
               <li class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última
+                <i aria-hidden="true" class="fas fa-check-circle text-green-500 mr-2"></i>Innovación: tecnología MESH de última
                 generación.
               </li>
               <li class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4
+                <i aria-hidden="true" class="fas fa-check-circle text-green-500 mr-2"></i>Flexibilidad: se adapta a tu hogar (hasta 4
                 equipos).
               </li>
               <li class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos
+                <i aria-hidden="true" class="fas fa-check-circle text-green-500 mr-2"></i>Conexión confiable: ideal para casas con muchos
                 dispositivos.
               </li>
             </ul>
             <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
               class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-              <i class="fab fa-whatsapp"></i> Consultar
+              <i aria-hidden="true" class="fab fa-whatsapp"></i> Consultar
             </a>
           </div>
         </div>
@@ -1361,59 +418,7 @@
             Fibra Óptica <span aria-hidden="true">→</span></a>
         </div>
       </div>
-      <script>
-        // Carrousel automático para Mesh
-        document.addEventListener("DOMContentLoaded", function () {
-          const meshSlides = document.querySelectorAll(".mesh-slide");
-          const meshDotsContainer = document.getElementById(
-            "mesh-dots-container"
-          );
-          let currentMeshSlide = 0;
-          let meshInterval;
 
-          function createMeshDots() {
-            if (!meshDotsContainer) return;
-            meshDotsContainer.innerHTML = "";
-            meshSlides.forEach((_, i) => {
-              const dot = document.createElement("button");
-              dot.classList.add("mesh-dot");
-              if (i === 0) dot.classList.add("active");
-              dot.addEventListener("click", () => {
-                showMeshSlide(i);
-                resetMeshInterval();
-              });
-              meshDotsContainer.appendChild(dot);
-            });
-          }
-
-          function showMeshSlide(n) {
-            if (!meshSlides.length) return;
-            meshSlides[currentMeshSlide].classList.remove("active");
-            meshDotsContainer.children[currentMeshSlide].classList.remove(
-              "active"
-            );
-            currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-            meshSlides[currentMeshSlide].classList.add("active");
-            meshDotsContainer.children[currentMeshSlide].classList.add(
-              "active"
-            );
-          }
-
-          function nextMeshSlide() {
-            showMeshSlide(currentMeshSlide + 1);
-          }
-
-          function resetMeshInterval() {
-            clearInterval(meshInterval);
-            meshInterval = setInterval(nextMeshSlide, 1500);
-          }
-
-          if (meshSlides.length > 1) {
-            createMeshDots();
-            meshInterval = setInterval(nextMeshSlide, 1500);
-          }
-        });
-      </script>
     </section>
 
     <!-- =========== Network & Coverage Section (ORDEN 4 - REDISEÑADA CON LAYOUT LADO A LADO) =========== -->
@@ -1439,18 +444,16 @@
             <!-- Contenedor del validador -->
             <div class="coverage-validator">
               <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Llegamos a tu casa?</h3>
-              <p class="text-gray-600 mb-6">
-                Ingresa tu dirección y su numero (No hace falta ingresar Tandil, Buenos Aires.) Ejemplo: San Martin 550
-              </p>
+              <p id="coverage-help" class="text-gray-600 mb-6">Ingresá calle y altura de Tandil. Por ejemplo: San Martín 1000.</p>
               <div class="space-y-4">
-                <input type="text" id="address-input" placeholder="Ingresá tu dirección, ej: San Martín 550"
+                <input type="text" id="address-input" aria-label="Dirección a consultar" autocomplete="street-address" placeholder="Ej.: San Martín 1000"
                   class="w-full px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
                 <button id="coverage-button"
                   class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button transition-all duration-200">
                   Consultar
                 </button>
               </div>
-              <div id="coverage-result" class="mt-6"></div>
+              <div id="coverage-result" role="status" aria-live="polite" class="mt-6"></div>
             </div>
           </div>
         </div>
@@ -1458,252 +461,57 @@
     </section>
 
     <!-- =========== FAQ Section (ORDEN 6 - CORREGIDA) =========== -->
-    <section class="py-16 md:py-24 bg-white">
-      <div class="container mx-auto px-6">
-        <div class="bg-white p-8 lg:p-12 rounded-xl shadow-lg max-w-4xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-              Preguntas Frecuentes
-            </h2>
-          </div>
-          <div id="faq-accordion" class="space-y-6">
-            <!-- Pregunta 1 -->
-            <div
-              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-              <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div
-                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                  <i class="fas fa-tachometer-alt text-lg"></i>
-                </div>
-                <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué significa que la velocidad sea "simétrica"?
-                  </h3>
-                </div>
-                <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-              </button>
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="container mx-auto">
+        <div class="faq-layout">
+          <h2 id="faq-title">Preguntas Frecuentes</h2>
+          <div id="faq-accordion">
+            <details name="home-faq" class="faq-item">
+              <summary>¿Qué significa que la velocidad sea "simétrica"?</summary>
               <div class="faq-answer">
-                <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                  <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-start gap-3">
-                      <div
-                        class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                        <i class="fas fa-arrows-up-down text-blue-600 text-xs"></i>
-                      </div>
-                      <p class="text-gray-700 leading-relaxed">
-                        Significa que tenés la misma velocidad de <strong class="text-blue-600">subida</strong> que de
-                        <strong class="text-blue-600">bajada</strong>.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                      <i class="fas fa-star text-blue-500"></i>
-                      Beneficios de la velocidad simétrica:
-                    </h4>
-                    <div class="grid md:grid-cols-2 gap-3">
-                      <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <i class="fas fa-video text-blue-500"></i>
-                        <span>Videollamadas en HD</span>
-                      </div>
-                      <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <i class="fas fa-gamepad text-blue-500"></i>
-                        <span>Gaming online fluido</span>
-                      </div>
-                      <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <i class="fas fa-cloud-upload text-green-500"></i>
-                        <span>Subir archivos rápido</span>
-                      </div>
-                      <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <i class="fas fa-share-alt text-blue-500"></i>
-                        <span>Redes sociales fluidas</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <p>Significa que tenés la misma velocidad de subida que de bajada.</p>
+                <p>Beneficios de la velocidad simétrica:</p>
+                <ul>
+                  <li>Videollamadas en HD</li>
+                  <li>Gaming online fluido</li>
+                  <li>Subir archivos rápido</li>
+                  <li>Redes sociales fluidas</li>
+                </ul>
               </div>
-            </div>
-            <!-- Pregunta 2 -->
-            <div
-              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-              <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div
-                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                  <i class="fas fa-tools text-lg"></i>
-                </div>
-                <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Cómo es el proceso de instalación?</h3>
-                </div>
-                <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-              </button>
+            </details>
+            <details name="home-faq" class="faq-item">
+              <summary>¿Cómo es el proceso de instalación?</summary>
               <div class="faq-answer">
-                <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                  <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                      Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico
-                      especializado coordinará una visita para realizar la instalación.
-                    </p>
-                  </div>
-
-                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                      <i class="fas fa-list-ol text-blue-600"></i>
-                      Pasos del proceso:
-                    </h4>
-                    <div class="space-y-3">
-                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div
-                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                          1</div>
-                        <span class="text-gray-700">Instalación del cable de fibra óptica</span>
-                      </div>
-                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div
-                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                          2</div>
-                        <span class="text-gray-700">Configuración del módem ONT</span>
-                      </div>
-                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div
-                          class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                          <i class="fas fa-check text-xs"></i>
-                        </div>
-                        <span class="text-gray-700">Pruebas de funcionamiento y entrega</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <p>Una vez que contratás el servicio y confirmamos la disponibilidad en tu domicilio, un técnico especializado coordinará una visita para realizar la instalación.</p>
+                <p>Pasos del proceso:</p>
+                <ol>
+                  <li>Instalación del cable de fibra óptica</li>
+                  <li>Configuración del módem ONT</li>
+                  <li>Pruebas de funcionamiento y entrega</li>
+                </ol>
               </div>
-            </div>
-            <!-- Pregunta 3 -->
-            <div
-              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-              <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div
-                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                  <i class="fas fa-wifi text-lg"></i>
-                </div>
-                <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Puedo usar mi propio router?</h3>
-                </div>
-                <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-              </button>
+            </details>
+            <details name="home-faq" class="faq-item">
+              <summary>¿Puedo usar mi propio router?</summary>
               <div class="faq-answer">
-                <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                  <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-start gap-3">
-                      <div
-                        class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                        <i class="fas fa-check text-green-600 text-xs"></i>
-                      </div>
-                      <p class="text-gray-700 leading-relaxed">
-                        <strong class="text-green-600">Sí, podés conectar tu propio router</strong> a nuestro módem
-                        (ONT) sin ningún problema. Es completamente compatible.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                      <i class="fas fa-star text-blue-500"></i>
-                      Sin embargo, nuestra recomendación:
-                    </h4>
-                    <div class="space-y-3">
-                      <div class="flex items-start gap-3">
-                        <div
-                          class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                          <i class="fas fa-shield-alt text-blue-600 text-xs"></i>
-                        </div>
-                        <p class="text-gray-700 text-sm">
-                          Para <strong>garantizar la mejor experiencia y cobertura</strong> en tu hogar, recomendamos
-                          usar nuestros equipos certificados
-                        </p>
-                      </div>
-                      <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                        <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                          <i class="fas fa-network-wired text-white text-xs"></i>
-                        </div>
-                        <div>
-                          <span class="font-medium text-gray-800">Solución WiFi Mesh</span>
-                          <p class="text-xs text-gray-600">Cobertura completa y uniforme en toda tu casa</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <p>Sí, podés conectar tu propio router a nuestro módem (ONT) sin ningún problema. Es completamente compatible.</p>
+                <p>Sin embargo, nuestra recomendación:</p>
+                <p>Para garantizar la mejor experiencia y cobertura en tu hogar, recomendamos usar nuestros equipos certificados.</p>
+                <p>Solución WiFi Mesh<br>Cobertura completa y uniforme en toda tu casa</p>
               </div>
-            </div>
-            <!-- Pregunta 4 -->
-            <div
-              class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-              <button class="faq-question w-full flex items-start gap-4 text-left">
-                <div
-                  class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                  <i class="fas fa-headset text-lg"></i>
-                </div>
-                <div class="flex-1 pr-4">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Qué hago si tengo problemas con el servicio?
-                  </h3>
-                </div>
-                <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-              </button>
+            </details>
+            <details name="home-faq" class="faq-item">
+              <summary>¿Qué hago si tengo problemas con el servicio?</summary>
               <div class="faq-answer">
-                <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                  <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                      Podés comunicarte con nuestro <strong class="text-blue-600">centro de atención al cliente</strong>
-                      por múltiples canales. Nuestro <strong class="text-blue-600">equipo de soporte técnico
-                        local</strong> te ayudará a resolver cualquier inconveniente rápidamente.
-                    </p>
-                  </div>
-
-                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                      <i class="fas fa-phone-alt text-blue-600"></i>
-                      Canales de atención disponibles:
-                    </h4>
-                    <div class="grid md:grid-cols-2 gap-3">
-                      <a href="tel:08001994545"
-                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <div
-                          class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <i class="fas fa-phone text-sm"></i>
-                        </div>
-                        <div>
-                          <span class="font-medium text-gray-800">Teléfono</span>
-                          <p class="text-xs text-gray-600">0800-199-4545</p>
-                        </div>
-                      </a>
-
-                      <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
-                        target="_blank" rel="noopener noreferrer"
-                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <div
-                          class="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <i class="fab fa-whatsapp text-sm"></i>
-                        </div>
-                        <div>
-                          <span class="font-medium text-gray-800">WhatsApp</span>
-                          <p class="text-xs text-gray-600">Atención inmediata</p>
-                        </div>
-                      </a>
-
-                      <a href="pages/centro_de_ayuda/index.html"
-                        class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group md:col-span-2">
-                        <div
-                          class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <i class="fas fa-user-cog text-sm"></i>
-                        </div>
-                        <div>
-                          <span class="font-medium text-gray-800">Centro de Ayuda</span>
-                          <p class="text-xs text-gray-600">Resolvé problemas básicos y consultá nuestras guías</p>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                <p>Podés comunicarte con nuestro centro de atención al cliente por múltiples canales. Nuestro equipo de soporte técnico local te ayudará a resolver cualquier inconveniente rápidamente.</p>
+                <p>Canales de atención disponibles:</p>
+                <ul class="faq-contact-links">
+                  <li><a href="tel:08001994545">Teléfono: 0800-199-4545</a></li>
+                  <li><a href="https://api.whatsapp.com/send/?phone=5492494060345&amp;text&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener noreferrer">WhatsApp</a> — Atención inmediata</li>
+                  <li><a href="pages/centro_de_ayuda/index.html">Centro de Ayuda</a> — Resolvé problemas básicos y consultá nuestras guías</li>
+                </ul>
               </div>
-            </div>
+            </details>
           </div>
         </div>
       </div>
@@ -1719,7 +527,7 @@
               <div class="space-y-4">
                 <div class="flex items-center gap-4">
                   <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                    <i class="fa-solid fa-phone text-xl"></i>
+                    <i aria-hidden="true" class="fa-solid fa-phone text-xl"></i>
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">Teléfono</h4>
@@ -1730,7 +538,7 @@
 
                 <div class="flex items-center gap-4">
                   <div class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                    <i class="fab fa-whatsapp text-3xl"></i>
+                    <i aria-hidden="true" class="fab fa-whatsapp text-3xl"></i>
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">WhatsApp</h4>
@@ -1742,7 +550,7 @@
 
                 <div class="flex items-center gap-4">
                   <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                    <i class="fa-solid fa-envelope text-xl"></i>
+                    <i aria-hidden="true" class="fa-solid fa-envelope text-xl"></i>
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">Email</h4>
@@ -1753,11 +561,11 @@
 
                 <div class="flex items-center gap-4">
                   <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                    <i class="fa-solid fa-location-dot text-xl"></i>
+                    <i aria-hidden="true" class="fa-solid fa-location-dot text-xl"></i>
                   </div>
                   <div>
                     <h4 class="font-semibold text-lg">Oficina</h4>
-                    <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank" rel="noopener noreferrer"
+                    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-37.3093588%2C-59.136183" target="_blank" rel="noopener noreferrer"
                       class="text-gray-600 hover:text-blue-600">Nigro 575, Tandil, Buenos Aires</a>
                   </div>
                 </div>
@@ -1766,11 +574,8 @@
 
             <div>
               <h3 class="text-2xl font-bold mb-4">Nuestra ubicación</h3>
-              <div class="rounded-lg overflow-hidden shadow-lg h-[300px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
-                  width="100%" height="100%" style="border: 0" allowfullscreen="" loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
+              <div class="office-map-frame">
+                <div class="office-map" data-office-map><div class="office-map-canvas" aria-label="Mapa de nuestra oficina en Nigro 575, Tandil"></div><p role="status">Cargando mapa…</p><a class="office-map-directions" href="https://www.google.com/maps/dir/?api=1&amp;destination=-37.3093588%2C-59.136183" target="_blank" rel="noopener">Cómo llegar a Nigro 575 <span aria-hidden="true">↗</span></a></div>
               </div>
             </div>
           </div>
@@ -1789,19 +594,19 @@
           </h4>
           <div class="space-y-3 text-gray-300">
             <p class="flex items-start gap-3">
-              <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
               <span>Nigro 575, Tandil</span>
             </p>
 
             <!-- Números oficiales de WhatsApp -->
             <div class="bg-gray-700 p-3 rounded-lg space-y-2">
               <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                <img src="assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+                <img loading="lazy" decoding="async" src="assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
               </p>
               <div class="space-y-2">
                 <div>
                   <p class="flex items-center gap-2 text-sm">
-                    <i class="fab fa-whatsapp text-green-400"></i>
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
                     <span class="font-medium">+54 9 249 406-0345</span>
                   </p>
                   <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
@@ -1809,7 +614,7 @@
                 </div>
                 <div>
                   <p class="flex items-center gap-2 text-sm">
-                    <i class="fab fa-whatsapp text-green-400"></i>
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
                     <span class="font-medium">+54 9 249 450-4522</span>
                   </p>
                   <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
@@ -1819,7 +624,7 @@
 
             <div class="space-y-2">
               <p class="flex items-center gap-3">
-                <i class="fas fa-phone text-blue-400"></i>
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
                 <span>0800-199-4545</span>
               </p>
               <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
@@ -1887,7 +692,7 @@
             </li>
           </ul>
           <div class="pt-4">
-            <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png"
+            <img loading="lazy" decoding="async" src="assets/img/logos/grupoUsinaBN.png"
               alt="Logo Usina de Tandil" class="rounded-md w-36" />
           </div>
         </div>
@@ -1897,13 +702,16 @@
         <p class="text-gray-400 text-sm mb-4 md:mb-0">
           &copy; 2025 Usittel. Todos los derechos reservados.
         </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="pages/nosotros/">Nosotros</a>
+        </nav>
         <div class="flex space-x-4">
-          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
               class="fab fa-facebook-f fa-lg"></i></a>
-          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
               class="fab fa-instagram fa-lg"></i></a>
           <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
-            class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
         </div>
       </div>
     </div>
@@ -1916,7 +724,7 @@
       aria-label="Chateá con nosotros por WhatsApp">
       <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
         style="font-size: 37.8px; width: 50.4px; height: 50.4px">
-        <i class="fab fa-whatsapp"></i>
+        <i aria-hidden="true" class="fab fa-whatsapp"></i>
       </span>
       <span
         class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors"
@@ -1927,406 +735,14 @@
     </a>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Mobile Menu Logic
-      const hamburger = document.getElementById("hamburger"),
-        mobileMenu = document.getElementById("mobileMenu"),
-        overlay = document.getElementById("overlay"),
-        closeMenu = document.getElementById("closeMenu"),
-        toggleProducts = document.getElementById("toggleProducts"),
-        productsSubmenu = document.getElementById("productsSubmenu");
-      function toggleMenu() {
-        mobileMenu.classList.toggle("show");
-        overlay.classList.toggle("show");
-      }
-      if (hamburger) hamburger.addEventListener("click", toggleMenu);
-      if (overlay) overlay.addEventListener("click", toggleMenu);
-      if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
-      if (toggleProducts) {
-        toggleProducts.addEventListener("click", (e) => {
-          e.preventDefault();
-          productsSubmenu.style.display =
-            productsSubmenu.style.display === "flex" ? "none" : "flex";
-        });
-      }
-
-      // Plans Section Logic
-      const plansData = {
-        internet: [
-          {
-            name: "Fibra 100",
-            speed: "100 Mbps",
-            symmetric: true,
-            price: "19999",
-            features: [
-              "Instalación 100% bonificada",
-              "100 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-              "Ideal para home office",
-            ],
-            popular: false,
-            promoMonths: "3",
-            promoFinal:
-              "Precio final: $34.999 <br> a partir del 4to mes.<br>",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $19.999 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $34.999.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente. <br><br>`,
-          },
-          {
-            name: "Fibra 300",
-            speed: "300 Mbps",
-            symmetric: true,
-            price: "21999",
-            features: [
-              "Instalación 100% bonificada",
-              "300 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-              "Perfecto para familias y gaming",
-            ],
-            popular: true,
-            promoMonths: "3",
-            promoFinal:
-              "Precio final: $38.499 <br> a partir del 4to mes.<br>",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $21.999 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio será de $38.499.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
-          },
-          {
-            name: "Fibra 500",
-            speed: "500 Mbps",
-            symmetric: true,
-            price: "24749",
-            features: [
-              "Instalación 100% bonificada",
-              "500 Mbps SIMÉTRICOS (misma velocidad de subida y de bajada)",
-              "La mejor experiencia online",
-            ],
-            popular: false,
-            promoMonths: "6",
-            promoFinal:
-              "Precio final: $43.999 <br> a partir del 7mo mes.",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $24.749 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio será de $43.999.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.`,
-          },
-        ],
-        internetTv: [
-          {
-            name: "Fibra 100 + TV",
-            speed: "100 Mbps",
-            symmetric: true,
-            price: "31426.41",
-            features: [
-              "Instalación 100% bonificada",
-              "Pack TV incluido",
-              "+100 canales en vivo",
-              "Contenido On-Demand",
-            ],
-            popular: false,
-            promoMonths: "3",
-            promoFinal:
-              "Precio final: $54.998 a partir del 4to mes.",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $31.426 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $54.998.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
-          },
-          {
-            name: "Fibra 300 + TV",
-            speed: "300 Mbps",
-            symmetric: true,
-            price: "33426.71",
-            features: [
-              "Instalación 100% bonificada",
-              "Pack TV incluido",
-              "Ideal para toda la familia",
-              "Mirá en múltiples pantallas",
-            ],
-            popular: true,
-            promoMonths: "3",
-            promoFinal: "Precio final: $58.498 a partir del 4to mes.",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $33.426 es válido durante los primeros 3 meses. A partir del mes cuatro (4), el precio final será de $58.498.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.`,
-          },
-          {
-            name: "Fibra 500 + TV",
-            speed: "500 Mbps",
-            symmetric: true,
-            price: "35748.21",
-            features: [
-              "Instalación 100% bonificada",
-              "Pack TV incluido",
-              "La experiencia completa",
-              "Precio fijo por 6 meses 🔒",
-            ],
-            popular: false,
-            promoMonths: "6",
-            promoFinal:
-              "Precio final: $63.998 a partir del 7mo mes.",
-            promo: `Promoción válida para nuevos clientes personas físicas que contraten el servicio residencial de USITTEL.<br><br>
-            El precio promocional de $35.748 es válido durante los primeros 6 meses. A partir del mes siete (7), el precio final será de $63.998.<br><br>
-            La adhesión al débito automático es requisito para acceder a la bonificación en la instalación y a los precios promocionales.<br><br>
-            El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.`,
-          },
-        ],
-        soloTv: [
-          {
-            name: " USITTEL TV",
-            speed: "Televisión Digital mediante la plataforma SENSA",
-            symmetric: false,
-            price: "19999",
-            features: [
-              "Más de 100 canales en vivo",
-              "Series y películas On-Demand",
-              "Acceso a la app de TV multidispositivo",
-              "No requiere Internet de Usittel",
-            ],
-            popular: true,
-          },
-        ],
-      };
-
-      const defaultPlansView = document.getElementById("default-plans-view");
-      const soloTvView = document.getElementById("solo-tv-view");
-      const planCardsContainer = document.getElementById(
-        "plan-cards-container"
-      );
-      const soloTvCardContainer = document.getElementById(
-        "solo-tv-card-container"
-      );
-      const premiumPacksDefault = document.getElementById(
-        "premium-packs-container-default"
-      );
-
-      const internetBtn = document.getElementById("internet-only-btn");
-      const internetTvBtn = document.getElementById("internet-tv-btn");
-      const tvOnlyBtn = document.getElementById("tv-only-btn");
-
-      // NUEVO: El texto de condiciones se muestra en todos los contenedores a la vez
-
-      function createPlanCard(plan, type) {
-        const isSoloTvPlan = type === "soloTv";
-        const paddingClass = isSoloTvPlan ? "p-8 md:p-10" : "p-8";
-        const formattedPrice = new Intl.NumberFormat("es-AR").format(
-          Math.trunc(Number(plan.price))
-        );
-        const speedLine = plan.speed.includes("Mbps")
-          ? `<p class="text-gray-500 mb-2">${plan.speed} ${plan.symmetric ? "Simétricos" : ""
-          }</p>`
-          : `<p class="text-blue-600 font-semibold mb-2">${plan.speed}</p>`;
-
-        // Render features, supporting custom icon for object items
-        const featuresHtml = plan.features
-          .map((feature) => {
-            if (typeof feature === "string") {
-              return `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`;
-            } else if (typeof feature === "object" && feature.icon) {
-              return `<li class="flex items-start"><i class="fas ${feature.icon} text-blue-500 mr-2 mt-1 shrink-0"></i><span>${feature.text}</span></li>`;
-            }
-            return "";
-          })
-          .join("");
-
-        // Mostrar el enlace de condiciones en internet e internetTv
-        let promoHtml = "";
-        if (type === "internet" || type === "internetTv") {
-          promoHtml = `
-        <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $${formattedPrice} por ${plan.promoMonths || "3"} meses</div>
-        <div class="text-xs text-gray-500 mb-2">${plan.promoFinal || ""}</div>
-        <a href="#" class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 promo-toggle-link">Condiciones de la promoción</a>
-        <div class="promo-details hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
-          ${plan.promo || ""}
-        </div>
-          `;
-        }
-
-        return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular
-          ? "border-blue-500 border-2 relative bg-white"
-          : "border-gray-200 bg-white"
-          }">
-        <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
-        ${speedLine}
-        <div class="my-2">
-          <span class="text-4xl font-extrabold text-gray-900">${formattedPrice}</span>
-          <span class="text-gray-500"> $/mes</span>
-        </div>
-        <ul class="space-y-3 text-gray-600 mb-4 flex-grow">${featuresHtml}</ul>
-        ${promoHtml}
-        <a href="https://wa.me/5492494060345"
-          target="_blank"
-          rel="noopener"
-          class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-          <i class="fab fa-whatsapp"></i> Consultar
-        </a>
-        ${plan.popular
-            ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS ELEGIDO</span>'
-            : ""
-          }
-        </div>`;
-      }
-
-      function displayPlans(type) {
-        const premiumGigaContainer = document.getElementById("premium-giga-container"); // NUEVA LINEA
-
-        if (internetBtn) internetBtn.classList.remove("active");
-        if (internetTvBtn) internetTvBtn.classList.remove("active");
-        if (tvOnlyBtn) tvOnlyBtn.classList.remove("active");
-
-        if (type === "soloTv") {
-          defaultPlansView.classList.add("hidden");
-          soloTvView.classList.remove("hidden");
-          if (premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA
-
-          soloTvCardContainer.innerHTML = createPlanCard(
-            plansData.soloTv[0],
-            "soloTv"
-          );
-          if (tvOnlyBtn) tvOnlyBtn.classList.add("active");
-        } else {
-          soloTvView.classList.add("hidden");
-          defaultPlansView.classList.remove("hidden");
-
-          planCardsContainer.innerHTML = "";
-          if (plansData[type]) {
-            plansData[type].forEach((plan) => {
-              planCardsContainer.innerHTML += createPlanCard(plan, type);
-            });
-          }
-
-          if (type === "internet") {
-            if (internetBtn) internetBtn.classList.add("active");
-            if (premiumPacksDefault) premiumPacksDefault.classList.add("hidden");
-            if (premiumGigaContainer) premiumGigaContainer.classList.remove("hidden"); // NUEVA LINEA
-          } else if (type === "internetTv") {
-            if (internetTvBtn) internetTvBtn.classList.add("active");
-            if (premiumPacksDefault) premiumPacksDefault.classList.remove("hidden");
-            if (premiumGigaContainer) premiumGigaContainer.classList.add("hidden"); // NUEVA LINEA (No lo mostramos en combos por ahora)
-          }
-        }
-
-        // NUEVO: Agrega los event listeners para los toggles de las promociones después de renderizar
-        document.querySelectorAll(".promo-toggle-link").forEach((toggle) => {
-          toggle.addEventListener("click", (e) => {
-            e.preventDefault();
-            document
-              .querySelectorAll(".promo-details")
-              .forEach((detailsContainer) => {
-                detailsContainer.classList.toggle("hidden");
-              });
-          });
-        });
-
-        const buttonContainer = document.getElementById(
-          "plan-info-button-container"
-        );
-        if (buttonContainer) {
-          let btnHTML = "";
-          if (type === "internet") {
-            btnHTML = `<a href="pages/internet/" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden=\"true\">→</span></a>`;
-          } else if (type === "internetTv" || type === "soloTv") {
-            btnHTML = `<a href="pages/tv/" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden=\"true\">→</span></a>`;
-          }
-          buttonContainer.innerHTML = btnHTML;
-        }
-      }
-
-      if (internetBtn) internetBtn.addEventListener("click", () => {
-        displayPlans("internet");
-      });
-      if (internetTvBtn) internetTvBtn.addEventListener("click", () => {
-        displayPlans("internetTv");
-      });
-      if (tvOnlyBtn) tvOnlyBtn.addEventListener("click", () => {
-        displayPlans("soloTv");
-      });
-
-      // Initial display
-      displayPlans("internet");
-
-      // FAQ Accordion Logic
-      const faqContainer = document.getElementById("faq-accordion");
-      if (faqContainer) {
-        const questions = faqContainer.querySelectorAll(".faq-question");
-        questions.forEach((question) => {
-          question.addEventListener("click", () => {
-            const answer = question.nextElementSibling;
-            const isOpen = question.classList.contains("open");
-
-            questions.forEach((q) => {
-              if (q !== question) {
-                q.classList.remove("open");
-                q.nextElementSibling.style.maxHeight = null;
-              }
-            });
-
-            if (isOpen) {
-              question.classList.remove("open");
-              answer.style.maxHeight = null;
-            } else {
-              question.classList.add("open");
-              answer.style.maxHeight = answer.scrollHeight + "px";
-            }
-          });
-        });
-      }
-
-      // Mesh Carousel Logic
-      const meshSlides = document.querySelectorAll(".mesh-slide");
-      const meshDotsContainer = document.getElementById(
-        "mesh-dots-container"
-      );
-      let currentMeshSlide = 0;
-      function createMeshDots() {
-        if (!meshDotsContainer) return;
-        meshDotsContainer.innerHTML = "";
-        meshSlides.forEach((_, i) => {
-          const dot = document.createElement("button");
-          dot.classList.add("mesh-dot");
-          if (i === 0) dot.classList.add("active");
-          dot.addEventListener("click", () => showMeshSlide(i));
-          meshDotsContainer.appendChild(dot);
-        });
-      }
-      function showMeshSlide(n) {
-        if (!meshSlides.length) return;
-        meshSlides[currentMeshSlide].classList.remove("active");
-        meshDotsContainer.children[currentMeshSlide].classList.remove(
-          "active"
-        );
-        currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-        meshSlides[currentMeshSlide].classList.add("active");
-        meshDotsContainer.children[currentMeshSlide].classList.add("active");
-      }
-      if (meshSlides.length > 1) {
-        createMeshDots();
-      }
-
-      // --- INICIO: LÓGICA DEL MAPA DE COBERTURA (MOVIDO A coverage-validator.js) ---
-      // El código del mapa y validador de cobertura ahora está en js/coverage-validator.js
-      // --- FIN: LÓGICA DEL MAPA DE COBERTURA ---
-    });
-  </script>
-
   <!-- Validador de Cobertura -->
+  <script src="js/coverage-data.js"></script>
+  <script src="js/coverage-core.js"></script>
   <script src="js/coverage-validator.js"></script>
 
   <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
+
+  <script src="js/site-tracking.js" defer></script>
 </body>
 
 </html>

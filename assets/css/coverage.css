@@ -1,0 +1,21 @@
+.coverage-help, .coverage-map-status { color: #566477; font-size: 14px; line-height: 1.6; margin-top: 12px; }
+.coverage-map-status { min-height: 3.2em; }
+.coverage-map-status:empty { display: none; }
+#coverage-help { margin-bottom: 20px; }
+#address-input[aria-invalid="true"] { border-color: #a32828; }
+.coverage-response { border-top: 1px solid #dce2e9; padding: 24px 0; text-align: left; }
+.coverage-response h3 { color: #182b3d; font-size: 21px; font-weight: 650; line-height: 1.4; margin: 0 0 10px; }
+.coverage-response p { color: #566477; font-size: 15px; line-height: 1.7; margin-bottom: 14px; }
+.coverage-response a { color: #0759bc; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.coverage-response a:focus-visible { outline: 2px solid #0759bc; outline-offset: 4px; }
+
+.coverage-container { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 48px; }
+.coverage-map-container { overflow: hidden; border-radius: 10px; border: 1px solid var(--line); padding: 6px; background: #fff; }
+#coverage-map { height: 460px; width: 100%; border-radius: 6px; z-index: 0; }
+.coverage-validator { text-align: left; padding: 24px 0; }
+.coverage-validator h3 { font-size: 28px; margin-bottom: 18px; }
+.coverage-validator p { font-size: 15px; line-height: 1.8; }
+.coverage-validator input { background: #fff; min-height: 52px; font-size: 15px; }
+#coverage-result { font-size: 14px; }
+@media (max-width: 1023px) { .coverage-container { gap: 32px; } }
+@media (max-width: 767px) { .coverage-container { grid-template-columns: 1fr; gap: 24px; } #coverage-map { height: 340px; } .coverage-validator { padding: 0; } }

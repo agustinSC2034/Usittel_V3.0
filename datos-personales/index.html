@@ -1,93 +1,215 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Política de Privacidad y Protección de Datos Personales | Usittel</title>
   <link rel="icon" type="image/png" href="../assets/icons/usittel-logo.png">
   <meta name="description" content="Política de privacidad y protección de datos personales de Usittel, proveedor de internet, TV y WiFi Mesh en Tandil." />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: 'Segoe UI', sans-serif; background: #f1f5f9; }
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 20px;
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
-    }
-    .topbar img { height: 32px; }
-    .topbar span { font-size: 15px; color: #374151; font-weight: 500; }
-    .topbar a {
-      margin-left: auto;
-      font-size: 13px;
-      color: #1a73e8;
-      text-decoration: none;
-      padding: 6px 14px;
-      border: 1px solid #1a73e8;
-      border-radius: 999px;
-      transition: background 0.2s;
-    }
-    .topbar a:hover { background: #1a73e8; color: white; }
-    .pdf-wrapper {
-      height: calc(100vh - 53px);
-      width: 100%;
-    }
-    embed {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    .fallback {
-      display: none;
-      padding: 40px 24px;
-      text-align: center;
-      color: #374151;
-    }
-    .fallback a {
-      display: inline-block;
-      margin-top: 16px;
-      background: #1a73e8;
-      color: white;
-      padding: 12px 28px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../assets/css/tailwind.output.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/documents.css">
+<script src="../js/site.js" defer></script>
 </head>
-<script>
-  // En móvil, el embed de PDF no funciona — redirigir directo al PDF
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    window.location.replace("Politica_de_privacidad_y_protección_de_datos_personales.pdf");
-  }
-</script>
-<body>
-  <div class="topbar">
-    <a href="../">
-      <img src="../assets/icons/usittel-logo.png" alt="Usittel" />
-    </a>
-    <span>Política de Privacidad y Protección de Datos Personales</span>
-    <a href="Politica_de_privacidad_y_protección_de_datos_personales.pdf" download>
-      Descargar PDF
-    </a>
-  </div>
+<body class="public-page document-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../index.html" class="logo">
+            <img src="../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="../#" class="logo">
+            <picture>
+              <source srcset="../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../pages/internet/">Internet</a></li>
+                <li><a href="../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../pages/empresas/">Empresas</a></li>
+            <li><a href="../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../pages/internet/">Internet</a><a href="../pages/mesh/">WiFi Mesh</a><a href="../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../pages/empresas/">Empresas</a><a href="../pages/contacto/">Contáctanos</a><a href="../pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content">
+<section class="document-hero"><div class="container mx-auto"><p class="document-kicker">Información legal</p><h1>Política de Privacidad y Protección de Datos Personales</h1><p class="document-lead">Consultá el documento completo de nuestra política de privacidad.</p></div></section><div class="container mx-auto document-body privacy-layout"><div class="privacy-document"><span class="document-format">PDF</span><div><h2>Política de privacidad</h2><p>El documento está disponible para abrirlo en otra pestaña o descargarlo en tu dispositivo.</p><div class="document-actions"><a class="site-button" href="Politica_de_privacidad_y_protección_de_datos_personales.pdf" target="_blank" rel="noopener">Abrir PDF <span aria-hidden="true">↗</span></a><a class="document-secondary" href="Politica_de_privacidad_y_protección_de_datos_personales.pdf" download>Descargar PDF <span aria-hidden="true">↓</span></a></div></div></div>
+<p class="privacy-note">Si tu navegador no muestra el PDF, podés descargarlo y abrirlo con tu lector de documentos.</p>
+<a class="document-text-link" href="../pages/terminos_y_condiciones/">Términos y condiciones del sitio <span aria-hidden="true">→</span></a></div>
+</main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
+    <div class="container mx-auto px-6 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
 
-  <div class="pdf-wrapper">
-    <embed
-      src="Politica_de_privacidad_y_protección_de_datos_personales.pdf"
-      type="application/pdf"
-      onerror="document.querySelector('.pdf-wrapper').style.display='none'; document.querySelector('.fallback').style.display='block';"
-    />
-  </div>
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
+                </div>
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
+                </div>
+              </div>
+            </div>
 
-  <div class="fallback">
-    <p>Tu navegador no puede mostrar el PDF en línea.</p>
-    <a href="Politica_de_privacidad_y_protección_de_datos_personales.pdf" target="_blank" rel="noopener">
-      Abrir PDF
-    </a>
-  </div>
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

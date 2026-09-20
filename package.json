@@ -4,6 +4,10 @@
   "description": "",
   "main": "tailwind.config.js",
   "scripts": {
+    "build:public": "node scripts/build-public-shell.cjs && tailwindcss -i assets/css/tailwind.input.css -o assets/css/tailwind.output.css --minify",
+    "check:public-shell": "node scripts/build-public-shell.cjs --check",
+    "test:coverage": "node tests/coverage.test.cjs",
+    "test:mesh": "node tests/mesh-calculator.test.cjs",
     "check:mi-usittel": "node autogestion/check.cjs",
     "dev:mi-usittel:php": "node autogestion/start-php.cjs",
     "test:mi-usittel": "node autogestion/tests/run.cjs",

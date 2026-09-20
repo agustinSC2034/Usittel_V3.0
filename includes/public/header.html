@@ -1,0 +1,59 @@
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="{{base}}index.html" class="logo">
+            <img src="{{base}}assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="{{base}}#" class="logo">
+            <picture>
+              <source srcset="{{base}}assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="{{base}}assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="{{base}}#">Home</a></li>
+            <li class="dropdown">
+              <a href="{{base}}#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="{{base}}pages/internet/">Internet</a></li>
+                <li><a href="{{base}}pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="{{base}}pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="{{base}}pages/empresas/">Empresas</a></li>
+            <li><a href="{{base}}pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="{{base}}pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="{{base}}assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="{{base}}#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="{{base}}pages/internet/">Internet</a><a href="{{base}}pages/mesh/">WiFi Mesh</a><a href="{{base}}pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="{{base}}pages/empresas/">Empresas</a><a href="{{base}}pages/contacto/">Contáctanos</a><a href="{{base}}pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>

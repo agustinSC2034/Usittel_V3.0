@@ -6,9 +6,12 @@ module.exports = {
     "./includes/**/*.php",
     "./pages/**/*.html",
     "./pages/**/*.php",
+    "./datos-personales/**/*.html",
     "./bot/**/*.html",
     "./bot/**/*.php",
     "./assets/js/**/*.js",
+    "./js/**/*.js",
+    "./includes/public/**/*.html",
   ],
   theme: {
     extend: {},

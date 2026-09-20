@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,749 +11,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - Internet por Fibra Óptica</title>
-
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
-
-    <!-- Google Fonts: Poppins & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet" />
-
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <!-- reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
     <meta name="description"
         content="Internet de fibra óptica de alta velocidad para hogares y empresas en Tandil. Planes flexibles, soporte local y WiFi Mesh incluido. Descubrí Usittel." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Usittel - Internet de Fibra Óptica para el Hogar" />
     <meta property="og:description"
         content="Internet de fibra óptica de alta velocidad para hogares y empresas en Tandil. Planes flexibles, soporte local y WiFi Mesh incluido. Descubrí Usittel." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - Internet de Fibra Óptica para el Hogar" />
     <meta name="twitter:description"
         content="Internet de fibra óptica de alta velocidad para hogares y empresas en Tandil. Planes flexibles, soporte local y WiFi Mesh incluido. Descubrí Usittel." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
-
-    <style>
-        /* NAVIGATION STYLES */
-        .navbar-section *,
-        .navbar-section *::before,
-        .navbar-section *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        header.navbar-section {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-        }
-
-        .navbar-section {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            font-size: 17px;
-            color: #3c4043;
-        }
-
-        .navbar {
-            background-color: white;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 34px;
-            height: 69px;
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 26px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .logo:hover {
-            background-color: rgba(60, 64, 67, 0.08);
-        }
-
-        .logo img {
-            height: 39px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            list-style: none;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #60666b;
-            font-size: 17px;
-            font-weight: 500;
-            padding: 13px 17px;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .nav-links li a:hover {
-            background-color: rgba(60, 64, 67, 0.06);
-            color: #202020;
-        }
-
-        .nav-links li a.active {
-            color: #1a73e8;
-            font-weight: 600;
-        }
-
-        .nav-links .dropdown {
-            position: relative;
-        }
-
-        .nav-links .dropdown>a.active-parent {
-            background-color: rgba(26, 115, 232, 0.08);
-            color: #1a73e8;
-        }
-
-        .nav-links .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            background-color: white;
-            padding: 8px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            list-style: none;
-            min-width: 180px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-
-        .nav-links .dropdown-menu li a {
-            display: block;
-            padding: 11px 17px;
-            color: #3c4043;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .nav-links .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-button,
-        .nav-button2,
-        .nav-button-green {
-            font-size: 16px;
-            padding: 11px 22px;
-            border-radius: 999px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-button-green {
-            background-color: #30a172;
-            color: white !important;
-        }
-
-        .nav-button-green:hover {
-            background-color: #188b48;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-button2 {
-            background-color: #1a73e8;
-            color: white !important;
-        }
-
-        .nav-button2:hover {
-            background-color: #175ca7;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* ================================== */
-        /* ===       CUSTOM STYLES        === */
-        /* ================================== */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .hero-internet {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-                url('https://images.unsplash.com/photo-1586934447387-1cfd120a135f?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
-            background-size: cover;
-        }
-
-        .cta-button {
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .whatsapp-float {
-            position: left;
-            bottom: 15px;
-            right: 15px;
-            width: 50px;
-            height: 50px;
-            background-color: #25d366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            transition: transform 0.2s ease;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
-
-        .interactive-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
-            background-color: white;
-        }
-
-        .interactive-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border-color: #22c55e;
-            /* green-500 */
-        }
-
-        /* === FAQ STYLES === */
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            padding: 0;
-        }
-
-        .faq-question.open+.faq-answer {
-            opacity: 1;
-        }
-
-        .faq-icon {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .faq-question.open .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        /* === NEW STARLINK-INSPIRED SECTION === */
-        .starlink-section {
-            position: relative;
-            background-color: #0a0f1f;
-            overflow: hidden;
-        }
-
-        #globe-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.3;
-        }
-
-        .activity-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .activity-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-        }
-
-        /* ESTILOS PARA VALIDADOR DE COBERTURA */
-        #coverage-map {
-            height: 600px;
-            width: 100%;
-            border-radius: 12px;
-        }
-
-        /* CONTENEDOR RESPONSIVE PARA MAPA Y VALIDADOR */
-        .coverage-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 1024px) {
-            .coverage-container {
-                grid-template-columns: 1fr 1fr;
-                align-items: start;
-            }
-        }
-
-        .coverage-validator {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e5e7eb;
-        }
-
-        .coverage-map-container {
-            background: white;
-            padding: 1rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e5e7eb;
-        }
-
-        /* ANIMACIONES PARA EL VALIDADOR DE COBERTURA */
-        @keyframes buttonPulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }
-
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-            }
-        }
-
-        .button-animate {
-            animation: buttonPulse 0.6s ease-out;
-        }
-
-        @keyframes inputShake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        .input-shake {
-            animation: inputShake 0.5s ease-in-out;
-        }
-
-        @keyframes resultFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-animate {
-            animation: resultFadeIn 0.6s ease-out;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-    <style>
-        /* ========== Mobile Menu + Responsive Styles ========== */
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background-color: #3c4043;
-            border-radius: 2px;
-        }
-
-        .mobile-header-bar {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .mobile-menu-slide {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 16px;
-            transition: left 0.3s ease-in-out;
-            z-index: 1001;
-        }
-
-        .mobile-menu-slide.show {
-            left: 0;
-        }
-
-        .mobile-menu-slide a {
-            text-decoration: none;
-            color: #3c4043;
-            font-size: 16px;
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-
-        .mobile-menu-slide .nav-button-green,
-        .mobile-menu-slide .nav-button2 {
-            padding: 12px 18px;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-menu-header img {
-            height: 32px;
-        }
-
-        .close-menu {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #3c4043;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .mobile-menu-slide hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-bottom: 16px;
-        }
-
-        .submenu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .submenu-toggle {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 16px;
-            text-align: left;
-            color: #3c4043;
-            padding: 10px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 400;
-        }
-
-        .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 12px;
-            margin-top: -4px;
-        }
-
-        .submenu a {
-            font-size: 15px;
-            padding: 8px 12px;
-            color: #3c4043;
-        }
-
-        .submenu.show {
-            display: flex;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .desktop-only {
-            display: flex;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        /* Breakpoint para mobile */
-        @media (max-width: 900px) {
-            .mobile-only {
-                display: flex !important;
-            }
-
-            .desktop-only {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-header-bar {
-                display: flex;
-            }
-        }
-
-        /* ESTILOS PARA EL MAPA (NUEVO) */
-        #coverage-map {
-            height: 500px;
-            width: 100%;
-        }
-
-        /* ================================== */
-        /* ===     NUEVO EFECTO HOVER     === */
-        /* ================================== */
-        .hover-glow-card {
-            position: relative;
-            border: 2px solid transparent;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .hover-glow-card:hover {
-            transform: translateY(-5px);
-            border-color: #30a172;
-            /* Verde de Usittel */
-            box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
-        }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css"><link rel="stylesheet" href="../../assets/css/site.css"><link rel="stylesheet" href="../../assets/css/public-pages.css"><link rel="stylesheet" href="../../assets/css/product-pages.css">
+<script src="../../js/site.js" defer></script><script src="../../js/site-tracking.js" defer></script><script src="../../js/product-pages.js" defer></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script><link rel="stylesheet" href="../../assets/css/coverage.css"><script src="../../js/coverage-data.js" defer></script><script src="../../js/coverage-core.js" defer></script><script src="../../js/coverage-validator.js" defer></script><script src="../../js/office-map.js" defer></script>
 </head>
+<body class="public-page product-page internet-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans" class="active">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/" class="active" aria-current="page">Internet</a></li>
+                <li><a href="../../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/" class="active" aria-current="page">Internet</a><a href="../../pages/mesh/">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content">
 
-<body class="text-gray-800">
-
-    <!-- =========== Header / Navigation =========== -->
-    <header class="navbar-section">
-        <nav class="navbar">
-            <div class="navbar-container">
-                <!-- Encabezado mobile -->
-                <div class="mobile-header-bar mobile-only">
-                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                    <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo.png" alt="Usittel Logo" />
-                    </a>
-                </div>
-
-                <!-- Encabezado desktop -->
-                <div class="nav-left desktop-only">
-                    <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
-                    </a>
-                    <ul class="nav-links">
-                        <li><a href="../../">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="active-parent">Productos</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="../internet/" class="active">Internet</a></li>
-                                <li><a href="../mesh/">WiFi Mesh</a></li>
-                                <li><a href="../tv/">TV</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="../empresas/">Empresas</a></li>
-                        <li><a href="../contacto/">Contáctanos</a></li>
-                    </ul>
-                </div>
-
-                <div class="nav-actions desktop-only">
-                    <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
-                        target="_blank" rel="noopener">Autogestión</a>
-                </div>
-            </div>
-
-            <!-- Overlay y menú mobile -->
-            <div class="overlay" id="overlay"></div>
-            <div class="mobile-menu-slide" id="mobileMenu">
-                <div class="mobile-menu-header">
-                    <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
-                    <button class="close-menu" id="closeMenu">&times;</button>
-                </div>
-                <hr />
-                <a href="../../">Home</a>
-                <div class="submenu-container">
-                    <button class="submenu-toggle" id="toggleProducts">Productos</button>
-                    <div class="submenu" id="productsSubmenu">
-                        <a href="../internet/" class="active">Internet</a>
-                        <a href="../mesh/">WiFi Mesh</a>
-                        <a href="../tv/">TV</a>
-                    </div>
-                </div>
-                <a href="../empresas/">Empresas</a>
-                <a href="../contacto/">Contáctanos</a>
-                <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
-                    target="_blank" rel="noopener">Autogestión</a>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- =========== Hero Section Internet =========== -->
-        <section class="hero-internet text-white min-h-screen flex items-center justify-center"
-            style="background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('../../assets/img/internet/familia_internet_2.webp') no-repeat center center; background-size: cover;">
-            <div class="container mx-auto text-center px-6 relative h-full flex flex-col justify-center">
-                <!-- Imagen mobile (solo visible en pantallas chicas) -->
-                <div class="block md:hidden absolute inset-0 w-full h-full z-0"
-                    style="background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('../../assets/img/internet/familia_internet_mobile.webp') no-repeat center center; background-size: cover;">
-                </div>
-                <div class="relative z-10">
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">El internet que tu hogar merece.
-                    </h1>
-                    <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Viví la experiencia de la ultra
+        <section class="product-hero internet-hero"><picture class="product-hero-media"><source media="(max-width: 767px)" srcset="../../assets/img/internet/familia_internet_mobile.webp"><img src="../../assets/img/internet/familia_internet_2.webp" alt="Familia disfrutando de Internet en casa" fetchpriority="high"></picture><div class="container mx-auto"><p class="eyebrow">INTERNET FIBRA ÓPTICA</p><h1>El internet que tu hogar merece.
+                    </h1><p class="hero-copy">Viví la experiencia de la ultra
                         velocidad. Disfrutá de streaming en 4K, gaming sin lag y la máxima potencia para todos tus
-                        dispositivos, todo al mismo tiempo.</p>
-                    <a href="#internet-plans"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Ver
-                        Planes</a>
-                </div>
-            </div>
-        </section>
-        <style>
-            .hero-internet {
-                min-height: 100vh;
-            }
+                        dispositivos, todo al mismo tiempo.</p><div class="hero-actions"><a class="site-button" href="#internet-plans">Ver
+                        Planes</a></div></div></section>
 
-            @media (max-width: 767px) {
-                .hero-internet {
-                    min-height: 100vh !important;
-                    background-image: none !important;
-                }
 
-                .hero-internet>.container {
-                    min-height: 100vh;
-                    height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-            }
-        </style>
 
-        <!-- Internet Plans Section -->
-        <section id="internet-plans" class="py-16 md:py-24 bg-gray-100">
+        <section id="internet-plans" class="section-space product-plans">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Planes de Fibra Óptica para tu Hogar</h2>
@@ -764,123 +109,43 @@
                 </div>
 
                 <div class="max-w-6xl mx-auto mb-12 px-4 md:px-0">
-                    <style>
-                        @keyframes slideFadePromo {
 
-                            0%,
-                            25% {
-                                opacity: 1;
-                                transform: scale(1.05) translateY(2%);
-                            }
-
-                            33%,
-                            92% {
-                                opacity: 0;
-                                transform: scale(1.1) translateY(2%);
-                            }
-
-                            100% {
-                                opacity: 1;
-                                transform: scale(1.05) translateY(2%);
-                            }
-                        }
-
-                        .promo-slideshow {
-                            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                            -webkit-mask-composite: source-in;
-                            mask-image: linear-gradient(to right, transparent 0%, black 30%, black 80%, transparent 100%), linear-gradient(to bottom, transparent 15%, black 40%, black 85%, transparent 100%);
-                            mask-composite: intersect;
-                        }
-
-                        .promo-slideshow img {
-                            position: absolute;
-                            inset: 0;
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                            object-position: center 20%;
-                        }
-
-                        .promo-slideshow img:nth-child(1) {
-                            animation: slideFadePromo 9s infinite 0s;
-                        }
-
-                        .promo-slideshow img:nth-child(2) {
-                            animation: slideFadePromo 9s infinite 3s;
-                            opacity: 0;
-                        }
-
-                        .promo-slideshow img:nth-child(3) {
-                            animation: slideFadePromo 9s infinite 6s;
-                            opacity: 0;
-                        }
-                    </style>
-                    <div
-                        class="bg-gradient-to-br from-gray-900 via-slate-800 to-black rounded-2xl p-1 shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                        <div
-                            class="absolute top-0 right-0 bg-green-500 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-bl-xl z-20 shadow-lg flex items-center gap-2">
-                            NUEVA VELOCIDAD
-                        </div>
-
-                        <div
-                            class="bg-gray-900/50 rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full backdrop-blur-sm">
-                            <div class="flex-1 w-full text-left relative z-20">
-                                <div
-                                    class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
+                    <article class="gigabit-plan"><div class="gigabit-image"><img src="../../assets/img/home/gaming-1000.webp" alt="Setup gaming para aprovechar los 1000 Megas" loading="lazy" decoding="async"></div><div class="gigabit-copy-wrap"><p class="eyebrow">NUEVA VELOCIDAD</p><div class="gigabit-copy">
+                                <div class="inline-block px-3 py-1 mb-3 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider">
                                     TECNOLOGÍA WI-FI 6
                                 </div>
-                                <h3
-                                    class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">
+                                <h3 class="text-4xl md:text-6xl font-extrabold mb-2 text-white tracking-tight drop-shadow-md">
                                     1000 MEGAS</h3>
                                 <p class="text-gray-300 text-base md:text-lg mb-4 drop-shadow-md">Jugá, creá y
                                     disfrutá sin interrupciones. La máxima experiencia de conectividad en Tandil.
                                 </p>
 
                                 <div class="my-6">
-                                    <span
-                                        class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$54.999</span>
+                                    <span class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-md">$54.999</span>
                                     <span class="text-gray-400 text-xl font-medium drop-shadow-md"> /mes</span>
                                     <p class="text-sm text-gray-300 mt-1 drop-shadow-md">A partir del 1er mes.</p>
-                                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">&#128274;
+                                    <p class="text-sm text-green-400 font-semibold mt-2 drop-shadow-md">
                                         Sin promoción temporal.</p>
                                 </div>
 
                                 <ul class="space-y-3 mb-8 relative z-20">
-                                    <li class="flex items-start"><i
-                                            class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                                            class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6
+                                    <li class="flex items-start"><span class="text-gray-100 drop-shadow-md"><strong>Wi-Fi 6
                                                 (802.11ax):</strong> Mayor alcance y capacidad para múltiples
                                             dispositivos sin lag.</span></li>
-                                    <li class="flex items-start"><i
-                                            class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                                            class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para
+                                    <li class="flex items-start"><span class="text-gray-100 drop-shadow-md">Latencia ultra baja, ideal para
                                             <strong>Gaming competitivo y Streaming 4K/8K</strong>.</span></li>
-                                    <li class="flex items-start"><i
-                                            class="fas fa-check-circle text-green-400 mr-3 mt-1 shrink-0 drop-shadow-md"></i><span
-                                            class="text-gray-100 drop-shadow-md"><strong>Soporte
+                                    <li class="flex items-start"><span class="text-gray-100 drop-shadow-md"><strong>Soporte
                                                 prioritario:</strong> Atención por WhatsApp y técnica
                                             exclusiva.</span></li>
                                 </ul>
 
-                                <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                                    class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(48,161,114,0.4)] hover:shadow-[0_0_20px_rgba(48,161,114,0.6)] relative z-20">
-                                    <i class="fab fa-whatsapp text-xl"></i> Solicitar Plan 1000 Megas
+                                <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="site-button">
+                                     Solicitar Plan 1000 Megas
                                 </a>
-                            </div>
-
-                            <div
-                                class="hidden md:flex absolute right-0 top-0 bottom-0 w-3/5 overflow-hidden z-0 pointer-events-none opacity-80">
-                                <div class="promo-slideshow absolute inset-0">
-                                    <img src="../../assets/img/imagen1000_nuevo.JPG" alt="1000 Megas" />
-                                    <img src="../../assets/img/nueva_imagen1000_2.JPG" alt="1000 Megas" />
-                                    <img src="../../assets/img/Nueva_imagen1000_3.JPG" alt="1000 Megas" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            </div></div></article>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
+                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card product-plan">
                         <h3 class="text-2xl font-bold text-gray-800">Fibra 100</h3>
                         <p class="text-gray-500 mb-2">100 Mbps Simétricos</p>
                         <div class="my-2">
@@ -888,24 +153,18 @@
                             <span class="text-gray-500"> $/mes</span>
                         </div>
                         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>Instalación
                                     100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>100 Mbps
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>100 Mbps
                                     SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Ideal
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>Ideal
                                     para
                                     home office</span></li>
                         </ul>
                         <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $19.999 por 3 meses</div>
                         <div class="text-xs text-gray-500 mb-2">Precio final: $34.999 a partir del 4to mes.</div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-100"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                        <details class="plan-terms"><summary>Condiciones
+                            de la promoción</summary><div id="condiciones-100">
                             Promoción válida para nuevos clientes personas físicas que contraten el servicio
                             residencial
                             de USITTEL.<br><br>
@@ -915,15 +174,14 @@
                             La adhesión al débito automático es requisito para acceder a la bonificación en la
                             instalación y a los precios promocionales.<br><br>
                             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
-                        </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
+                        </div></details>
+
+                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar
                         </a>
                     </div>
-                    <div class="rounded-xl p-8 flex flex-col relative interactive-card border-blue-500 border-2">
-                        <span
-                            class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS
+                    <div class="rounded-xl p-8 flex flex-col relative interactive-card border-blue-500 border-2 product-plan">
+                        <span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS
                             ELEGIDO</span>
                         <h3 class="text-2xl font-bold text-gray-800">Fibra 300</h3>
                         <p class="text-gray-500 mb-2">300 Mbps Simétricos</p>
@@ -932,24 +190,18 @@
                             <span class="text-gray-500"> $/mes</span>
                         </div>
                         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>Instalación
                                     100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>300 Mbps
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>300 Mbps
                                     SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Perfecto
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>Perfecto
                                     para familias y gaming</span></li>
                         </ul>
                         <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $21.999 por 3 meses</div>
                         <div class="text-xs text-gray-500 mb-2">Precio final: $38.499 a partir del 4to mes.
                         </div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-300"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                        <details class="plan-terms"><summary>Condiciones
+                            de la promoción</summary><div id="condiciones-300">
                             Promoción válida para nuevos clientes personas físicas que contraten el servicio
                             residencial
                             de USITTEL.<br><br>
@@ -959,13 +211,13 @@
                             La adhesión al débito automático es requisito para acceder a la bonificación en la
                             instalación y a los precios promocionales.<br><br>
                             El precio del servicio podrá sufrir modificaciones conforme a la normativa vigente.
-                        </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
+                        </div></details>
+
+                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar
                         </a>
                     </div>
-                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card">
+                    <div class="bg-white rounded-xl p-8 flex flex-col interactive-card product-plan">
                         <h3 class="text-2xl font-bold text-gray-800">Fibra 500</h3>
                         <p class="text-gray-500 mb-2">500 Mbps Simétricos</p>
                         <div class="my-2">
@@ -973,24 +225,18 @@
                             <span class="text-gray-500"> $/mes</span>
                         </div>
                         <ul class="space-y-3 text-gray-600 mb-4 flex-grow">
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>Instalación
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>Instalación
                                     100% bonificada</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>500 Mbps
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>500 Mbps
                                     SIMÉTRICOS (misma velocidad de subida y de bajada)</span></li>
-                            <li class="flex items-start"><i
-                                    class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>La mejor
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0" aria-hidden="true"></i><span>La mejor
                                     experiencia online</span></li>
                         </ul>
                         <div class="text-sm text-blue-600 font-semibold mb-4">Promoción: $24.749 por 6 meses</div>
                         <div class="text-xs text-gray-500 mb-2">Precio final: $43.999 a partir del 7mo mes. Precio
                             fijo hasta el mes 6.</div>
-                        <a href="#"
-                            class="text-blue-500 underline text-sm mb-2 self-start hover:text-blue-700 condiciones-btn">Condiciones
-                            de la promoción</a>
-                        <div id="condiciones-500"
-                            class="hidden text-gray-600 text-xs bg-blue-50 border border-blue-200 rounded p-3 mb-2">
+                        <details class="plan-terms"><summary>Condiciones
+                            de la promoción</summary><div id="condiciones-500">
                             Promoción válida para nuevos clientes personas físicas que contraten el servicio
                             residencial
                             de USITTEL.<br><br>
@@ -1000,41 +246,23 @@
                             La adhesión al débito automático es requisito para acceder a la bonificación en la
                             instalación y a los precios promocionales.<br><br>
                             El precio de lista se mantiene fijo durante los primeros 6 meses de contratación.
-                        </div>
-                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                            class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> Consultar
+                        </div></details>
+
+                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full text-center mt-auto bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 cta-button flex items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <script>
-            // Toggle promotional conditions
-            document.addEventListener('DOMContentLoaded', function () {
-                var btns = document.querySelectorAll('.condiciones-btn');
-                var condiciones = [
-                    document.getElementById('condiciones-100'),
-                    document.getElementById('condiciones-300'),
-                    document.getElementById('condiciones-500')
-                ];
-                btns.forEach(function (btn) {
-                    btn.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        condiciones.forEach(function (div) {
-                            div.classList.toggle('hidden');
-                        });
-                    });
-                });
-            });
-        </script>
 
-        <!-- Coverage Section -->
-        <section id="coverage" class="py-16 md:py-24 bg-white">
+
+
+        <section id="coverage" class="section-space   bg-white">
             <div class="container mx-auto px-6">
-                <!-- Parte de "Zona de Cobertura" integrada armoniosamente (REDISEÑADA) -->
-                <div id="coverage" class="text-center">
+
+                <div class="text-center">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         Zona de cobertura actual
                     </h2>
@@ -1043,26 +271,20 @@
                         tu domicilio.
                     </p>
 
-                    <!-- Contenedor responsive con mapa y validador lado a lado -->
+
                     <div class="coverage-container">
-                        <!-- Contenedor del mapa -->
+
                         <div class="coverage-map-container">
                             <div id="coverage-map"></div>
                         </div>
 
-                        <!-- Contenedor del validador -->
+
                         <div class="coverage-validator">
                             <h3 class="text-xl font-semibold text-gray-800 mb-4">¿Llegamos a tu casa?</h3>
-                            <p class="text-gray-600 mb-6">
-                                Ingresa tu dirección y su numero (No hace falta ingresar Tandil, Buenos Aires.) Ejemplo:
-                                San Martin 550
-                            </p>
+                            <p id="coverage-help" class="text-gray-600 mb-6">Ingresá calle y altura de Tandil. Por ejemplo: San Martín 1000.</p>
                             <div class="space-y-4">
-                                <input type="text" id="address-input"
-                                    placeholder="Ingresá tu dirección, ej: San Martín 550"
-                                    class="w-full px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
-                                <button id="coverage-button"
-                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button transition-all duration-200">
+                                <input type="text" id="address-input" placeholder="Ej.: San Martín 1000" class="w-full px-4 py-3 rounded-lg text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                                <button id="coverage-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg cta-button transition-all duration-200">
                                     Consultar
                                 </button>
                             </div>
@@ -1073,10 +295,10 @@
             </div>
         </section>
 
-        <!-- Network & Coverage Section -->
-        <section id="network" class="py-16 md:py-24 bg-gray-100">
+
+        <section id="network" class="section-space   bg-gray-100">
             <div class="container mx-auto px-6">
-                <!-- Parte de "Nuestra Red" -->
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div>
                         <span class="text-blue-600 font-semibold uppercase">Nuestra Red</span>
@@ -1091,7 +313,7 @@
                     </div>
                     <div class="grid grid-cols-1 gap-6">
                         <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                            <i class="fas fa-wifi text-2xl text-blue-500 mt-1"></i>
+                            <i class="fas fa-wifi text-2xl text-blue-500 mt-1" aria-hidden="true"></i>
                             <div>
                                 <h4 class="font-bold text-lg">Internet sin límites</h4>
                                 <p class="text-gray-600">Descargá archivos pesados, jugá online y hacé videollamadas en
@@ -1100,7 +322,7 @@
                             </div>
                         </div>
                         <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                            <i class="fas fa-film text-2xl text-blue-500 mt-1"></i>
+                            <i class="fas fa-film text-2xl text-blue-500 mt-1" aria-hidden="true"></i>
                             <div>
                                 <h4 class="font-bold text-lg">Streaming 4K fluido</h4>
                                 <p class="text-gray-600">Disfrutá de tus series y películas favoritas en la máxima
@@ -1109,7 +331,7 @@
                             </div>
                         </div>
                         <div class="bg-white p-6 rounded-lg flex items-start gap-4 hover-glow-card">
-                            <i class="fas fa-house-signal text-2xl text-blue-500 mt-1"></i>
+                            <i class="fas fa-house-signal text-2xl text-blue-500 mt-1" aria-hidden="true"></i>
                             <div>
                                 <h4 class="font-bold text-lg">Cobertura Total</h4>
                                 <p class="text-gray-600">Nuestra fibra, combinada con la tecnología WiFi Mesh, asegura
@@ -1122,8 +344,8 @@
             </div>
         </section>
 
-        <section class="starlink-section py-16 md:py-24 text-white">
-            <div id="globe-container"></div>
+        <section class="section-space product-dark">
+
             <div class="container mx-auto px-6 text-center relative z-10">
                 <h2 class="text-3xl md:text-4xl font-bold">Diseñado para todo lo que hacés online.</h2>
                 <p class="text-lg text-gray-300 mt-2 max-w-3xl mx-auto mb-12">Desde home office y clases virtuales hasta
@@ -1131,25 +353,25 @@
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="activity-card p-6 rounded-lg text-center">
-                        <i class="fas fa-video text-4xl text-blue-400 mb-4"></i>
+                        <i class="fas fa-video text-4xl text-blue-400 mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold">Streaming en 4K</h3>
                         <p class="text-gray-400 mt-2 text-sm">Mirá tus series y películas favoritas sin interrupciones
                             ni buffering.</p>
                     </div>
                     <div class="activity-card p-6 rounded-lg text-center">
-                        <i class="fas fa-gamepad text-4xl text-blue-400 mb-4"></i>
+                        <i class="fas fa-gamepad text-4xl text-blue-400 mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold">Gaming sin Lag</h3>
                         <p class="text-gray-400 mt-2 text-sm">Disfrutá de una baja latencia para una experiencia de
                             juego competitiva y fluida.</p>
                     </div>
                     <div class="activity-card p-6 rounded-lg text-center">
-                        <i class="fas fa-users text-4xl text-blue-400 mb-4"></i>
+                        <i class="fas fa-users text-4xl text-blue-400 mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold">Videollamadas</h3>
                         <p class="text-gray-400 mt-2 text-sm">Conectate con video y audio de alta calidad, sin
                             congelamientos.</p>
                     </div>
                     <div class="activity-card p-6 rounded-lg text-center">
-                        <i class="fas fa-laptop-house text-4xl text-blue-400 mb-4"></i>
+                        <i class="fas fa-laptop-house text-4xl text-blue-400 mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold">Home Office</h3>
                         <p class="text-gray-400 mt-2 text-sm">Subí y descargá archivos pesados en segundos y trabajá en
                             la nube sin demoras.</p>
@@ -1158,10 +380,10 @@
             </div>
         </section>
 
-        <!-- =========== Why Fiber Section =========== -->
-        <section class="py-16 md:py-24 bg-white relative overflow-hidden">
-            <!-- Fondo de partículas -->
-            <div id="particles-bg" class="absolute inset-0 w-full h-full z-0 pointer-events-none"></div>
+
+        <section class="section-space   bg-white relative overflow-hidden">
+
+
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Por qué nuestra Fibra Óptica es superior?
@@ -1172,19 +394,19 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
-                        <i class="fas fa-bolt-lightning text-blue-500 text-4xl mb-4"></i>
+                        <i class="fas fa-bolt-lightning text-blue-500 text-4xl mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold mb-2">Velocidad de la Luz</h3>
                         <p class="text-gray-600">Descargá películas en segundos y navegá sin esperas. La fibra óptica
                             ofrece las velocidades más altas del mercado.</p>
                     </div>
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
-                        <i class="fas fa-shield-alt text-blue-500 text-4xl mb-4"></i>
+                        <i class="fas fa-shield-alt text-blue-500 text-4xl mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold mb-2">Estabilidad a Toda Prueba</h3>
                         <p class="text-gray-600">Olvidate de las caídas e interferencias. Nuestra red te da una conexión
                             sólida, sin importar el clima o cuántos vecinos estén conectados.</p>
                     </div>
                     <div class="text-center p-6 bg-gray-100 rounded-lg interactive-card">
-                        <i class="fas fa-gamepad text-blue-500 text-4xl mb-4"></i>
+                        <i class="fas fa-gamepad text-blue-500 text-4xl mb-4" aria-hidden="true"></i>
                         <h3 class="text-xl font-bold mb-2">Latencia Ultra Baja</h3>
                         <p class="text-gray-600">La respuesta es inmediata. Ideal para gaming, videollamadas
                             fluidas y una navegación sin demoras.</p>
@@ -1192,460 +414,272 @@
                 </div>
             </div>
         </section>
-        <script>
-            // Partículas simples para fondo de "internet"
-            (function () {
-                const canvas = document.createElement('canvas');
-                canvas.style.position = 'absolute';
-                canvas.style.top = 0;
-                canvas.style.left = 0;
-                canvas.style.width = '100%';
-                canvas.style.height = '100%';
-                canvas.style.pointerEvents = 'none';
-                canvas.style.zIndex = 0;
-                canvas.id = 'particles-canvas';
-                document.getElementById('particles-bg').appendChild(canvas);
 
-                function resizeCanvas() {
-                    canvas.width = canvas.offsetWidth;
-                    canvas.height = canvas.offsetHeight;
-                }
-                resizeCanvas();
-                window.addEventListener('resize', resizeCanvas);
 
-                const ctx = canvas.getContext('2d');
-                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                const PARTICLE_COUNT = prefersReducedMotion ? 0 : 25;
-                const particles = [];
 
-                for (let i = 0; i < PARTICLE_COUNT; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        r: 1.5 + Math.random() * 2,
-                        dx: (Math.random() - 0.5) * 0.5,
-                        dy: (Math.random() - 0.5) * 0.5,
-                        color: Math.random() > 0.5 ? 'rgba(59,130,246,0.45)' : 'rgba(16,185,129,0.3)'
-                    });
-                }
+        <section id="faq" class="section-space product-faq"><div class="container mx-auto public-faq-layout"><div><p class="eyebrow">TE AYUDAMOS</p><h2>Preguntas Frecuentes</h2></div><div><details name="internet-faq"><summary>Cobertura Amplia y Uniforme</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <div>
+                                        <div>
 
-                function draw() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    // Draw lines
-                    for (let i = 0; i < PARTICLE_COUNT; i++) {
-                        for (let j = i + 1; j < PARTICLE_COUNT; j++) {
-                            const a = particles[i], b = particles[j];
-                            const dist = Math.hypot(a.x - b.x, a.y - b.y);
-                            if (dist < 90) {
-                                ctx.strokeStyle = 'rgba(59,130,246,0.15)';
-                                ctx.lineWidth = 1;
-                                ctx.beginPath();
-                                ctx.moveTo(a.x, a.y);
-                                ctx.lineTo(b.x, b.y);
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                    // Draw particles
-                    for (const p of particles) {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-                        ctx.fillStyle = p.color;
-                        ctx.shadowColor = p.color;
-                        ctx.shadowBlur = 8;
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    }
-                }
-
-                function animate() {
-                    for (const p of particles) {
-                        p.x += p.dx;
-                        p.y += p.dy;
-                        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-                        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-                    }
-                    draw();
-                    requestAnimationFrame(animate);
-                }
-                animate();
-            })();
-        </script>
-
-        <!-- =========== NEW: FAQ Section =========== -->
-        <section class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes</h2>
-                </div>
-                <div id="faq-accordion" class="space-y-6">
-                    <!-- FAQ Item 1 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-wifi text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Cobertura Amplia y Uniforme</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                                    <div class="flex items-start gap-3">
-                                        <div
-                                            class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                            <i class="fas fa-check text-green-600 text-xs"></i>
                                         </div>
-                                        <p class="text-gray-700 leading-relaxed">
-                                            La <strong class="text-blue-600">fibra óptica</strong> ofrece una cobertura
+                                        <p>
+                                            La <strong>fibra óptica</strong> ofrece una cobertura
                                             más amplia y uniforme que las conexiones tradicionales.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                        <i class="fas fa-lightbulb text-blue-500"></i>
+                                <div>
+                                    <h4>
+
                                         Cómo funciona:
                                     </h4>
-                                    <div class="space-y-2 text-sm text-gray-700">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-arrow-right text-blue-500"></i>
+                                    <div>
+                                        <div>
+
                                             <span>Transmite datos a través de <strong>luz</strong> en lugar de señales
                                                 eléctricas</span>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-shield-alt text-green-500"></i>
+                                        <div>
+
                                             <span>Elimina interferencias y pérdidas de señal</span>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-home text-blue-500"></i>
+                                        <div>
+
                                             <span>Conexión estable en toda la casa, hasta en áreas alejadas</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 2 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-tachometer-alt text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Alta Velocidad y Ancho de Banda
-                                </h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                                    <p class="text-gray-700 leading-relaxed">
-                                        La <strong class="text-blue-600">fibra óptica</strong> proporciona velocidades
+                        </div></details><details name="internet-faq"><summary>Alta Velocidad y Ancho de Banda
+                                </summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        La <strong>fibra óptica</strong> proporciona velocidades
                                         mucho mayores que las conexiones por cobre o cable coaxial.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-star text-blue-500"></i>
+                                <div>
+                                    <h4>
+
                                         Actividades que podés hacer simultáneamente:
                                     </h4>
-                                    <div class="grid md:grid-cols-2 gap-3">
-                                        <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-play-circle text-blue-500"></i>
+                                    <div>
+                                        <div>
+
                                             <span>Streaming en 4K/HD</span>
                                         </div>
-                                        <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-video text-blue-500"></i>
+                                        <div>
+
                                             <span>Videoconferencias</span>
                                         </div>
-                                        <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-gamepad text-blue-500"></i>
+                                        <div>
+
                                             <span>Gaming online</span>
                                         </div>
-                                        <div class="flex items-center gap-2 text-sm text-gray-700">
-                                            <i class="fas fa-cloud-download-alt text-green-500"></i>
+                                        <div>
+
                                             <span>Descargas masivas</span>
                                         </div>
                                     </div>
-                                    <div class="mt-3 p-2 bg-white rounded-lg border border-blue-100">
-                                        <p class="text-xs text-gray-600 text-center">
+                                    <div>
+                                        <p>
                                             <strong>Sin lentitud ni interrupciones</strong>
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 3 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-shield-alt text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Conexión Estable y Fiable</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                                    <p class="text-gray-700 leading-relaxed mb-3">
-                                        A diferencia de las conexiones tradicionales, la <strong
-                                            class="text-blue-600">fibra óptica garantiza</strong> una conexión estable y
+                        </div></details><details name="internet-faq"><summary>Conexión Estable y Fiable</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        A diferencia de las conexiones tradicionales, la <strong>fibra óptica garantiza</strong> una conexión estable y
                                         fiable.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-exclamation-triangle text-blue-500"></i>
+                                <div>
+                                    <h4>
+
                                         Problemas que NO tendrás:
                                     </h4>
-                                    <div class="space-y-2">
-                                        <div
-                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-gray-400 text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-sm text-gray-700">Interferencias eléctricas</span>
+                                            <span>Interferencias eléctricas</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-gray-400 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-sm text-gray-700">Afectaciones por clima</span>
+                                            <span>Afectaciones por clima</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-times text-gray-400 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-sm text-gray-700">Caídas frecuentes de conexión</span>
+                                            <span>Caídas frecuentes de conexión</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <div class="flex items-center gap-2 justify-center">
-                                        <i class="fas fa-medal text-blue-500"></i>
-                                        <span class="font-semibold text-gray-800">Resultado: Mayor consistencia en la
+                                <div>
+                                    <div>
+
+                                        <span>Resultado: Mayor consistencia en la
                                             calidad del servicio</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 4 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-lock text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Seguridad Mejorada</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                                    <p class="text-gray-700 leading-relajadas">
-                                        La <strong class="text-blue-600">fibra óptica ofrece mayor seguridad</strong> en
+                        </div></details><details name="internet-faq"><summary>Seguridad Mejorada</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        La <strong>fibra óptica ofrece mayor seguridad</strong> en
                                         la transmisión de datos comparada con el cableado de cobre.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-shield-alt text-blue-500"></i>
+                                <div>
+                                    <h4>
+
                                         Ventajas de seguridad:
                                     </h4>
-                                    <div class="space-y-3">
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-check text-green-600 text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Menos susceptible a
+                                                <span>Menos susceptible a
                                                     intercepciones</span>
-                                                <p class="text-xs text-gray-600 mt-1">Es muy difícil "pinchar" una fibra
+                                                <p>Es muy difícil "pinchar" una fibra
                                                     óptica sin detectarlo</p>
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-check text-green-600 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Protección contra
+                                                <span>Protección contra
                                                     hackeo</span>
-                                                <p class="text-xs text-gray-600 mt-1">Capa adicional de protección para
+                                                <p>Capa adicional de protección para
                                                     tu red y datos</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 5 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-tools text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Durabilidad y Menor Mantenimiento
-                                </h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-3">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                                    <p class="text-gray-700 leading-relaxed">
-                                        Las <strong class="text-blue-600">fibras ópticas son más resistentes</strong> a
+                        </div></details><details name="internet-faq"><summary>Durabilidad y Menor Mantenimiento
+                                </summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        Las <strong>fibras ópticas son más resistentes</strong> a
                                         las condiciones ambientales y degradación comparadas con los cables de cobre.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-chart-line text-blue-600"></i>
+                                <div>
+                                    <h4>
+
                                         Beneficios a largo plazo:
                                     </h4>
-                                    <div class="grid md:grid-cols-2 gap-3">
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-wrench text-green-600 text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Menos
+                                                <span>Menos
                                                     mantenimiento</span>
-                                                <p class="text-xs text-gray-600">Menor frecuencia de reparaciones</p>
+                                                <p>Menor frecuencia de reparaciones</p>
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-hourglass text-green-600 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Vida útil más
+                                                <span>Vida útil más
                                                     larga</span>
-                                                <p class="text-xs text-gray-600">Mayor durabilidad del sistema</p>
+                                                <p>Mayor durabilidad del sistema</p>
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100 md:col-span-2">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-dollar-sign text-blue-600 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Reduce costos y
+                                                <span>Reduce costos y
                                                     molestias a largo plazo</span>
-                                                <p class="text-xs text-gray-600">Inversión inteligente para el futuro
+                                                <p>Inversión inteligente para el futuro
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                        </div></details></div></div></section>
 
-        <!-- =========== Contact Section =========== -->
-        <section id="contact" class="py-8 md:py-12 bg-white">
+
+        <section id="contact" class="section-space business-contact">
             <div class="container mx-auto px-6">
-                <div class="mt-0 bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg max-w-7xl mx-auto interactive-card"
-                    style="background-color: white;">
+                <div class="mt-0 bg-gray-50 p-8 lg:p-12 rounded-xl max-w-7xl mx-auto interactive-card" style="background-color: white;">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-2xl font-bold mb-4">Contactanos</h3>
                             <div class="space-y-4">
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                        <i class="fa-solid fa-phone text-xl"></i>
+                                    <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                        <i class="fa-solid fa-phone text-xl" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <h4 class="font-semibold text-lg">Teléfono</h4>
-                                        <a href="tel:08001994545"
-                                            class="text-gray-600 hover:text-blue-600">0800-199-4545</a>
+                                        <a href="tel:08001994545" class="text-gray-600 hover:text-blue-600">0800-199-4545</a>
                                         <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16hs.</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                        <i class="fab fa-whatsapp text-3xl"></i>
+                                    <div class="bg-green-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                        <i class="fab fa-whatsapp text-3xl" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <h4 class="font-semibold text-lg">WhatsApp</h4>
-                                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer"
-                                            class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
+                                        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-green-600">+54 9 249 406-0345</a>
                                         <p class="text-sm text-gray-500">L-V de 8 a 20hs. Sáb, Dom y feriados de 10 a
                                             16hs.</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                        <i class="fa-solid fa-envelope text-xl"></i>
+                                    <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                        <i class="fa-solid fa-envelope text-xl" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <h4 class="font-semibold text-lg">Email</h4>
-                                        <a href="mailto:contacto@usittel.com.ar"
-                                            class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
+                                        <a href="mailto:contacto@usittel.com.ar" class="text-gray-600 hover:text-blue-600">contacto@usittel.com.ar</a>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
-                                        <i class="fa-solid fa-location-dot text-xl"></i>
+                                    <div class="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center w-12 h-12">
+                                        <i class="fa-solid fa-location-dot text-xl" aria-hidden="true"></i>
                                     </div>
                                     <div>
                                         <h4 class="font-semibold text-lg">Oficina</h4>
-                                        <a href="https://maps.app.goo.gl/9a43a2Fv4Qf9eZ1f8" target="_blank"
-                                            rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro
+                                        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Nigro%20575%2C%20Tandil%2C%20Buenos%20Aires" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-600">Nigro
                                             575, Tandil, Buenos Aires</a>
                                     </div>
                                 </div>
@@ -1654,11 +688,8 @@
 
                         <div>
                             <h3 class="text-2xl font-bold mb-4">Nuestra ubicación</h3>
-                            <div class="rounded-lg overflow-hidden shadow-lg h-[300px]">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3173.370881402261!2d-59.13915212486734!3d-37.310041572106144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95912026456142db%3A0x4211da708442e913!2sNigro%20575%2C%20B7000%20Tandil%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1751241377698!5m2!1ses!2sar"
-                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade" class="rounded-lg"></iframe>
+                            <div class="office-map-frame">
+                                <div class="office-map" data-office-map><div class="office-map-canvas" aria-label="Mapa de nuestra oficina en Nigro 575, Tandil"></div><p role="status">Cargando mapa…</p><a class="office-map-directions" href="https://www.google.com/maps/dir/?api=1&amp;destination=-37.3093588%2C-59.136183" target="_blank" rel="noopener">Cómo llegar a Nigro 575 <span aria-hidden="true">↗</span></a></div>
                             </div>
                         </div>
                     </div>
@@ -1667,253 +698,137 @@
         </section>
 
     </main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
+    <div class="container mx-auto px-6 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
 
-    <footer class="bg-gray-800 text-white pt-16 pb-8">
-        <div class="container mx-auto px-6 max-w-7xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <!-- Columna de Contacto y Horarios -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                    <div class="space-y-3 text-gray-300">
-                        <p class="flex items-start gap-3">
-                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                            <span>Nigro 575, Tandil</span>
-                        </p>
-
-                        <!-- Números oficiales de WhatsApp -->
-                        <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                            <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                                <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5">
-                                Números Oficiales
-                            </p>
-                            <div class="space-y-2">
-                                <div>
-                                    <p class="flex items-center gap-2 text-sm">
-                                        <i class="fab fa-whatsapp text-green-400"></i>
-                                        <span class="font-medium">+54 9 249 406-0345</span>
-                                    </p>
-                                    <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                                    <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="flex items-center gap-2 text-sm">
-                                        <i class="fab fa-whatsapp text-green-400"></i>
-                                        <span class="font-medium">+54 9 249 450-4522</span>
-                                    </p>
-                                    <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <p class="flex items-center gap-3">
-                                <i class="fas fa-phone text-blue-400"></i>
-                                <span>0800-199-4545</span>
-                            </p>
-                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Columna de Servicios -->
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
                 <div>
-                    <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                        <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
-                        <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                        <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                    </ul>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
                 </div>
-
-                <!-- Columna de Soporte -->
                 <div>
-                    <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
-                        </li>
-                        <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
-                                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
-                        </li>
-                    <li><a href="../centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a></li>
-                        <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                    </ul>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
                 </div>
-
-                <!-- Columna de Legal y Logo -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
-                                condiciones</a></li>
-                        <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
-                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                        <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
-                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
-                        <li><a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a></li>
-                    </ul>
-                    <div class="pt-4">
-                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png"
-                            alt="Logo Usina de Tandil" class="rounded-md w-36" />
-                    </div>
-                </div>
+              </div>
             </div>
 
-            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-                <div class="flex space-x-4">
-                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
-                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
-                            class="fab fa-instagram fa-lg"></i></a>
-                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
-                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-                </div>
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
             </div>
+          </div>
         </div>
-    </footer>
 
-    <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-    <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-            class="flex items-center no-underline group hover:no-underline focus:no-underline"
-            aria-label="Chateá con nosotros por WhatsApp">
-            <span
-                class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-                style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-                <i class="fab fa-whatsapp"></i>
-            </span>
-            <span
-                class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors"
-                style="min-width: 126px;">
-                <span>¿Necesitás ayuda?</span>
-                <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-            </span>
-        </a>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-            // --- Speedtest Simulation ---
-            const startBtn = document.getElementById('start-speedtest-btn');
-            const speedValueEl = document.getElementById('speed-value');
-            const gaugeEl = document.getElementById('gauge');
-            const pingValueEl = document.getElementById('ping-value');
-            const uploadValueEl = document.getElementById('upload-value');
-
-            if (startBtn) {
-                startBtn.addEventListener('click', () => {
-                    startBtn.disabled = true;
-                    startBtn.textContent = 'Midiendo...';
-
-                    // Reset values
-                    speedValueEl.textContent = '0.00';
-                    pingValueEl.textContent = '-';
-                    uploadValueEl.textContent = '-';
-                    gaugeEl.style.background = 'conic-gradient(#1a73e8 0deg, #3c4043 0deg)';
-
-                    let currentSpeed = 0;
-                    const targetSpeed = 280 + Math.random() * 20; // Simulate a speed around 280-300
-
-                    // Simulate download speed
-                    const downloadInterval = setInterval(() => {
-                        currentSpeed += (targetSpeed - currentSpeed) * 0.1;
-                        speedValueEl.textContent = currentSpeed.toFixed(2);
-
-                        const gaugeAngle = (currentSpeed / 500) * 360; // Max speed of 500 for gauge
-                        gaugeEl.style.background = `conic-gradient(#1a73e8 ${gaugeAngle}deg, #3c4043 ${gaugeAngle}deg)`;
-
-                        if (Math.abs(targetSpeed - currentSpeed) < 0.1) {
-                            clearInterval(downloadInterval);
-                            speedValueEl.textContent = targetSpeed.toFixed(2);
-
-                            setTimeout(() => {
-                                pingValueEl.textContent = Math.round(8 + Math.random() * 5);
-                            }, 200);
-
-                            setTimeout(() => {
-                                uploadValueEl.textContent = (targetSpeed * (0.9 + Math.random() * 0.1)).toFixed(2); // Simulate symmetric speed
-                                startBtn.disabled = false;
-                                startBtn.textContent = 'Iniciar de nuevo';
-                            }, 500);
-                        }
-                    }, 50);
-                });
-            }
-
-            // --- FAQ Accordion Logic ---
-            const faqContainer = document.getElementById("faq-accordion");
-            if (faqContainer) {
-                const questions = faqContainer.querySelectorAll(".faq-question");
-                questions.forEach((question) => {
-                    question.addEventListener("click", () => {
-                        const answer = question.nextElementSibling;
-                        const isOpen = question.classList.contains("open");
-
-                        questions.forEach((q) => {
-                            if (q !== question) {
-                                q.classList.remove("open");
-                                q.nextElementSibling.style.maxHeight = null;
-                            }
-                        });
-
-                        if (isOpen) {
-                            question.classList.remove("open");
-                            answer.style.maxHeight = null;
-                        } else {
-                            question.classList.add("open");
-                            answer.style.maxHeight = answer.scrollHeight + "px";
-                        }
-                    });
-                });
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const hamburger = document.getElementById("hamburger"),
-                mobileMenu = document.getElementById("mobileMenu"),
-                overlay = document.getElementById("overlay"),
-                closeMenu = document.getElementById("closeMenu"),
-                toggleProducts = document.getElementById("toggleProducts"),
-                productsSubmenu = document.getElementById("productsSubmenu");
-
-            function toggleMenu() {
-                mobileMenu.classList.toggle("show");
-                overlay.classList.toggle("show");
-            }
-
-            if (hamburger) hamburger.addEventListener("click", toggleMenu);
-            if (overlay) overlay.addEventListener("click", toggleMenu);
-            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
-            if (toggleProducts) {
-                toggleProducts.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
-                });
-            }
-        });
-    </script>
-
-    <!-- Validador de Cobertura -->
-    <script src="../../js/coverage-validator.js"></script>
-
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
+  </footer>
 </body>
-
 </html>

@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -13,1065 +11,219 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - Alcances de Servicios</title>
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-
     <meta name="description" content="Descubrí el alcance de los servicios de Usittel: internet, TV y WiFi Mesh en Tandil. Soluciones para hogares y empresas." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Usittel - Alcance de Servicios" />
     <meta property="og:description" content="Descubrí el alcance de los servicios de Usittel: internet, TV y WiFi Mesh en Tandil. Soluciones para hogares y empresas." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - Alcance de Servicios" />
     <meta name="twitter:description" content="Descubrí el alcance de los servicios de Usittel: internet, TV y WiFi Mesh en Tandil. Soluciones para hogares y empresas." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
-
-    <!-- Google Fonts: Poppins & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet" />
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-<style>
-        /* NAVIGATION STYLES */
-.navbar-section *,
-.navbar-section *::before,
-.navbar-section *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-header.navbar-section {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background-color: white;
-}
-
-.navbar-section {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    font-size: 17px;
-    color: #3c4043;
-}
-
-.navbar {
-    background-color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 34px;
-    height: 69px;
-    width: 100%;
-    max-width: 1500px;
-    margin: 0 auto;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 26px;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
-
-.logo:hover {
-    background-color: rgba(60, 64, 67, 0.08);
-}
-
-.logo img {
-    height: 39px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 12px;
-    list-style: none;
-}
-
-.nav-links li a {
-    text-decoration: none;
-    color: #60666b;
-    font-size: 17px;
-    font-weight: 500;
-    padding: 13px 17px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.nav-links li a:hover {
-    background-color: rgba(60, 64, 67, 0.06);
-    color: #202020;
-}
-
-.nav-links li a.active {
-    color: #1a73e8;
-    font-weight: 600;
-}
-
-.nav-links .dropdown {
-    position: relative;
-}
-
-.nav-links .dropdown-menu {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    background-color: white;
-    padding: 8px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    list-style: none;
-    min-width: 180px;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.nav-links .dropdown-menu li a {
-    display: block;
-    padding: 11px 17px;
-    color: #3c4043;
-    font-size: 16px;
-    border-radius: 4px;
-}
-
-.nav-links .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nav-button,
-.nav-button2,
-.nav-button-green {
-    font-size: 16px;
-    padding: 11px 22px;
-    border-radius: 999px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
-
-.nav-button-green {
-    background-color: #30a172;
-    color: white !important;
-}
-
-.nav-button-green:hover {
-    background-color: #188b48;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.nav-button2 {
-    background-color: #1a73e8;
-    color: white !important;
-}
-
-.nav-button2:hover {
-    background-color: #175ca7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-        /* CUSTOM STYLES */
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
-}
-
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif;
-}
-
-.interactive-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    border: 2px solid transparent;
-    background-color: white;
-}
-
-.interactive-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border-color: #22c55e; /* green-500 */
-}
-
-.service-doc-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    text-decoration: none;
-}
-.service-doc-button .fa-download {
-    transition: transform 0.2s ease;
-}
-.service-doc-button:hover .fa-download {
-    transform: scale(1.2);
-}
-
- .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    .hamburger span {
-      width: 24px;
-      height: 3px;
-      background-color: #3c4043;
-      border-radius: 2px;
-    }
-
-    .mobile-menu-slide {
-      position: fixed;
-      top: 0;
-      left: -300px;
-      width: 280px;
-      height: 100vh;
-      background-color: white;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
-      gap: 16px;
-      transition: left 0.3s ease-in-out;
-      z-index: 1001;
-    }
-
-    .mobile-menu-slide.show {
-      left: 0;
-    }
-
-    .mobile-menu-slide a {
-      text-decoration: none;
-      color: #3c4043;
-      font-size: 16px;
-      padding: 10px 8px;
-      border-radius: 6px;
-    }
-
-    .mobile-menu-slide .nav-button-green,
-    .mobile-menu-slide .nav-button2 {
-      padding: 12px 18px;
-      margin-top: 8px;
-      text-align: center;
-      display: block;
-    }
-
-    .mobile-menu-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mobile-menu-header img {
-      height: 32px;
-    }
-
-    .close-menu {
-      background: none;
-      border: none;
-      font-size: 28px;
-      color: #3c4043;
-      cursor: pointer;
-      padding: 0;
-      line-height: 1;
-    }
-
-    .mobile-menu-slide hr {
-      border: none;
-      border-top: 1px solid #ddd;
-      margin-bottom: 16px;
-    }
-
-    .submenu-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .submenu-toggle {
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: 16px;
-      text-align: left;
-      color: #3c4043;
-      padding: 10px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 400;
-    }
-
-    .submenu {
-      display: none;
-      flex-direction: column;
-      padding-left: 12px;
-      margin-top: -4px;
-    }
-
-    .submenu a {
-      font-size: 15px;
-      padding: 8px 12px;
-      color: #3c4043;
-    }
-
-    .submenu.show {
-      display: flex;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-    }
-
-    .overlay.show {
-      display: block;
-    }
-
-    .desktop-only {
-      display: flex;
-    }
-
-    .mobile-only {
-      display: none;
-    }
-
-    .mobile-header-bar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .navbar.sticky-shadow {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 1024px) {
-      .navbar-container {
-        padding: 0 24px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .mobile-only {
-        display: flex !important;
-      }
-
-      .desktop-only {
-        display: none;
-      }
-
-      .hamburger {
-        display: flex;
-      }
-
-      .mobile-header-bar {
-        display: flex;
-      }
-    }
-
-    /* ================================== */
-    /* ===      CUSTOM STYLES         === */
-    /* ================================== */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9fa;
-    }
-
-    #hero-container {
-      position: relative;
-      background-color: #0c0c1d; /* Fallback color */
-    }
-
-    #hero-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2; /* Ensure content is above canvas */
-    }
-
-    .cta-button {
-      transition: all 0.3s ease;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    .plan-toggle {
-      display: inline-flex;
-      background-color: #e9e9e9;
-      border-radius: 999px;
-      padding: 6px;
-    }
-
-    .plan-toggle button {
-      padding: 10px 24px;
-      border: none;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      background-color: transparent;
-      color: #5f6368;
-      transition: all 0.3s ease;
-    }
-
-    .plan-toggle button.active {
-      background-color: #1a73e8;
-      color: white;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    h1,
-    h2,
-    h3 {
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .faq-answer {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-    
-    .faq-question.open + .faq-answer {
-        padding-top: 0.5rem;
-        padding-bottom: 1.5rem;
-        opacity: 1;
-    }
-
-    .faq-icon {
-        transition: transform 0.3s ease-in-out;
-    }
-    
-    .faq-question.open .faq-icon {
-        transform: rotate(45deg);
-    }
-
-    .whatsapp-float {
-      position: left;
-      bottom: 15px;
-      right: 15px;
-      width: 50px;
-      height: 50px;
-      background-color: #25d366;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 35px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-      transition: transform 0.2s ease;
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-
-    .mesh-carousel-container {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .mesh-slide {
-      display: none;
-    }
-
-    .mesh-slide.active {
-      display: block;
-    }
-
-    .mesh-dots-container {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .mesh-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background-color: #ccc;
-      border-radius: 50%;
-      margin: 0 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .mesh-dot.active {
-      background-color: #1a73e8;
-    }
-    
-    /* HOVER EFFECTS */
-    .hover-glow-card {
-        position: relative;
-        border: 2px solid transparent;
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .hover-glow-card:hover {
-        transform: translateY(-5px);
-        border-color: #30a172; /* Verde de Usittel */
-        box-shadow: 0 10px 25px -5px rgba(48, 161, 114, 0.15), 0 8px 10px -6px rgba(48, 161, 114, 0.15);
-    }
-
-</style>
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/documents.css">
+<script src="../../js/site.js" defer></script>
+<script src="../../js/site-tracking.js" defer></script>
 </head>
-
-<body class="text-gray-800">
-
-    <!-- Header / Navigation -->
+<body class="public-page document-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
 <header class="navbar-section">
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="mobile-header-bar mobile-only">
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-        <a href="../../" class="logo">
-          <img src="../../assets/img/logos/usittel-logo.png" alt="Usittel Logo" />
-        </a>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/">Internet</a></li>
+                <li><a href="../../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
       </div>
-      <div class="nav-left desktop-only">
-        <a href="../../" class="logo">
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
           <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
-        </a>
-        <ul class="nav-links">
-          <li><a href="../../">Home</a></li>
-          <li class="dropdown"><a href="#">Productos</a>
-            <ul class="dropdown-menu">
-              <li><a href="../internet/">Internet</a></li>
-              <li><a href="../mesh/">WiFi Mesh</a></li>
-              <li><a href="../tv/">TV</a></li>
-            </ul>
-          </li>
-          <li><a href="../empresas/">Empresas</a></li>
-          <li><a href="../contacto/">Contáctanos</a></li>
-        </ul>
-      </div>
-      <div class="nav-actions desktop-only">
-  <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-        <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-      </div>
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-    <div class="mobile-menu-slide" id="mobileMenu">
-      <div class="mobile-menu-header">
-        <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
-        <button class="close-menu" id="closeMenu">&times;</button>
-      </div>
-      <hr />
-    <a href="../../">Home</a>
-      <div class="submenu-container">
-        <button class="submenu-toggle" id="toggleProducts">Productos</button>
-        <div class="submenu" id="productsSubmenu">
-          <a href="../internet/">Internet</a>
-          <a href="../mesh/">WiFi Mesh</a>
-          <a href="../tv/">TV</a>
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
         </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/">Internet</a><a href="../../pages/mesh/">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
       </div>
-  <a href="../empresas/">Empresas</a>
-  <a href="../contacto/">Contáctanos</a>
-  <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-      <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-    </div>
-  </nav>
-</header>
-
-
-    <main>
-        <!-- Hero Section -->
-        <section class="bg-green-100 py-20 md:py-28">
-            <div class="container mx-auto text-center px-6">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Alcance de Nuestros Servicios</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Conocé en detalle la cobertura y las condiciones de cada uno de nuestros servicios de conectividad.</p>
-            </div>
-        </section>
-
-        <!-- Service Docs Section -->
-        <section class="py-16 md:py-24">
-            <div class="container mx-auto px-6 max-w-4xl">
-              
-              <!-- Internet Services -->
-              <div class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8 border-l-4 border-blue-500 pl-4">Internet</h2>
-                <div class="space-y-4">
-                  <a href="../alcances_servicios/internet_residencial.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                    <div class="flex items-center gap-4">
-                      <i class="fas fa-user text-blue-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">Internet Residencial</span>
-                    </div>
-                    <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                  <a href="../alcances_servicios/internet_comercio.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                    <div class="flex items-center gap-4">
-                      <i class="fas fa-store-alt text-blue-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">Internet Comercio</span>
-                    </div>
-                     <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                  <a href="../alcances_servicios/internet_empresas.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                     <div class="flex items-center gap-4">
-                      <i class="fas fa-building text-blue-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">Internet Empresas</span>
-                    </div>
-                     <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                   <a href="../alcances_servicios/internet_dedicado.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                     <div class="flex items-center gap-4">
-                      <i class="fas fa-server text-blue-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">Internet Dedicado</span>
-                    </div>
-                     <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                     <a href="../alcances_servicios/acuerdo_nivel_servicio.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                     <div class="flex items-center gap-4">
-                      <i class="fas fa-file-contract text-blue-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">Acuerdo de nivel de servicio para internet dedicado (SLA)</span>
-                    </div>
-                     <i class="fas fa-download text-gray-400"></i>
-                    </a>
-                </div>
-              </div>
-
-              <!-- TV Services -->
-              <div>
-                 <h2 class="text-3xl font-bold text-gray-900 mb-8 border-l-4 border-green-500 pl-4">Televisión</h2>
-                 <div class="space-y-4">
-                  <a href="../alcances_servicios/tv_digital_sensa.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                    <div class="flex items-center gap-4">
-                      <i class="fas fa-tv text-green-500 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">TV Digital Sensa</span>
-                    </div>
-                    <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                 </div>
-              </div>
-
-              <!-- WiFi+ -->
-              <div class="mt-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8 border-l-4 border-blue-400 pl-4">WiFi+</h2>
-                <div class="space-y-4">
-                  <a href="../alcances_servicios/Wifi+.pdf" class="service-doc-button interactive-card rounded-lg" target="_blank" rel="noopener">
-                    <div class="flex items-center gap-4">
-                      <i class="fas fa-wifi text-blue-400 text-2xl w-8 text-center"></i>
-                      <span class="text-lg font-semibold text-gray-800">WiFi+</span>
-                    </div>
-                    <i class="fas fa-download text-gray-400"></i>
-                  </a>
-                </div>
-              </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-  <footer class="bg-gray-800 text-white pt-16 pb-8">
+    </nav>
+  </header>
+<main id="main-content">
+<section class="document-hero"><div class="container mx-auto"><p class="document-kicker">Servicios y documentación</p><h1>Alcance de Nuestros Servicios</h1><p class="document-lead">Conocé en detalle la cobertura y las condiciones de cada uno de nuestros servicios de conectividad.</p></div></section><div class="container mx-auto document-body document-columns"><aside class="document-aside"><h2>Documentación de servicio</h2><p>Consultá los documentos en formato PDF. Se abren en una pestaña nueva.</p><a href="../contacto/">¿Tenés alguna consulta? <span aria-hidden="true">→</span></a></aside><div><section class="document-group"><h2>Internet</h2><div><a class="document-row" href="../alcances_servicios/internet_residencial.pdf" target="_blank" rel="noopener"><span>Internet Residencial</span><span class="document-file">PDF · 177 KB <span aria-hidden="true">↗</span></span></a><a class="document-row" href="../alcances_servicios/internet_comercio.pdf" target="_blank" rel="noopener"><span>Internet Comercio</span><span class="document-file">PDF · 178 KB <span aria-hidden="true">↗</span></span></a><a class="document-row" href="../alcances_servicios/internet_empresas.pdf" target="_blank" rel="noopener"><span>Internet Empresas</span><span class="document-file">PDF · 213 KB <span aria-hidden="true">↗</span></span></a><a class="document-row" href="../alcances_servicios/internet_dedicado.pdf" target="_blank" rel="noopener"><span>Internet Dedicado</span><span class="document-file">PDF · 214 KB <span aria-hidden="true">↗</span></span></a><a class="document-row" href="../alcances_servicios/acuerdo_nivel_servicio.pdf" target="_blank" rel="noopener"><span>Acuerdo de nivel de servicio para internet dedicado (SLA)</span><span class="document-file">PDF · 76 KB <span aria-hidden="true">↗</span></span></a></div></section><section class="document-group"><h2>Televisión</h2><div><a class="document-row" href="../alcances_servicios/tv_digital_sensa.pdf" target="_blank" rel="noopener"><span>TV Digital Sensa</span><span class="document-file">PDF · 4 KB <span aria-hidden="true">↗</span></span></a></div></section><section class="document-group"><h2>WiFi+</h2><div><a class="document-row" href="../alcances_servicios/Wifi+.pdf" target="_blank" rel="noopener"><span>WiFi+</span><span class="document-file">PDF · 127 KB <span aria-hidden="true">↗</span></span></a></div></section></div></div>
+</main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
     <div class="container mx-auto px-6 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Columna de Contacto y Horarios -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                <div class="space-y-3 text-gray-300">
-                    <p class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                        <span>Nigro 575, Tandil</span>
-                    </p>
-                    
-                    <!-- Números oficiales de WhatsApp -->
-                    <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                      <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                        <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
-                      </p>
-                      <div class="space-y-2">
-                        <div>
-                          <p class="flex items-center gap-2 text-sm">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span class="font-medium">+54 9 249 406-0345</span>
-                          </p>
-                          <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                          <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
-                        </div>
-                        <div>
-                          <p class="flex items-center gap-2 text-sm">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span class="font-medium">+54 9 249 450-4522</span>
-                          </p>
-                          <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <span>0800-199-4545</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                    </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
+
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
                 </div>
-            </div>
-
-            <!-- Columna de Servicios -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                    <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
-                    <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                    <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Soporte -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                    <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="../centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a></li>
-                    <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Legal y Logo -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                <ul class="space-y-2">
-                    <li><a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-  <li><a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a></li>
-                </ul>
-                <div class="pt-4">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
                 </div>
+              </div>
             </div>
+
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+            </div>
+          </div>
         </div>
 
-        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-            </div>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
         </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
-
- <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-       class="flex items-center no-underline group hover:no-underline focus:no-underline"
-       aria-label="Chateá con nosotros por WhatsApp">
-      <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-            style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-        <i class="fab fa-whatsapp"></i>
-      </span>
-      <span class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors" style="min-width: 126px;">
-        <span>¿Necesitás ayuda?</span>
-        <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-      </span>
-    </a>
-  </div>
-
- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Mobile Menu Logic
-      const hamburger = document.getElementById('hamburger'), mobileMenu = document.getElementById('mobileMenu'), overlay = document.getElementById('overlay'), closeMenu = document.getElementById('closeMenu'), toggleProducts = document.getElementById('toggleProducts'), productsSubmenu = document.getElementById('productsSubmenu');
-      function toggleMenu() { mobileMenu.classList.toggle('show'); overlay.classList.toggle('show'); }
-      if (hamburger) hamburger.addEventListener('click', toggleMenu);
-      if (overlay) overlay.addEventListener('click', toggleMenu);
-      if (closeMenu) closeMenu.addEventListener('click', toggleMenu);
-      if (toggleProducts) { toggleProducts.addEventListener('click', (e) => { e.preventDefault(); productsSubmenu.style.display = productsSubmenu.style.display === 'flex' ? 'none' : 'flex'; }); }
-
-       // Hero Animation: Fiber Optic Lines (Updated)
-        const container = document.getElementById('hero-canvas-container');
-        if (container) {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 1, 1000);
-            camera.position.z = 200;
-            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), antialias: true, alpha: true });
-            renderer.setClearColor(0x0c0c1d, 1);
-            renderer.setSize(container.offsetWidth, container.offsetHeight);
-
-            const lines = [];
-            const lineCount = 200;
-            const lineColors = [new THREE.Color(0x1a73e8), new THREE.Color(0x30a172)];
-
-            for (let i = 0; i < lineCount; i++) {
-                const geometry = new THREE.BufferGeometry();
-                const points = [];
-                const length = Math.random() * 20 + 5;
-                const point1 = new THREE.Vector3(0, 0, 0);
-                const point2 = new THREE.Vector3(0, 0, -length);
-                points.push(point1, point2);
-                geometry.setFromPoints(points);
-
-                const material = new THREE.LineBasicMaterial({ 
-                    color: lineColors[Math.floor(Math.random() * lineColors.length)],
-                    linewidth: Math.random() * 1.5 + 0.5,
-                });
-                
-                const line = new THREE.Line(geometry, material);
-                
-                line.position.set(
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 150,
-                    (Math.random() - 0.5) * 400
-                );
-                
-                line.speed = Math.random() * 1 + 0.5; // Increased speed
-                
-                lines.push(line);
-                scene.add(line);
-            }
-
-            function animate() {
-                requestAnimationFrame(animate);
-                lines.forEach(line => {
-                    line.position.z += line.speed;
-                    if (line.position.z > camera.position.z) {
-                        line.position.z = -200;
-                        line.position.x = (Math.random() - 0.5) * 150;
-                        line.position.y = (Math.random() - 0.5) * 150;
-                    }
-                });
-                renderer.render(scene, camera);
-            }
-
-            function onWindowResize() {
-                camera.aspect = container.offsetWidth / container.offsetHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-            }
-
-            window.addEventListener('resize', onWindowResize, false);
-            animate();
-        }
-
-      // Plans Section Logic
-      const plansData = {
-        internet: [{ name: "Fibra 300", speed: "300 Mbps", symmetric: true, price: "21999", features: ["Instalación 100% bonificada", "Ideal para Home Office", "Streaming en 4K/UHD", "Hasta 5 dispositivos"], popular: false }, { name: "Fibra 500", speed: "500 Mbps", symmetric: true, price: "24749", features: ["Instalación 100% bonificada", "Perfecto para familias", "Gaming online sin lag", "Múltiples streams en 4K"], popular: true }, { name: "Fibra 1000", speed: "1000 Mbps", symmetric: true, price: "54999", features: ["Instalación 100% bonificada", "Máxima velocidad disponible", "Para usuarios exigentes", "La mejor experiencia online"], popular: false },],
-        internetTv: [{ name: "Fibra 100 + TV", speed: "100 Mbps", symmetric: true, price: "31426.41", features: ["Instalación 100% bonificada", "Pack USITTEL TV incluido", "+100 canales en vivo", "Contenido On-Demand"], popular: false }, { name: "Fibra 300 + TV", speed: "300 Mbps", symmetric: true, price: "33426.71", features: ["Instalación 100% bonificada", "Pack USITTEL TV incluido", "Ideal para toda la familia", "Mirá en múltiples pantallas"], popular: true }, { name: "Fibra 500 + TV", speed: "500 Mbps", symmetric: true, price: "35748.21", features: ["Instalación 100% bonificada", "Pack USITTEL TV incluido", "La experiencia completa", "Velocidad y entretenimiento"], popular: false },],
-        soloTv: [
-          {
-            name: "Sensa TV Básico",
-            speed: "Televisión Digital",
-            symmetric: false,
-            price: "19999",
-            features: [
-              "Más de 100 canales en vivo",
-              "Series y películas On-Demand",
-              "Acceso a la app Sensa multidispositivo",
-              "No requiere Internet de Usittel"
-            ],
-            popular: true
-          }
-        ]
-      };
-      
-      const defaultPlansView = document.getElementById('default-plans-view');
-      const soloTvView = document.getElementById('solo-tv-view');
-      const planCardsContainer = document.getElementById('plan-cards-container');
-      const soloTvCardContainer = document.getElementById('solo-tv-card-container');
-      const premiumPacksDefault = document.getElementById('premium-packs-container-default');
-
-      const internetBtn = document.getElementById('internet-only-btn');
-      const internetTvBtn = document.getElementById('internet-tv-btn');
-      const tvOnlyBtn = document.getElementById('tv-only-btn');
-
-      function createPlanCard(plan, type) {
-          const isSoloTvPlan = type === 'soloTv';
-          const paddingClass = isSoloTvPlan ? 'p-8 md:p-10' : 'p-6';
-          const speedLine = plan.speed.includes('Mbps')
-              ? `<p class="text-gray-500 mb-4">${plan.speed} ${plan.symmetric ? 'Simétricos' : ''}</p>`
-              : `<p class="text-blue-600 font-semibold mb-4">${plan.speed}</p>`;
-
-          return `<div class="hover-glow-card h-full border rounded-xl ${paddingClass} flex flex-col ${plan.popular ? 'border-blue-500 border-2 relative bg-white' : 'border-gray-200 bg-white'}">
-                      <h3 class="text-2xl font-bold text-gray-800">${plan.name}</h3>
-                      ${speedLine}
-                      <div class="my-4"><span class="text-4xl lg:text-5xl font-extrabold text-gray-900">$${new Intl.NumberFormat('es-AR').format(Math.trunc(Number(plan.price)))}</span><span class="text-gray-500">/mes</span></div>
-                      <ul class="space-y-3 text-gray-600 mb-6 flex-grow">${plan.features.map(feature => `<li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-2 mt-1 shrink-0"></i><span>${feature}</span></li>`).join('')}</ul>
-                      <a href="#" class="w-full text-center mt-auto bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors cta-button">Contratar ahora</a>
-                      ${plan.popular ? '<span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-3 right-4">MÁS POPULAR</span>' : ''}
-                  </div>`;
-      }
-
-
-      function displayPlans(type) {
-        internetBtn.classList.remove('active');
-        internetTvBtn.classList.remove('active');
-        tvOnlyBtn.classList.remove('active');
-
-        if(type === 'soloTv') {
-            defaultPlansView.classList.add('hidden');
-            soloTvView.classList.remove('hidden');
-            soloTvCardContainer.innerHTML = createPlanCard(plansData.soloTv[0], 'soloTv');
-            tvOnlyBtn.classList.add('active');
-        } else {
-            soloTvView.classList.add('hidden');
-            defaultPlansView.classList.remove('hidden');
-            
-            planCardsContainer.innerHTML = '';
-            plansData[type].forEach(plan => { planCardsContainer.innerHTML += createPlanCard(plan, type); });
-
-            if (type === 'internet') {
-                internetBtn.classList.add('active');
-                premiumPacksDefault.classList.add('hidden');
-            } else if (type === 'internetTv') {
-                internetTvBtn.classList.add('active');
-                premiumPacksDefault.classList.remove('hidden');
-            }
-        }
-
-        const buttonContainer = document.getElementById('plan-info-button-container');
-        if(buttonContainer){
-            let btnHTML = '';
-            if (type === 'internet') {
-                btnHTML = `<a href="#network" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Más información sobre nuestra tecnología de Fibra <span aria-hidden="true">?</span></a>`;
-            } else if (type === 'internetTv' || type === 'soloTv') {
-                btnHTML = `<a href="#tv-section" class="inline-block text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">Descubrí más sobre el servicio de TV <span aria-hidden="true">?</span></a>`;
-            }
-            buttonContainer.innerHTML = btnHTML;
-        }
-      }
-
-      internetBtn.addEventListener('click', () => displayPlans('internet'));
-      internetTvBtn.addEventListener('click', () => displayPlans('internetTv'));
-      tvOnlyBtn.addEventListener('click', () => displayPlans('soloTv'));
-      
-      // Initial display
-      displayPlans('internet');
-
-      // FAQ Accordion Logic
-      const faqContainer = document.getElementById('faq-accordion');
-      if (faqContainer) {
-          const questions = faqContainer.querySelectorAll('.faq-question');
-          questions.forEach(question => {
-              question.addEventListener('click', () => {
-                  const answer = question.nextElementSibling;
-                  const isOpen = question.classList.contains('open');
-                  
-                  questions.forEach(q => {
-                      if (q !== question) {
-                          q.classList.remove('open');
-                          q.nextElementSibling.style.maxHeight = null;
-                      }
-                  });
-
-                  if (isOpen) {
-                      question.classList.remove('open');
-                      answer.style.maxHeight = null;
-                  } else {
-                      question.classList.add('open');
-                      answer.style.maxHeight = answer.scrollHeight + 'px';
-                  }
-              });
-          });
-      }
-
-      // Mesh Carousel Logic
-      const meshSlides = document.querySelectorAll('.mesh-slide');
-      const meshDotsContainer = document.getElementById('mesh-dots-container');
-      let currentMeshSlide = 0;
-      function createMeshDots() {
-        if (!meshDotsContainer) return;
-        meshDotsContainer.innerHTML = '';
-        meshSlides.forEach((_, i) => {
-          const dot = document.createElement('button');
-          dot.classList.add('mesh-dot');
-          if (i === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => showMeshSlide(i));
-          meshDotsContainer.appendChild(dot);
-        });
-      }
-      function showMeshSlide(n) {
-        if (!meshSlides.length) return;
-        meshSlides[currentMeshSlide].classList.remove('active');
-        meshDotsContainer.children[currentMeshSlide].classList.remove('active');
-        currentMeshSlide = (n + meshSlides.length) % meshSlides.length;
-        meshSlides[currentMeshSlide].classList.add('active');
-        meshDotsContainer.children[currentMeshSlide].classList.add('active');
-      }
-      if (meshSlides.length > 1) { createMeshDots(); }
-    });
-  </script>
-
-
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
 </body>
 </html>

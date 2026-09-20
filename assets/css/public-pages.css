@@ -1,0 +1,118 @@
+/* Page-specific layouts built on the public-site foundation. */
+.section-space { padding-block: 80px; }
+.page-intro { padding-block: 56px 40px; border-bottom: 1px solid var(--line); }
+.eyebrow { color: var(--brand-green); font-size: 12px; font-weight: 700; letter-spacing: .12em; margin-bottom: 16px; }
+.page-intro h1 { font-size: clamp(38px,4.5vw,56px); font-weight: 750; line-height: 1.12; margin: 0 0 24px; }
+.contact-page #contact-main { padding-top: 56px; }
+.intro-copy { color: var(--muted); font-size: 19px; max-width: 680px; }
+.contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.contact-primary h2 { font-size: 30px; margin-bottom: 20px; }
+.contact-number { font-size: clamp(26px,3vw,38px); font-weight: 650; letter-spacing: -.035em; display: block; margin-bottom: 8px; }
+.contact-response { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+.contact-hours { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 28px; }
+.contact-hours h3, .contact-services h3 { font-size: 17px; font-weight: 650; margin-bottom: 20px; }
+.contact-hours dl > div { display: flex; justify-content: space-between; gap: 24px; font-size: 14px; margin-top: 14px; }
+.contact-hours dt { color: var(--muted); } .contact-hours dd { white-space: nowrap; font-weight: 550; }
+.contact-services { border-left: 1px solid var(--line); padding-left: 56px; }
+.plain-service-list { color: var(--muted); }
+.plain-service-list li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.plain-service-list li:first-child { padding-top: 0; }
+.direct-contact { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 32px; }
+.direct-contact h3 { font-size: 14px; margin-bottom: 8px; }
+.direct-contact a { font-size: 18px; color: var(--brand-blue); overflow-wrap: anywhere; }
+.direct-contact p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.office-section { background: var(--surface); }
+.office-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 64px; align-items: center; }
+.office-layout h2 { margin-bottom: 20px; }
+.office-layout p:not(.eyebrow) { color: var(--muted); }
+.office-layout h3 { font-size: 14px; font-weight: 650; margin-top: 28px; margin-bottom: 8px; }
+.office-layout iframe { width: 100%; height: 380px; border: 0; border-radius: 10px; }
+.text-link { display: inline-block; color: var(--brand-blue); margin-top: 22px; font-weight: 600; }
+.text-link:hover, .direct-contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.business-hero { position: relative; isolation: isolate; display: flex; align-items: center; min-height: calc(100svh - 88px); padding-block: 88px; background: #13233b; }
+.business-hero-photo { position: absolute; inset: 0; z-index: -2; }
+.business-hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+.business-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#091b2ded,#091b2d86 68%,#091b2d4d); z-index: -1; }
+.business-hero h1 { font-size: clamp(38px,4.5vw,64px); font-weight: 750; max-width: 760px; color: #fff; line-height: 1.12; margin-bottom: 24px; text-wrap: balance; }
+.business-hero p { max-width: 640px; margin: 0 0 32px; color: #e5edf5; font-size: 19px; }
+.business-page .section-heading, .business-page main .text-center.mb-12 { text-align: left; margin-bottom: 40px; max-width: 780px; }
+.business-page main h2 + p { margin-top: 16px; color: var(--muted); font-size: 18px; }
+.business-plan { position: relative; padding: 32px 28px; border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; background: #fff; }
+.business-plan:nth-child(2) { border-color: var(--brand-blue); }
+.business-plan h3 { font-size: 23px; font-weight: 650; margin-bottom: 10px; }
+.business-plan > p { font-size: 14px; min-height: 48px; margin-bottom: 24px; }
+.business-plan ul { flex: 1; padding-top: 24px; border-top: 1px solid var(--line); margin-bottom: 28px; font-size: 14px; line-height: 1.8; }
+.business-plan li { display: list-item; list-style: disc; margin-left: 16px; padding-left: 3px; }
+.business-plan strong { font-weight: 550; }
+.plan-badge { position: absolute; left: 24px; top: -12px; background: #fff; color: var(--brand-blue); font-size: 11px; font-weight: 750; padding: 2px 8px; letter-spacing: .04em; }
+.business-coverage { background: var(--surface); }
+.business-coverage-layout { display: grid; grid-template-columns: 1fr 1.35fr; gap: 72px; }
+.business-coverage-layout p:not(.eyebrow) { color: var(--muted); font-size: 16px; line-height: 1.8; margin-bottom: 22px; }
+.business-coverage-layout br + br { display: block; content: ''; margin-top: 14px; }
+.business-possibilities { background: #152b40; }
+.business-possibilities h2 { color: #fff; }
+.business-possibilities .section-heading p { color: #c9d6e3; }
+.business-use-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 0 40px; }
+.business-use-list li { border-top: 1px solid #ffffff30; padding: 24px 0; font-size: 18px; color: #fff; font-weight: 550; }
+.business-feature { padding: 12px 24px 12px 0; text-align: left; }
+.business-feature h3 { font-size: 20px; font-weight: 650; margin-bottom: 16px; }
+.business-feature p { font-size: 15px; color: var(--muted); line-height: 1.85; }
+.business-feature + .business-feature { border-left: 1px solid var(--line); padding-left: 24px; }
+.business-support { background: var(--surface); }
+.public-faq-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 64px; }
+.business-page .public-faq-layout .faq-intro { font-size: 16px; }
+.public-faq-layout details { border-bottom: 1px solid var(--line); }
+.public-faq-layout details:first-child { border-top: 1px solid var(--line); }
+.public-faq-layout summary { font-weight: 550; padding: 24px 0 24px 8px; margin-left: 18px; cursor: pointer; list-style-position: outside; }
+.public-faq-layout summary::marker { font-size: 11px; color: #7b8594; }
+.public-faq-layout summary:focus-visible { outline: 2px solid var(--brand-blue); outline-offset: 4px; }
+.public-faq-answer { padding: 0 26px 24px; font-size: 15px; line-height: 1.8; color: var(--muted); }
+.public-faq-answer h4 { font-size: 15px; font-weight: 600; margin-top: 18px; margin-bottom: 6px; }
+.business-contact { background: var(--surface); }
+.business-contact > .container > div { padding: 0; background: none!important; box-shadow: none; }
+.business-contact .grid { gap: 64px; }
+.business-contact h3 { font-size: 28px; margin-bottom: 28px; }
+.business-contact .w-12 { width: 24px; height: 24px; padding: 0; color: var(--brand-blue); background: none; border-radius: 0; flex-shrink: 0; }
+.business-contact a { overflow-wrap: anywhere; }
+.business-contact iframe { border-radius: 10px; }
+@media (max-width: 1023px) {
+  .contact-layout { gap: 40px; } .contact-services { padding-left: 32px; }
+  .business-coverage-layout { gap: 40px; }
+  .business-plans .grid { grid-template-columns: 1fr; max-width: none; gap: 32px; }
+  .business-plan > p { min-height: 0; }
+  .business-benefits .grid { grid-template-columns: 1fr 1fr; }
+  .business-feature:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+@media (max-width: 767px) {
+  .section-space { padding-block: 56px; }
+  .page-intro { padding-block: 48px 40px; }
+  .intro-copy { font-size: 17px; }
+  .contact-layout, .office-layout, .business-coverage-layout, .public-faq-layout { grid-template-columns: 1fr; gap: 36px; }
+  .contact-services { padding-left: 0; border: 0; padding-top: 36px; border-top: 1px solid var(--line); }
+  .contact-primary .site-button { width: 100%; padding-inline: 12px; }
+  .contact-hours dl > div { flex-direction: column; gap: 4px; }
+  .office-layout iframe { height: 300px; }
+  .business-hero { min-height: calc(100svh - 72px); padding-block: 64px; }
+  .business-hero::after { background: #091b2da8; }
+  .business-hero p { font-size: 17px; }
+  .business-hero .site-button { width: 100%; }
+  .business-plan { padding: 28px 24px; }
+  .business-use-list { grid-template-columns: 1fr 1fr; gap: 0 24px; }
+  .business-use-list li { font-size: 15px; }
+  .business-benefits .grid, .business-support .grid { grid-template-columns: 1fr; gap: 24px; }
+  .business-feature, .business-feature + .business-feature { padding: 0; border-left: 0; }
+  .business-feature + .business-feature { padding-top: 24px; border-top: 1px solid var(--line); }
+  .business-contact .grid { gap: 36px; }
+}
+
+/* A little more brand color, with quiet surfaces and readable contrast. */
+.contact-page .page-intro { background: #eef6ff; border-bottom-color: #d9e9fc; }
+.contact-primary { border-top: 3px solid var(--brand-blue); padding-top: 28px; }
+.contact-primary .contact-hours .text-link { margin: 0 0 12px; font-size: 15px; }
+.office-section, .business-coverage { background: #edf7f3; }
+.business-plan:nth-child(2) { background: #f3f8ff; border-top: 3px solid var(--brand-blue); }
+.plan-badge { background: #e4f0ff; border-radius: 4px; }
+.business-possibilities { background: #103f62; }
+.business-support, .business-contact { background: #f0f6fd; }
+.business-hero::after { background: linear-gradient(90deg,#071d36d9,#06335375 68%,#091b2d30); }
+@media (max-width: 767px) { .business-hero::after { background: #092c4a99; } }

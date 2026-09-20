@@ -1,0 +1,48 @@
+/* Institutional pages share the public shell; no page-specific JavaScript. */
+.institutional-section { padding-block: 88px; }
+.institutional-page .institutional-kicker { margin-bottom: 18px; color: var(--brand-blue); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.institutional-page h1 { font-size: clamp(42px, 5vw, 66px); font-weight: 750; line-height: 1.06; }
+.institutional-lead { font-size: clamp(17px, 1.65vw, 21px); line-height: 1.6; }
+.institutional-copy { color: var(--muted); }
+.institutional-copy > p + p { margin-top: 20px; }
+.institutional-copy h2 { margin-bottom: 24px; }
+.institutional-copy strong { color: var(--ink); font-weight: 600; }
+.about-hero { position: relative; isolation: isolate; display: flex; align-items: center; min-height: 490px; padding-block: 72px; background: #1d4050; }
+.about-hero picture, .about-hero::after { position: absolute; inset: 0; z-index: -1; }
+.about-hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 53%; }
+.about-hero::after { content: ''; background: linear-gradient(90deg, #0d2337ed, #0d233794 57%, #0d233726); }
+.about-hero h1, .about-hero .institutional-kicker { color: #fff; }
+.about-hero .institutional-lead { margin-top: 24px; max-width: 610px; color: #edf4fc; }
+.institutional-photo-link { display: inline-flex; gap: 32px; margin-top: 28px; padding-block: 8px; color: white; border-bottom: 1px solid #ffffff70; font-size: 14px; font-weight: 600; }
+.institutional-photo-link:hover { border-color: white; }
+.story-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; }
+.partner-names { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; padding-left: 18px; border-left: 3px solid var(--brand-green); font-size: 17px; font-weight: 600; }
+.mission-section { background: #f0f6ff; }
+.mission-intro { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; align-items: start; }
+.mission-intro .institutional-lead { color: #314c70; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 52px; }
+.values-grid > div { border-top: 1px solid #bdcfe9; padding-top: 24px; }
+.value-number { display: block; color: var(--brand-blue); font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+.values-grid h3 { font-size: 21px; font-weight: 650; max-width: 280px; margin-bottom: 16px; }
+.values-grid p { color: var(--muted); font-size: 15px; }
+.team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.team-grid img { width: 100%; height: auto; border-radius: 12px; }
+.team-grid figcaption { padding-top: 14px; color: var(--muted); font-size: 13px; }
+.institutional-text-link { display: inline-flex; align-items: center; gap: 18px; padding-block: 8px; margin-top: 20px; color: var(--brand-blue); font-size: 14px; font-weight: 650; }
+.institutional-text-link:hover { text-decoration: underline; text-underline-offset: 5px; }
+@media (max-width: 1000px) {
+  .story-grid, .mission-intro, .team-grid { gap: 40px; }
+  .values-grid { gap: 28px; }
+}
+@media (max-width: 767px) {
+  .institutional-section { padding-block: 56px; }
+  .about-hero { min-height: 510px; padding-block: 56px; }
+  .about-hero::after { background: linear-gradient(90deg, #0d2337e0, #0d233798); }
+  .about-hero img { object-position: 62% center; }
+  .institutional-page h1 { font-size: clamp(38px, 9vw, 52px); }
+  .story-grid, .mission-intro, .team-grid { grid-template-columns: 1fr; gap: 28px; }
+  .values-grid { grid-template-columns: 1fr; gap: 26px; margin-top: 32px; }
+  .values-grid h3 { max-width: none; }
+  .value-number { margin-bottom: 12px; }
+  .team-grid figure { order: 2; }
+}

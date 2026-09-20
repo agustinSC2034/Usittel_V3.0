@@ -1,8 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,682 +11,142 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - Centro de Ayuda</title>
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-
     <meta name="description" content="Centro de ayuda Usittel: resolvé tus dudas sobre internet, TV y WiFi Mesh. Preguntas frecuentes, instructivos y soporte técnico en Tandil." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Usittel - Centro de Ayuda" />
     <meta property="og:description" content="Centro de ayuda Usittel: resolvé tus dudas sobre internet, TV y WiFi Mesh. Preguntas frecuentes, instructivos y soporte técnico en Tandil." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - Centro de Ayuda" />
     <meta name="twitter:description" content="Centro de ayuda Usittel: resolvé tus dudas sobre internet, TV y WiFi Mesh. Preguntas frecuentes, instructivos y soporte técnico en Tandil." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
-
-    <!-- Google Fonts: Poppins & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet" />
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <style>
-        /* NAVIGATION STYLES */
-        .navbar-section *,
-        .navbar-section *::before,
-        .navbar-section *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        header.navbar-section {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-        }
-
-        .navbar-section {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            font-size: 17px;
-            color: #3c4043;
-        }
-
-        .navbar {
-            background-color: white;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 34px;
-            height: 69px;
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 26px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .logo:hover {
-            background-color: rgba(60, 64, 67, 0.08);
-        }
-
-        .logo img {
-            height: 39px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            list-style: none;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #60666b;
-            font-size: 17px;
-            font-weight: 500;
-            padding: 13px 17px;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .nav-links li a:hover {
-            background-color: rgba(60, 64, 67, 0.06);
-            color: #202020;
-        }
-
-        .nav-links li a.active {
-            color: #1a73e8;
-            font-weight: 600;
-        }
-
-        .nav-links .dropdown {
-            position: relative;
-        }
-
-        .nav-links .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            background-color: white;
-            padding: 8px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            list-style: none;
-            min-width: 180px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-
-        .nav-links .dropdown-menu li a {
-            display: block;
-            padding: 11px 17px;
-            color: #3c4043;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .nav-links .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-button,
-        .nav-button2,
-        .nav-button-green {
-            font-size: 16px;
-            padding: 11px 22px;
-            border-radius: 999px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-button-green {
-            background-color: #30a172;
-            color: white !important;
-        }
-
-        .nav-button-green:hover {
-            background-color: #188b48;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-button2 {
-            background-color: #1a73e8;
-            color: white !important;
-        }
-
-        .nav-button2:hover {
-            background-color: #175ca7;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* CUSTOM STYLES */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .hero-help-center {
-            background: linear-gradient(rgba(23, 79, 143, 0.8), rgba(23, 79, 143, 0.8)), url('https://images.unsplash.com/photo-1453928582365-b6ad33cb124b?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .search-bar {
-            position: relative;
-        }
-
-        .search-bar input {
-            padding-left: 3rem;
-        }
-
-        .search-bar .fa-search {
-            position: absolute;
-            top: 50%;
-            left: 1.25rem;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
-
-        .faq-section {
-            display: none;
-        }
-
-        .faq-section.active {
-            display: block;
-        }
-
-        .faq-tab {
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            border-bottom: 4px solid transparent;
-        }
-
-        .faq-tab.active {
-            color: #1a73e8;
-            border-color: #1a73e8;
-        }
-
-        .faq-tab:hover:not(.active) {
-            background-color: #f3f4f6;
-        }
-
-        .faq-item {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-            padding: 0 1.5rem;
-        }
-
-        .faq-item.open .faq-answer {
-            padding: 0 1.5rem 1.5rem;
-        }
-
-        .faq-icon {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .faq-item.open .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        .resource-button {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background-color: white;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .resource-button:hover {
-            border-color: #1a73e8;
-            color: #1a73e8;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .resource-button i {
-            color: #3b82f6;
-        }
-    </style>
-    <style>
-        /* MOBILE MENU & RESPONSIVE STYLES */
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background-color: #3c4043;
-            border-radius: 2px;
-        }
-
-        .mobile-header-bar {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .mobile-menu-slide {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 16px;
-            transition: left 0.3s ease-in-out;
-            z-index: 1001;
-        }
-
-        .mobile-menu-slide.show {
-            left: 0;
-        }
-
-        .mobile-menu-slide a {
-            text-decoration: none;
-            color: #3c4043;
-            font-size: 16px;
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-
-        .mobile-menu-slide .nav-button-green,
-        .mobile-menu-slide .nav-button2 {
-            padding: 12px 18px;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-menu-header img {
-            height: 32px;
-        }
-
-        .close-menu {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #3c4043;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .mobile-menu-slide hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-bottom: 16px;
-        }
-
-        .submenu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .submenu-toggle {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 16px;
-            text-align: left;
-            color: #3c4043;
-            padding: 10px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 400;
-        }
-
-        .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 12px;
-            margin-top: -4px;
-        }
-
-        .submenu a {
-            font-size: 15px;
-            padding: 8px 12px;
-            color: #3c4043;
-        }
-
-        .submenu.show {
-            display: flex;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .desktop-only {
-            display: flex;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        /* Breakpoint para mobile */
-        @media (max-width: 900px) {
-            .mobile-only {
-                display: flex !important;
-            }
-
-            .desktop-only {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-header-bar {
-                display: flex;
-            }
-        }
-
-        .whatsapp-float {
-      position: left;
-      bottom: 15px;
-      right: 15px;
-      width: 50px;
-      height: 50px;
-      background-color: #25d366;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 35px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 100;
-      transition: transform 0.2s ease;
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-    </style>
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css"><link rel="stylesheet" href="../../assets/css/site.css"><link rel="stylesheet" href="../../assets/css/help.css">
+<script src="../../js/site.js" defer></script><script src="../../js/site-tracking.js" defer></script><script src="../../js/help-center.js" defer></script>
 </head>
-
-<body class="text-gray-800">
-
-    <!-- Header / Navigation -->
-    <header class="navbar-section">
-        <nav class="navbar"></nav>
-        <div class="navbar-container">
-            <!-- Encabezado mobile -->
-            <div class="mobile-header-bar mobile-only">
-                <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                <a href="../../" class="logo">
-                    <img src="../../assets/img/logos/usittel-logo.png"
-                        alt="Usittel Logo" />
-                </a>
-            </div>
-
-            <!-- Encabezado desktop -->
-            <div class="nav-left desktop-only">
-                <a href="../../" class="logo">
-                    <img src="../../assets/img/logos/usittel-logo_and_name.webp"
-                        alt="Usittel Logo" />
-                </a>
-                <ul class="nav-links">
-                    <li><a href="../../">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#">Productos ▾</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="../internet/">Internet</a></li>
-                            <li><a href="../mesh/">WiFi Mesh</a></li>
-                            <li><a href="../tv/">TV</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="../empresas/">Empresas</a></li>
-                    <li><a href="../contacto/">Contáctanos</a></li>
-                </ul>
-            </div>
-
-            <div class="nav-actions desktop-only">
-                <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-            </div>
+<body class="public-page help-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
         </div>
-
-        <!-- Overlay y menú mobile -->
-        <div class="overlay" id="overlay"></div>
-        <div class="mobile-menu-slide" id="mobileMenu">
-            <div class="mobile-menu-header">
-                <img src="../../assets/img/logos/usittel-logo_and_name.webp"
-                    alt="Usittel Logo" />
-                <button class="close-menu" id="closeMenu">&times;</button>
-            </div>
-            <hr />
-          <a href="../../">Home</a>
-            <div class="submenu-container">
-                <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
-                <div class="submenu" id="productsSubmenu">
-                    <a href="../internet/">Internet</a>
-                    <a href="../mesh/">WiFi Mesh</a>
-                    <a href="../tv/">TV</a>
-                </div>
-            </div>
-            <a href="../empresas/">Empresas</a>
-            <a href="../contacto/">Contáctanos</a>
-            <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-            <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/">Internet</a></li>
+                <li><a href="../../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
         </div>
-        </nav>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green active" aria-current="page">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/">Internet</a><a href="../../pages/mesh/">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green active" aria-current="page">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content"><section class="help-hero"><div class="container mx-auto"><p class="eyebrow">CENTRO DE AYUDA</p><h1>¿En qué podemos ayudarte?</h1><p class="help-intro">Encontrá respuestas y guías para aprovechar tus servicios.</p>
+<div class="help-search" role="search" aria-label="Buscar en el Centro de ayuda" hidden><label for="help-search">Buscar una respuesta</label><div class="help-search-field"><input id="help-search" type="search" placeholder="Por ejemplo: factura, WiFi o Sensa" autocomplete="off" aria-controls="help-results" maxlength="120"><button type="button" id="help-clear" hidden>Limpiar</button></div><p id="help-search-status" role="status" aria-live="polite"></p></div>
+</div></section><div class="container mx-auto help-layout"><aside class="help-sidebar"><nav aria-label="Temas de ayuda"><p class="eyebrow">EXPLORÁ POR TEMA</p><a href="#tv-faqs" data-help-category>Televisión</a><a href="#internet-faqs" data-help-category>Internet y WiFi</a><a href="#admin-faqs" data-help-category>Administrativas</a><a class="help-payment-link" href="#medios-de-pago" data-help-category>Medios de pago <span aria-hidden="true">→</span></a></nav><div class="help-sidebar-contact"><p>¿Necesitás más ayuda?</p><a href="../contacto/">Contactanos <span aria-hidden="true">→</span></a></div></aside><div id="help-results"><div class="help-empty" hidden><h2>No encontramos esa consulta.</h2><p>Probá con otras palabras o consultá los canales de atención.</p><a href="../contacto/" class="site-button">Contactanos</a></div><section id="tv-faqs" class="help-category" aria-labelledby="tv-title"><div class="help-category-heading"><h2 id="tv-title">Televisión</h2><p>Sensa, dispositivos y acceso a tu cuenta.</p></div><div class="help-resources"><h3>Recursos y Guías para TV</h3><div class="resource-links"><a href="https://drive.google.com/file/d/1vpI9lnq-4iAu7H3NaHJBIldGonot8fWG/view?usp=drive_link" target="_blank" rel="noopener">Manual de la aplicación<span aria-hidden="true">↗</span></a><a href="https://drive.google.com/file/d/1uIObs55UAb7eWF2C6ySPMP-LvYmHAX2Q/view?usp=drive_link" target="_blank" rel="noopener">Cómo Instalar la App<span aria-hidden="true">↗</span></a><a href="https://player.sensa.com.ar/" target="_blank" rel="noopener">Ver TV en la PC<span aria-hidden="true">↗</span></a><a href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=drive_link" target="_blank" rel="noopener">Grilla de Canales<span aria-hidden="true">↗</span></a><a href="https://www.sensa.com.ar/?p=login" target="_blank" rel="noopener">Administrar mi Cuenta<span aria-hidden="true">↗</span></a></div></div><div class="help-questions"><details id="compatibilidad-sensa" class="help-question"><summary>¿Cómo sé si mi TV o dispositivo es compatible con Sensa?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Compatibilidad de Dispositivos</h3>
 
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-help-center text-white py-20 md:py-20">
-            <div class="container mx-auto text-center px-6">
-                <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">¿En qué podemos ayudarte?</h1>
-                
-            </div>
-        </section>
-
-        <!-- FAQs Section -->
-        <section class="py-16 md:py-24">
-            <div class="container mx-auto px-6 max-w-5xl">
-                <!-- Tabs -->
-                <div class="border-b border-gray-200 mb-12">
-                    <nav class="-mb-px flex flex-wrap justify-center gap-2 md:gap-0 md:space-x-8" aria-label="Tabs">
-                        <button data-tab="tv"
-                            class="faq-tab active whitespace-nowrap py-3 px-2 text-center font-bold text-base md:text-lg flex-1 md:flex-none">
-                            <i class="fas fa-tv mr-2"></i> Televisión
-                        </button>
-                        <button data-tab="internet"
-                            class="faq-tab whitespace-nowrap py-3 px-2 text-center font-bold text-base md:text-lg flex-1 md:flex-none">
-                            <i class="fas fa-wifi mr-2"></i> Internet y WiFi
-                        </button>
-                        <button data-tab="admin"
-                            class="faq-tab whitespace-nowrap py-3 px-2 text-center font-bold text-base md:text-lg flex-1 md:flex-none">
-                            <i class="fas fa-file-invoice-dollar mr-2"></i> Administrativas
-                        </button>
-                    </nav>
-                </div>
-
-                <!-- TV FAQs -->
-                <div id="tv-faqs" class="faq-section active">
-                    <div class="mb-12">
-                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Recursos y Guías para TV</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <a target="_blank" href="https://drive.google.com/file/d/1vpI9lnq-4iAu7H3NaHJBIldGonot8fWG/view?usp=drive_link" class="resource-button"><i class="fas fa-book"></i> Manual de la aplicación</a>
-                            <a target="_blank" href="https://drive.google.com/file/d/1uIObs55UAb7eWF2C6ySPMP-LvYmHAX2Q/view?usp=drive_link" class="resource-button"><i class="fas fa-mobile-alt"></i> Cómo Instalar la App</a>
-                            <a target="_blank" href="https://player.sensa.com.ar/" class="resource-button"><i class="fas fa-play-circle"></i> Ver TV en la PC</a>
-                            <a target="_blank" href="https://drive.google.com/file/d/1eeVUP8IWHz4scgzdGh7DfnW1CT3uwWPL/view?usp=drive_link" class="resource-button"><i class="fas fa-th-list"></i> Grilla de Canales</a>
-                            <a target="_blank" href="https://www.sensa.com.ar/?p=login" class="resource-button"><i class="fas fa-cog"></i> Administrar mi Cuenta</a>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo sé si mi TV o dispositivo es compatible con Sensa?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Compatibilidad de Dispositivos</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <p class="text-sm">
+                                    <div class="answer-block">
+                                        <p>
                                             Para saber si tu TV o dispositivo es compatible con Sensa, consultá los instructivos específicos para cada plataforma:
                                         </p>
                                     </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                                        <a href="../instructivos/Instructivo_android.html" target="_blank" 
-                                           class="flex items-center p-3 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors">
-                                            <i class="fab fa-android text-green-600 text-xl mr-3"></i>
-                                            <span class="text-sm font-medium text-gray-700">Compatibilidad con Android TV</span>
+
+                                    <div>
+                                        <a href="../instructivos/Instructivo_android.html">
+
+                                            <span>Compatibilidad con Android TV</span>
                                         </a>
-                                        
-                                        <a href="../instructivos/Instructivo_amazon.html" target="_blank" 
-                                           class="flex items-center p-3 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors">
-                                            <i class="fab fa-amazon text-orange-600 text-xl mr-3"></i>
-                                            <span class="text-sm font-medium text-gray-700">Compatibilidad con Amazon Fire TV</span>
+
+                                        <a href="../instructivos/Instructivo_amazon.html">
+
+                                            <span>Compatibilidad con Amazon Fire TV</span>
                                         </a>
-                                        
-                                        <a href="../instructivos/Instructivo_apple.html" target="_blank" 
-                                           class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-                                            <i class="fab fa-apple text-gray-600 text-xl mr-3"></i>
-                                            <span class="text-sm font-medium text-gray-700">Compatibilidad con Apple TV</span>
+
+                                        <a href="../instructivos/Instructivo_apple.html">
+
+                                            <span>Compatibilidad con Apple TV</span>
                                         </a>
-                                        
-                                        <a href="../instructivos/Instructivo_celulares.html" target="_blank" 
-                                           class="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors">
-                                            <i class="fas fa-mobile-alt text-purple-600 text-xl mr-3"></i>
-                                            <span class="text-sm font-medium text-gray-700">Compatibilidad con Celulares</span>
+
+                                        <a href="../instructivos/Instructivo_celulares.html">
+
+                                            <span>Compatibilidad con Celulares</span>
                                         </a>
                                     </div>
-                               
-                                    
-                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 mb-4">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Dispositivos Totalmente Compatibles
-                                        </h5>
-                                        <p class="text-sm">
+                                        </h4>
+                                        <p>
                                             <strong>Aclaración:</strong> Sensa es compatible con todos los dispositivos <strong>Chromecast</strong> y <strong>Roku</strong>.
                                         </p>
                                     </div>
-                                    
-                                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400 text-sm">
-                                        <strong>¿No encontrás tu dispositivo?</strong> 
+
+                                    <div class="answer-block">
+                                        <strong>¿No encontrás tu dispositivo?</strong>
                                         Si tu dispositivo no aparece en la lista, podés consultar el manual del fabricante o comunicarte con nuestro soporte para más información.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo accedo a Sensa?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Acceso a Sensa TV</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-envelope text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="acceder-sensa" class="help-question"><summary>¿Cómo accedo a Sensa?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Acceso a Sensa TV</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Tus Credenciales</h5>
-                                                <p class="text-sm">
+                                                <h4>Tus Credenciales</h4>
+                                                <p>
                                                     Una vez obtenido tu usuario y contraseña en el mail de bienvenida de Usittel,
                                                     deberás descargarte la aplicación SENSA TV desde el store de tu dispositivo
                                                     (Google Play Store, App Store, Amazon Store, Roku Channel Store).
@@ -696,108 +154,85 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-desktop text-green-600 text-xl mr-3 mt-1"></i>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">¡También en PC!</h5>
-                                                <p class="text-sm">
-                                                    También podés disfrutar el servicio desde el navegador web de tu PC en 
-                                                    <a href="https://player.sensa.com.ar" target="_blank" class="text-blue-600 hover:underline font-semibold">player.sensa.com.ar</a>.
+                                                <h4>¡También en PC!</h4>
+                                                <p>
+                                                    También podés disfrutar el servicio desde el navegador web de tu PC en
+                                                    <a href="https://player.sensa.com.ar" target="_blank" rel="noopener">player.sensa.com.ar</a>.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                                            <h5 class="font-semibold text-gray-700 mb-3 flex items-center">
-                                                <i class="fas fa-download text-purple-600 mr-2"></i>
+
+                                    <div>
+                                        <div class="answer-block">
+                                            <h4>
+
                                                 Instalación
-                                            </h5>
-                                            <div class="space-y-2">
-                                                <a target="_blank"
-                                                   href="https://drive.google.com/file/d/1uIObs55UAb7eWF2C6ySPMP-LvYmHAX2Q/view?usp=drive_link"
-                                                   class="flex items-center text-sm text-blue-600 hover:underline">
-                                                    <i class="fas fa-file-pdf mr-2"></i>
+                                            </h4>
+                                            <div class="answer-block">
+                                                <a target="_blank" href="https://drive.google.com/file/d/1uIObs55UAb7eWF2C6ySPMP-LvYmHAX2Q/view?usp=drive_link" rel="noopener">
+
                                                     Manual de instalación (PDF)
                                                 </a>
-                                                <a target="_blank"
-                                                   href="https://drive.google.com/file/d/1zkY08PdJJHkEF2eGr7kPaDN8xYkdlyER/view?usp=drive_link"
-                                                   class="flex items-center text-sm text-blue-600 hover:underline">
-                                                    <i class="fas fa-play-circle mr-2"></i>
+                                                <a target="_blank" href="https://drive.google.com/file/d/1zkY08PdJJHkEF2eGr7kPaDN8xYkdlyER/view?usp=drive_link" rel="noopener">
+
                                                     Manual de instalación (Video)
                                                 </a>
                                             </div>
                                         </div>
-                                        
-                                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                                            <h5 class="font-semibold text-gray-700 mb-3 flex items-center">
-                                                <i class="fas fa-user-cog text-orange-600 mr-2"></i>
+
+                                        <div class="answer-block">
+                                            <h4>
+
                                                 Uso de la App
-                                            </h5>
-                                            <div class="space-y-2">
-                                                <a href="https://drive.google.com/file/d/1vpI9lnq-4iAu7H3NaHJBIldGonot8fWG/view?usp=drive_link" 
-                                                   class="flex items-center text-sm text-blue-600 hover:underline" target="_blank">
-                                                    <i class="fas fa-file-pdf mr-2"></i>
+                                            </h4>
+                                            <div class="answer-block">
+                                                <a href="https://drive.google.com/file/d/1vpI9lnq-4iAu7H3NaHJBIldGonot8fWG/view?usp=drive_link" target="_blank" rel="noopener">
+
                                                     Manual de uso app (PDF)
                                                 </a>
-                                                <a href="https://drive.google.com/file/d/1ZTbvIiDE-D5GbKZ0ErbRYOK75xnTb-9c/view?usp=drive_link" 
-                                                   class="flex items-center text-sm text-blue-600 hover:underline" target="_blank">
-                                                    <i class="fas fa-play-circle mr-2"></i>
+                                                <a href="https://drive.google.com/file/d/1ZTbvIiDE-D5GbKZ0ErbRYOK75xnTb-9c/view?usp=drive_link" target="_blank" rel="noopener">
+
                                                     Manual de uso app (Video)
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>Olvidé mis datos de acceso</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Recuperar Datos de Acceso</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-key text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="recuperar-acceso-sensa" class="help-question"><summary>Olvidé mis datos de acceso</summary><div class="help-answer">
+                                <div>
+                                    <h3>Recuperar Datos de Acceso</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Proceso de Recuperación</h5>
-                                                <p class="text-sm">
+                                                <h4>Proceso de Recuperación</h4>
+                                                <p>
                                                     Debes seleccionar el enlace "Olvidé mis datos de acceso" en la página de inicio
-                                                    de sesión <a href="https://www.sensa.com.ar" target="_blank"
-                                                        class="text-blue-600 hover:underline font-semibold">www.sensa.com.ar</a> y te llegará un
+                                                    de sesión <a href="https://www.sensa.com.ar" target="_blank" rel="noopener">www.sensa.com.ar</a> y te llegará un
                                                     mail al correo con el que se registró tu cuenta.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>No me llega el email para recuperar la clave de acceso</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Problemas con el Email de Recuperación</h4>
-                                    
-                                    <div class="space-y-4">
-                                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
-                                            <div class="flex items-start">
-                                                <i class="fas fa-exclamation-triangle text-yellow-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="email-recuperacion" class="help-question"><summary>No me llega el email para recuperar la clave de acceso</summary><div class="help-answer">
+                                <div>
+                                    <h3>Problemas con el Email de Recuperación</h3>
+
+                                    <div class="answer-block">
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">Revisar Carpeta de Spam</h5>
-                                                    <p class="text-sm">
+                                                    <h4>Revisar Carpeta de Spam</h4>
+                                                    <p>
                                                         Si no recibes tu e-mail de confirmación es probable que lo encuentres en tu
                                                         carpeta de spam o correo no deseado. Marca el correo como seguro o envíalo a tu
                                                         bandeja de entrada.
@@ -805,13 +240,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                                            <div class="flex items-start">
-                                                <i class="fab fa-whatsapp text-green-600 text-xl mr-3 mt-1"></i>
+
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">¿Sigue sin llegar?</h5>
-                                                    <p class="text-sm">
+                                                    <h4>¿Sigue sin llegar?</h4>
+                                                    <p>
                                                         Si tras varios intentos seguís sin recibir el email consultá
                                                         a nuestro WhatsApp para que revisen el estado de tu cuenta y tus datos.
                                                     </p>
@@ -820,109 +255,92 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Dónde puedo ver Sensa?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Dispositivos Compatibles</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <p class="text-sm">Un usuario común puede ver Sensa en los siguientes dispositivos:</p>
+                            </div></details><details id="dispositivos-sensa" class="help-question"><summary>¿Dónde puedo ver Sensa?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Dispositivos Compatibles</h3>
+
+                                    <div class="answer-block">
+                                        <p>Un usuario común puede ver Sensa en los siguientes dispositivos:</p>
                                     </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="space-y-3">
-                                            <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
-                                                <i class="fas fa-mobile-alt text-green-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">Dispositivos móviles</div>
-                                                    <div class="text-gray-600">Android 4.0+ | iOS 9.0+</div>
+
+                                    <div>
+                                        <div class="answer-block">
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>Dispositivos móviles</div>
+                                                    <div>Android 4.0+ | iOS 9.0+</div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-200">
-                                                <i class="fas fa-desktop text-purple-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">PC <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full ml-1">¡Nuevo!</span></div>
-                                                    <div class="text-gray-600">Todos los navegadores web</div>
+
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>PC <span>¡Nuevo!</span></div>
+                                                    <div>Todos los navegadores web</div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
-                                                <i class="fab fa-chromecast text-blue-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">Chromecast</div>
-                                                    <div class="text-gray-600">Todas las versiones</div>
+
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>Chromecast</div>
+                                                    <div>Todas las versiones</div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="space-y-3">
-                                            <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
-                                                <i class="fab fa-android text-green-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">Android TV</div>
-                                                    <div class="text-gray-600">Android 9 y posteriores</div>
+
+                                        <div class="answer-block">
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>Android TV</div>
+                                                    <div>Android 9 y posteriores</div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="flex items-center p-3 bg-orange-50 rounded-lg border border-orange-200">
-                                                <i class="fab fa-amazon text-orange-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">Amazon Fire TV</div>
-                                                    <div class="text-gray-600">Fire OS 6 y posteriores</div>
+
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>Amazon Fire TV</div>
+                                                    <div>Fire OS 6 y posteriores</div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-200">
-                                                <i class="fas fa-tv text-purple-600 text-xl mr-3"></i>
-                                                <div class="text-sm">
-                                                    <div class="font-semibold text-gray-700">Roku & Apple TV</div>
-                                                    <div class="text-gray-600">Apple TV 13.4+</div>
+
+                                            <div class="answer-block">
+
+                                                <div>
+                                                    <div>Roku &amp; Apple TV</div>
+                                                    <div>Apple TV 13.4+</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo borrar un dispositivo para liberar un espacio?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Gestión de Dispositivos</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-cog text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="administrar-dispositivos" class="help-question"><summary>¿Cómo borrar un dispositivo para liberar un espacio?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Gestión de Dispositivos</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Portal de Administración</h5>
-                                                <p class="text-sm">
-                                                    Deberás entrar con tu usuario y contraseña a la web de Sensa 
-                                                    <a href="https://www.sensa.com.ar/?p=login" target="_blank"
-                                                       class="text-blue-600 hover:underline font-semibold">www.sensa.com.ar</a> 
+                                                <h4>Portal de Administración</h4>
+                                                <p>
+                                                    Deberás entrar con tu usuario y contraseña a la web de Sensa
+                                                    <a href="https://www.sensa.com.ar/?p=login" target="_blank" rel="noopener">www.sensa.com.ar</a>
                                                     y desde allí administrar tus dispositivos.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-plus-circle text-green-600 text-xl mr-3 mt-1"></i>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Liberar Espacio</h5>
-                                                <p class="text-sm">
+                                                <h4>Liberar Espacio</h4>
+                                                <p>
                                                     Podés eliminar los dispositivos que ya no uses para liberar un espacio
                                                     y poder agregar uno nuevo.
                                                 </p>
@@ -930,39 +348,17 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Internet & WiFi FAQs -->
-                <div id="internet-faqs" class="faq-section">
-                    <div class="mb-12">
-                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Recursos y Guías para Internet
-                        </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" target="_blank" class="resource-button"><i class="fas fa-user-cog"></i> Autogestión Servicio</a>
-                            <a href="https://wa.me/5492494060345" target="_blank" class="resource-button"><i class="fab fa-whatsapp"></i> Autogestión por WhatsApp</a>
-                            <a href="../../assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf" target="_blank" class="resource-button"><i class="fas fa-book-open"></i> Instructivo WiFi
-                                Mesh</a>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Dónde instalamos el módem WiFi?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Ubicación Estratégica del Módem</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-home text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details></div></section><section id="internet-faqs" class="help-category" aria-labelledby="internet-title"><div class="help-category-heading"><h2 id="internet-title">Internet y WiFi</h2><p>Conexión, velocidad y cobertura dentro de tu hogar.</p></div><div class="help-resources"><h3>Recursos y Guías para Internet
+                        </h3><div class="resource-links"><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" target="_blank" rel="noopener">Autogestión Servicio<span aria-hidden="true">↗</span></a><a href="https://wa.me/5492494060345" target="_blank" rel="noopener">Autogestión por WhatsApp<span aria-hidden="true">↗</span></a><a href="../../assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf" target="_blank" rel="noopener">Instructivo WiFi Mesh<span aria-hidden="true">↗</span></a></div></div><div class="help-questions"><details id="ubicacion-modem" class="help-question"><summary>¿Dónde instalamos el módem WiFi?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Ubicación Estratégica del Módem</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Zona de Uso Intensivo</h5>
-                                                <p class="text-sm">
+                                                <h4>Zona de Uso Intensivo</h4>
+                                                <p>
                                                     Nuestros técnicos validaron, al momento de realizar la instalación, la "zona de
                                                     uso intensivo dentro del hogar" que es la zona en la cual se reúne la familia al
                                                     momento de usar Internet.
@@ -970,156 +366,132 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
-                                        <p class="text-sm flex items-start">
-                                            <i class="fas fa-wifi text-green-600 mr-2 mt-1"></i>
+
+                                    <div class="answer-block">
+                                        <p>
+
                                             <span>En dicha zona es donde realizamos la instalación del módem WiFi para que ahí puedan disfrutar la máxima velocidad.</span>
                                         </p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cuál es la diferencia entre la frecuencia de 2.4 GHz y 5 GHz?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Diferencias entre Frecuencias WiFi</h4>
-                                    
-                                    <p class="mb-4">La diferencia principal entre 2.4 GHz y 5 GHz es:</p>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-signal text-orange-600 text-xl mr-2"></i>
-                                                <h5 class="font-semibold text-gray-700">2.4 GHz</h5>
+                            </div></details><details id="frecuencias-wifi" class="help-question"><summary>¿Cuál es la diferencia entre la frecuencia de 2.4 GHz y 5 GHz?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Diferencias entre Frecuencias WiFi</h3>
+
+                                    <p>La diferencia principal entre 2.4 GHz y 5 GHz es:</p>
+
+                                    <div>
+                                        <div class="answer-block">
+                                            <div>
+
+                                                <h4>2.4 GHz</h4>
                                             </div>
-                                            <p class="text-sm text-gray-600">
+                                            <p>
                                                 <b>Mayor alcance,</b> pero menor velocidad y más interferencias
                                                 (muchos dispositivos y electrodomésticos usan esta frecuencia).
                                             </p>
                                         </div>
-                                        
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-tachometer-alt text-blue-600 text-xl mr-2"></i>
-                                                <h5 class="font-semibold text-gray-700">5 GHz</h5>
+
+                                        <div class="answer-block">
+                                            <div>
+
+                                                <h4>5 GHz</h4>
                                             </div>
-                                            <p class="text-sm text-gray-600">
+                                            <p>
                                                 <b>Menor alcance,</b> pero mayor velocidad y menos interferencias.
                                                 Ideal para aprovechar al máximo la velocidad contratada, si estás cerca del módem.
                                             </p>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-4">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-lightbulb text-yellow-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Recomendación
-                                        </h5>
-                                        <p class="text-sm">
+                                        </h4>
+                                        <p>
                                             Si necesitás más cobertura, usá 2.4 GHz. Si buscás más velocidad y hay poca
                                             distancia al módem, usá 5 GHz.
                                         </p>
                                     </div>
-                                    
-                                    <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400 text-sm">
-                                        <strong>Importante:</strong> 
+
+                                    <div class="answer-block">
+                                        <strong>Importante:</strong>
                                         Para alcanzar velocidades de 100 Mbps o más, tu dispositivo debe ser compatible
                                         con WiFi 5 (norma ac) y conectarse a la red de 5 GHz.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Tenés zonas sin cobertura WiFi o con menos velocidad?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Optimización de Cobertura WiFi</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-map-marker-alt text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="mejorar-wifi" class="help-question"><summary>¿Tenés zonas sin cobertura WiFi o con menos velocidad?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Optimización de Cobertura WiFi</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Instalación Optimizada</h5>
-                                                <p class="text-sm">
+                                                <h4>Instalación Optimizada</h4>
+                                                <p>
                                                     Al instalar el servicio, buscamos la mejor ubicación para el módem dentro de la
                                                     zona de mayor uso en tu hogar, para optimizar la cobertura WiFi.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-4">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-exclamation-triangle text-amber-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Factores que pueden afectar la señal
-                                        </h5>
-                                        <ul class="text-sm text-gray-600 space-y-1">
-                                            <li>• Distancia al módem</li>
-                                            <li>• Paredes u obstáculos</li>
-                                            <li>• Interferencias de otros equipos o redes cercanas</li>
-                                            <li>• Cantidad de dispositivos conectados</li>
+                                        </h4>
+                                        <ul>
+                                            <li>Distancia al módem</li>
+                                            <li>Paredes u obstáculos</li>
+                                            <li>Interferencias de otros equipos o redes cercanas</li>
+                                            <li>Cantidad de dispositivos conectados</li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-tools text-green-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Solución recomendada
-                                        </h5>
-                                        <p class="text-sm">
+                                        </h4>
+                                        <p>
                                             Si notás zonas con poca cobertura o menor velocidad, probá reiniciar el módem
                                             (apagando y encendiendo desde el botón trasero, con cuidado de no mover el cable
                                             de fibra óptica). Si el problema persiste, contactanos para asesoramiento.
                                         </p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>No se alcanza la velocidad contratada, ¿Qué puede ser o qué puedo hacer?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Diagnóstico de Velocidad</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <p class="text-sm">
+                            </div></details><details id="medir-velocidad" class="help-question"><summary>No se alcanza la velocidad contratada, ¿Qué puede ser o qué puedo hacer?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Diagnóstico de Velocidad</h3>
+
+                                    <div class="answer-block">
+                                        <p>
                                             Para entender por qué no se alcanza la velocidad contratada, es importante
                                             analizar cómo está conectado el dispositivo desde el cual realizás la prueba de
                                             velocidad. Existen dos formas principales de conexión: por WiFi o por cable de
                                             red (Ethernet).
                                         </p>
                                     </div>
-                                    
-                                    <div class="space-y-4 mb-6">
-                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                            <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
-                                                <i class="fas fa-wifi text-blue-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <div class="answer-block">
+                                            <h4>
+
                                                 Si estás conectado por WiFi:
-                                            </h5>
-                                            <ul class="text-sm space-y-2 text-gray-600">
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1 text-xs"></i>
+                                            </h4>
+                                            <ul>
+                                                <li>
+
                                                     <span>Verificá que tu dispositivo (celular, notebook, PC, etc.) sea
                                                     compatible con la norma WiFi 5 (también llamada "ac") o superior. Si
                                                     tu dispositivo solo soporta WiFi 4 (norma "n") o anterior, no podrá
                                                     alcanzar velocidades de 100 Mbps o más.</span>
                                                 </li>
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1 text-xs"></i>
+                                                <li>
+
                                                     <span>Asegurate de estar conectado a la red WiFi de 5 GHz (suele tener un
                                                     nombre diferente al de 2.4 GHz). La red de 2.4 GHz tiene mayor
                                                     alcance pero menor velocidad y más interferencias; la de 5 GHz
@@ -1127,42 +499,42 @@
                                                     estás cerca del módem (idealmente a menos de 2 metros y sin paredes
                                                     de por medio).</span>
                                                 </li>
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1 text-xs"></i>
+                                                <li>
+
                                                     <span>Si estás lejos del módem, hay paredes u obstáculos, o hay muchas
                                                     redes WiFi cercanas, la velocidad puede verse afectada. En ese caso,
                                                     acercate al módem y volvé a probar.</span>
                                                 </li>
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-green-500 mr-2 mt-1 text-xs"></i>
+                                                <li>
+
                                                     <span>Si tenés dudas sobre la cobertura o la diferencia entre 2.4 GHz y 5
                                                     GHz, consultá las preguntas frecuentes relacionadas.</span>
                                                 </li>
                                             </ul>
                                         </div>
-                                        
-                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                            <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
-                                                <i class="fas fa-ethernet text-blue-600 mr-2"></i>
+
+                                        <div class="answer-block">
+                                            <h4>
+
                                                 Si estás conectado por cable de red (Ethernet):
-                                            </h5>
-                                            <ul class="text-sm space-y-2 text-gray-600">
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-blue-500 mr-2 mt-1 text-xs"></i>
+                                            </h4>
+                                            <ul>
+                                                <li>
+
                                                     <span>Revisá si tu dispositivo tiene un puerto de red <b>Fast Ethernet</b>
                                                     (soporta hasta 100 Mbps) o <b>Gigabit Ethernet</b> (soporta hasta
                                                     1000 Mbps). Si tu equipo solo tiene Fast Ethernet, no podrá superar
                                                     los 100 Mbps aunque el servicio contratado sea mayor.</span>
                                                 </li>
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-blue-500 mr-2 mt-1 text-xs"></i>
+                                                <li>
+
                                                     <span>Si usás un router propio entre el módem y tu dispositivo, asegurate
                                                     de que tanto el router como el dispositivo tengan puertos Gigabit
                                                     Ethernet. Si alguno de los dos tiene solo Fast Ethernet, la
                                                     velocidad máxima será de 100 Mbps.</span>
                                                 </li>
-                                                <li class="flex items-start">
-                                                    <i class="fas fa-check-circle text-blue-500 mr-2 mt-1 text-xs"></i>
+                                                <li>
+
                                                     <span>Los cables de red también deben ser de buena calidad
                                                     (preferentemente categoría 5e o superior) para soportar altas
                                                     velocidades.</span>
@@ -1170,77 +542,69 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-4">
-                                        <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-tachometer-alt text-yellow-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             ¿Cómo hacer una prueba de velocidad confiable?
-                                        </h5>
-                                        <ul class="text-sm space-y-2 text-gray-600">
-                                            <li class="flex items-start">
-                                                <i class="fas fa-arrow-right text-yellow-600 mr-2 mt-1 text-xs"></i>
+                                        </h4>
+                                        <ul>
+                                            <li>
+
                                                 <span>Desconectá todos los dispositivos de la red, excepto aquel con el que vas a hacer la prueba.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-arrow-right text-yellow-600 mr-2 mt-1 text-xs"></i>
+                                            <li>
+
                                                 <span>Si es posible, conectá el dispositivo por cable directamente al módem.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-arrow-right text-yellow-600 mr-2 mt-1 text-xs"></i>
-                                                <span>Accedé a <a href="10.85.0.10/speedtest/" target="_blank" class="text-blue-600 hover:underline">10.85.0.10/speedtest/</a> y realizá la prueba.</span>
+                                            <li>
+
+                                                <span>Accedé a <a href="http://10.85.0.10/speedtest/" target="_blank" rel="noopener">10.85.0.10/speedtest/</a> y realizá la prueba.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-arrow-right text-yellow-600 mr-2 mt-1 text-xs"></i>
+                                            <li>
+
                                                 <span>Si hacés la prueba por WiFi, recordá: usá un dispositivo compatible con WiFi 5 (ac) o superior, conectate a la red de 5 GHz, y ubicá el dispositivo cerca del módem (sin paredes de por medio).</span>
                                             </li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500 mb-4">
-                                        <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-exclamation-triangle text-orange-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Otros factores a tener en cuenta:
-                                        </h5>
-                                        <ul class="text-sm space-y-2 text-gray-600">
-                                            <li class="flex items-start">
-                                                <i class="fas fa-info-circle text-orange-600 mr-2 mt-1 text-xs"></i>
+                                        </h4>
+                                        <ul>
+                                            <li>
+
                                                 <span>Si la velocidad disminuyó respecto al momento de la instalación, puede
                                                 deberse a interferencias de otras redes WiFi cercanas, nuevos dispositivos
                                                 conectados o cambios en la ubicación del módem.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-info-circle text-orange-600 mr-2 mt-1 text-xs"></i>
+                                            <li>
+
                                                 <span>Te recomendamos reiniciar el módem apagándolo y encendiéndolo desde el botón
                                                 trasero (tené cuidado de no mover el cable de fibra óptica, ya que es muy
                                                 delicado).</span>
                                             </li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400 text-sm">
-                                        <strong>Contactanos:</strong> 
+
+                                    <div class="answer-block">
+                                        <strong>Contactanos:</strong>
                                         Si después de realizar estas verificaciones seguís sin alcanzar la velocidad
                                         contratada, contactanos para que podamos ayudarte a identificar el inconveniente.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Es posible mover el módem de lugar?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Reubicación del Módem</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-map-marker-alt text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="reubicar-modem" class="help-question"><summary>¿Es posible mover el módem de lugar?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Reubicación del Módem</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Ubicación Estratégica Actual</h5>
-                                                <p class="text-sm">
+                                                <h4>Ubicación Estratégica Actual</h4>
+                                                <p>
                                                     Nuestros técnicos validaron, al momento de realizar la instalación, la "zona de
                                                     uso intensivo dentro del hogar" que es la zona en la cual se reúne la familia al
                                                     momento de usar Internet. En dicha zona es donde realizamos la instalación del
@@ -1251,13 +615,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-exclamation-triangle text-amber-600 text-xl mr-3 mt-1"></i>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">¿Por qué no recomendamos moverlo?</h5>
-                                                <p class="text-sm">
+                                                <h4>¿Por qué no recomendamos moverlo?</h4>
+                                                <p>
                                                     No recomendamos moverlo dado que está instalado, por lo que mencionamos
                                                     anteriormente, en un lugar estratégico y, también, el cable de Fibra Óptica que
                                                     está conectado entre el módem y la roseta ubicada en la pared es muy
@@ -1267,71 +631,62 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-red-50 p-4 rounded-lg border border-red-200 mb-4">
-                                        <h5 class="font-semibold text-gray-800 mb-3 flex items-center">
-                                            <i class="fas fa-shield-alt text-red-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Recordá que:
-                                        </h5>
-                                        <ul class="text-sm space-y-2 text-gray-600">
-                                            <li class="flex items-start">
-                                                <i class="fas fa-check-circle text-red-500 mr-2 mt-1 text-xs"></i>
+                                        </h4>
+                                        <ul>
+                                            <li>
+
                                                 <span>Te dejamos instalado un módem de última tecnología para que puedas disfrutar
                                                 del servicio sin inconvenientes.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-times-circle text-red-500 mr-2 mt-1 text-xs"></i>
+                                            <li>
+
                                                 <span>No dobles o enrolles el cableado que conecta el módem a la roseta instalada
                                                 en la pared. Dicho cable es fibra óptica, es sumamente delicado y cualquier
                                                 movimiento incorrecto puede afectar el funcionamiento del servicio.</span>
                                             </li>
-                                            <li class="flex items-start">
-                                                <i class="fas fa-times-circle text-red-500 mr-2 mt-1 text-xs"></i>
+                                            <li>
+
                                                 <span>No manipules el dispositivo. Cualquier mal movimiento, puede generar
                                                 inconvenientes en el cableado de Fibra Óptica y afectar el correcto
                                                 funcionamiento del servicio.</span>
                                             </li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400 text-sm">
-                                        <strong>Importante:</strong> 
+
+                                    <div class="answer-block">
+                                        <strong>Importante:</strong>
                                         Los daños en el módem y/o cableado por uso indebido o descuido suelen tener un
                                         costo asociado.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Qué hacer cuando hay lentitud en Internet?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Solución para Lentitud de Internet</h4>
-                                    
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-info-circle text-blue-600 text-xl mr-3 mt-1"></i>
+                            </div></details><details id="internet-lento" class="help-question"><summary>¿Qué hacer cuando hay lentitud en Internet?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Solución para Lentitud de Internet</h3>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Causa Principal</h5>
-                                                <p class="text-sm">
-                                                    La <strong>lentitud ocasional</strong> puede deberse a congestión en los canales WiFi. 
+                                                <h4>Causa Principal</h4>
+                                                <p>
+                                                    La <strong>lentitud ocasional</strong> puede deberse a congestión en los canales WiFi.
                                                     La solución más efectiva es reiniciar tu equipo.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 mb-4">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-power-off text-green-600 text-xl mr-3 mt-1"></i>
+
+                                    <div class="answer-block">
+                                        <div>
+
                                             <div>
-                                                <h5 class="font-semibold text-gray-700 mb-2">Pasos para Reiniciar</h5>
-                                                <ol class="text-sm space-y-2 list-decimal ml-4">
+                                                <h4>Pasos para Reiniciar</h4>
+                                                <ol>
                                                     <li><strong>Desconectá</strong> el módem/router de la corriente eléctrica</li>
                                                     <li><strong>Esperá</strong> 30 segundos</li>
                                                     <li><strong>Conectá nuevamente</strong> el equipo</li>
@@ -1340,308 +695,246 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500 mb-4">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-lightbulb text-purple-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             ¿Por qué funciona?
-                                        </h5>
-                                        <ul class="text-sm space-y-2 list-disc ml-4">
+                                        </h4>
+                                        <ul>
                                             <li>Al reiniciar, el WiFi busca automáticamente un <strong>canal menos congestionado</strong></li>
                                             <li>La transmisión del WiFi <strong>levanta por un canal con mayor velocidad</strong></li>
                                             <li>Se limpia la memoria del dispositivo y se optimizan las conexiones</li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-400 text-sm">
+
+                                    <div class="answer-block">
                                         <strong>¿Sigue lento después del reinicio?</strong><br>
-                                        Si la lentitud persiste, 
-                                        <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
-                                           target="_blank" rel="noopener noreferrer"
-                                           class="text-blue-600 hover:underline font-semibold">contactanos por WhatsApp</a> 
+                                        Si la lentitud persiste,
+                                        <a href="https://api.whatsapp.com/send/?phone=5492494060345&amp;text&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">contactanos por WhatsApp</a>
                                         para que nuestro equipo técnico pueda asistirte.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Administrative FAQs -->
-                <div id="admin-faqs" class="faq-section">
-                    <div class="space-y-4">
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo va a ser el valor de mi primer factura?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                            </div></details></div></section><section id="admin-faqs" class="help-category" aria-labelledby="admin-title"><div class="help-category-heading"><h2 id="admin-title">Administrativas</h2><p>Facturas, medios de pago y atención al cliente.</p></div><div class="help-questions"><details id="primera-factura" class="help-question"><summary>¿Cómo va a ser el valor de mi primer factura?</summary><div class="help-answer">
+                                <div>
+                                    <div>
                                         <div>
-                                            <h4 class="font-semibold text-gray-800 mb-4">¿Por qué mi primera factura es diferente?</h4>
-                                            
-                                            <p class="mb-4">
-                                                Tu primera factura será un poco más alta de lo habitual, y esto es completamente normal. 
+                                            <h3>¿Por qué mi primera factura es diferente?</h3>
+
+                                            <p>
+                                                Tu primera factura será un poco más alta de lo habitual, y esto es completamente normal.
                                                 Te explicamos por qué:
                                             </p>
-                                            
-                                            <div class="space-y-4">
-                                                <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border-l-4 border-blue-500">
-                                                    <h5 class="font-semibold text-gray-800 mb-2">Nuestro sistema de facturación</h5>
-                                                    <p class="text-sm">
-                                                        Facturamos <strong>a mes adelantado</strong>, es decir, en cada factura pagás 
+
+                                            <div class="answer-block">
+                                                <div class="answer-block">
+                                                    <h4>Nuestro sistema de facturación</h4>
+                                                    <p>
+                                                        Facturamos <strong>a mes adelantado</strong>, es decir, en cada factura pagás
                                                         el servicio del mes que viene, no el que ya pasó.
                                                     </p>
                                                 </div>
-                                                
-                                                <div class="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border-l-4 border-amber-500">
-                                                    <h5 class="font-semibold text-gray-800 mb-2">Los días desde la instalación</h5>
-                                                    <p class="text-sm">
-                                                        Además del mes completo que viene, también cobramos los días que ya 
+
+                                                <div class="answer-block">
+                                                    <h4>Los días desde la instalación</h4>
+                                                    <p>
+                                                        Además del mes completo que viene, también cobramos los días que ya
                                                         usaste el servicio desde que se instaló hasta que termine el mes actual.
                                                     </p>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="bg-green-50 p-4 rounded-lg border border-green-200 mt-4">
-                                                <h5 class="font-semibold text-gray-800 mb-2">Ejemplo simple:</h5>
-                                                <p class="text-sm mb-2">
+
+                                            <div class="answer-block">
+                                                <h4>Ejemplo simple:</h4>
+                                                <p>
                                                     <strong>Si instalamos tu servicio el 15 de enero:</strong>
                                                 </p>
-                                                <ul class="text-sm space-y-1">
-                                                    <li>• <strong>Febrero completo:</strong> $15.999 (valor normal de tu plan)</li>
-                                                    <li>• <strong>16 días de enero:</strong> $8.533 (del 15/01 al 31/01)</li>
-                                                    <li class="font-semibold text-green-700">• <strong>Total primera factura:</strong> $24.532</li>
+                                                <ul>
+                                                    <li><strong>Febrero completo:</strong> $15.999 (valor normal de tu plan)</li>
+                                                    <li><strong>16 días de enero:</strong> $8.533 (del 15/01 al 31/01)</li>
+                                                    <li><strong>Total primera factura:</strong> $24.532</li>
                                                 </ul>
                                             </div>
-                                            
-                                            <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400 text-sm mt-4">
-                                                <strong>Tranquilo:</strong> A partir de la segunda factura, solo pagarás el valor 
+
+                                            <div class="answer-block">
+                                                <strong>Tranquilo:</strong> A partir de la segunda factura, solo pagarás el valor
                                                 normal de tu plan ($15.999 en este ejemplo).
                                             </div>
                                         </div>
-                                        
-                                        <div class="flex justify-center">
-                                            <img src="../../assets/img/bot/imagen_ejemplo_fc.png" 
-                                                 alt="Ejemplo de factura de Usittel mostrando cómo se calcula el valor de la primera facturación" 
-                                                 class="rounded-lg shadow-md max-w-full h-auto border border-gray-200">
+
+                                        <div>
+                                            <img src="../../assets/img/bot/imagen_ejemplo_fc.png" alt="Ejemplo de factura de Usittel mostrando cómo se calcula el valor de la primera facturación" width="845" height="821" loading="lazy" decoding="async">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo me entero si tengo una nueva factura para abonar?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                            </div></details><details id="consultar-factura" class="help-question"><summary>¿Cómo me entero si tengo una nueva factura para abonar?</summary><div class="help-answer">
+                                <div>
+                                    <div>
                                         <div>
-                                            <h4 class="font-semibold text-gray-800 mb-3">Notificación por Email</h4>
-                                            <p class="mb-4">
-                                                En cada ciclo de facturación (primeros días del mes) te enviamos automáticamente 
-                                                por correo electrónico tu factura adjunta y/o un enlace para descargarla directamente 
+                                            <h3>Notificación por Email</h3>
+                                            <p>
+                                                En cada ciclo de facturación (primeros días del mes) te enviamos automáticamente
+                                                por correo electrónico tu factura adjunta y/o un enlace para descargarla directamente
                                                 a la casilla de email que registraste en USITTEL.
                                             </p>
-                                            
-                                            <h4 class="font-semibold text-gray-800 mb-3">Portal de Autogestión</h4>
-                                            <p class="mb-4">
-                                                También tenés disponible nuestra plataforma de <a
-                                                href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" target="_blank"
-                                                class="text-blue-600 hover:underline font-semibold">Autogestión Web</a> donde 
+
+                                            <h3>Portal de Autogestión</h3>
+                                            <p>
+                                                También tenés disponible nuestra plataforma de <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" target="_blank" rel="noopener">Autogestión Web</a> donde
                                                 podés acceder las 24 horas para:
                                             </p>
-                                            
-                                            <ul class="list-disc pl-5 space-y-2 mb-4">
+
+                                            <ul>
                                                 <li>Ver tu balance de cuenta actualizado</li>
                                                 <li>Consultar facturas pendientes de pago</li>
                                                 <li>Descargar facturas anteriores</li>
                                                 <li>Revisar el historial de pagos</li>
                                             </ul>
-                                            
-                                            <div class="bg-amber-50 p-3 rounded-lg border-l-4 border-amber-400 text-sm">
+
+                                            <div class="answer-block">
                                                 <strong>¿No recordás tus datos de acceso?</strong><br>
-                                                Contactanos a través de WhatsApp o teléfono con tu email o celular registrado, 
+                                                Contactanos a través de WhatsApp o teléfono con tu email o celular registrado,
                                                 y te ayudaremos a recuperar tu usuario para que puedas acceder nuevamente.
                                             </div>
                                         </div>
-                                        
-                                        <div class="flex justify-center">
-                                            <img src="../../assets/img/bot/autogeston1.png" 
-                                                 alt="Captura de pantalla del portal de autogestión de Usittel mostrando el balance de cuenta y facturas" 
-                                                 class="rounded-lg shadow-md max-w-full h-auto border border-gray-200">
+
+                                        <div>
+                                            <img src="../../assets/img/bot/autogeston1.png" alt="Captura de pantalla del portal de autogestión de Usittel mostrando el balance de cuenta y facturas" width="651" height="861" loading="lazy" decoding="async">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cómo descargar la factura por WhatsApp?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                            </div></details><details id="descargar-factura-whatsapp" class="help-question"><summary>¿Cómo descargar la factura por WhatsApp?</summary><div class="help-answer">
+                                <div>
+                                    <div>
                                         <div>
-                                            <p class="mb-4">
-                                                También podés solicitar tu factura de manera rápida y sencilla a través de nuestro bot de WhatsApp. 
-                                                Solo tenés que escribir al <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" 
-                                                target="_blank" class="text-blue-600 hover:underline font-semibold">+54 9 249 406-0345</a>.
+                                            <p>
+                                                También podés solicitar tu factura de manera rápida y sencilla a través de nuestro bot de WhatsApp.
+                                                Solo tenés que escribir al <a href="https://api.whatsapp.com/send/?phone=5492494060345&amp;text&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">+54 9 249 406-0345</a>.
                                             </p>
-                                            
-                                            <h4 class="font-semibold text-gray-800 mb-2">Pasos a seguir:</h4>
-                                            <ol class="list-decimal pl-5 space-y-2 mb-4">
+
+                                            <h3>Pasos a seguir:</h3>
+                                            <ol>
                                                 <li>Iniciá la conversación con nuestro bot</li>
                                                 <li>Seleccioná la opción <strong>"Soy cliente"</strong></li>
                                                 <li>Elegí <strong>"Última factura"</strong></li>
                                                 <li>El bot te enviará automáticamente tu factura más reciente</li>
                                             </ol>
-                                            
-                                            <p class="text-sm bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                                                <strong>Tip:</strong> También podés consultar el estado de tu deuda actual en cualquier momento 
+
+                                            <p>
+                                                <strong>Tip:</strong> También podés consultar el estado de tu deuda actual en cualquier momento
                                                 seleccionando "Soy cliente" y luego "Consultar mi deuda".
                                             </p>
                                         </div>
-                                        
-                                        <div class="flex justify-center">
-                                            <img src="../../assets/img/bot/bot-imagen.png" 
-                                                 alt="Ejemplo del bot de WhatsApp de Usittel mostrando las opciones para clientes" 
-                                                 class="rounded-lg shadow-md max-w-full h-auto border border-gray-200">
+
+                                        <div>
+                                            <img src="../../assets/img/bot/bot-imagen.png" alt="Ejemplo del bot de WhatsApp de Usittel mostrando las opciones para clientes" width="412" height="512" loading="lazy" decoding="async">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div id="medios-de-pago" class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Cuáles son los medios de pago?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Los medios de pago disponibles son:</h4>
-                                    
-                                    <ul class="list-disc pl-5 mt-2 space-y-3">
-                                        <li class="flex items-start">
-                                            <span class="list-disc mr-2"></span>
+                            </div></details><details id="medios-de-pago" class="help-question"><summary>¿Cuáles son los medios de pago?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Los medios de pago disponibles son:</h3>
+
+                                    <ul>
+                                        <li>
+                                            <span></span>
                                             <div>
-                                                <span class="flex items-center mb-1">
-                                                    <i class="fas fa-store text-orange-500 mr-2"></i>
+                                                <span>
+
                                                     <strong>Rapipago, Pago Fácil, CobroExpress:</strong>
                                                 </span>
-                                                <span class="text-sm text-gray-600">a partir del código de barras presente en la factura.</span>
-                                            </div>
-                                        </li>
-                                        
-                                        <li class="flex items-start">
-                                            <span class="list-disc mr-2"></span>
-                                            <div>
-                                                <span class="flex items-center mb-1">
-                                                    <i class="fas fa-university text-blue-500 mr-2"></i>
-                                                    <strong>Pago mis Cuentas, Red Link:</strong>
-                                                </span>
-                                                <span class="text-sm text-gray-600">a través del Código Electrónico de pago presente en la factura.</span>
-                                            </div>
-                                        </li>
-                                        
-                                        <li class="flex items-start">
-                                            <span class="list-disc mr-2"></span>
-                                            <div>
-                                                <span class="flex items-center mb-1">
-                                                    <i class="fab fa-cc-mastercard text-green-600 mr-2"></i>
-                                                    <strong>Mercado Pago:</strong>
-                                                </span>
-                                                <span class="text-sm text-gray-600">presionando el botón en la notificación, o escaneando el código QR en la Factura.</span>
-                                            </div>
-                                        </li>
-                                        
-                                        <li class="flex items-start">
-                                            <span class="list-disc mr-2"></span>
-                                            <div>
-                                                <span class="flex items-center mb-1">
-                                                    <i class="fas fa-credit-card text-purple-500 mr-2"></i>
-                                                    <strong>Débito automático</strong>
-                                                </span>
-                                                <span class="text-sm text-gray-600">desde tu cuenta bancaria o tarjeta de crédito. Contactanos para adherirte y evitar preocuparte por las fechas de vencimiento.</span>
+                                                <span>a partir del código de barras presente en la factura.</span>
                                             </div>
                                         </li>
 
-                                        <li class="flex items-start">
-                                            <span class="list-disc mr-2"></span>
+                                        <li>
+                                            <span></span>
                                             <div>
-                                                <span class="flex items-center mb-1">
-                                                    <i class="fas fa-globe text-cyan-600 mr-2"></i>
+                                                <span>
+
+                                                    <strong>Pago mis Cuentas, Red Link:</strong>
+                                                </span>
+                                                <span>a través del Código Electrónico de pago presente en la factura.</span>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <span></span>
+                                            <div>
+                                                <span>
+
+                                                    <strong>Mercado Pago:</strong>
+                                                </span>
+                                                <span>presionando el botón en la notificación, o escaneando el código QR en la Factura.</span>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <span></span>
+                                            <div>
+                                                <span>
+
+                                                    <strong>Débito automático</strong>
+                                                </span>
+                                                <span>desde tu cuenta bancaria o tarjeta de crédito. Contactanos para adherirte y evitar preocuparte por las fechas de vencimiento.</span>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <span></span>
+                                            <div>
+                                                <span>
+
                                                     <strong>Tarjeta de débito o crédito desde la web de autogestión:</strong>
                                                 </span>
-                                                <span class="text-sm text-gray-600">ingresando desde el botón <a href="https://usittel.com.ar/autogestion" target="_blank" rel="noopener" class="text-blue-600 hover:underline font-semibold">Autogestión</a> en usittel.com.ar o directamente desde <a href="https://usittel.com.ar/autogestion" target="_blank" rel="noopener" class="text-blue-600 hover:underline font-semibold">usittel.com.ar/autogestion</a>. Para iniciar sesión usá los datos que figuran en tu factura; si no podés obtenerlos, comunicate con nosotros por WhatsApp y te los brindamos.</span>
+                                                <span>ingresando desde el botón <a href="https://usittel.com.ar/autogestion" target="_blank" rel="noopener">Autogestión</a> en usittel.com.ar o directamente desde <a href="https://usittel.com.ar/autogestion" target="_blank" rel="noopener">usittel.com.ar/autogestion</a>. Para iniciar sesión usá los datos que figuran en tu factura; si no podés obtenerlos, comunicate con nosotros por WhatsApp y te los brindamos.</span>
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Dónde me tengo que contactar si necesitara hablar con un representante?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">Canales de Atención al Cliente</h4>
-                                    <p class="mb-4">Estamos disponibles para ayudarte a través de nuestros diferentes canales de comunicación:</p>
-                                    
-                                    <div class="space-y-4">
-                                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-                                            <div class="flex items-start">
-                                                <div class="flex-shrink-0 mr-3">
-                                                    <i class="fab fa-whatsapp text-green-600 text-2xl"></i>
-                                                </div>
+                            </div></details><details id="canales-de-atencion" class="help-question"><summary>¿Dónde me tengo que contactar si necesitara hablar con un representante?</summary><div class="help-answer">
+                                <div>
+                                    <h3>Canales de Atención al Cliente</h3>
+                                    <p>Estamos disponibles para ayudarte a través de nuestros diferentes canales de comunicación:</p>
+
+                                    <div class="answer-block">
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">WhatsApp</h5>
-                                                    <p class="text-sm mb-2">
-                                                        <a href="https://api.whatsapp.com/send/?phone=5492494060345"
-                                                           target="_blank" class="text-green-600 hover:underline font-semibold text-lg">
+                                                    <h4>WhatsApp</h4>
+                                                    <p>
+                                                        <a href="https://api.whatsapp.com/send/?phone=5492494060345" target="_blank" rel="noopener">
                                                            +54 9 249 406-0345
                                                         </a>
                                                     </p>
-                                                    <div class="text-xs text-gray-600">
-                                                        <div class="flex items-center mb-1">
-                                                            <i class="fas fa-clock mr-1"></i>
+                                                    <div>
+                                                        <div>
+
                                                             <span><strong>L-V:</strong> 8:00 a 20:00 hs</span>
                                                         </div>
-                                                        <div class="flex items-center">
-                                                            <i class="fas fa-calendar-weekend mr-1"></i>
+                                                        <div>
+
                                                             <span><strong>Sáb, Dom y feriados:</strong> 10:00 a 16:00 hs</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                            <div class="flex items-start">
-                                                <div class="flex-shrink-0 mr-3">
-                                                    <i class="fas fa-phone text-blue-600 text-2xl"></i>
-                                                </div>
+
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">Teléfono Gratuito</h5>
-                                                    <p class="text-sm mb-2">
-                                                        <a href="tel:08001994545" class="text-blue-600 hover:underline font-semibold text-lg">
+                                                    <h4>Teléfono Gratuito</h4>
+                                                    <p>
+                                                        <a href="tel:08001994545">
                                                             0800 199-4545
                                                         </a>
                                                     </p>
-                                                    <div class="text-xs text-gray-600">
-                                                        <div class="flex items-center">
-                                                            <i class="fas fa-clock mr-1"></i>
+                                                    <div>
+                                                        <div>
+
                                                             <span><strong>L-V:</strong> 8:00 a 16:00 hs</span>
                                                         </div>
                                                     </div>
@@ -1649,278 +942,200 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-400 text-sm mt-4">
-                                        <strong>Recomendación:</strong> 
-                                        WhatsApp es nuestro canal principal con mayor disponibilidad horaria. 
+
+                                    <div class="answer-block">
+                                        <strong>Recomendación:</strong>
+                                        WhatsApp es nuestro canal principal con mayor disponibilidad horaria.
                                         ¡También podés usar nuestro bot automático las 24 horas!
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="faq-item rounded-lg">
-                            <button
-                                class="faq-question w-full flex justify-between items-center text-left p-6 font-semibold text-lg">
-                                <span>¿Qué dejamos instalado en el hogar?</span>
-                                <span class="faq-icon text-blue-500 font-bold text-2xl">+</span>
-                            </button>
-                            <div class="faq-answer">
-                                <div class="text-gray-600 prose p-4">
-                                    <h4 class="font-semibold text-gray-800 mb-4">🏠 Instalación Completa en tu Hogar</h4>
-                                    <p class="mb-4">
-                                        Te proporcionamos una instalación completa con la mejor tecnología disponible en Tandil 
+                            </div></details><details id="instalacion" class="help-question"><summary>¿Qué dejamos instalado en el hogar?</summary><div class="help-answer">
+                                <div>
+                                    <h3> Instalación Completa en tu Hogar</h3>
+                                    <p>
+                                        Te proporcionamos una instalación completa con la mejor tecnología disponible en Tandil
                                         para que puedas disfrutar de internet de alta velocidad desde el primer día.
                                     </p>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex items-start">
-                                                <i class="fas fa-fiber-optic text-blue-600 text-2xl mr-3 mt-1"></i>
+
+                                    <div>
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">Fibra Óptica</h5>
-                                                    <p class="text-sm text-gray-600">
-                                                        La tecnología más avanzada para internet, garantizando velocidades 
+                                                    <h4>Fibra Óptica</h4>
+                                                    <p>
+                                                        La tecnología más avanzada para internet, garantizando velocidades
                                                         estables y confiables hasta tu hogar.
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                            <div class="flex items-start">
-                                                <i class="fas fa-wifi text-blue-600 text-2xl mr-3 mt-1"></i>
+
+                                        <div class="answer-block">
+                                            <div>
+
                                                 <div>
-                                                    <h5 class="font-semibold text-gray-700 mb-2">Módem WiFi AC</h5>
-                                                    <p class="text-sm text-gray-600">
-                                                        Equipo de última generación que soporta la velocidad contratada 
+                                                    <h4>Módem WiFi AC</h4>
+                                                    <p>
+                                                        Equipo de última generación que soporta la velocidad contratada
                                                         con excelente cobertura WiFi.
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
-                                        <h5 class="font-semibold text-gray-700 mb-2 flex items-center">
-                                            <i class="fas fa-tools text-gray-600 mr-2"></i>
+
+                                    <div class="answer-block">
+                                        <h4>
+
                                             Instalación Profesional Incluida
-                                        </h5>
-                                        <ul class="text-sm space-y-1 text-gray-600">
-                                            <li>• Cableado interno hasta el punto de conexión óptimo</li>
-                                            <li>• Configuración completa del módem WiFi</li>
-                                            <li>• Pruebas de velocidad y cobertura</li>
-                                            <li>• Capacitación básica sobre el uso del servicio</li>
+                                        </h4>
+                                        <ul>
+                                            <li>Cableado interno hasta el punto de conexión óptimo</li>
+                                            <li>Configuración completa del módem WiFi</li>
+                                            <li>Pruebas de velocidad y cobertura</li>
+                                            <li>Capacitación básica sobre el uso del servicio</li>
                                         </ul>
                                     </div>
-                                    
-                                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400 text-sm">
-                                        <strong>⚡ Resultado:</strong> 
-                                        El mejor servicio de internet disponible en Tandil, con tecnología de fibra óptica 
+
+                                    <div class="answer-block">
+                                        <strong> Resultado:</strong>
+                                        El mejor servicio de internet disponible en Tandil, con tecnología de fibra óptica
                                         y equipamiento de última generación para una experiencia de navegación superior.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-  <footer class="bg-gray-800 text-white pt-16 pb-8">
+                            </div></details></div></section></div></div></main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
     <div class="container mx-auto px-6 max-w-7xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Columna de Contacto y Horarios -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                <div class="space-y-3 text-gray-300">
-                    <p class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                        <span>Nigro 575, Tandil</span>
-                    </p>
-                    
-                    <!-- Números oficiales de WhatsApp -->
-                    <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                      <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                        <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
-                      </p>
-                      <div class="space-y-2">
-                        <div>
-                          <p class="flex items-center gap-2 text-sm">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span class="font-medium">+54 9 249 406-0345</span>
-                          </p>
-                          <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                          <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
-                        </div>
-                        <div>
-                          <p class="flex items-center gap-2 text-sm">
-                            <i class="fab fa-whatsapp text-green-400"></i>
-                            <span class="font-medium">+54 9 249 450-4522</span>
-                          </p>
-                          <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <p class="flex items-center gap-3">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <span>0800-199-4545</span>
-                        </p>
-                        <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                    </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
+
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
                 </div>
-            </div>
-
-            <!-- Columna de Servicios -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                    <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
-                    <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                    <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Soporte -->
-            <div>
-                <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                    <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                </ul>
-            </div>
-
-            <!-- Columna de Legal y Logo -->
-            <div class="space-y-4">
-                <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                <ul class="space-y-2">
-                    <a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
-                                condiciones</a>
-                    <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                    <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-  <li><a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a></li>
-                </ul>
-                <div class="pt-4">
-                    <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
                 </div>
+              </div>
             </div>
+
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+            </div>
+          </div>
         </div>
 
-        <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-            </div>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
         </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
-
-     <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-  <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-       class="flex items-center no-underline group hover:no-underline focus:no-underline"
-       aria-label="Chateá con nosotros por WhatsApp">
-      <span class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-            style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-        <i class="fab fa-whatsapp"></i>
-      </span>
-      <span class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors" style="min-width: 126px;">
-        <span>¿Necesitás ayuda?</span>
-        <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-      </span>
-    </a>
-  </div>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // --- FAQ Accordion & Tabs Logic ---
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach((item) => {
-                const question = item.querySelector('.faq-question');
-                question.addEventListener('click', () => {
-                    const isOpen = item.classList.contains('open');
-                    // No cerramos los otros para que se puedan abrir varios a la vez si el usuario quiere
-                    if (isOpen) {
-                        item.classList.remove('open');
-                        item.querySelector('.faq-answer').style.maxHeight = null;
-                    } else {
-                        item.classList.add('open');
-                        const answer = item.querySelector('.faq-answer');
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                    }
-                });
-            });
-
-            const tabs = document.querySelectorAll('.faq-tab');
-            const sections = document.querySelectorAll('.faq-section');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.getAttribute('data-tab');
-
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    sections.forEach(section => {
-                        if (section.id === target + '-faqs') {
-                            section.classList.add('active');
-                        } else {
-                            section.classList.remove('active');
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const hamburger = document.getElementById("hamburger"),
-                mobileMenu = document.getElementById("mobileMenu"),
-                overlay = document.getElementById("overlay"),
-                closeMenu = document.getElementById("closeMenu"),
-                toggleProducts = document.getElementById("toggleProducts"),
-                productsSubmenu = document.getElementById("productsSubmenu");
-
-            function toggleMenu() {
-                mobileMenu.classList.toggle("show");
-                overlay.classList.toggle("show");
-            }
-
-            if (hamburger) hamburger.addEventListener("click", toggleMenu);
-            if (overlay) overlay.addEventListener("click", toggleMenu);
-            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
-            if (toggleProducts) {
-                toggleProducts.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
-                });
-            }
-        });
-    </script>
-
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
 </body>
-
 </html>

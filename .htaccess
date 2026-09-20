@@ -16,6 +16,9 @@ Options -Indexes
 # ── 2. Página de error personalizada ─────────────────────
 ErrorDocument 404 /pages/index.html
 
+# Retired public page: also disable stale copies left by copy-based deployments.
+RedirectMatch 410 "^/pages/prensa(?:/|$)"
+
 # ── 3. Seguridad de cabeceras HTTP ────────────────────────
 <IfModule mod_headers.c>
     # Evitar que el navegador "olfatee" el tipo de contenido

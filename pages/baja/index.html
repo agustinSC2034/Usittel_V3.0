@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -13,684 +11,228 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - Baja del Servicio</title>
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-
     <meta name="description" content="Solicitá la baja de tu servicio Usittel de forma rápida y sencilla. Atención personalizada y soporte en Tandil." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Usittel - Baja del Servicio" />
     <meta property="og:description" content="Solicitá la baja de tu servicio Usittel de forma rápida y sencilla. Atención personalizada y soporte en Tandil." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - Baja del Servicio" />
     <meta name="twitter:description" content="Solicitá la baja de tu servicio Usittel de forma rápida y sencilla. Atención personalizada y soporte en Tandil." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
-
-    <!-- Google Fonts: Poppins & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet" />
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <style>
-        /* NAVIGATION STYLES */
-        .navbar-section *,
-        .navbar-section *::before,
-        .navbar-section *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        header.navbar-section {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-        }
-
-        .navbar-section {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            font-size: 17px;
-            color: #3c4043;
-        }
-
-        .navbar {
-            background-color: white;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 34px;
-            height: 69px;
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 26px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .logo:hover {
-            background-color: rgba(60, 64, 67, 0.08);
-        }
-
-        .logo img {
-            height: 39px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            list-style: none;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #60666b;
-            font-size: 17px;
-            font-weight: 500;
-            padding: 13px 17px;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .nav-links li a:hover {
-            background-color: rgba(60, 64, 67, 0.06);
-            color: #202020;
-        }
-
-        .nav-links li a.active {
-            color: #1a73e8;
-            font-weight: 600;
-        }
-
-        .nav-links .dropdown {
-            position: relative;
-        }
-
-        .nav-links .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            background-color: white;
-            padding: 8px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            list-style: none;
-            min-width: 180px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-
-        .nav-links .dropdown-menu li a {
-            display: block;
-            padding: 11px 17px;
-            color: #3c4043;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .nav-links .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-button,
-        .nav-button2,
-        .nav-button-green {
-            font-size: 16px;
-            padding: 11px 22px;
-            border-radius: 999px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-button-green {
-            background-color: #30a172;
-            color: white !important;
-        }
-
-        .nav-button-green:hover {
-            background-color: #188b48;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-button2 {
-            background-color: #1a73e8;
-            color: white !important;
-        }
-
-        .nav-button2:hover {
-            background-color: #175ca7;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background-color: #3c4043;
-            border-radius: 2px;
-        }
-
-        .mobile-menu-slide {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 16px;
-            transition: left 0.3s ease-in-out;
-            z-index: 1001;
-        }
-
-        .mobile-menu-slide.show {
-            left: 0;
-        }
-
-        .mobile-menu-slide a {
-            text-decoration: none;
-            color: #3c4043;
-            font-size: 16px;
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-
-        .mobile-menu-slide .nav-button-green,
-        .mobile-menu-slide .nav-button2 {
-            padding: 12px 18px;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-menu-header img {
-            height: 32px;
-        }
-
-        .close-menu {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #3c4043;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .mobile-menu-slide hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-bottom: 16px;
-        }
-
-        .submenu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .submenu-toggle {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 16px;
-            text-align: left;
-            color: #3c4043;
-            padding: 10px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 400;
-        }
-
-        .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 12px;
-            margin-top: -4px;
-        }
-
-        .submenu a {
-            font-size: 15px;
-            padding: 8px 12px;
-            color: #3c4043;
-        }
-
-        .submenu.show {
-            display: flex;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .desktop-only {
-            display: flex;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        .mobile-header-bar {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        @media (max-width: 1024px) {
-            .navbar-container {
-                padding: 0 24px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .mobile-only {
-                display: flex !important;
-            }
-
-            .desktop-only {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-header-bar {
-                display: flex;
-            }
-        }
-
-        /* CUSTOM STYLES */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .cta-button {
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* === NEW: Green Border Effect for Cards === */
-        .interactive-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .interactive-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border-color: #22c55e;
-            /* green-500 */
-        }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/documents.css">
+<script src="../../js/site.js" defer></script>
+<script src="../../js/site-tracking.js" defer></script>
 </head>
-
-<body class="text-gray-800">
-
-    <!-- Header / Navigation -->
-    <header class="navbar-section">
-        <nav class="navbar">
-            <div class="navbar-container">
-                <!-- Encabezado mobile -->
-                <div class="mobile-header-bar mobile-only">
-                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                    <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo.png" alt="Usittel Logo" />
-                    </a>
-                </div>
-
-                <!-- Encabezado desktop -->
-                <div class="nav-left desktop-only">
-                    <a href="../../" class="logo">
-                        <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
-                    </a>
-                    <ul class="nav-links">
-                        <li><a href="../../">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#">Productos</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="../internet/">Internet</a></li>
-                                <li><a href="../mesh/">WiFi Mesh</a></li>
-                                <li><a href="../tv/">TV</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="../empresas/">Empresas</a></li>
-                        <li><a href="../contacto/">Contáctanos</a></li>
-                    </ul>
-                </div>
-
-                <div class="nav-actions desktop-only">
-                    <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-                </div>
-            </div>
-
-            <!-- Overlay y menú mobile -->
-            <div class="overlay" id="overlay"></div>
-            <div class="mobile-menu-slide" id="mobileMenu">
-                <div class="mobile-menu-header">
-                    <img src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
-                    <button class="close-menu" id="closeMenu">&times;</button>
-                </div>
-                <hr />
-                <a href="../../">Home</a>
-                <div class="submenu-container">
-                    <button class="submenu-toggle" id="toggleProducts">Productos</button>
-                    <div class="submenu" id="productsSubmenu">
-                        <a href="../internet/">Internet</a>
-                        <a href="../mesh/">WiFi Mesh</a>
-                        <a href="../tv/">TV</a>
-                    </div>
-                </div>
-                <a href="../empresas/">Empresas</a>
-                <a href="../contacto/">Contáctanos</a>
-                <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2" target="_blank" rel="noopener">Autogestión</a>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- =========== Hero Section =========== -->
-        <section class="bg-white py-20 md:py-28">
-            <div class="container mx-auto text-center px-6">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">Solicitud de Baja de Servicio</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Desde aquí puede gestionar la baja de sus servicios o el arrepentimiento de una compra.</p>
-            </div>
-        </section>
-
-        <!-- =========== Retention & Cancellation Section =========== -->
-        <section class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-6 max-w-5xl">
-                
-                <!-- Retention Block -->
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg mb-16 interactive-card">
-                     <div class="flex items-start gap-4">
-                        <i class="fas fa-info-circle text-blue-600 text-3xl"></i>
-                        <div>
-                             <h2 class="text-2xl font-bold text-gray-900">Antes de continuar, ¡hablemos!</h2>
-                             <p class="text-gray-700 mt-2">A veces, los problemas tienen una solución más simple de lo que parece. Si estás teniendo inconvenientes técnicos, de facturación o sentís que tu plan no se ajusta a tus necesidades, nuestro equipo puede ayudarte.</p>
-                             <div class="mt-6">
-                                <a href="https://wa.me/5492494060345" target="_blank" class="cta-button inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
-                                    <i class="fab fa-whatsapp mr-2"></i> Hablar con un representante
-                                </a>
-                             </div>
-                        </div>
-                     </div>
-                </div>
-
-                <!-- Cancellation Options -->
-                <div>
-                     <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Canales para solicitar la baja</h2>
-                     <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Si ya tomaste una decisión, podés gestionar la baja de tu servicio a través de cualquiera de nuestros canales de atención.</p>
-                     
-                     <div class="grid md:grid-cols-1 gap-8">
-                        <!-- WhatsApp Card -->
-                        <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-8 border-2 border-green-500 interactive-card">
-                            <div class="flex-shrink-0 text-center">
-                                <i class="fab fa-whatsapp text-7xl text-green-500"></i>
-                            </div>
-                            <div class="text-center md:text-left flex-grow">
-                                <h3 class="text-2xl font-bold text-gray-900">Atención por WhatsApp</h3>
-                                <p class="text-gray-600 mt-2">La forma más rápida y directa para iniciar tu gestión. Un representante te guiará en el proceso.</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <a href="https://wa.me/5492494060345?text=Hola%2C%20quisiera%20iniciar%20la%20solicitud%20de%20baja%20de%20mi%20servicio." target="_blank" class="cta-button inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full">
-                                    Solicitar Baja
-                                </a>
-                            </div>
-                        </div>
-                     </div>
-
-                    <div class="grid md:grid-cols-3 gap-8 mt-8">
-                         <!-- Phone Card -->
-                         <div class="bg-white p-8 rounded-xl shadow-lg text-center interactive-card">
-                            <i class="fas fa-phone-alt text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Línea Telefónica</h3>
-                            <p class="text-gray-600 mt-2">Comunicate con nuestro centro de atención al cliente.</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-2">0800 199 4545</p>
-                            <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16 hs.</p>
-                         </div>
-                         <!-- Email Card -->
-                         <div class="bg-white p-8 rounded-xl shadow-lg text-center interactive-card">
-                            <i class="fas fa-envelope text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Email</h3>
-                            <p class="text-gray-600 mt-2">Envianos tu solicitud por correo electrónico.</p>
-                            <a href="mailto:contacto@usittel.com.ar" class="font-semibold text-lg text-blue-600 hover:underline mt-2 inline-block">contacto@usittel.com.ar</a>
-                         </div>
-                         <!-- Office Card -->
-                         <div class="bg-white p-8 rounded-xl shadow-lg text-center interactive-card">
-                            <i class="fas fa-building text-4xl text-blue-500 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Oficina Comercial</h3>
-                            <p class="text-gray-600 mt-2">También podés acercarte personalmente.</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-2">Nigro 575, Tandil</p>
-                            <p class="text-sm text-gray-500">Lunes a Viernes de 8 a 16 hs.</p>
-                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- =========== Footer =========== -->
-    <footer class="bg-gray-800 text-white pt-16 pb-8">
-        <div class="container mx-auto px-6 max-w-7xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <!-- Columna de Contacto y Horarios -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                    <div class="space-y-3 text-gray-300">
-                        <p class="flex items-start gap-3">
-                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                            <span>Nigro 575, Tandil</span>
-                        </p>
-                        
-                        <!-- Números oficiales de WhatsApp -->
-                        <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                          <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                            <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
-                          </p>
-                          <div class="space-y-2">
-                            <div>
-                              <p class="flex items-center gap-2 text-sm">
-                                <i class="fab fa-whatsapp text-green-400"></i>
-                                <span class="font-medium">+54 9 249 406-0345</span>
-                              </p>
-                              <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                              <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
-                            </div>
-                            <div>
-                              <p class="flex items-center gap-2 text-sm">
-                                <i class="fab fa-whatsapp text-green-400"></i>
-                                <span class="font-medium">+54 9 249 450-4522</span>
-                              </p>
-                              <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div class="space-y-2">
-                            <p class="flex items-center gap-3">
-                                <i class="fas fa-phone text-blue-400"></i>
-                                <span>0800-199-4545</span>
-                            </p>
-                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                        </div>
-                    </div>
-                </div>
-    
-                <!-- Columna de Servicios -->
-                <div>
-                    <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                        <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
-                        <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                        <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Columna de Soporte -->
-                <div>
-                    <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a></li>
-                        <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="text-gray-300 hover:text-white">Autogestión</a></li>
-                    <li><a href="../centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a></li>
-                        <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Columna de Legal y Logo -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y condiciones</a></li>
-                        <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm" class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                        <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf" class="text-gray-300 hover:text-white">Ley 24240</a></li>
-  <li><a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a></li>
-                    </ul>
-                    <div class="pt-4">
-                        <img src="../../assets/img/logos/grupoUsinaBN.png" alt="Logo Usina de Tandil" class="rounded-md w-36" />
-                    </div>
-                </div>
-            </div>
-    
-            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-                <div class="flex space-x-4">
-                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
-                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-                </div>
-            </div>
+<body class="public-page document-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
         </div>
-      </footer>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/">Internet</a></li>
+                <li><a href="../../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/">Internet</a><a href="../../pages/mesh/">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content">
+<section class="document-hero"><div class="container mx-auto"><p class="document-kicker">Gestiones de tu servicio</p><h1>Solicitud de Baja de Servicio</h1><p class="document-lead">Desde aquí puede gestionar la baja de sus servicios o el arrepentimiento de una compra.</p></div></section><div class="container mx-auto document-body">
+<div class="cancellation-intro"><h2>Canales para solicitar la baja</h2><p>Si ya tomaste una decisión, podés gestionar la baja de tu servicio a través de cualquiera de nuestros canales de atención.</p></div>
+<div class="cancellation-primary"><div><h3>Atención por WhatsApp</h3><p>La forma más rápida y directa para iniciar tu gestión. Un representante te guiará en el proceso.</p></div><a class="site-button" href="https://wa.me/5492494060345?text=Hola%2C%20quisiera%20iniciar%20la%20solicitud%20de%20baja%20de%20mi%20servicio." target="_blank" rel="noopener">Solicitar Baja <span aria-hidden="true">↗</span></a></div>
+<div class="contact-options">
+<section><h3>Línea Telefónica</h3><p>Comunicate con nuestro centro de atención al cliente.</p><a class="contact-value" href="tel:08001994545">0800 199 4545</a><p class="contact-hours">Lunes a Viernes de 8 a 16 hs.</p></section>
+<section><h3>Email</h3><p>Envianos tu solicitud por correo electrónico.</p><a class="contact-value" href="mailto:contacto@usittel.com.ar">contacto@usittel.com.ar</a></section>
+<section><h3>Oficina Comercial</h3><p>También podés acercarte personalmente.</p><p class="contact-value">Nigro 575, Tandil</p><p class="contact-hours">Lunes a Viernes de 8 a 16 hs.</p><a class="document-text-link" href="../contacto/">Cómo llegar <span aria-hidden="true">→</span></a></section>
+</div>
+<aside class="optional-help"><div><p class="document-kicker">Si necesitás ayuda</p><h2>Antes de continuar, ¡hablemos!</h2><p>A veces, los problemas tienen una solución más simple de lo que parece. Si estás teniendo inconvenientes técnicos, de facturación o sentís que tu plan no se ajusta a tus necesidades, nuestro equipo puede ayudarte.</p></div><a class="document-text-link" href="https://wa.me/5492494060345" target="_blank" rel="noopener">Hablar con un representante <span aria-hidden="true">↗</span></a></aside>
+</div>
+</main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
+    <div class="container mx-auto px-6 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Mobile Menu Logic
-            const hamburger = document.getElementById("hamburger"),
-                mobileMenu = document.getElementById("mobileMenu"),
-                overlay = document.getElementById("overlay"),
-                closeMenu = document.getElementById("closeMenu"),
-                toggleProducts = document.getElementById("toggleProducts"),
-                productsSubmenu = document.getElementById("productsSubmenu");
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
+                </div>
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
+                </div>
+              </div>
+            </div>
 
-            function toggleMenu() {
-                mobileMenu.classList.toggle("show");
-                overlay.classList.toggle("show");
-            }
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+            </div>
+          </div>
+        </div>
 
-            if (hamburger) hamburger.addEventListener("click", toggleMenu);
-            if (overlay) overlay.addEventListener("click", toggleMenu);
-            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
-            if (toggleProducts) {
-                toggleProducts.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    productsSubmenu.style.display =
-                        productsSubmenu.style.display === "flex" ? "none" : "flex";
-                });
-            }
-        });
-    </script>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
+        </div>
 
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

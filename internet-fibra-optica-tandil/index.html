@@ -31,14 +31,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="preload" as="image" href="../assets/img/hero/web/hero_final_10.webp" />
   <link rel="stylesheet" href="../assets/css/google-ads-landing.css" />
 </head>
 
-<body class="landing-body">
+<body class="landing-body"><a class="landing-skip" href="#main-content">Ir al contenido</a>
   <header class="landing-header">
     <div class="landing-container landing-header__inner">
       <a class="landing-logo" href="../" aria-label="Ir a la web principal de USITTEL">
@@ -47,10 +47,11 @@
           <img src="../assets/img/logos/usittel-logo_and_name.png" alt="USITTEL" width="160" height="42" />
         </picture>
       </a>
+      <nav class="landing-header-links" aria-label="Navegación de la página"><a href="#planes">Ver planes</a><a href="../pages/centro_de_ayuda/">Centro de ayuda</a></nav>
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="landing-hero" aria-labelledby="landing-title">
       <div class="landing-container landing-hero__inner">
         <div class="landing-hero__copy">
@@ -73,22 +74,18 @@
     <section class="features-section reveal" aria-label="Beneficios principales">
       <div class="landing-container feature-grid">
         <article class="feature-card">
-          <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
           <h2>Fibra óptica simétrica</h2>
           <p>La misma velocidad de subida y bajada para una experiencia sin límites.</p>
         </article>
         <article class="feature-card">
-          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
           <h2>Atención local en Tandil</h2>
           <p>Soporte técnico real y cercano, cuando más lo necesitás.</p>
         </article>
         <article class="feature-card">
-          <i class="fa-solid fa-wifi" aria-hidden="true"></i>
           <h2>WiFi Mesh opcional</h2>
           <p>Cobertura estable en todos los rincones de tu hogar.</p>
         </article>
         <article class="feature-card">
-          <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
           <h2>Ideal para streaming, gaming y home office</h2>
           <p>Disfrutá, trabajá y estudiá sin interrupciones.</p>
         </article>
@@ -189,19 +186,16 @@
           <ol>
             <li>
               <span class="step-number">1</span>
-              <span class="step-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
               <strong>Escribinos por WhatsApp</strong>
               <p>Contanos qué necesitás y te asesoramos.</p>
             </li>
             <li>
               <span class="step-number">2</span>
-              <span class="step-icon"><i class="fa-solid fa-house" aria-hidden="true"></i></span>
               <strong>Verificamos cobertura</strong>
               <p>Revisamos si llegamos a tu domicilio.</p>
             </li>
             <li>
               <span class="step-number">3</span>
-              <span class="step-icon"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></span>
               <strong>Coordinamos instalación</strong>
               <p>Agendamos el día y listo, ya estás conectado.</p>
             </li>
@@ -218,7 +212,6 @@
               Consultar cobertura
             </a>
           </div>
-          <i class="fa-solid fa-location-dot coverage-pin" aria-hidden="true"></i>
         </article>
       </div>
     </section>
@@ -228,7 +221,7 @@
         <div class="tv-media">
           <picture>
             <source srcset="../assets/img/tv/zte4.webp" type="image/webp" />
-            <img src="../assets/img/tv/zte4.png" alt="Decodificador y control de USITTEL TV" width="500" height="500" />
+            <img src="../assets/img/tv/zte4.webp" alt="Decodificador y control de USITTEL TV" width="498" height="501" loading="lazy" decoding="async" />
           </picture>
         </div>
         <div class="tv-copy">
@@ -298,8 +291,8 @@
         </picture>
         <p>Internet por fibra óptica en Tandil. Conexión rápida, estable y con atención local.</p>
         <div class="footer-social" aria-label="Redes sociales">
-          <i class="fa-brands fa-facebook" aria-hidden="true"></i>
-          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/" aria-label="Facebook de Usittel"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" aria-label="Instagram de Usittel"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
         </div>
       </div>
       <div class="footer-contact">
@@ -324,44 +317,6 @@
   </a>
 
   <script src="../assets/js/whatsapp-ads-tracking.js" defer></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const revealItems = document.querySelectorAll(".reveal, .feature-card, .plan-card, .mega-card, .process-steps li, .coverage-card, .tv-card, .faq-copy, .faq-list, .landing-final__inner, .footer-brand, .footer-contact");
-
-      if (!("IntersectionObserver" in window)) {
-        revealItems.forEach((item) => item.classList.add("is-visible"));
-        return;
-      }
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
-
-      revealItems.forEach((item, index) => {
-        item.classList.add("scroll-reveal");
-        item.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 70}ms`);
-        observer.observe(item);
-      });
-    });
-  </script>
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
+  <script src="../js/site-tracking.js" defer></script>
 </body>
-
 </html>

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18203865712"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,768 +11,98 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usittel - WiFi Mesh para una Cobertura Total</title>
-
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-
     <meta name="description"
         content="Cobertura total de WiFi Mesh en tu hogar o empresa. Olvidate de las zonas sin señal y navegá a máxima velocidad con Usittel." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Usittel - WiFi Mesh para una Cobertura Total" />
     <meta property="og:description"
         content="Cobertura total de WiFi Mesh en tu hogar o empresa. Olvidate de las zonas sin señal y navegá a máxima velocidad con Usittel." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Usittel - WiFi Mesh para una Cobertura Total" />
     <meta name="twitter:description"
         content="Cobertura total de WiFi Mesh en tu hogar o empresa. Olvidate de las zonas sin señal y navegá a máxima velocidad con Usittel." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio"></script>
-
-    <!-- Google Fonts: Poppins & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet" />
-
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-    <style>
-        /* NAVIGATION STYLES */
-        .navbar-section *,
-        .navbar-section *::before,
-        .navbar-section *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        header.navbar-section {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-        }
-
-        .navbar-section {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            font-size: 17px;
-            color: #3c4043;
-        }
-
-        .navbar {
-            background-color: white;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 34px;
-            height: 69px;
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 26px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .logo:hover {
-            background-color: rgba(60, 64, 67, 0.08);
-        }
-
-        .logo img {
-            height: 39px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            list-style: none;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #60666b;
-            font-size: 17px;
-            font-weight: 500;
-            padding: 13px 17px;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .nav-links li a:hover {
-            background-color: rgba(60, 64, 67, 0.06);
-            color: #202020;
-        }
-
-        .nav-links li a.active {
-            color: #1a73e8;
-            font-weight: 600;
-        }
-
-        .nav-links .dropdown {
-            position: relative;
-        }
-
-        .nav-links .dropdown>a.active-parent {
-            background-color: rgba(26, 115, 232, 0.08);
-            color: #1a73e8;
-        }
-
-        .nav-links .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            background-color: white;
-            padding: 8px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            list-style: none;
-            min-width: 180px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-
-        .nav-links .dropdown-menu li a {
-            display: block;
-            padding: 11px 17px;
-            color: #3c4043;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .nav-links .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* CORRECTED: Added base styles for nav buttons */
-        .nav-button,
-        .nav-button2,
-        .nav-button-green {
-            font-size: 16px;
-            padding: 11px 22px;
-            border-radius: 999px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-button-green {
-            background-color: #30a172;
-            color: white !important;
-        }
-
-        .nav-button-green:hover {
-            background-color: #188b48;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-button2 {
-            background-color: #1a73e8;
-            color: white !important;
-        }
-
-        .nav-button2:hover {
-            background-color: #175ca7;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* CUSTOM STYLES */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .hero-wifimesh {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-                url('https://images.unsplash.com/photo-1593084313939-3d26cadcf98d?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
-            background-size: cover;
-        }
-
-        .cta-button {
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .interactive-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
-            background-color: white;
-        }
-
-        .interactive-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border-color: #22c55e;
-            /* green-500 */
-        }
-
-        /* === MESH VISUALIZATION SECTION === */
-        .mesh-visualization {
-            background-color: #eef2ff;
-            /* indigo-50 */
-            position: relative;
-            overflow: hidden;
-        }
-
-        .house-layout {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-            border: 2px solid #d1d5db;
-            /* gray-300 */
-            border-radius: 0.5rem;
-            background-color: white;
-        }
-
-        .room {
-            position: absolute;
-            border: 1px dashed #e5e7eb;
-            /* gray-200 */
-            color: #6b7280;
-            /* gray-500 */
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Room positions */
-        .room-living {
-            top: 0;
-            left: 0;
-            width: 60%;
-            height: 70%;
-        }
-
-        .room-kitchen {
-            top: 0;
-            right: 0;
-            width: 40%;
-            height: 40%;
-        }
-
-        .room-bed1 {
-            top: 70%;
-            left: 0;
-            width: 50%;
-            height: 30%;
-        }
-
-        .room-bed2 {
-            top: 40%;
-            right: 0;
-            width: 40%;
-            height: 30%;
-        }
-
-        .room-office {
-            top: 70%;
-            right: 0;
-            width: 50%;
-            height: 30%;
-        }
-
-        .mesh-node {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .mesh-node .node-icon {
-            font-size: 20px;
-            color: white;
-        }
-
-        .mesh-node .node-pulse {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: currentColor;
-            z-index: -1;
-            opacity: 0.2;
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.2;
-            }
-
-            50% {
-                transform: scale(2.5);
-                opacity: 0;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 0.2;
-            }
-        }
-
-        /* Node positions and colors */
-        .node-main {
-            background-color: #4f46e5;
-            color: #4f46e5;
-            top: 30%;
-            left: 25%;
-        }
-
-        .node-sat1 {
-            background-color: #22c55e;
-            color: #22c55e;
-            top: 15%;
-            right: 15%;
-        }
-
-        .node-sat2 {
-            background-color: #22c55e;
-            color: #22c55e;
-            bottom: 15%;
-            left: 65%;
-        }
-
-        /* === FAQ STYLES === */
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            padding: 0;
-        }
-
-        .faq-question.open+.faq-answer {
-            opacity: 1;
-        }
-
-        .faq-icon {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .faq-question.open .faq-icon {
-            transform: rotate(45deg);
-        }
-
-        .step-card .step-number {
-            transition: all 0.3s ease;
-        }
-
-        .step-card:hover .step-number {
-            background-color: #22c55e;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* === MESH CALCULATOR STYLES === */
-        .calculator-step {
-            display: none;
-        }
-
-        .calculator-step.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .progress-bar-fill {
-            transition: width 0.4s ease-in-out;
-        }
-
-        .radio-label {
-            transition: all 0.2s ease-in-out;
-        }
-
-        input[type="radio"]:checked+.radio-label {
-            border-color: #2563eb;
-            /* blue-600 */
-            background-color: #dbeafe;
-            /* blue-100 */
-            color: #1e40af;
-            /* blue-800 */
-        }
-
-        input[type="radio"]:checked+.radio-label i {
-            color: #2563eb;
-        }
-    </style>
-    <style>
-        /* MOBILE MENU & RESPONSIVE STYLES */
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background-color: #3c4043;
-            border-radius: 2px;
-        }
-
-        .mobile-header-bar {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .mobile-menu-slide {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            gap: 16px;
-            transition: left 0.3s ease-in-out;
-            z-index: 1001;
-        }
-
-        .mobile-menu-slide.show {
-            left: 0;
-        }
-
-        .mobile-menu-slide a {
-            text-decoration: none;
-            color: #3c4043;
-            font-size: 16px;
-            padding: 10px 8px;
-            border-radius: 6px;
-        }
-
-        .mobile-menu-slide .nav-button-green,
-        .mobile-menu-slide .nav-button2 {
-            padding: 12px 18px;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mobile-menu-header img {
-            height: 32px;
-        }
-
-        .close-menu {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #3c4043;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .mobile-menu-slide hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-bottom: 16px;
-        }
-
-        .submenu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .submenu-toggle {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 16px;
-            text-align: left;
-            color: #3c4043;
-            padding: 10px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 400;
-        }
-
-        .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 12px;
-            margin-top: -4px;
-        }
-
-        .submenu a {
-            font-size: 15px;
-            padding: 8px 12px;
-            color: #3c4043;
-        }
-
-        .submenu.show {
-            display: flex;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .desktop-only {
-            display: flex;
-        }
-
-        .mobile-only {
-            display: none;
-        }
-
-        /* Breakpoint para mobile */
-        @media (max-width: 900px) {
-            .mobile-only {
-                display: flex !important;
-            }
-
-            .desktop-only {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-header-bar {
-                display: flex;
-            }
-        }
-
-        .whatsapp-float {
-            position: left;
-            bottom: 15px;
-            right: 15px;
-            width: 50px;
-            height: 50px;
-            background-color: #25d366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            transition: transform 0.2s ease;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css"><link rel="stylesheet" href="../../assets/css/site.css"><link rel="stylesheet" href="../../assets/css/public-pages.css"><link rel="stylesheet" href="../../assets/css/product-pages.css">
+<script src="../../js/site.js" defer></script><script src="../../js/site-tracking.js" defer></script><script src="../../js/product-pages.js" defer></script><script src="../../js/mesh-calculator.js" defer></script>
 </head>
+<body class="public-page product-page mesh-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans" class="active">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/">Internet</a></li>
+                <li><a href="../../pages/mesh/" class="active" aria-current="page">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/">Internet</a><a href="../../pages/mesh/" class="active" aria-current="page">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content">
 
-<body class="text-gray-800">
-
-    <!-- Header / Navigation -->
-    <header class="navbar-section">
-        <nav class="navbar">
-            <div class="navbar-container">
-                <!-- Encabezado mobile -->
-                <div class="mobile-header-bar mobile-only">
-                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                    <a href="../../" class="logo">
-                        <picture>
-                            <source srcset="../../assets/img/logos/usittel-logo.webp" type="image/webp"><img
-                                src="../../assets/img/logos/usittel-logo.webp" alt="Usittel Logo" />
-                        </picture>
-                    </a>
-                </div>
-
-                <!-- Encabezado desktop -->
-                <div class="nav-left desktop-only">
-                    <a href="../../" class="logo">
-                        <picture>
-                            <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
-                                src="../../assets/img/logos/usittel-logo_and_name.webp" alt="Usittel Logo" />
-                        </picture>
-                    </a>
-                    <ul class="nav-links">
-                        <li><a href="../../">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="active-parent">Productos ▾</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="../internet/">Internet</a></li>
-                                <li><a href="../mesh/">WiFi Mesh</a></li>
-                                <li><a href="../tv/">TV</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="../empresas/">Empresas</a></li>
-                        <li><a href="../contacto/">Contáctanos</a></li>
-                    </ul>
-                </div>
-
-                <div class="nav-actions desktop-only">
-                    <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                    <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
-                        target="_blank" rel="noopener">Autogestión</a>
-                </div>
-            </div>
-
-            <!-- Overlay y menú mobile -->
-            <div class="overlay" id="overlay"></div>
-            <div class="mobile-menu-slide" id="mobileMenu">
-                <div class="mobile-menu-header">
-                    <picture>
-                        <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
-                            src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
-                    </picture>
-                    <button class="close-menu" id="closeMenu">&times;</button>
-                </div>
-                <hr />
-                <a href="../../">Home</a>
-                <div class="submenu-container">
-                    <button class="submenu-toggle" id="toggleProducts">Productos ▾</button>
-                    <div class="submenu" id="productsSubmenu">
-                        <a href="../internet/">Internet</a>
-                        <a href="../mesh/">WiFi Mesh</a>
-                        <a href="../tv/">TV</a>
-                    </div>
-                </div>
-                <a href="../empresas/">Empresas</a>
-                <a href="../contacto/">Contáctanos</a>
-                <a href="../centro_de_ayuda/" class="nav-button-green">Centro de ayuda</a>
-                <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
-                    target="_blank" rel="noopener">Autogestión</a>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-wifimesh text-white flex items-center relative overflow-hidden"
-            style="min-height:calc(100vh - 64px);height:calc(100vh - 64px);">
-            <!-- Background Video -->
-            <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay loop muted playsinline
-                style="object-position: center;">
-                <source src="../../assets/video/mesh.mp4" type="video/mp4" />
-                Tu navegador no soporta videos HTML5.
-            </video>
-            <!-- Overlay for darkening the video (less opacity for more clarity) -->
-            <div class="absolute inset-0 bg-black" style="opacity:0.10; z-index:10;"></div>
-            <div class="container mx-auto text-center px-6 relative z-20">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Decile chau a las zonas sin WiFi.
-                </h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-8">Con nuestra tecnología WiFi Mesh,
+        <section class="product-hero mesh-hero"><video class="product-hero-media" data-hero-video loop muted playsinline preload="metadata" aria-label="WiFi Mesh en el hogar"><source src="../../assets/video/mesh.mp4" type="video/mp4"></video><button class="hero-video-toggle" type="button" data-video-toggle aria-label="Reproducir video de fondo" hidden>Reproducir video</button><div class="container mx-auto"><p class="eyebrow">WIFI MESH</p><h1>Decile chau a las zonas sin WiFi.
+                </h1><p class="hero-copy">Con nuestra tecnología WiFi Mesh,
                     llevamos la máxima velocidad de tu fibra óptica a cada rincón de tu casa. Sin cortes, sin demoras.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center hidden sm:flex">
-                    <a href="#mesh-pricing"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">Consultar
-                        por mi plan Mesh</a>
-                    <a href="#mesh-calculator"
-                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg">¿Cuántos
-                        Mesh necesito?</a>
-                </div>
-            </div>
-            <style>
-                @media (max-width: 900px) {
-                    .hero-wifimesh video {
-                        object-position: 85% center !important;
-                    }
-                }
+                </p><div class="hero-actions"><a class="site-button" href="#mesh-pricing">Consultar
+                        por mi plan Mesh</a><a class="site-button site-button-secondary" href="#mesh-calculator">¿Cuántos
+                        Mesh necesito?</a></div></div></section>
 
-                @media (max-width: 640px) {
-                    .hero-wifimesh {
-                        min-height: 95vh !important;
-                        height: 95vh !important;
-                    }
-                }
-            </style>
-        </section>
 
-        <!-- Pricing Section -->
-        <section id="mesh-pricing" class="py-16 md:py-24 bg-white">
+        <section id="mesh-pricing" class="section-space mesh-pricing">
             <div class="container mx-auto px-6 max-w-2xl">
-                <div
-                    class="text-center bg-gray-50 rounded-xl p-8 lg:p-12 interactive-card border-2 border-green-500 hover:border-green-600 transition-shadow">
+                <div class="mesh-plan-layout"><div class="mesh-equipment-image"><img src="../../assets/img/mesh/mesh1.webp" alt="Equipo WiFi Mesh" width="400" height="400" loading="lazy" decoding="async"></div><div class="mesh-plan-copy">
                     <h2 class="text-2xl font-bold text-gray-800">Plan WiFi Mesh Pack Inicial</h2>
                     <p class="text-gray-500 mb-4">La solución perfecta para eliminar las zonas muertas.</p>
                     <div class="my-6">
@@ -783,16 +111,15 @@
                     </div>
                     <p class="text-lg text-gray-600 mb-6">Incluye <strong>1 equipo Mesh</strong> de última generación,
                         ideal para cubrir departamentos y casas con problemas de cobertura.</p>
-                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-                        class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button flex items-center justify-center gap-2">
-                        <i class="fab fa-whatsapp"></i> Consultar
+                    <a href="https://wa.me/5492494060345" target="_blank" rel="noopener" class="w-full text-center mt-auto bg-blue-500 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 cta-button flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar
                     </a>
-                </div>
+                </div></div>
             </div>
         </section>
 
-        <!-- Mesh Calculator Section -->
-        <section id="mesh-calculator" class="py-16 md:py-24 bg-blue-50">
+
+        <section id="mesh-calculator" class="section-space   bg-blue-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Encontrá la configuración ideal para tu
@@ -801,133 +128,120 @@
                         necesitás.</p>
                 </div>
                 <div id="calculator-container" class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                    <!-- Progress Bar -->
+
                     <div class="mb-8">
                         <div class="flex justify-between mb-1">
                             <span class="text-base font-medium text-blue-700">Progreso</span>
-                            <span class="text-sm font-medium text-blue-700" id="progress-text">Paso 1 de 4</span>
+                            <span class="text-sm font-medium text-blue-700" id="progress-text" aria-live="polite">Paso 1 de 4</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2.5">
                             <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <!-- Steps Container -->
+
                     <div id="steps-container">
-                        <!-- Step 1: Ambientes -->
-                        <div id="step-1" class="calculator-step active">
-                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántos ambientes tiene tu domicilio?</h3>
+
+                        <fieldset id="step-1" class="calculator-step">
+                            <legend tabindex="-1">¿Cuántos ambientes tiene tu domicilio?</legend>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <label><input type="radio" name="ambientes" value="1" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
-                                        <i class="fas fa-square text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="ambientes" value="0" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+
                                         <p>1-2</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="ambientes" value="2" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
-                                        <i class="fas fa-th-large text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="ambientes" value="1" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+
                                         <p>3-4</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="ambientes" value="3" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100 col-span-2 md:col-span-1">
-                                        <i class="fas fa-th text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="ambientes" value="2" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100 col-span-2 md:col-span-1">
+
                                         <p>5 o más</p>
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <!-- Step 2: Metros Cuadrados -->
-                        <div id="step-2" class="calculator-step">
-                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántos m² tiene tu domicilio?</h3>
+                        </fieldset>
+
+                        <fieldset id="step-2" class="calculator-step" hidden>
+                            <legend tabindex="-1">¿Cuántos m² tiene tu domicilio?</legend>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <label><input type="radio" name="m2" value="1" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="m2" value="1" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>Hasta 100m²</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="m2" value="2" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="m2" value="2" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>Hasta 200m²</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="m2" value="3" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="m2" value="3" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>Hasta 300m²</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="m2" value="4" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="m2" value="4" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>+300m²</p>
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <!-- Step 3: Plantas -->
-                        <div id="step-3" class="calculator-step">
-                            <h3 class="text-xl font-bold text-center mb-6">¿Cuántas plantas tiene tu domicilio?</h3>
+                        </fieldset>
+
+                        <fieldset id="step-3" class="calculator-step" hidden>
+                            <legend tabindex="-1">¿Cuántas plantas tiene tu domicilio?</legend>
                             <div class="grid grid-cols-3 gap-4">
-                                <label><input type="radio" name="plantas" value="1" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
-                                        <i class="fas fa-building text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="plantas" value="0" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+
                                         <p>1 Planta</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="plantas" value="2" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
-                                        <i class="fas fa-city text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="plantas" value="2" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+
                                         <p>2 Plantas</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="plantas" value="3" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
-                                        <i class="far fa-building text-gray-400 text-2xl mb-2"></i>
+                                <label><input type="radio" name="plantas" value="3" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+
                                         <p>3 o más</p>
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <!-- Step 4: Distribucion -->
-                        <div id="step-4" class="calculator-step">
-                            <h3 class="text-xl font-bold text-center mb-6">¿Qué distribución tiene tu domicilio?</h3>
+                        </fieldset>
+
+                        <fieldset id="step-4" class="calculator-step" hidden>
+                            <legend tabindex="-1">¿Qué distribución tiene tu domicilio?</legend>
                             <div class="grid grid-cols-3 gap-4">
-                                <label><input type="radio" name="distribucion" value="1" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="distribucion" value="1" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>Cuadrada</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="distribucion" value="1" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="distribucion" value="1" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>Rectangular</p>
                                     </div>
                                 </label>
-                                <label><input type="radio" name="distribucion" value="2" class="hidden">
-                                    <div
-                                        class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
+                                <label><input type="radio" name="distribucion" value="2" class="mesh-radio">
+                                    <div class="radio-label border-2 border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-100">
                                         <p>En "L"</p>
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                    </div>
+                        </fieldset>
+                    <div class="calculator-navigation"><button type="button" class="site-button site-button-secondary" id="mesh-back" hidden>Anterior</button><button type="button" class="site-button" id="mesh-next" disabled>Continuar</button></div></div>
 
-                    <!-- Result Screen -->
-                    <div id="result-screen" class="hidden">
+
+                    <div id="result-screen" hidden>
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold text-gray-900">¡Esta es tu configuración ideal!</h3>
+                            <h3 class="text-2xl font-bold text-gray-900" tabindex="-1">¡Esta es tu configuración ideal!</h3>
                             <div class="my-6 bg-gray-50 p-6 rounded-lg">
                                 <p class="text-gray-600">Según tu selección:</p>
                                 <ul id="user-selection" class="font-semibold text-gray-800 my-2"></ul>
@@ -936,12 +250,10 @@
                                 <p id="recommendation-subtext" class="text-gray-600 mt-2"></p>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                                <a id="buy-now" href="https://wa.me/5492494060345" target="_blank"
-                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full cta-button">
+                                <a id="buy-now" href="https://wa.me/5492494060345" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full cta-button" rel="noopener">
                                     ¡Lo quiero!
                                 </a>
-                                <button id="retake-test"
-                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full cta-button">Rehacer
+                                <button id="retake-test" class="site-button site-button-secondary">Rehacer
                                     Test</button>
                             </div>
                         </div>
@@ -950,8 +262,8 @@
             </div>
         </section>
 
-        <!-- What is WiFi Mesh? Visualization Section -->
-        <section class="py-16 md:py-24 mesh-visualization bg-white">
+
+        <section class="section-space   mesh-visualization bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Cobertura Inteligente en todo tu Hogar</h2>
@@ -961,37 +273,36 @@
                 </div>
 
                 <div class="lg:flex lg:items-center lg:gap-12">
-                    <!-- House Visualization -->
+
                     <div class="lg:w-1/2 flex justify-center items-center mb-8 lg:mb-0">
                         <div class="house-layout">
-                            <!-- Rooms -->
+
                             <div class="room room-living"><span>Living</span></div>
                             <div class="room room-kitchen"><span>Cocina</span></div>
                             <div class="room room-bed1"><span>Dormitorio 1</span></div>
                             <div class="room room-bed2"><span>Dormitorio 2</span></div>
                             <div class="room room-office"><span>Oficina</span></div>
-                            <!-- Mesh Nodes -->
+
                             <div class="mesh-node node-main" title="Nodo Principal">
-                                <i class="fas fa-router node-icon"></i>
+                                <i class="fas fa-wifi node-icon" aria-hidden="true"></i>
                                 <div class="node-pulse"></div>
                             </div>
                             <div class="mesh-node node-sat1" title="Nodo Satélite">
-                                <i class="fas fa-satellite-dish node-icon"></i>
+                                <i class="fas fa-satellite-dish node-icon" aria-hidden="true"></i>
                                 <div class="node-pulse"></div>
                             </div>
                             <div class="mesh-node node-sat2" title="Nodo Satélite">
-                                <i class="fas fa-satellite-dish node-icon"></i>
+                                <i class="fas fa-satellite-dish node-icon" aria-hidden="true"></i>
                                 <div class="node-pulse"></div>
                             </div>
                         </div>
                     </div>
-                    <!-- Explanatory Text -->
+
                     <div class="lg:w-1/2">
                         <div class="space-y-6">
                             <div class="flex items-start gap-4">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-wifi text-2xl"></i>
+                                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-wifi text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Una Sola Red, Sin Interrupciones</h3>
@@ -1001,9 +312,8 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-brain text-2xl"></i>
+                                <div class="flex-shrink-0 w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Velocidad Inteligente</h3>
@@ -1013,9 +323,8 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
-                                <div
-                                    class="flex-shrink-0 w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-expand-arrows-alt text-2xl"></i>
+                                <div class="flex-shrink-0 w-12 h-12 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-expand-arrows-alt text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-800">Expandible y Flexible</h3>
@@ -1029,8 +338,8 @@
             </div>
         </section>
 
-        <!-- Is Mesh For You? Section -->
-        <section class="py-16 md:py-24 bg-blue-50">
+
+        <section class="section-space   bg-blue-50">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">¿Es la solución WiFi Mesh para vos?</h2>
@@ -1039,25 +348,25 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
-                        <i class="fas fa-home text-blue-500 text-3xl mb-4"></i>
+                        <i class="fas fa-home text-blue-500 text-3xl mb-4" aria-hidden="true"></i>
                         <h3 class="font-bold text-lg mb-2">Casas Grandes o con Múltiples Plantas</h3>
                         <p class="text-gray-600 text-sm">Las paredes gruesas y las distancias largas debilitan la señal
                             de un router tradicional.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
-                        <i class="fas fa-map-pin text-blue-500 text-3xl mb-4"></i>
+                        <i class="fas fa-map-pin text-blue-500 text-3xl mb-4" aria-hidden="true"></i>
                         <h3 class="font-bold text-lg mb-2">Zonas Muertas o Señal Débil</h3>
                         <p class="text-gray-600 text-sm">Si hay habitaciones, patios o quinchos donde el WiFi no llega o
                             es muy lento.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
-                        <i class="fas fa-laptop-house text-blue-500 text-3xl mb-4"></i>
+                        <i class="fas fa-laptop-house text-blue-500 text-3xl mb-4" aria-hidden="true"></i>
                         <h3 class="font-bold text-lg mb-2">Home Office y Clases Online</h3>
                         <p class="text-gray-600 text-sm">Necesitás una conexión 100% estable en tu espacio de trabajo o
                             estudio, sin importar dónde esté.</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg interactive-card">
-                        <i class="fas fa-mobile-alt text-blue-500 text-3xl mb-4"></i>
+                        <i class="fas fa-mobile-alt text-blue-500 text-3xl mb-4" aria-hidden="true"></i>
                         <h3 class="font-bold text-lg mb-2">Muchos Dispositivos Conectados</h3>
                         <p class="text-gray-600 text-sm">Cuando celulares, consolas, TVs y computadoras compiten por el
                             WiFi, Mesh distribuye la carga eficientemente.</p>
@@ -1066,7 +375,7 @@
             </div>
         </section>
 
-        <section class="py-16 md:py-24 bg-white">
+        <section class="section-space   bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Instalá tu WiFi Mesh en 3 simples pasos
@@ -1074,10 +383,8 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
-                    <div
-                        class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                    <div class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                             1
                         </div>
                         <h3 class="text-xl font-bold mb-2">Sincronizá tu Mesh</h3>
@@ -1088,10 +395,8 @@
                         </p>
                     </div>
 
-                    <div
-                        class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                    <div class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                             2
                         </div>
                         <h3 class="text-xl font-bold mb-2">Encontrá el lugar ideal</h3>
@@ -1102,10 +407,8 @@
                         </p>
                     </div>
 
-                    <div
-                        class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                    <div class="text-center p-6 step-card bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="step-number w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                             3
                         </div>
                         <h3 class="text-xl font-bold mb-2">Navegá y expandí tu red</h3>
@@ -1119,666 +422,324 @@
 
                 </div>
                 <div class="container mx-auto px-6 max-w-4xl" style="padding-top: 7%;">
-                    <div class="bg-gray-50 p-8 lg:p-12 rounded-xl shadow-lg text-center interactive-card">
+                    <div class="bg-gray-50 p-8 lg:p-12 rounded-xl text-center interactive-card">
                         <h2 class="text-3xl font-bold text-gray-900">¿Necesitás ayuda con tu WiFi Mesh?</h2>
                         <p class="text-lg text-gray-600 mt-4 mb-8">Descargá el instructivo completo para instalar y
                             configurar tu sistema WiFi Mesh de manera fácil y rápida. Seguí los pasos y disfrutá de la
                             mejor
                             conexión en toda tu casa.</p>
-                        <a href="../../assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg"
-                            download>Descargar instructivo</a>
+                        <a href="../../assets/pdf/INSTRUCTIVO_USITTEL_MESH.pdf" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full cta-button text-lg" download>Descargar instructivo</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- FAQ Section -->
-        <section class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-6 max-w-4xl">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre WiFi Mesh</h2>
-                </div>
-                <div id="faq-accordion" class="space-y-6">
-                    <!-- FAQ Item 1 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-signal text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Cómo percibo la mejora en el
-                                    servicio de Internet?</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-green-100">
-                                    <p class="text-gray-700 leading-relaxed">
-                                        Vas a lograr una <strong class="text-green-600">cobertura mayor y
+
+        <section id="faq" class="section-space product-faq"><div class="container mx-auto public-faq-layout"><div><p class="eyebrow">TE AYUDAMOS</p><h2>Preguntas Frecuentes sobre WiFi Mesh</h2></div><div><details name="mesh-faq"><summary>¿Cómo percibo la mejora en el
+                                    servicio de Internet?</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        Vas a lograr una <strong>cobertura mayor y
                                             uniforme</strong>. La tecnología MESH elimina completamente las zonas sin
                                         señal.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-check-circle text-blue-500"></i>
+                                <div>
+                                    <h4>
+
                                         Beneficios que vas a notar:
                                     </h4>
-                                    <div class="space-y-3">
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-wifi text-white text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700">Señal fuerte y constante en cada rincón</span>
+                                            <span>Señal fuerte y constante en cada rincón</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-home text-white text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700">Cobertura en todos los ambientes</span>
+                                            <span>Cobertura en todos los ambientes</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-ban text-white text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700">No más zonas sin conexión</span>
+                                            <span>No más zonas sin conexión</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 2 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-plus-circle text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">¿Es difícil ampliar si requiero más
-                                    de un USITTEL MESH?</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-100">
-                                    <div class="flex items-start gap-3">
-                                        <div
-                                            class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                            <i class="fas fa-thumbs-up text-green-600 text-xs"></i>
+                        </div></details><details name="mesh-faq"><summary>¿Es difícil ampliar si requiero más
+                                    de un USITTEL MESH?</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <div>
+                                        <div>
+
                                         </div>
-                                        <p class="text-gray-700 leading-relaxed">
-                                            <strong class="text-blue-600">¡Es súper fácil!</strong> Podés añadir hasta 4
+                                        <p>
+                                            <strong>¡Es súper fácil!</strong> Podés añadir hasta 4
                                             equipos mesh adicionales sin complicaciones.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-home text-blue-600"></i>
+                                <div>
+                                    <h4>
+
                                         Ideal para:
                                     </h4>
-                                    <div class="grid md:grid-cols-2 gap-3">
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-purple-100">
-                                            <div
-                                                class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-building text-white text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700 text-sm">Casas grandes</span>
+                                            <span>Casas grandes</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-purple-100">
-                                            <div
-                                                class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-layer-group text-white text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700 text-sm">Varias plantas</span>
+                                            <span>Varias plantas</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-400 text-sm">
+                                <div>
                                     <strong>Resultado:</strong> Todos los espacios quedan perfectamente cubiertos
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 3 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-cogs text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Autogestión y Redundancia</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-purple-100">
-                                    <p class="text-gray-700 leading-relaxed">
-                                        Los equipos MESH <strong class="text-purple-600">se comunican entre sí</strong>,
+                        </div></details><details name="mesh-faq"><summary>Autogestión y Redundancia</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        Los equipos MESH <strong>se comunican entre sí</strong>,
                                         redirigiendo automáticamente el tráfico en caso de que uno falle.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-shield-alt text-blue-600"></i>
+                                <div>
+                                    <h4>
+
                                         Sistema inteligente de respaldo:
                                     </h4>
-                                    <div class="space-y-3">
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-route text-blue-600 text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Redirección
+                                                <span>Redirección
                                                     automática</span>
-                                                <p class="text-xs text-gray-600 mt-1">Si un equipo falla, la red se
+                                                <p>Si un equipo falla, la red se
                                                     reorganiza sola</p>
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-100">
-                                            <div
-                                                class="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                <i class="fas fa-check text-green-600 text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
                                             <div>
-                                                <span class="font-medium text-gray-800 text-sm">Red siempre
+                                                <span>Red siempre
                                                     operativa</span>
-                                                <p class="text-xs text-gray-600 mt-1">Sin interrupciones de servicio</p>
+                                                <p>Sin interrupciones de servicio</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <div class="flex items-center gap-2 justify-center">
-                                        <i class="fas fa-medal text-blue-500"></i>
-                                        <span class="font-semibold text-gray-800">Conexión estable y confiable las 24
+                                <div>
+                                    <div>
+
+                                        <span>Conexión estable y confiable las 24
                                             horas</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- FAQ Item 4 -->
-                    <div
-                        class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                        <button class="faq-question w-full flex items-start gap-4 text-left">
-                            <div
-                                class="hidden md:flex flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full items-center justify-center text-white shadow-md">
-                                <i class="fas fa-rocket text-lg"></i>
-                            </div>
-                            <div class="flex-1 pr-4">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Rendimiento Optimizado</h3>
-                            </div>
-                            <span class="faq-icon text-gray-500 font-bold text-2xl transform flex-shrink-0">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <div class="ml-0 md:ml-16 mt-4 space-y-4">
-                                <div class="bg-white rounded-lg p-4 shadow-sm border border-red-100">
-                                    <p class="text-gray-700 leading-relaxed">
-                                        La tecnología MESH <strong class="text-red-600">optimiza
+                        </div></details><details name="mesh-faq"><summary>Rendimiento Optimizado</summary><div class="public-faq-answer">
+                            <div>
+                                <div>
+                                    <p>
+                                        La tecnología MESH <strong>optimiza
                                             automáticamente</strong> la mejor ruta de señal, priorizando el tráfico
                                         según las necesidades.
                                     </p>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                        <i class="fas fa-chart-line text-blue-600"></i>
+                                <div>
+                                    <h4>
+
                                         Priorización inteligente para:
                                     </h4>
-                                    <div class="grid md:grid-cols-3 gap-3">
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-play text-white text-xs"></i>
+                                    <div>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700 text-sm">Streaming</span>
+                                            <span>Streaming</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-gamepad text-white text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700 text-sm">Gaming</span>
+                                            <span>Gaming</span>
                                         </div>
-                                        <div
-                                            class="flex items-center gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                                            <div
-                                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-video text-white text-xs"></i>
+                                        <div>
+                                            <div>
+
                                             </div>
-                                            <span class="text-gray-700 text-sm">Videollamadas</span>
+                                            <span>Videollamadas</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <div class="flex items-center gap-2 justify-center">
-                                        <i class="fas fa-trophy text-blue-600"></i>
-                                        <span class="font-semibold text-gray-800">Cada dispositivo recibe la mejor
+                                <div>
+                                    <div>
+
+                                        <span>Cada dispositivo recibe la mejor
                                             conexión posible</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                        </div></details></div></div></section>
 
     </main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
+    <div class="container mx-auto px-6 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white pt-16 pb-8">
-        <div class="container mx-auto px-6 max-w-7xl">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <!-- Columna de Contacto y Horarios -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Contacto y Horarios</h4>
-                    <div class="space-y-3 text-gray-300">
-                        <p class="flex items-start gap-3">
-                            <i class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
-                            <span>Nigro 575, Tandil</span>
-                        </p>
-
-                        <!-- Números oficiales de WhatsApp -->
-                        <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                            <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
-                                <img src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5">
-                                Números Oficiales
-                            </p>
-                            <div class="space-y-2">
-                                <div>
-                                    <p class="flex items-center gap-2 text-sm">
-                                        <i class="fab fa-whatsapp text-green-400"></i>
-                                        <span class="font-medium">+54 9 249 406-0345</span>
-                                    </p>
-                                    <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
-                                    <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="flex items-center gap-2 text-sm">
-                                        <i class="fab fa-whatsapp text-green-400"></i>
-                                        <span class="font-medium">+54 9 249 450-4522</span>
-                                    </p>
-                                    <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <p class="flex items-center gap-3">
-                                <i class="fas fa-phone text-blue-400"></i>
-                                <span>0800-199-4545</span>
-                            </p>
-                            <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Columna de Servicios -->
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
                 <div>
-                    <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a></li>
-                        <li><a href="../tv/" class="text-gray-300 hover:text-white">Televisión</a></li>
-                        <li><a href="../mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a></li>
-                        <li><a href="../alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a></li>
-                    </ul>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
                 </div>
-
-                <!-- Columna de Soporte -->
                 <div>
-                    <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="../centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
-                        </li>
-                        <li><a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
-                                class="text-gray-300 hover:text-white">Autogestión</a></li>
-                        <li><a href="../centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a></li>
-                        <li><a href="../baja/" class="text-gray-300 hover:text-white">Baja de servicio</a></li>
-                    </ul>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
                 </div>
-
-                <!-- Columna de Legal y Logo -->
-                <div class="space-y-4">
-                    <h4 class="font-bold uppercase tracking-wider">Legal</h4>
-                    <ul class="space-y-2">
-                        <a href="../terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
-                            condiciones</a>
-                        <li><a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
-                                class="text-gray-300 hover:text-white">Defensa del consumidor</a></li>
-                        <li><a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
-                                class="text-gray-300 hover:text-white">Ley 24240</a></li>
-                        <li><a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de
-                                privacidad</a></li>
-                    </ul>
-                    <div class="pt-4">
-                        <img src="https://agustinsc2034.github.io/Usittel_V3.0/assets/img/logos/grupoUsinaBN.png"
-                            alt="Logo Usina de Tandil" class="rounded-md w-36" />
-                    </div>
-                </div>
+              </div>
             </div>
 
-            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Usittel. Todos los derechos reservados.</p>
-                <div class="flex space-x-4">
-                    <a href="https://www.facebook.com/people/Usittel/100093569816699/#"
-                        class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                    <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white"><i
-                            class="fab fa-instagram fa-lg"></i></a>
-                    <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
-                        class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-                </div>
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
             </div>
+          </div>
         </div>
-    </footer>
 
-    <!-- Botón flotante de WhatsApp renovado (oculto en mobile, 10% más chico) -->
-    <div class="fixed bottom-4 right-4 z-[101] flex items-center group hidden md:flex" style="font-size: 90%;">
-        <a href="https://wa.me/5492494060345" target="_blank" rel="noopener"
-            class="flex items-center no-underline group hover:no-underline focus:no-underline"
-            aria-label="Chateá con nosotros por WhatsApp">
-            <span
-                class="whatsapp-float flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
-                style="font-size: 37.8px; width: 50.4px; height: 50.4px;">
-                <i class="fab fa-whatsapp"></i>
-            </span>
-            <span
-                class="ml-2.5 bg-gray-100 border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-lg flex flex-col items-start text-xs font-medium text-gray-800 group-hover:bg-green-50 group-hover:text-green-700 transition-colors"
-                style="min-width: 126px;">
-                <span>¿Necesitás ayuda?</span>
-                <span class="font-semibold mt-0.5">Chateá con nosotros</span>
-            </span>
-        </a>
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // --- FAQ Accordion Logic ---
-            const faqContainer = document.getElementById("faq-accordion");
-            if (faqContainer) {
-                const questions = faqContainer.querySelectorAll(".faq-question");
-                questions.forEach((question) => {
-                    question.addEventListener("click", () => {
-                        const answer = question.nextElementSibling;
-                        const isOpen = question.classList.contains("open");
-
-                        questions.forEach((q) => {
-                            if (q !== question) {
-                                q.classList.remove("open");
-                                q.nextElementSibling.style.maxHeight = null;
-                            }
-                        });
-
-                        if (isOpen) {
-                            question.classList.remove("open");
-                            answer.style.maxHeight = null;
-                        } else {
-                            question.classList.add("open");
-                            answer.style.maxHeight = answer.scrollHeight + "px";
-                        }
-                    });
-                });
-            }
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // --- FAQ Accordion Logic ---
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach((item) => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
-
-                if (question) {
-                    question.addEventListener('click', () => {
-                        const isOpen = item.classList.contains('open');
-
-                        // Close all other items
-                        faqItems.forEach(i => {
-                            if (i !== item) {
-                                i.classList.remove('open');
-                                const ans = i.querySelector('.faq-answer');
-                                if (ans) {
-                                    ans.style.maxHeight = null;
-                                }
-                            }
-                        });
-
-                        // Toggle the clicked item
-                        if (isOpen) {
-                            item.classList.remove('open');
-                            answer.style.maxHeight = null;
-                        } else {
-                            item.classList.add('open');
-                            answer.style.maxHeight = answer.scrollHeight + 'px';
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const hamburger = document.getElementById("hamburger"),
-                mobileMenu = document.getElementById("mobileMenu"),
-                overlay = document.getElementById("overlay"),
-                closeMenu = document.getElementById("closeMenu"),
-                toggleProducts = document.getElementById("toggleProducts"),
-                productsSubmenu = document.getElementById("productsSubmenu");
-
-            function toggleMenu() {
-                mobileMenu.classList.toggle("show");
-                overlay.classList.toggle("show");
-            }
-
-            if (hamburger) hamburger.addEventListener("click", toggleMenu);
-            if (overlay) overlay.addEventListener("click", toggleMenu);
-            if (closeMenu) closeMenu.addEventListener("click", toggleMenu);
-            if (toggleProducts) {
-                toggleProducts.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    productsSubmenu.style.display = productsSubmenu.style.display === "flex" ? "none" : "flex";
-                });
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // --- FAQ Accordion Logic ---
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach((item) => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
-
-                if (question) {
-                    question.addEventListener('click', () => {
-                        const isOpen = item.classList.contains('open');
-
-                        faqItems.forEach(i => {
-                            if (i !== item) {
-                                i.classList.remove('open');
-                                const ans = i.querySelector('.faq-answer');
-                                if (ans) {
-                                    ans.style.maxHeight = null;
-                                }
-                            }
-                        });
-
-                        if (isOpen) {
-                            item.classList.remove('open');
-                            answer.style.maxHeight = null;
-                        } else {
-                            item.classList.add('open');
-                            answer.style.maxHeight = answer.scrollHeight + 'px';
-                        }
-                    });
-                }
-            });
-
-            // --- Mesh Calculator Logic ---
-            const steps = document.querySelectorAll('.calculator-step');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            const stepsContainer = document.getElementById('steps-container');
-            const resultScreen = document.getElementById('result-screen');
-            const retakeTestBtn = document.getElementById('retake-test');
-
-            let currentStep = 0;
-            const userSelections = {};
-
-            const updateProgress = () => {
-                const progressPercentage = (currentStep / steps.length) * 100;
-                progressBar.style.width = `${progressPercentage}%`;
-
-                if (currentStep < steps.length) {
-                    progressText.textContent = `Paso ${currentStep + 1} de ${steps.length}`;
-                }
-            };
-
-            const nextStep = () => {
-                if (currentStep < steps.length - 1) {
-                    steps[currentStep].classList.remove('active');
-                    currentStep++;
-                    steps[currentStep].classList.add('active');
-                    updateProgress();
-                } else {
-                    showResult();
-                }
-            };
-
-            const showResult = () => {
-                stepsContainer.style.display = 'none';
-                resultScreen.style.display = 'block';
-
-                let score = 0;
-                const selectionList = document.getElementById('user-selection');
-                selectionList.innerHTML = '';
-
-                for (const key in userSelections) {
-                    score += userSelections[key].score;
-                    const li = document.createElement('li');
-                    li.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i>${userSelections[key].text}`;
-                    selectionList.appendChild(li);
-                }
-
-                // CAMBIO: Nueva lógica de recomendación
-                let recommendationText = '';
-                let recommendationSubtext = ''; // Texto adicional para el resultado
-
-                if (score <= 2) {
-                    recommendationText = 'No necesitás WiFi Mesh';
-                    recommendationSubtext = 'Con el módem estándar de Usittel tu cobertura es suficiente.';
-                } else if (score <= 4) {
-                    recommendationText = '1 Equipo Mesh';
-                    recommendationSubtext = 'Ideal para eliminar esa zona difícil y potenciar tu señal.';
-                } else if (score <= 7) {
-                    recommendationText = '2 Equipos Mesh';
-                    recommendationSubtext = 'La configuración más popular para una cobertura total y sin interrupciones.';
-                } else if (score <= 9) {
-                    recommendationText = '3 Equipos Mesh';
-                    recommendationSubtext = 'Para hogares grandes con múltiples plantas y alta demanda de conexión.';
-                } else {
-                    recommendationText = '4 Equipos o más';
-                    recommendationSubtext = 'Para tu caso, te recomendamos consultar con un asesor para un plan a medida.';
-                }
-
-                document.getElementById('recommendation').textContent = recommendationText;
-                document.getElementById('recommendation-subtext').textContent = recommendationSubtext; // Mostramos el subtexto
-
-                progressBar.style.width = '100%';
-                progressText.textContent = '¡Sugerencia Lista!';
-            };
-
-            const resetCalculator = () => {
-                stepsContainer.style.display = 'block';
-                resultScreen.style.display = 'none';
-                currentStep = 0;
-                steps.forEach(step => step.classList.remove('active'));
-                steps[0].classList.add('active');
-                updateProgress();
-                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
-            };
-
-            steps.forEach((step) => {
-                const radios = step.querySelectorAll('input[type="radio"]');
-                radios.forEach(radio => {
-                    radio.addEventListener('change', () => {
-                        // CAMBIO: Nueva lógica de puntuación
-                        const points = {
-                            ambientes: { '1-2': 0, '3-4': 1, '5 o más': 2 },
-                            m2: { 'Hasta 100m²': 1, 'Hasta 200m²': 2, 'Hasta 300m²': 3, '+300m²': 4 },
-                            plantas: { '1 Planta': 0, '2 Plantas': 2, '3 o más': 3 },
-                            distribucion: { 'Cuadrada': 1, 'Rectangular': 1, 'En "L"': 2 }
-                        };
-                        const selectionText = radio.nextElementSibling.textContent.trim();
-                        userSelections[radio.name] = {
-                            score: points[radio.name][selectionText] || 0,
-                            text: selectionText
-                        };
-
-                        updateProgress();
-                        setTimeout(nextStep, 300);
-                    });
-                });
-            });
-
-            if (retakeTestBtn) {
-                retakeTestBtn.addEventListener('click', resetCalculator);
-            }
-
-            updateProgress();
-        });
-    </script>
-
-  <!-- Google Ads conversion tracking for WhatsApp -->
-  <script>
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
-      if (link && typeof gtag === 'function') {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-18203865712/GiCdCOKU1uAcEPDko-hD',
-          'value': 1.0,
-          'currency': 'ARS'
-        });
-      }
-    });
-  </script>
+  </footer>
 </body>
-
 </html>

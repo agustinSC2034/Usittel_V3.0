@@ -5,178 +5,264 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructivo: ¿Mi TV es compatible?</title>
     <meta name="description" content="Guía para verificar si tu Smart TV con Android es compatible con la app de TV de Usittel. Instrucciones paso a paso." />
-    <!-- Open Graph -->
     <meta property="og:title" content="Instructivo: ¿Mi TV es compatible?" />
     <meta property="og:description" content="Guía para verificar si tu Smart TV con Android es compatible con la app de TV de Usittel. Instrucciones paso a paso." />
     <meta property="og:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <meta property="og:type" content="article" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Instructivo: ¿Mi TV es compatible?" />
     <meta name="twitter:description" content="Guía para verificar si tu Smart TV con Android es compatible con la app de TV de Usittel. Instrucciones paso a paso." />
     <meta name="twitter:image" content="../../assets/img/logos/usittel-logo_and_name.png" />
     <link rel="icon" type="image/png" href="../../assets/icons/usittel-logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .page {
-            background-color: white;
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .logo-USITTEL {
-            width: 180px;
-            /* Truco para pasar el logo blanco a negro para fondo claro */
-            filter: brightness(0) invert(0);
-        }
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-align: center;
-            color: #2c1e5a; /* Violeta corporativo */
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 1rem;
-            color: #6b7280;
-            margin-bottom: 2.5rem;
-        }
-        .step {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-        }
-        .step-number {
-            flex-shrink: 0;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #ede9fe; /* Violeta claro */
-            color: #5b21b6; /* Violeta oscuro */
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1.5rem;
-        }
-        .step-content h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 0.25rem;
-        }
-        .step-content p {
-            color: #4b5563;
-            line-height: 1.6;
-        }
-        .result-box {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-        .result-box.compatible {
-            background-color: #dcfce7; /* Verde claro */
-            border: 1px solid #16a34a;
-            color: #15803d;
-        }
-        .result-box.not-compatible {
-            background-color: #fee2e2; /* Rojo claro */
-            border: 1px solid #dc2626;
-            color: #b91c1c;
-        }
-        .result-box h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        /* Estilos para impresión */
-        @media print {
-            body {
-                background-color: #ffffff;
-            }
-            .page {
-                margin: 0;
-                box-shadow: none;
-                border-radius: 0;
-                max-width: 100%;
-            }
-        }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../../assets/css/tailwind.output.css"><link rel="stylesheet" href="../../assets/css/site.css"><link rel="stylesheet" href="../../assets/css/help.css">
+<script src="../../js/site.js" defer></script>
 </head>
-<body>
+<body class="public-page guide-page"><a class="skip-link" href="#main-content">Ir al contenido</a>
+<header class="navbar-section">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="mobile-header-bar mobile-only">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+          <a href="../../index.html" class="logo">
+            <img src="../../assets/icons/usittel-logo.png" alt="Usittel Logo" />
+          </a>
+        </div>
+        <div class="nav-left desktop-only">
+          <a href="../../#" class="logo">
+            <picture>
+              <source srcset="../../assets/img/logos/usittel-logo_and_name.webp" type="image/webp"><img
+                src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+            </picture>
+          </a>
+          <ul class="nav-links">
+            <li><a href="../../#">Home</a></li>
+            <li class="dropdown">
+              <a href="../../#plans">Productos ▾</a>
+              <ul class="dropdown-menu">
+                <li><a href="../../pages/internet/">Internet</a></li>
+                <li><a href="../../pages/mesh/">WiFi Mesh</a></li>
+                <li><a href="../../pages/tv/">TV</a></li>
+              </ul>
+            </li>
+            <li><a href="../../pages/empresas/">Empresas</a></li>
+            <li><a href="../../pages/contacto/">Contáctanos</a></li>
+          </ul>
+        </div>
+        <div class="nav-actions desktop-only">
+          <a href="../../pages/centro_de_ayuda/" class="nav-button-green active" aria-current="location">Centro de ayuda</a>
+          <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+            target="_blank" rel="noopener">Autogestión</a>
+        </div>
+      </div>
+      <div class="overlay" id="overlay"></div>
+      <div class="mobile-menu-slide" id="mobileMenu" inert aria-label="Navegación móvil">
+        <div class="mobile-menu-header">
+          <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Usittel Logo" />
+          <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">&times;</button>
+        </div>
+        <hr />
+        <a href="../../#">Home</a>
+        <div class="submenu-container">
+          <button class="submenu-toggle" id="toggleProducts" aria-controls="productsSubmenu" aria-expanded="false">
+            Productos ▾
+          </button>
+          <div class="submenu" id="productsSubmenu">
+            <a href="../../pages/internet/">Internet</a><a href="../../pages/mesh/">WiFi Mesh</a><a href="../../pages/tv/">TV</a>
+          </div>
+        </div>
+        <a href="../../pages/empresas/">Empresas</a><a href="../../pages/contacto/">Contáctanos</a><a href="../../pages/centro_de_ayuda/"
+          class="nav-button-green active" aria-current="location">Centro de ayuda</a><a
+          href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php" class="nav-button2"
+          target="_blank" rel="noopener">Autogestión</a>
+      </div>
+    </nav>
+  </header>
+<main id="main-content"><section class="guide-intro"><div class="container mx-auto"><nav class="breadcrumbs" aria-label="Ruta de navegación"><a href="../centro_de_ayuda/">Centro de ayuda</a><span aria-hidden="true">/</span><a href="../centro_de_ayuda/#tv-faqs">Televisión</a><span aria-hidden="true">/</span><span aria-current="page">Android TV</span></nav><p class="eyebrow">GUÍA DE COMPATIBILIDAD · ANDROID TV</p><h1>¿Mi TV es compatible?</h1><p class="guide-subtitle">Cómo verificar tu versión de Android TV en 4 simples pasos.</p></div></section><div class="container mx-auto guide-layout"><article class="guide-article" aria-label="Instrucciones paso a paso">
 
-    <div class="page">
-        <!-- Encabezado con Logo -->
-        <header class="flex justify-center border-b pb-4">
-            <img src="../../assets/img/logos/usittel-logo_and_name.png" alt="Logo USITTEL" class="mx-auto" style="width: 150px; display: block;">
-        </header>
 
-        <main>
-            <h1>¿Mi TV es compatible?</h1>
-            <p class="subtitle">Cómo verificar tu versión de Android TV en 4 simples pasos.</p>
 
-            <!-- Paso 1 -->
-            <div class="step">
-                <div class="step-number">1</div>
+
+            <ol class="guide-steps"><li class="step" id="paso-1">
+                <div class="step-number" aria-hidden="true">1</div>
                 <div class="step-content">
                     <h2>Ir a Ajustes</h2>
                     <p>Encendé tu Smart TV y, con el control remoto, buscá y seleccioná el ícono de <strong>Ajustes</strong> o <strong>Configuración</strong>. Generalmente es un engranaje y suele estar en la esquina superior derecha de la pantalla de inicio.</p>
                 </div>
-            </div>
-
-            <!-- Paso 2 -->
-            <div class="step">
-                <div class="step-number">2</div>
+            </li><li class="step" id="paso-2">
+                <div class="step-number" aria-hidden="true">2</div>
                 <div class="step-content">
                     <h2>Buscar "Acerca de"</h2>
                     <p>Dentro de Ajustes, navegá por el menú hasta encontrar una opción como <strong>"Preferencias del dispositivo"</strong>, <strong>"Sistema"</strong> o similar. Hacé clic ahí.</p>
                 </div>
-            </div>
-            
-            <!-- Paso 3 -->
-            <div class="step">
-                <div class="step-number">3</div>
+            </li><li class="step" id="paso-3">
+                <div class="step-number" aria-hidden="true">3</div>
                 <div class="step-content">
                     <h2>Acceder a la Información</h2>
                     <p>Dentro del nuevo menú, seleccioná la primera opción, que suele ser <strong>"Acerca de"</strong> o <strong>"Información"</strong>. Esta sección contiene todos los datos técnicos de tu televisor.</p>
                 </div>
-            </div>
-
-            <!-- Paso 4 -->
-            <div class="step">
-                <div class="step-number">4</div>
+            </li><li class="step" id="paso-4">
+                <div class="step-number" aria-hidden="true">4</div>
                 <div class="step-content">
                     <h2>Verificar la Versión</h2>
                     <p>Buscá el campo que dice <strong>"Versión"</strong>. El número que aparece al lado es la versión de tu sistema operativo Android TV.</p>
                 </div>
-            </div>
+            </li></ol>
 
-            <!-- Resultados -->
+
+
+
+
+
+
+
+
+
+
             <div class="result-box compatible">
                 <h3>Si el número es 9 o superior:</h3>
                 <p>¡Perfecto! Tu TV es 100% compatible con USITTEL.</p>
             </div>
-            
-            <div class="result-box not-compatible" style="margin-top: 1rem;">
+
+            <div class="result-box not-compatible">
                 <h3>Si el número es 8 o inferior:</h3>
                 <p>La aplicación podría no funcionar correctamente o tener limitaciones. Te recomendamos contactar a nuestro soporte técnico para evaluar alternativas.</p>
             </div>
 
-        </main>
-    </div>
+        <div class="guide-help"><h2>¿Necesitás una mano?</h2><p>Consultanos si tenés dudas sobre tu dispositivo.</p><a class="site-button" href="../contacto/">Contactanos</a><a class="guide-back" href="../centro_de_ayuda/#compatibilidad-sensa">Volver al Centro de ayuda <span aria-hidden="true">→</span></a></div></article><aside class="guide-sidebar"><nav aria-label="En esta guía"><p class="eyebrow">EN ESTA GUÍA</p><a href="#paso-1">Ir a Ajustes</a><a href="#paso-2">Buscar &quot;Acerca de&quot;</a><a href="#paso-3">Acceder a la Información</a><a href="#paso-4">Verificar la Versión</a></nav><nav class="related-guides" aria-label="Otras guías de compatibilidad"><p class="eyebrow">OTROS DISPOSITIVOS</p><a href="Instructivo_amazon.html">Amazon Fire TV <span aria-hidden="true">→</span></a><a href="Instructivo_apple.html">Apple TV <span aria-hidden="true">→</span></a><a href="Instructivo_celulares.html">Celulares y tablets <span aria-hidden="true">→</span></a></nav></aside></div></main>
+<footer class="bg-gray-800 text-white pt-16 pb-8">
+    <div class="container mx-auto px-6 max-w-7xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <!-- Columna de Contacto y Horarios -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">
+            Contacto y Horarios
+          </h4>
+          <div class="space-y-3 text-gray-300">
+            <p class="flex items-start gap-3">
+              <i aria-hidden="true" class="fas fa-map-marker-alt mt-1 text-blue-400"></i>
+              <span>Nigro 575, Tandil</span>
+            </p>
 
+            <!-- Números oficiales de WhatsApp -->
+            <div class="bg-gray-700 p-3 rounded-lg space-y-2">
+              <p class="text-xs font-semibold text-gray-200 uppercase tracking-wide flex items-center">
+                <img loading="lazy" decoding="async" src="../../assets/icons/usittel-logo.png" alt="Usittel" class="w-4 h-4 mr-1.5"> Números Oficiales
+              </p>
+              <div class="space-y-2">
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 406-0345</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Autogestión y atención</p>
+                  <p class="pl-6 text-xs text-gray-400">L-V 8-20hs. <br> Sáb, Dom y feriados 10-16hs.</p>
+                </div>
+                <div>
+                  <p class="flex items-center gap-2 text-sm">
+                    <i aria-hidden="true" class="fab fa-whatsapp text-green-400"></i>
+                    <span class="font-medium">+54 9 249 450-4522</span>
+                  </p>
+                  <p class="pl-6 text-xs text-gray-400">Ventas y avisos</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <p class="flex items-center gap-3">
+                <i aria-hidden="true" class="fas fa-phone text-blue-400"></i>
+                <span>0800-199-4545</span>
+              </p>
+              <p class="pl-6 text-xs text-gray-400">L-V de 8 a 16hs.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna de Servicios -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Servicios</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/internet/" class="text-gray-300 hover:text-white">Internet Fibra Óptica</a>
+            </li>
+            <li>
+              <a href="../../pages/tv/" class="text-gray-300 hover:text-white">Televisión</a>
+            </li>
+            <li>
+              <a href="../../pages/mesh/" class="text-gray-300 hover:text-white">WiFi Mesh</a>
+            </li>
+            <li>
+              <a href="../../pages/alcances/" class="text-gray-300 hover:text-white">Alcances de servicios</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Soporte -->
+        <div>
+          <h4 class="font-bold uppercase tracking-wider">Soporte</h4>
+          <ul class="mt-4 space-y-2">
+            <li>
+              <a href="../../pages/centro_de_ayuda/" class="text-gray-300 hover:text-white">Centro de ayuda</a>
+            </li>
+            <li>
+              <a href="https://phantom.usittel.com.ar/PHANTOM/Includes/CRM/CRM_APP/login.php"
+                class="text-gray-300 hover:text-white" target="_blank" rel="noopener">Autogestión</a>
+            </li>
+            <li>
+              <a href="../../pages/centro_de_ayuda/#medios-de-pago" class="text-gray-300 hover:text-white">Medios de pago</a>
+            </li>
+            <li>
+              <a href="../../pages/baja/" class="text-gray-300 hover:text-white">Baja de servicio</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna de Legal y Logo -->
+        <div class="space-y-4">
+          <h4 class="font-bold uppercase tracking-wider">Legal</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="../../pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
+                condiciones</a>
+            </li>
+            <li>
+              <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/638/texact.htm"
+                class="text-gray-300 hover:text-white">Defensa del consumidor</a>
+            </li>
+            <li>
+              <a href="https://www.argentina.gob.ar/sites/default/files/11186_2012_anexo_i.pdf"
+                class="text-gray-300 hover:text-white">Ley 24240</a>
+            </li>
+            <li>
+              <a href="../../datos-personales/" class="text-gray-300 hover:text-white">Política de privacidad</a>
+            </li>
+          </ul>
+          <div class="pt-4">
+            <img loading="lazy" decoding="async" src="../../assets/img/logos/grupoUsinaBN.png"
+              alt="Logo Usina de Tandil" class="rounded-md w-36" />
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">
+          &copy; 2025 Usittel. Todos los derechos reservados.
+        </p>
+        <nav class="flex gap-6 mb-4 md:mb-0 text-gray-300" aria-label="Institucional en el pie">
+          <a href="../../pages/nosotros/">Nosotros</a>
+        </nav>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/people/Usittel/100093569816699/#" class="text-gray-400 hover:text-white" aria-label="Facebook de Usittel"><i
+              class="fab fa-facebook-f fa-lg"></i></a>
+          <a href="https://www.instagram.com/usittel.tandil/" class="text-gray-400 hover:text-white" aria-label="Instagram de Usittel"><i
+              class="fab fa-instagram fa-lg"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=5492494060345&text&type=phone_number&app_absent=0"
+            class="text-gray-400 hover:text-white" aria-label="WhatsApp de Usittel"><i aria-hidden="true" class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

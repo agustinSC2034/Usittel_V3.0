@@ -1,12 +1,13 @@
-// This entry point ships inert on the public site. No query flag enables it there.
+const help = /^\/pages\/centro_de_ayuda\/(?:index\.html)?$/.test(location.pathname);
+if (help) {
+  const { mountAttentionHelp } = await import('./attention-help-preview.js');
+  mountAttentionHelp();
+}
+
+// The mock remains loopback-only. Production pages use the real Central widget.
 if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
   const { mountChatPreview } = await import('../autogestion/js/attention-chat.js');
   const hub = /^\/atencion\/?$/.test(location.pathname);
-  const help = /^\/pages\/centro_de_ayuda\/(?:index\.html)?$/.test(location.pathname);
-  if (help) {
-    const { mountAttentionHelp } = await import('./attention-help-preview.js');
-    mountAttentionHelp();
-  }
   const realPreview = hub && new URLSearchParams(location.search).get('chat-provider') === 'central';
   let chat;
   if (realPreview) {

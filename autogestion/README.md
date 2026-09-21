@@ -65,7 +65,7 @@ En la raíz se modificaron package.json (comandos) y .gitignore (defensa contra 
 
 ## Modos y aislamiento
 
-Demo conserva todas las funciones visuales: documentos de ejemplo, ticket, formularios temporales, chat local, speedtest simulado y opciones comerciales. Las secundarias siguen en Mi servicio → Más opciones.
+Demo conserva todas las funciones visuales: documentos de ejemplo, ticket, formularios temporales, Central conectado, speedtest simulado y opciones comerciales. Las secundarias siguen en Mi servicio → Más opciones. El chat todavía es anónimo: no recibe datos de la sesión ni del contrato.
 
 Phantom usa sesión propia y lecturas del backend, sin sustituir fallos con datos demo. No muestra tickets inventados ni confirma modificaciones falsas. Pagos, descargas, comprobantes, recuperación y escrituras quedan deshabilitados. No se usa localStorage ni sessionStorage. La contraseña solo se envía al backend propio para verificar el login y después se vacía del formulario.
 

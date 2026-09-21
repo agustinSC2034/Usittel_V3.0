@@ -19,7 +19,7 @@ function createPreviewServer({ channelKey = '' } = {}) {
     if (pathname.includes('\\') || pathname.includes('\0')) return send(404);
     const csp = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'";
     const hub = /^\/atencion\/?$/.test(pathname);
-    const real = hub && new URL(req.url, 'http://localhost').searchParams.get('chat-provider') === 'central';
+    const real = hub;
     // Only this explicit preview page may load the SDK and its cross-origin frame.
     // Public home keeps its existing external assets; requests are blocked in QA.
     if (hub || pathname.startsWith('/autogestion/')) res.setHeader('Content-Security-Policy', real ? csp.replace("script-src 'self'", "script-src 'self' https://web.central.chat").replace("frame-src 'none'", 'frame-src https://web.central.chat') : csp);

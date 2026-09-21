@@ -3,10 +3,7 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
-import { mountChatPreview } from './attention-chat.js';
-
-const attentionPreview = mountChatPreview();
-if (attentionPreview) document.body.classList.add('attention-autogestion');
+const centralChat = document.querySelector('central-chat');
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -44,9 +41,8 @@ function openDialog(title, content) {
 }
 dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?.isConnected) lastTrigger.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'].filter(action => action !== 'chat' || !attentionPreview);
+const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'speedtest', 'ticket', 'download-receipt', 'receipt'];
 function render() {
-  attentionPreview?.reset();
   const demoStrip = document.querySelector('.demo-strip');
   demoStrip.textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
   demoStrip.hidden = runtime.mode !== 'demo';
@@ -135,9 +131,10 @@ document.addEventListener('click', async event => {
   const target = event.target.closest('[data-action]');
   if (!target || target.disabled) return;
   const action = target.dataset.action;
-  if (action === 'chat' && attentionPreview) {
+  if (action === 'chat' || action === 'sales') {
     if (dialog.open) dialog.close();
-    attentionPreview.open(document.querySelector('[data-attention-open]') || target);
+    try { await centralChat.show(); await centralChat.maximize(); }
+    catch { toast('No pudimos abrir el chat. Volvé a intentar más tarde.'); }
     return;
   }
   const item = getInvoice(target.dataset.id);
@@ -319,12 +316,11 @@ document.addEventListener('click', async event => {
   if (action === 'recover') return openDialog('Recuperar contraseña', `<p>Ingresá tu usuario para solicitar instrucciones de recuperación.</p><form id="recover-form">${input('Usuario', 'recovery-user')}${button('Solicitar instrucciones', '', { type: 'submit' })}<p class="field-hint">Demostración: no se enviarán correos ni mensajes.</p></form>`);
   if (action === 'upgrade-plan') return openDialog('Mejorar mi plan', `<p class="muted">Tu plan actual: ${e(planLabel(customer.plan))}</p><div class="commercial-option"><h3>Fibra 500 Mbps</h3><p>Una opción con más velocidad para tu hogar.</p></div><div class="commercial-option"><h3>Fibra 1000 Mbps</h3><p>Conocé la opción de mayor velocidad.</p></div><p class="field-hint">Opciones de ejemplo. La disponibilidad, el precio y las condiciones se confirmarán antes de cualquier cambio.</p><div class="dialog-actions">${button('Consultar con un comercial', 'sales', { iconName: 'message-circle' })}</div><p class="demo-caption">Vista de diseño: tu plan no se modifica.</p>`);
   if (action === 'addons') return openDialog('Agregar servicios', `<div class="commercial-option"><h3>USITTEL TV</h3><p>Sumá televisión a tu servicio.</p></div><div class="commercial-option"><h3>Wi-Fi Mesh</h3><p>Consultá opciones para ampliar la cobertura Wi-Fi de tu hogar.</p></div><p class="field-hint">Opciones de ejemplo, sujetas a disponibilidad y condiciones comerciales. No se muestran precios sin confirmar.</p><div class="dialog-actions">${button('Consultar por estos servicios', 'sales', { iconName: 'message-circle' })}</div><p class="demo-caption">Vista de diseño: no se realiza ninguna contratación.</p>`);
-  if (action === 'sales') return openDialog('Hablar con un comercial', `<p>Recibí asesoramiento para mejorar tu plan o sumar servicios.</p><div class="commercial-option"><h3>Tu servicio actual</h3><p>${e(planLabel(customer.plan))} · ${e(addressLabel(customer.address))}</p></div><p class="demo-notice">Este acceso está en etapa de diseño. Todavía no se envían solicitudes ni se abre una conversación comercial.</p><div class="dialog-actions">${button('Solicitar asesoramiento', '', { attrs: 'disabled' })}${button('Volver a Mi servicio', 'close', { secondary: true })}</div>`);
   if (action === 'wifi') return openDialog('Configurar Wi-Fi', `<form id="wifi-form">${input('Nombre de la red', 'network', { value: customer.network, extra: 'maxlength="32"' })}${input('Nueva contraseña de Wi-Fi', 'wifi-password', { type: 'password', autocomplete: 'new-password', extra: 'minlength="8" maxlength="63"', hint: 'Usá entre 8 y 63 caracteres.' })}<p class="demo-notice">En el servicio real, tus dispositivos podrían desconectarse al cambiar estos datos. En esta prueba no se modifica ningún equipo.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'contact') return openDialog('Editar datos de contacto', `<form id="contact-form">${input('Correo electrónico', 'email', { value: customer.email, type: 'email', extra: 'maxlength="120"' })}${input('Teléfono', 'phone', { value: customer.phone, type: 'tel', required: false, extra: 'maxlength="30"' })}<p class="field-hint">Usá datos ficticios. Los cambios duran hasta que recargues la página.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'password') return openDialog('Cambiar contraseña', `<form id="password-form">${input('Contraseña actual', 'current-password', { type: 'password', autocomplete: 'off' })}${input('Nueva contraseña', 'new-password', { type: 'password', autocomplete: 'off', extra: 'minlength="8"', hint: 'Para esta demostración, usá al menos 8 caracteres.' })}${input('Repetir nueva contraseña', 'confirm-password', { type: 'password', autocomplete: 'off' })}<p class="field-hint">Usá valores de prueba. Ninguna contraseña se guarda ni se envía.</p>${button('Probar cambio', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
-  
+    centralChat.minimize().catch(() => {});
     dataGeneration++;
     target.disabled = true;
     try {
@@ -335,7 +331,6 @@ document.addEventListener('click', async event => {
     return;
   }
   if (action === 'ticket') return openDialog('Seguimiento del ticket', `<p class="eyebrow">${ticket.id} · Caso de ejemplo</p><h3>${ticket.title}</h3>${status(ticket.status)}<ol class="ticket-timeline"><li><time>15/09/2026 · 10:30</time><strong>Consulta recibida</strong><p>La conexión Wi-Fi se interrumpe por momentos.</p></li><li><time>16/09/2026 · 09:15</time><strong>En revisión</strong><p>El equipo de soporte está revisando tu consulta.</p></li></ol>${button('Consultar por este ticket', 'chat', { iconName: 'message-circle' })}`);
-  if (action === 'chat') return openDialog('Chat con USITTEL', `<p class="demo-caption">Chat de demostración · No conectado a soporte</p><div id="chat-messages" class="chat-messages" role="log" aria-live="polite"><p class="chat-message">Hola, Agustín. Contanos en qué podemos ayudarte.</p></div><form id="chat-form" class="chat-form"><label class="sr-only" for="message">Mensaje de prueba</label><input id="message" name="message" placeholder="Escribí un mensaje de prueba" required maxlength="500" autocomplete="off"><button type="submit" class="button" aria-label="Enviar mensaje de prueba">${icon('send')}</button></form>`);
   if (help[action]) return openDialog(help[action][0], `<p>${help[action][1]}</p><div class="dialog-actions">${button('Abrir chat', 'chat', { iconName: 'message-circle' })}</div>`);
   if (action === 'speedtest') {
     clearInterval(speedTimer);

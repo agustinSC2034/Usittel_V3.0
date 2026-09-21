@@ -22,10 +22,10 @@ test('preview isolates demo, config, CSP and filesystem from real operations', a
   assert.deepEqual(bootstrap, { mode:'demo', backend:false, authenticated:false });
   assert.equal((await fetch(base + '/autogestion/api/login', { method:'POST' })).status, 405);
   const plain = await fetch(base + '/atencion?chat=open');
-  assert.match(plain.headers.get('content-security-policy'), /frame-src 'none'/);
-  assert.doesNotMatch(plain.headers.get('content-security-policy'), /central\.chat/);
+  assert.match(plain.headers.get('content-security-policy'), /frame-src https:\/\/web.central.chat/);
   const real = await fetch(base + '/atencion?chat-provider=central');
   assert.match(real.headers.get('content-security-policy'), /frame-src https:\/\/web.central.chat/);
+  assert.match(await real.text(), /<central-chat\b/);
   const login = await fetch(base + '/autogestion/?chat-provider=central');
   assert.doesNotMatch(login.headers.get('content-security-policy'), /central\.chat/);
   const config = await fetch(base + '/attention-preview-config.json');

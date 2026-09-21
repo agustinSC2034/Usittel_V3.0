@@ -1,4 +1,4 @@
-// Imported only on loopback: production help and WhatsApp remain unchanged.
+// Shared guidance for the public help center. Chat links open Central on USITTEL.
 export function mountAttentionHelp() {
   const style = document.createElement('link');
   style.rel = 'stylesheet';

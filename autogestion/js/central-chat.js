@@ -1,6 +1,5 @@
-// Real widget, ONLY on the isolated local /atencion preview selected explicitly.
-// Public channel configuration comes from the loopback preview server, never from
-// Mi USITTEL's private config, login session or URL identity parameters.
+// Legacy loopback adapter kept for isolated preview compatibility.
+// The current public and Mi USITTEL integrations mount the official element directly.
 import { chatPreviewEnabled } from './attention-chat.js';
 
 const SDK = 'https://web.central.chat/widget/core.js';
@@ -19,7 +18,7 @@ export class CentralChatAdapter {
     if (container) this.element.setAttribute('mode', 'fill-container');
     this.element.addEventListener('central-chat-mount', () => {
       clearTimeout(this.timer);
-      setStatus('Central conectado · Prueba local real. Los mensajes que envíes llegarán a USITTEL.');
+      setStatus('');
     }, { once: true });
     // Never log central-chat-event: its payload may contain customer data.
     this.timer = setTimeout(() => {

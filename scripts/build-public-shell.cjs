@@ -24,7 +24,12 @@ let stale = false;
 for (const page of pages) {
   const filename = path.join(root, page.file);
   const original = fs.readFileSync(filename, 'utf8');
-  let output = original;
+  // Earlier builds placed this managed widget after </footer>, outside the
+  // replaceable shell. Remove every managed copy before rendering the footer so
+  // repeated builds remain idempotent and never mount more than one chat.
+  let output = original
+    .replace(/\s*<!-- CENTRAL_CHAT_START -->[\s\S]*?<!-- CENTRAL_CHAT_END -->/g, '')
+    .replace(/\s*<script src="https:\/\/web\.central\.chat\/widget\/core\.js"><\/script>\s*<central-chat\b[^>]*><\/central-chat>/g, '');
   if (page.notFound) {
     const content = fs.readFileSync(path.join(root, 'includes/public/not-found.html'), 'utf8').trim();
     output = output.replace(/<main\b[\s\S]*?<\/main>/, () => `<main id="main-content">\n${content}\n</main>`);

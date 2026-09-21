@@ -25,7 +25,7 @@ http.createServer((req, res) => {
     if (error) { res.writeHead(404); return res.end('Not found'); }
     res.writeHead(200, {
       'Content-Type': types[ext], 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
-      'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'",
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' https://web.central.chat; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src https://web.central.chat; frame-ancestors 'none'; base-uri 'self'; form-action 'none'",
     });
     res.end(req.method === 'HEAD' ? undefined : buffer);
   });

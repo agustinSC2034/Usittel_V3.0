@@ -12,6 +12,12 @@ No se contactó Phantom/SIRO real ni se modificaron configuraciones privadas.
 Próxima acción: inspección manual de tickets sobre laboratorio 4950 y esperar
 su resultado. Modelo ONU y SOAP se preparan después, uno por uno.
 
+Resultado recibido: ausencia de ticket confirmada con IDTT int 0 y Permitir int 1.
+Snippet privado futuro: `'clear_response'=>['IDTT'=>0,'Permitir'=>1]`, manteniendo
+`tickets.enabled=false`. Abierto y Pendiente devolvieron TICKETS_RESPONSE; queda
+una segunda lectura estructural segura antes de afirmar que equivalen a listas
+vacías o definir el primer mapping real.
+
 ## Entrega actual: operaciones controladas, 20/09/2026
 
 Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, flags, tickets,

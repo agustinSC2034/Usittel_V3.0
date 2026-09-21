@@ -15,6 +15,14 @@ interface TicketTransport {
     public function ticketGet(string $url): array;
     public function ticketPost(string $url,array $body): array;
 }
+function safeTicketFailureShape(array $result): array {
+    $code=$result['code']??null;
+    $safe=['result_type'=>get_debug_type($result),'list'=>array_is_list($result),'count'=>count($result),
+        'code_present'=>array_key_exists('code',$result),'code_type'=>get_debug_type($code),
+        'message_present'=>array_key_exists('message',$result),'message_type'=>get_debug_type($result['message']??null)];
+    if(is_int($code) || is_string($code) && preg_match('/^[0-9]{1,3}$/D',$code)) $safe['code_value']=$code;
+    return $safe;
+}
 final class CurlTransport implements Transport, TicketTransport {
     public function __construct(private array $config, private bool $inspectorAuthForm=false, private bool $inspectResponseFormat=false) {}
     public function authenticate(string $url,array $credentials): array {
@@ -205,7 +213,7 @@ final class Phantom {
                 $result=$this->transport->ticketGet($url);
                 if(isset($result['code'])) {
                     if(in_array((int)$result['code'],[401,403],true)) throw new Failure('TOKEN_EXPIRED');
-                    throw new Failure('TICKETS_RESPONSE');
+                    throw new Failure('TICKETS_RESPONSE',503,null,null,safeTicketFailureShape($result));
                 }
                 return $result;
             } catch(Failure $e) {if($e->kind!=='TOKEN_EXPIRED' || $i===1) throw $e;}

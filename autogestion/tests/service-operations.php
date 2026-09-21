@@ -125,4 +125,11 @@ checkOp($shape['ticket_count']===2 && $shape['states']===['Abierto'] && $shape['
 checkOp($shape['sample']['Delegacion']['present'] && !preg_match('/fixture-private|321/',json_encode($shape)));
 checkOp(ticketInspectionShape(['message'=>'fixture-error'],'open')['ticket_count']===null);
 checkOp(ticketInspectionShape([],'open')['ticket_count']===0);
+$safe=safeTicketFailureShape(['code'=>400,'message'=>'fixture-private ticket 321','Detalle'=>'fixture-private']);
+checkOp($safe['code_value']===400 && $safe['code_type']==='int' && $safe['message_present'] && $safe['message_type']==='string');
+checkOp(!preg_match('/fixture-private|321|Detalle/',json_encode($safe)));
+$safe=safeTicketFailureShape(['code'=>'500','message'=>['fixture-private']]);
+checkOp($safe['code_value']==='500' && $safe['code_type']==='string' && $safe['message_type']==='array');
+$safe=safeTicketFailureShape(['code'=>'private-code','message'=>'fixture-private']);
+checkOp(!array_key_exists('code_value',$safe));
 echo $count;

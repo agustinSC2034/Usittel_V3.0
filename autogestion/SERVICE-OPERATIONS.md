@@ -231,6 +231,14 @@ Orden manual: primero ejecutar únicamente inspect-service-requests.php sobre 49
 y revisar el resultado. Después se acuerda la lectura del modelo, luego SOAP.
 No se ejecutaron consultas reales desde esta entrega ni se cambió config.php.
 
+Primera lectura real aportada: Phantom_Consultar_Estado_TT devolvió un objeto con
+IDTT entero 0 y Permitir entero 1. La respuesta vacía exacta queda confirmada como
+`['IDTT'=>0,'Permitir'=>1]`; conservar `tickets.enabled=false` hasta conocer el
+primer mapping. Los listados Abierto/Pendiente devolvieron objetos con `code`, no
+listas. No se reinterpretan como cero: el inspector informa ahora solamente tipo
+y código numérico, y presencia/tipo de message sin publicar su contenido. Hace
+falta repetir esa lectura antes de decidir la semántica y las categorías reales.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

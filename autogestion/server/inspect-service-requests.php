@@ -13,7 +13,10 @@ try {
             $data=$step==='existence'?$ph->ticketRead($ida,'Phantom_Consultar_Estado_TT'):
                 $ph->ticketRead($ida,'Tickets_Help_Desk',['Periodo'=>'01/01/1900-'.date('d/m/Y'),'Estado'=>$step==='open'?'Abierto':'Pendiente']);
             $report[$step]=\MiUsittel\ticketInspectionShape($data,$step);
-        } catch(\MiUsittel\Failure $e) {$report[$step]=['failure_code'=>\MiUsittel\safeDiagnosticCode($e),'http'=>$e->upstreamHttp];}
+        } catch(\MiUsittel\Failure $e) {
+            $report[$step]=['failure_code'=>\MiUsittel\safeDiagnosticCode($e),'http'=>$e->upstreamHttp];
+            if($e->kind==='TICKETS_RESPONSE' && $e->safeDiagnostic!==null) $report[$step]['response']=$e->safeDiagnostic;
+        }
     }
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;
     echo 'Solo estructura y permiso de creación informado. No se crearon tickets.'.PHP_EOL;

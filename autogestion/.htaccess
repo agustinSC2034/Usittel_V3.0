@@ -1,6 +1,13 @@
 Options -Indexes
 DirectoryIndex disabled
 
+# cPanel can retain the account-wide PHP 7.4 handler even when MultiPHP reports
+# PHP 8.2 for this subdomain. Mi USITTEL requires PHP 8; bind this document root
+# explicitly so API requests do not fall back to the legacy account runtime.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^server/production-router\.php$ - [L]

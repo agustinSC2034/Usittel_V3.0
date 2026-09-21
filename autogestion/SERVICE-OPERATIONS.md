@@ -273,6 +273,15 @@ lista posicional y devolver índices, nunca los demás valores. Una coincidencia
 única queda como TECHNICAL_PROFILE_CANDIDATE_POSITIONAL; no demuestra todavía la
 semántica del índice, facturación ni que modificar_abonado ejecute Act. Perfiles.
 
+Segunda inspección real: el IDA buscado coincide únicamente con la posición 0 de
+consulta_abonado, evidencia compatible con el abonado correcto pero todavía sin
+nombres de campo. Ninguno de los dos textos visibles del selector CRM (empresa
+200/500 Mbps) aparece en la respuesta posicional. consulta_perfiles por Nombre
+devolvió null para ambos, por lo que PROFILE_LOOKUP permanece UNCONFIRMED. Los
+textos comerciales del selector no se toman como alias técnicos SOAP y no se
+ensayan variantes inventadas. El siguiente dato read-only es el value interno de
+esas dos opciones del selector; no guardar ni ejecutar Act. Perfiles.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

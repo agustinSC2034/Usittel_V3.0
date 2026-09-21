@@ -1,5 +1,17 @@
 # Mi servicio
 
+## Preparación de inspecciones, 21/09/2026
+
+Exclusión de telefonía preservada del commit fb9090f y cubierta por pruebas de
+campos prohibidos, incluyendo bonificaciones. Validación de esta iteración:
+797 verificaciones con fixtures, 62 archivos PHP con sintaxis correcta, build y
+escaneo local de secretos correctos. Sin cambios de frontend ni nuevo QA visual.
+El chequeo se ejecutó sin cargar configuración privada; no verifica sus valores.
+PHP local 8.4.25 sin extensión SOAP: pendiente habilitarla antes de la lectura SOAP.
+No se contactó Phantom/SIRO real ni se modificaron configuraciones privadas.
+Próxima acción: inspección manual de tickets sobre laboratorio 4950 y esperar
+su resultado. Modelo ONU y SOAP se preparan después, uno por uno.
+
 ## Entrega actual: operaciones controladas, 20/09/2026
 
 Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, flags, tickets,
@@ -32,6 +44,24 @@ publican IP, MAC, GPON, potencias ni credenciales. Límite: una consulta/10 segu
 por sesión. Respuestas del contrato anterior se descartan en navegador.
 
 ## Productos y adicionales
+
+Lectura real aportada por Agustín para IDA 4950: Productos_Television y
+Productos_Otros presentes, ambos strings no vacíos. Esa forma es compatible
+con serviceProducts sin descriptor de objetos. No demuestra los nombres de los
+productos ni que un texto no vacío sea distinto del marcador `-`.
+Configuración recomendada, para colocar manualmente en el archivo privado:
+
+```php
+'service_product_fields' => ['Productos_Television', 'Productos_Otros'],
+```
+
+Productos_Telefonia, Producto_Telefonia y Productos_Bonificaciones quedan fuera
+de la allowlist incluso mediante descriptores. No alimentan products, Inicio,
+Mi servicio ni la comprobación de productos contratados para solicitudes.
+El inspector puede reconocer su estructura; no los publica como servicios.
+Sin configuración o con un campo ausente/incompatible el resultado es null;
+con ambos campos soportados presentes y vacíos es []. Configuración privada
+sin modificaciones automáticas.
 
 Inicio y Mi servicio comparten la lista products. null indica desconocido; []
 indica lista vacía confirmada por los campos configurados. No se deduce que un

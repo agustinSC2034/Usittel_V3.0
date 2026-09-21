@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MiUsittel;
 require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Phantom.php';require __DIR__.'/../server/ServiceRequests.php';require __DIR__.'/../server/PhantomSoap.php';require __DIR__.'/../server/Wifi.php';
+require __DIR__.'/../server/Inspector.php';
 $count=0;
 function checkOp(bool $ok): void {global $count;$count++;if(!$ok)throw new \RuntimeException('Operation check '.$count.' failed');}
 function rejectOp(callable $fn,string $code): void {try {$fn();throw new \RuntimeException('Accepted '.$code);}catch(Failure $e){checkOp($e->kind===$code);}}
@@ -72,7 +73,7 @@ final class TestSoap implements SoapReadTransport {
     public function invoke(string $method,array $parameters): mixed {
         $this->calls[]=[$method,$parameters];
         if($this->scenario==='timeout' && $method==='consulta_abonado')throw new Failure('SOAP_TIMEOUT');
-        return match($method){'autentificar'=>$this->scenario==='auth'?'Error': 'fixture-token','consulta_abonado'=>['ID'=>8,'perfil'=>'fixture-only','Password'=>'never-output'], 'consulta_perfiles'=>['Nombre'=>'fixture-only','Down'=>400], 'desconectar'=>null};
+        return match($method){'autentificar'=>$this->scenario==='auth'?'Error': 'fixture-token','consulta_abonado'=>['ID'=>$this->scenario==='foreign'?9:8,'perfil'=>'fixture-only','Password'=>'never-output'], 'consulta_perfiles'=>$this->scenario==='unknown'?'fixture-unknown':['Nombre'=>$parameters['Nombre'],'Down'=>400], 'desconectar'=>null};
     }
 }
 $soap=new TestSoap();$sc=['api_user'=>'fixture-api','api_pass'=>'fixture-api-secret','soap'=>['read_enabled'=>true,'lab_ida'=>8]];
@@ -82,8 +83,15 @@ $result=(new PhantomSoapClient($soap,$sc))->inspect(8,['Fixture target']);
 checkOp(array_column($soap->calls,0)===['autentificar','consulta_abonado','consulta_perfiles','desconectar']);
 checkOp($soap->calls[1][1]===['token'=>'fixture-token','Id'=>8]);
 checkOp(!preg_match('/fixture|never-output|Password|token/',json_encode($result)));
+checkOp($result['auth_status']==='SOAP_AUTH_OK' && $result['technical_profile_status']==='TECHNICAL_PROFILE_KNOWN' && $result['profile_lookup_status']==='PROFILE_LOOKUP_OK');
+$soap=new TestSoap();$soap->scenario='foreign';$result=(new PhantomSoapClient($soap,$sc))->inspect(8,[]);
+checkOp($result['technical_profile_status']==='TECHNICAL_PROFILE_UNKNOWN' && $result['profile_lookup_status']==='PROFILE_LOOKUP_NOT_REQUESTED');
+$soap=new TestSoap();$soap->scenario='unknown';$result=(new PhantomSoapClient($soap,$sc))->inspect(8,['Fixture target']);
+checkOp($result['profile_lookup_status']==='PROFILE_LOOKUP_UNCONFIRMED');
 $soap=new TestSoap();$soap->scenario='auth';rejectOp(fn()=>(new PhantomSoapClient($soap,$sc))->inspect(8,[]),'SOAP_AUTH');checkOp(count($soap->calls)===1);
-$soap=new TestSoap();$soap->scenario='timeout';rejectOp(fn()=>(new PhantomSoapClient($soap,$sc))->inspect(8,[]),'SOAP_TIMEOUT');checkOp(array_column($soap->calls,0)===['autentificar','consulta_abonado','desconectar']);
+$soap=new TestSoap();$soap->scenario='timeout';$partial=(new PhantomSoapClient($soap,$sc))->inspect(8,[]);
+checkOp($partial['failure_code']==='SOAP_TIMEOUT' && $partial['auth_status']==='SOAP_AUTH_OK' && $partial['technical_profile_status']==='TECHNICAL_PROFILE_UNKNOWN');
+checkOp(array_column($soap->calls,0)===['autentificar','consulta_abonado','desconectar']);
 checkOp(upgradeCatalog([])===[]);
 $p=['current'=>'Fixture 100','target'=>'Fixture 200','phantom_profile'=>'Fixture 200 technical','public_name'=>'Internet 200 Mbps','current_down'=>100,'current_up'=>100,'speed_down'=>200,'speed_up'=>200,'price_cents'=>10000];
 checkOp(upgradeCatalog(['upgrade'=>['plans'=>['TEST'=>$p]]])===['TEST'=>$p]);
@@ -97,5 +105,24 @@ checkOp(wifiInput(array_replace($wifi,['ssid5'=>'Fixture24']))['SSID_5G']==='Fix
 rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid5'=>''])),'WIFI_INPUT');
 checkOp(wifiInput(array_replace($wifi,['ssid5'=>'']),false)===['SSID'=>'Fixture24','Password'=>'Fixture#123']);
 $native=(new \ReflectionClass(NativeSoapReadTransport::class))->newInstanceWithoutConstructor();
-foreach(['modificar_abonado','modificar_perfiles','alta_abonado'] as $method)rejectOp(fn()=>$native->invoke($method,[]),'SOAP_METHOD_FORBIDDEN');
+foreach(['modificar_abonado','modificar_perfiles','alta_abonado','suspender','eliminar_abonado','unknown'] as $method)rejectOp(fn()=>$native->invoke($method,[]),'SOAP_METHOD_FORBIDDEN');
+$endpoint=['phantom_url'=>'https://fixture.example/PHANTOM/Includes/API_Rest.php','soap'=>['url'=>'https://fixture.example/PHANTOM/Includes/API.php']];
+checkOp(soapReadEndpoint($endpoint)===$endpoint['soap']['url']);
+foreach(['http://fixture.example/PHANTOM/Includes/API.php','https://foreign.example/PHANTOM/Includes/API.php','https://fixture.example:8443/PHANTOM/Includes/API.php','https://fixture.example/PHANTOM/Includes/API_Rest.php','https://fixture.example/PHANTOM/Includes/API.php?token=fixture','https://fixture.example/PHANTOM/Includes/API.php#fragment','https://user:pass@fixture.example/PHANTOM/Includes/API.php'] as $url) {
+    $bad=$endpoint;$bad['soap']['url']=$url;rejectOp(fn()=>soapReadEndpoint($bad),'SOAP_CONFIGURATION');
+}
+checkOp(soapInspectionRecord('fixture-free-text')===null);
+checkOp(soapInspectionRecord([['ID'=>8],['ID'=>9]])===null);
+foreach([null,0,'0',''] as $empty) {
+    $shape=ticketInspectionShape(['IDTT'=>$empty,'Permitir'=>'1','Detalle'=>'fixture-private'],'existence');
+    checkOp($shape['no_ticket_id'] && $shape['id_type']===get_debug_type($empty) && $shape['permit_value']==='1');
+    checkOp(!str_contains(json_encode($shape),'fixture-private'));
+}
+$shape=ticketInspectionShape([],'existence');checkOp(!$shape['id_present'] && !$shape['permit_present'] && !$shape['no_ticket_id']);
+$shape=ticketInspectionShape(['IDTT'=>'321','Permitir'=>'fixture-private'],'existence');checkOp(!$shape['no_ticket_id'] && $shape['permit_value']===null);
+$shape=ticketInspectionShape([['ID'=>'321','Estado'=>'Abierto','Categoria'=>'fixture-private','Delegacion'=>'fixture-private','Detalle'=>'fixture-private'],['Estado'=>'fixture-private']],'open');
+checkOp($shape['ticket_count']===2 && $shape['states']===['Abierto'] && $shape['unknown_state_count']===1);
+checkOp($shape['sample']['Delegacion']['present'] && !preg_match('/fixture-private|321/',json_encode($shape)));
+checkOp(ticketInspectionShape(['message'=>'fixture-error'],'open')['ticket_count']===null);
+checkOp(ticketInspectionShape([],'open')['ticket_count']===0);
 echo $count;

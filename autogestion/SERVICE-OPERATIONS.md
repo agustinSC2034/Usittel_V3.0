@@ -196,6 +196,41 @@ solo por abrir la pantalla. El formulario descarta las contraseñas tras enviar.
 
 ## Validación y próximo paso
 
+Preparación read-only del 21/09/2026: el inspector de tickets distingue presencia
+y tipo de IDTT/Permitir, ID vacío, permiso 0/1 conservando tipo y cantidades de
+filas de listas. Solo publica estados de una lista genérica cerrada; otros se
+cuentan como desconocidos. Categoría/delegación solo presencia/tipo. Una respuesta
+objeto o error no se presenta como cero tickets. Sin prueba real todavía no se
+configuran clear_response, categorías, delegaciones ni estados, ni se habilitan
+escrituras. HTTP se informa únicamente si está disponible en el error de transporte.
+
+El inspector SOAP termina en NOT_READY_FOR_UPGRADE_WRITE. Distingue plan comercial,
+perfil técnico, autenticación y coincidencia exacta de perfiles consultados.
+TECHNICAL_PROFILE_KNOWN requiere registro directo o lista de un registro, identidad
+coincidente y campo perfil no vacío; no sustituye perfil con Producto_Internet.
+PROFILE_LOOKUP_OK requiere respuestas reconocidas con Nombre exactamente igual
+al solicitado para todos los nombres configurados. Otros formatos son desconocidos,
+no errores interpretados como éxito. Con cero nombres no afirma haber validado perfiles.
+BILLING_RELATION_UNKNOWN y PROVISIONING_RELATION_UNKNOWN permanecen siempre.
+Conocer la estructura del perfil no acredita facturación ni aprovisionamiento.
+
+Antes de su futura ejecución manual: extensión PHP SOAP, soap.read_enabled=true,
+soap.lab_ida del laboratorio elegido, soap.url HTTPS del mismo host y puerto REST
+con API.php en lugar de API_Rest.php, CA válida y soap.profile_names exactos.
+Las credenciales técnicas existentes deben ser aceptadas por SOAP; no se prueba aquí.
+No habilitar upgrade ni agregar métodos de escritura.
+
+Para Wi-Fi se conserva inspect-service-features.php: el IDA 4950 aportado no devolvió
+ONU_Modelo. Necesitamos un IDA controlado con ONU y su modelo exacto devuelto por
+esa lectura; después confirmar físicamente sus bandas. Solo entonces definir
+wifi.lab_ida, wifi.models y, si corresponde, wifi.dual_band_models. Obtener el
+modelo no autoriza el cambio. La prueba futura será una escritura expresamente
+confirmada, sin retries; ambos SSID explícitos para dual-band, Ticket=0.
+
+Orden manual: primero ejecutar únicamente inspect-service-requests.php sobre 4950
+y revisar el resultado. Después se acuerda la lectura del modelo, luego SOAP.
+No se ejecutaron consultas reales desde esta entrega ni se cambió config.php.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

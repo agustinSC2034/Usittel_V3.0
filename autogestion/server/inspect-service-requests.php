@@ -12,17 +12,8 @@ try {
         try {
             $data=$step==='existence'?$ph->ticketRead($ida,'Phantom_Consultar_Estado_TT'):
                 $ph->ticketRead($ida,'Tickets_Help_Desk',['Periodo'=>'01/01/1900-'.date('d/m/Y'),'Estado'=>$step==='open'?'Abierto':'Pendiente']);
-            $r=['list'=>array_is_list($data),'count'=>count($data)];
-            if($step==='existence') {
-                $r['id_present']=array_key_exists('IDTT',$data);$r['id_type']=get_debug_type($data['IDTT']??null);
-                $r['no_ticket_id']=array_key_exists('IDTT',$data)&&in_array($data['IDTT'],[null,0,'0',''],true);
-                $r['id_empty_string']=($data['IDTT']??null)==='';
-                $r['permit_type']=get_debug_type($data['Permitir']??null);
-                $r['permit_value']=in_array($data['Permitir']??null,[0,1,'0','1'],true)?$data['Permitir']:null;
-            } else foreach(array_slice($data,0,1) as $row) if(is_array($row)) foreach(['ID','IDA','Categoria','Estado','Fecha'] as $field)
-                $r['sample'][$field]=['present'=>array_key_exists($field,$row),'type'=>get_debug_type($row[$field]??null)];
-            $report[$step]=$r;
-        } catch(\MiUsittel\Failure $e) {$report[$step]=['failure_code'=>$e->kind];}
+            $report[$step]=\MiUsittel\ticketInspectionShape($data,$step);
+        } catch(\MiUsittel\Failure $e) {$report[$step]=['failure_code'=>\MiUsittel\safeDiagnosticCode($e),'http'=>$e->upstreamHttp];}
     }
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;
     echo 'Solo estructura y permiso de creación informado. No se crearon tickets.'.PHP_EOL;

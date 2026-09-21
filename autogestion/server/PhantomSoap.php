@@ -3,6 +3,25 @@ declare(strict_types=1);
 namespace MiUsittel;
 
 interface SoapReadTransport {public function invoke(string $method,array $parameters): mixed;}
+function soapReadEndpoint(array $c): string {
+    $url=$c['soap']['url']??null;$p=is_string($url)?parse_url($url):[];
+    $rest=parse_url($c['phantom_url']??'');
+    if(($rest['scheme']??null)!=='https' || !preg_match('~/API_Rest\.php$~',$rest['path']??'')
+        || ($p['scheme']??null)!=='https' || !isset($p['host']) || ($p['host']??null)!==($rest['host']??null)
+        || ($p['port']??443)!==($rest['port']??443)
+        || ($p['path']??null)!==preg_replace('~/API_Rest\.php$~','/API.php',$rest['path']??'')
+        || isset($p['query']) || isset($p['fragment']) || isset($p['user']) || isset($p['pass'])) throw new Failure('SOAP_CONFIGURATION');
+    if(($c['ca_file']??null)!==null && (!is_string($c['ca_file']) || !is_readable($c['ca_file']))) throw new Failure('SOAP_CONFIGURATION');
+    return $url;
+}
+// Recognize only a direct record or a single-record list, never search arbitrary wrappers.
+function soapInspectionRecord(mixed $value): ?array {
+    if(is_object($value)) $value=get_object_vars($value);
+    if(is_array($value) && array_is_list($value) && count($value)===1) {
+        $value=$value[0];if(is_object($value)) $value=get_object_vars($value);
+    }
+    return is_array($value)&&!array_is_list($value)?$value:null;
+}
 // No WSDL, trace, external entity fetching, redirects or arbitrary method names.
 // The only production SOAP capability in this delivery is read-only inspection.
 if(class_exists('SoapClient')) {
@@ -30,13 +49,8 @@ if(class_exists('SoapClient')) {
 final class NativeSoapReadTransport implements SoapReadTransport {
     private mixed $client;
     public function __construct(array $c) {
+        $url=soapReadEndpoint($c);
         if(!extension_loaded('soap') || !extension_loaded('curl')) throw new Failure('SOAP_EXTENSION_REQUIRED');
-        $url=$c['soap']['url']??null;$p=is_string($url)?parse_url($url):[];
-        $rest=parse_url($c['phantom_url']);
-        if(($p['scheme']??null)!=='https' || ($p['host']??null)!==($rest['host']??null) || ($p['port']??443)!==($rest['port']??443)
-            || ($p['path']??null)!==preg_replace('~/API_Rest\.php$~','/API.php',$rest['path']??'')
-            || isset($p['query']) || isset($p['fragment']) || isset($p['user']) || isset($p['pass'])) throw new Failure('SOAP_CONFIGURATION');
-        if($c['ca_file']!==null && (!is_string($c['ca_file']) || !is_readable($c['ca_file']))) throw new Failure('SOAP_CONFIGURATION');
         $this->client=new BoundedSoapClient($c,$url);
     }
     public function invoke(string $method,array $parameters): mixed {
@@ -53,11 +67,33 @@ final class PhantomSoapClient {
         foreach($profiles as $name) if(!is_string($name) || $name==='' || strlen($name)>160) throw new Failure('UPGRADE_CONFIGURATION');
         $token=$this->transport->invoke('autentificar',['API_User'=>$this->c['api_user'],'API_Pass'=>$this->c['api_pass']]);
         if(!is_string($token) || trim($token)==='' || strlen($token)>512 || preg_match('/error|[<>\s]/i',$token)) throw new Failure('SOAP_AUTH');
+        $report=['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','technical_profile_status'=>'TECHNICAL_PROFILE_UNKNOWN',
+            'profile_lookup_status'=>'PROFILE_LOOKUP_NOT_REQUESTED'];
         try {
             $subscriber=$this->transport->invoke('consulta_abonado',['token'=>$token,'Id'=>$ida]);
-            $results=[];
-            foreach($profiles as $name) $results[]=soapSafeShape($this->transport->invoke('consulta_perfiles',['token'=>$token,'Nombre'=>$name]));
-            return ['authenticated'=>true,'subscriber'=>soapSafeShape($subscriber),'profiles'=>$results];
+            $record=soapInspectionRecord($subscriber);
+            $identity=$record!==null && (isset($record['Id']) || isset($record['ID']));
+            foreach(['Id','ID','IDA'] as $key) if(array_key_exists($key,$record??[]))
+                $identity=$identity&&(is_int($record[$key]) || is_string($record[$key]))&&(string)$record[$key]===(string)$ida;
+            $profile=$record['perfil']??null;
+            $known=$identity && (is_string($profile)||is_int($profile)) && trim((string)$profile)!=='';
+            $report+=['subscriber'=>soapSafeShape($subscriber),'subscriber_identity_matches'=>$identity];
+            $report['technical_profile_status']=$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN';
+            $results=[];$lookupsOk=count($profiles)>0;
+            foreach($profiles as $name) {
+                $report['profile_lookup_status']='PROFILE_LOOKUP_UNCONFIRMED';
+                $value=$this->transport->invoke('consulta_perfiles',['token'=>$token,'Nombre'=>$name]);
+                $row=soapInspectionRecord($value);$matched=($row['Nombre']??null)===$name;
+                $lookupsOk=$lookupsOk&&$matched;
+                $results[]=['exact_name_match'=>$matched,'shape'=>soapSafeShape($value)];
+            }
+            return ['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','subscriber'=>soapSafeShape($subscriber),
+                'subscriber_identity_matches'=>$identity,'technical_profile_status'=>$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN',
+                'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($profiles===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
+                'profiles'=>$results];
+        } catch(Failure $e) {
+            $report['failure_code']=in_array($e->kind,['SOAP_TIMEOUT','SOAP_NETWORK','SOAP_RESPONSE','SOAP_CONFIGURATION','SOAP_METHOD_FORBIDDEN'],true)?$e->kind:'SOAP_RESPONSE';
+            return $report;
         } finally {
             unset($token,$subscriber);
             try {$this->transport->invoke('desconectar',[]);} catch(\Throwable) {}

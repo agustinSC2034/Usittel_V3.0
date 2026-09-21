@@ -2,6 +2,36 @@
 declare(strict_types=1);
 namespace MiUsittel;
 
+// Diagnostics only: never expose ticket identifiers, free text or arbitrary states.
+function ticketInspectionShape(array $data,string $step): array {
+    $list=array_is_list($data);
+    $r=['result_type'=>get_debug_type($data),'list'=>$list,'count'=>count($data)];
+    if($step==='existence') {
+        $r['id_present']=array_key_exists('IDTT',$data);
+        $r['id_type']=get_debug_type($data['IDTT']??null);
+        $r['no_ticket_id']=$r['id_present']&&in_array($data['IDTT'],[null,0,'0',''],true);
+        $r['id_empty_string']=($data['IDTT']??null)==='';
+        $r['permit_present']=array_key_exists('Permitir',$data);
+        $r['permit_type']=get_debug_type($data['Permitir']??null);
+        $r['permit_value']=in_array($data['Permitir']??null,[0,1,'0','1'],true)?$data['Permitir']:null;
+        return $r;
+    }
+    $valid=$list;
+    $states=[];$unknown=0;
+    foreach($data as $row) {
+        if(!is_array($row) || array_is_list($row)) {$valid=false;continue;}
+        $state=$row['Estado']??null;
+        if(in_array($state,['Abierto','Pendiente','Resuelto','Cerrado','Rechazado'],true)) $states[]=$state;
+        else $unknown++;
+    }
+    $r['ticket_count']=$valid?count($data):null;
+    $r['states']=array_values(array_unique($states));$r['unknown_state_count']=$unknown;
+    if($list) foreach(array_slice($data,0,1) as $row) if(is_array($row))
+        foreach(['ID','IDTT','IDA','Categoria','Delegacion','Estado','Fecha'] as $field)
+            $r['sample'][$field]=['present'=>array_key_exists($field,$row),'type'=>get_debug_type($row[$field]??null)];
+    return $r;
+}
+
 function inspectorArguments(array $args): array {
     if(!in_array(count($args),[2,3],true) || ($args[1]??null)!=='1'
         || (isset($args[2]) && $args[2]!=='--auth-get')) throw new Failure('INSPECTOR_ARGUMENTS');

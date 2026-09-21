@@ -266,6 +266,13 @@ facturación y aprovisionamiento también. consulta_perfiles no se ejecutó porq
 lista privada de nombres exactos estaba vacía. Resultado conservado:
 NOT_READY_FOR_UPGRADE_WRITE.
 
+El CRM aportado visualmente confirma, sin guardar cambios, el nombre exacto del
+perfil actual de empresa 200 Mbps y un destino seleccionable de empresa 500 Mbps.
+El inspector puede buscar esos valores exactos solo en el nivel superior de la
+lista posicional y devolver índices, nunca los demás valores. Una coincidencia
+única queda como TECHNICAL_PROFILE_CANDIDATE_POSITIONAL; no demuestra todavía la
+semántica del índice, facturación ni que modificar_abonado ejecute Act. Perfiles.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

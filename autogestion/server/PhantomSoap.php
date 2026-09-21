@@ -22,6 +22,14 @@ function soapInspectionRecord(mixed $value): ?array {
     }
     return is_array($value)&&!array_is_list($value)?$value:null;
 }
+function soapDirectMatchIndices(mixed $value,string|int $expected): array {
+    if(is_object($value)) $value=get_object_vars($value);
+    if(!is_array($value) || !array_is_list($value)) return [];
+    $out=[];
+    foreach($value as $index=>$item)
+        if((is_string($item)||is_int($item)) && (string)$item===(string)$expected) $out[]=$index;
+    return $out;
+}
 // No WSDL, trace, external entity fetching, redirects or arbitrary method names.
 // The only production SOAP capability in this delivery is read-only inspection.
 if(class_exists('SoapClient')) {
@@ -82,18 +90,29 @@ final class PhantomSoapClient {
             $known=$identity && (is_string($profile)||is_int($profile)) && trim((string)$profile)!=='';
             $report+=['subscriber'=>soapSafeShape($subscriber),'subscriber_identity_status'=>$identityStatus,
                 'subscriber_identity_matches'=>$positional?null:$identity];
+            if($positional) $report['subscriber_id_match_indices']=soapDirectMatchIndices($subscriber,$ida);
             $report['technical_profile_status']=$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN';
             $results=[];$lookupsOk=count($profiles)>0;
+            $subscriberProfileMatches=[];
             foreach($profiles as $name) {
                 $report['profile_lookup_status']='PROFILE_LOOKUP_UNCONFIRMED';
                 $value=$this->transport->invoke('consulta_perfiles',['token'=>$token,'Nombre'=>$name]);
-                $row=soapInspectionRecord($value);$matched=($row['Nombre']??null)===$name;
+                $row=soapInspectionRecord($value);$indices=soapDirectMatchIndices($value,$name);
+                $matched=($row['Nombre']??null)===$name || count($indices)===1;
                 $lookupsOk=$lookupsOk&&$matched;
-                $results[]=['exact_name_match'=>$matched,'shape'=>soapSafeShape($value)];
+                $results[]=['exact_name_match'=>$matched,'name_match_indices'=>$indices,'shape'=>soapSafeShape($value)];
+                $subscriberProfileMatches[]=soapDirectMatchIndices($subscriber,$name);
+            }
+            if($positional) {
+                $report['configured_profile_match_indices']=$subscriberProfileMatches;
+                if(count(array_filter($subscriberProfileMatches,fn($matches)=>count($matches)===1))===1)
+                    $report['technical_profile_status']='TECHNICAL_PROFILE_CANDIDATE_POSITIONAL';
             }
             return ['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','subscriber'=>soapSafeShape($subscriber),
                 'subscriber_identity_status'=>$identityStatus,'subscriber_identity_matches'=>$positional?null:$identity,
-                'technical_profile_status'=>$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN',
+                'subscriber_id_match_indices'=>$positional?soapDirectMatchIndices($subscriber,$ida):[],
+                'configured_profile_match_indices'=>$subscriberProfileMatches,
+                'technical_profile_status'=>$report['technical_profile_status'],
                 'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($profiles===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
                 'profiles'=>$results];
         } catch(Failure $e) {

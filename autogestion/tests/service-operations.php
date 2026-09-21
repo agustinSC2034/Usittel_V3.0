@@ -115,6 +115,9 @@ foreach(['http://fixture.example/PHANTOM/Includes/API.php','https://foreign.exam
 }
 checkOp(soapInspectionRecord('fixture-free-text')===null);
 checkOp(soapInspectionRecord([['ID'=>8],['ID'=>9]])===null);
+checkOp(soapDirectMatchIndices(['8','Fixture target','8'],8)===[0,2]);
+checkOp(soapDirectMatchIndices(['8','Fixture target'],'Fixture target')===[1]);
+checkOp(soapDirectMatchIndices(['ID'=>8],8)===[]);
 $shape=soapSafeShape(array_fill(0,90,'fixture-private'));
 checkOp($shape['count']===90 && $shape['list'] && $shape['element_types']===['string'=>90]);
 checkOp(!str_contains(json_encode($shape),'fixture-private'));
@@ -128,6 +131,21 @@ $positional=(new PhantomSoapClient($soap,$sc))->inspect(8,[]);
 checkOp($positional['subscriber_identity_status']==='SUBSCRIBER_IDENTITY_UNKNOWN_POSITIONAL');
 checkOp($positional['subscriber_identity_matches']===null && $positional['technical_profile_status']==='TECHNICAL_PROFILE_UNKNOWN');
 checkOp(!str_contains(json_encode($positional),'fixture-private'));
+$soap=new class implements SoapReadTransport {
+    public function invoke(string $method,array $parameters): mixed {return match($method) {
+        'autentificar'=>'fixture-token',
+        'consulta_abonado'=>['fixture-private',8,'Fixture current','fixture-private'],
+        'consulta_perfiles'=>[$parameters['Nombre'],400,400],
+        'desconectar'=>null,default=>throw new Failure('FIXTURE_UNEXPECTED'),
+    };}
+};
+$matched=(new PhantomSoapClient($soap,$sc))->inspect(8,['Fixture current','Fixture target']);
+checkOp($matched['subscriber_id_match_indices']===[1]);
+checkOp($matched['configured_profile_match_indices']===[[2],[]]);
+checkOp($matched['technical_profile_status']==='TECHNICAL_PROFILE_CANDIDATE_POSITIONAL');
+checkOp($matched['profile_lookup_status']==='PROFILE_LOOKUP_OK');
+checkOp($matched['profiles'][0]['name_match_indices']===[0] && $matched['profiles'][1]['name_match_indices']===[0]);
+checkOp(!str_contains(json_encode($matched),'fixture-private'));
 foreach([null,0,'0',''] as $empty) {
     $shape=ticketInspectionShape(['IDTT'=>$empty,'Permitir'=>'1','Detalle'=>'fixture-private'],'existence');
     checkOp($shape['no_ticket_id'] && $shape['id_type']===get_debug_type($empty) && $shape['permit_value']==='1');

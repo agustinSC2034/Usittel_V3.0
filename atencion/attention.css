@@ -1,58 +1,40 @@
-.attention-page { margin: 0; }
-.attention-page * { box-sizing: border-box; }
-.attention-preview-note { background: #edf4f0; color: #426352; font-size: 12px; text-align: center; padding: 8px 16px; }
-.attention-header { max-width: 1280px; margin: auto; padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; gap: 28px; }
-.attention-header img { display: block; width: 184px; height: auto; }
-.attention-header nav { display: flex; align-items: center; gap: 30px; font-size: 14px; }
-.attention-account { padding: 10px 17px; border: 1px solid #cfdfd5; border-radius: 8px; color: #116849; font-weight: 600; }
-.attention-main { max-width: 1184px; padding: 48px 0 0; margin: auto; }
-.attention-eyebrow { color: #116849; font-size: 12px; letter-spacing: .11em; font-weight: 650; margin: 0 0 16px; }
-.attention-intro { padding-bottom: 46px; }
-.attention-intro h1 { font-size: clamp(38px, 5vw, 60px); font-weight: 750; letter-spacing: -.045em; margin: 0 0 22px; }
-.attention-intro > p:last-child { font-size: 18px; color: #53627a; margin: 0; }
-.attention-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
-.attention-customer { padding: 36px; border-radius: 16px; background: #edf5f0; }
-.attention-symbol { display: block; width: 36px; height: 36px; color: #0e684c; margin-bottom: 22px; }
-.attention-symbol svg { width: 100%; height: 100%; }
-.attention-customer h2 { font-size: 32px; margin: 0 0 14px; }
-.attention-customer > p:not(.attention-eyebrow):not(.attention-small) { color: #53627a; max-width: 370px; margin: 0 0 24px; }
-.attention-primary { background: #0e684c; color: white; gap: 24px; }
-.attention-primary:hover { background: #09543c; }
-.attention-customer .attention-small { font-size: 12px; color: #52665a; margin: 16px 0 0; }
-.attention-secondary-paths { display: flex; flex-direction: column; justify-content: center; }
-.attention-secondary-paths section { display: flex; gap: 22px; padding: 26px 0; }
-.attention-secondary-paths section + section { border-top: 1px solid #dce3e2; }
-.attention-step { font-size: 13px; color: #62768b; padding-top: 7px; }
-.attention-secondary-paths h2 { font-size: 26px; margin: 0 0 12px; }
-.attention-secondary-paths p { color: #53627a; margin: 0 0 15px; max-width: 340px; }
-.attention-link { display: inline-flex; align-items: center; gap: 25px; min-height: 44px; border: 0; background: transparent; color: #0e684c; padding: 0; font-weight: 650; }
-.attention-link:hover, .attention-selfcare a:hover { text-decoration: underline; text-underline-offset: 5px; }
-.attention-selfcare { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 64px; padding: 36px 0; border-top: 1px solid #dce3e2; }
-.attention-selfcare h2 { font-size: 24px; margin: 0; max-width: 360px; }
-.attention-selfcare nav { display: grid; }
-.attention-selfcare a { display: flex; justify-content: space-between; padding: 10px 0; min-height: 44px; color: #0e684c; }
-.attention-footer { display: flex; align-items: center; gap: 20px; max-width: 1184px; margin: 35px auto 0; padding: 30px 0 110px; border-top: 1px solid #dce3e2; color: #53627a; font-size: 13px; }
-.attention-footer a:first-child { font-weight: 750; color: #13233b; letter-spacing: .04em; }
-.attention-footer a:last-child { margin-left: auto; }
-.public-page .attention-footer { background: white; padding-block: 30px 110px; font-size: 13px; }
-.public-page .attention-footer a:hover { color: #0e684c; text-decoration: underline; }
-@media (max-width: 1280px) { .attention-main, .attention-footer { margin-inline: 48px; } }
+.attention-preview-note { background: #edf4f0; color: #426352; font: 12px/1.4 system-ui, sans-serif; text-align: center; padding: 8px 16px; margin: 0; }
+.attention-conversation { margin: 0; height: 100dvh; display: flex; flex-direction: column; background: #f5f8f6; color: #132b43; font: 15px/1.5 Inter, system-ui, sans-serif; }
+.attention-conversation * { box-sizing: border-box; }
+.attention-conversation a { color: #0e684c; text-decoration: none; }
+.conversation-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 24px; background: white; border-bottom: 1px solid #dce5df; }
+.conversation-header img { display: block; width: 150px; height: auto; }
+.conversation-header nav { display: flex; gap: 24px; }
+.conversation-header a { min-height: 44px; display: inline-flex; align-items: center; }
+.conversation-main { width: min(100%, 980px); margin: 0 auto; padding: 12px 24px 24px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.conversation-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 10px; }
+.conversation-tools h1 { font-size: 18px; margin: 0; }
+.conversation-tools button { color: #0e684c; background: transparent; border: 0; font: inherit; cursor: pointer; min-height: 44px; }
+.conversation-container { position: relative; flex: 1; min-height: 0; overflow: hidden; border: 1px solid #dce5df; border-radius: 14px; background: white; }
+.conversation-container central-chat { display: block; width: 100%; height: 100%; }
+.conversation-container .attention-chat { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; border: 0; border-radius: 0; box-shadow: none; }
+.attention-help-preview { max-width: 1184px; margin: 28px auto; padding: 0 24px; }
+.attention-help-preview * { box-sizing: border-box; }
+.attention-help-preview .attention-preview-note { margin-bottom: 16px; border-radius: 8px; }
+.attention-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.attention-customer { padding: 32px; border-radius: 16px; background: #edf5f0; display: flex; flex-direction: column; align-items: flex-start; }
+.attention-customer .attention-eyebrow { color: #116849; font-size: 12px; letter-spacing: .08em; font-weight: 650; margin: 0 0 14px; }
+.attention-customer h2 { font-size: 30px; margin: 0 0 14px; }
+.attention-customer > p:not(.attention-eyebrow) { color: #53627a; margin: 0 0 24px; }
+.attention-customer .attention-primary { display: inline-flex; align-items: center; min-height: 48px; padding: 12px 20px; border-radius: 8px; background: #0e684c; color: white; font-weight: 600; margin-top: auto; text-decoration: none; }
+.attention-customer .attention-primary:hover { background: #09543c; }
+.attention-customer .attention-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; color: #0e684c; }
+.attention-customer a:focus-visible, .attention-conversation :is(a, button):focus-visible { outline: 3px solid #0965e8; outline-offset: 3px; }
 @media (max-width: 640px) {
-  .attention-header { padding: 22px; gap: 10px; }
-  .attention-header img { width: 140px; }
-  .attention-header nav > a:first-child { display: none; }
-  .attention-account { padding: 9px 12px; font-size: 12px; }
-  .attention-main { padding-top: 32px; margin-inline: 22px; }
-  .attention-intro { padding-bottom: 30px; }
-  .attention-intro > p:last-child { font-size: 16px; }
-  .attention-paths, .attention-selfcare { grid-template-columns: 1fr; gap: 14px; }
-  .attention-customer { padding: 26px; }
-  .attention-customer h2 { font-size: 29px; }
-  .attention-symbol { margin-bottom: 16px; }
-  .attention-primary { width: 100%; padding-inline: 12px; font-size: 14px; }
-  .attention-secondary-paths section { gap: 16px; padding: 26px 0; }
-  .attention-secondary-paths h2 { font-size: 23px; }
-  .attention-selfcare { margin-top: 12px; padding-top: 30px; gap: 24px; }
-  .attention-footer { margin: 12px 22px 0; flex-wrap: wrap; padding-bottom: 110px; }
-  .attention-footer a:last-child { margin-left: 0; flex-basis: 100%; }
+  .conversation-header { padding: 8px 14px; gap: 10px; }
+  .conversation-header img { width: 120px; }
+  .conversation-header nav { font-size: 13px; gap: 16px; }
+  .conversation-main { padding: 0 0 env(safe-area-inset-bottom); }
+  .conversation-tools { padding: 0 14px; }
+  .conversation-container { border-radius: 0; border-inline: 0; }
+  .attention-help-preview { padding: 0 20px; }
+  .attention-paths { grid-template-columns: 1fr; gap: 16px; }
+  .attention-customer { padding: 24px; }
+  .attention-customer h2 { font-size: 28px; }
+  .attention-customer .attention-primary { width: 100%; justify-content: center; }
 }

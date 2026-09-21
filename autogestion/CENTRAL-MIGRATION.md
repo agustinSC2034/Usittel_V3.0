@@ -23,9 +23,12 @@ WhatsApp principal → derivación futura → `/atencion` en USITTEL → Central
 → bots y agentes que ya trabajan en Botmaker. No se construye una consola nueva
 ni un backend propio de chat. La línea de ventas/campañas queda en WhatsApp.
 
-El hub prioriza autoservicio: Soy cliente → Mi USITTEL; Quiero contratar → planes
-y cobertura; Hablar con nosotros → chat. La página usa el estilo y recursos de
-USITTEL y tiene una cabecera compacta propia, sin modificar la navegación pública.
+La orientación vive en Centro de ayuda: Soy cliente → Mi USITTEL o chat;
+Quiero contratar → chat con intención de ventas, con igual importancia visual.
+La entrada `/atencion` abre el widget automáticamente dentro de una cabecera
+compacta USITTEL, sin volver a elegir un recorrido. En móvil ocupa el espacio
+disponible. El cambio de Centro de ayuda solo se monta en loopback: la web pública
+conserva sus enlaces y operatoria actuales.
 Wi-Fi y upgrades no se anuncian como operaciones disponibles si aún no lo están.
 
 Central, su webchat embebido y el derivador son distintos del Webchat clásico de
@@ -64,9 +67,9 @@ Recorridos:
 | Escenario | Ruta / acción |
 | --- | --- |
 | Visitante web | `http://127.0.0.1:4175/` → botón de ayuda |
-| Hub normal | `http://127.0.0.1:4175/atencion` → chat minimizado |
-| Derivación simulada | `http://127.0.0.1:4175/atencion?chat=open` |
-| Prospecto | Hub → Quiero contratar → `/pages/internet/` |
+| Chat directo de diseño | `http://127.0.0.1:4175/atencion` → mock abierto |
+| Orientación | `http://127.0.0.1:4175/pages/centro_de_ayuda/` |
+| Prospecto | Centro de ayuda → Hablar con ventas → `/atencion?chat-provider=central&intent=sales` |
 | Cliente sin sesión | Hub → Mi USITTEL → Hablar con nosotros |
 | Cliente demo | Ingresar con datos precargados → Soporte → Hablar con nosotros |
 
@@ -141,9 +144,39 @@ Botmaker/Meta por separado antes de decidir el cambio operativo.
 7. Activación posterior controlada de la línea principal, manteniendo ventas
    aparte, con vuelta atrás verificada y revisión del estado por defecto anunciado.
 
-El siguiente dato ya fue recibido: snippet oficial. La siguiente prueba funcional
-debe ser un mensaje ficticio enviado manualmente por Agustín en el preview real,
-con el destino de atención verificado antes; aún no se ejecutó.
+## URL personalizada y siguiente paso
+
+Ruta prevista para publicar: `/atencion` en el dominio HTTPS de USITTEL. Todavía
+NO pegar la URL local ni una ruta pública sin desplegar en el derivador.
+La documentación de Botmaker anuncia activación por defecto el 01/10/2026,
+por línea. Revisar las tres líneas antes de esa fecha, incluida ventas/campañas;
+no asumir que la prueba local evita esa activación. No cambiamos ninguna cuenta.
+
+La propiedad `mode="fill-container"` se verificó en el loader oficial para
+integrar el widget en nuestro contenedor sin cambiar su configuración global.
+En la prueba móvil, el modo integrado muestra directamente el compositor y sus
+sugerencias, sin la portada flotante anterior. `maximize()` por sí solo no
+demuestra continuidad de WhatsApp. `intent=sales` cambia únicamente el título de
+nuestra página (y el recorrido del mock). Se probó `prefill()` sin envío, pero no
+se observó el borrador en el widget real; no se dejó ese comportamiento sin validar.
+No asigna cola, no envía mensajes ni cambia los flujos de Botmaker.
+No se interpretan parámetros de identidad ni tokens de derivación.
+
+Única gestión siguiente con Botmaker: pedir el contrato oficial de integración
+de la URL personalizada con `central-chat`. Consulta preparada:
+
+> Queremos que la línea USITTEL terminada en 0345 derive a `/atencion` en nuestra
+> web HTTPS, con el widget de Central integrado. ¿Cómo recibe el widget la
+> identidad y conversación del enlace de WhatsApp? Necesitamos los nombres de
+> parámetros y el mecanismo documentado para abrir directamente esa conversación,
+> sin la portada del widget ni pedir nuevamente la consulta. ¿Pueden habilitar
+> una prueba de URL personalizada sin activar ni modificar la línea productiva?
+> No necesitamos ejemplos con tokens o datos reales de clientes.
+
+Pendiente: probar esa continuidad, enrutamiento cliente/ventas, recepción por
+agente y publicación HTTPS/CSP. Hasta entonces el resultado es PREVIEW, no una
+migración lista para activar. El cliente puede continuar hablando sin autenticarse;
+Mi USITTEL mantiene su propia sesión para consultar o modificar datos de cuenta.
 
 ## Publicación
 
@@ -175,3 +208,15 @@ Validación: suite Mi USITTEL con 834 verificaciones (fixtures, no Phantom real)
 Mesh; 2 pruebas de límites del servidor de preview. Builds público/autogestión y
 shared shell correctos. Sintaxis de 62 PHP correcta, sin cambios PHP. Escaneo local
 de secretos correcto. Los builds solo advirtieron datos antiguos de Browserslist.
+
+### Ajuste de recorridos del 21/09/2026
+
+Validación de esta iteración con el navegador integrado vía CUA: 390×844 y
+1366×900. Centro de ayuda conserva sus preguntas y buscador; las dos tarjetas
+miden lo mismo en escritorio. El enlace de ventas abre /atencion. Mock automático
+sin query y selección de ventas correctos. Central real muestra compositor dentro
+del contenedor móvil, sin envío de mensajes ni cambios en Botmaker. Sin errores
+relevantes de consola ni desborde horizontal en las vistas inspeccionadas.
+Pruebas de aislamiento del preview: 2/2; build público y check de shell correctos;
+escaneo local de secretos correcto. No hay cambios PHP ni se repitió la suite de
+Phantom: sus resultados anteriores arriba pertenecen al commit previo.

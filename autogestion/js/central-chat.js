@@ -15,18 +15,23 @@ export class CentralChatAdapter {
     this.element = document.createElement('central-chat');
     this.element.setAttribute('channel-key', this.channelKey);
     this.element.setAttribute('locale', 'es');
+    const container = document.getElementById('attention-chat-container');
+    if (container) this.element.setAttribute('mode', 'fill-container');
     this.element.addEventListener('central-chat-mount', () => {
       clearTimeout(this.timer);
       setStatus('Central conectado · Prueba local real. Los mensajes que envíes llegarán a USITTEL.');
+      if (container) document.querySelector('[data-attention-open]')?.setAttribute('hidden', '');
     }, { once: true });
     // Never log central-chat-event: its payload may contain customer data.
     this.timer = setTimeout(() => {
       setStatus('Central todavía no pudo conectarse. Cerrá esta página y volvé a intentar más tarde.');
     }, 25000);
-    document.body.append(this.element);
+    (container || document.body).append(this.element);
   }
   async open() {
-    try { await this.element.show(); await this.element.maximize(); }
+    try {
+      await this.element.show(); await this.element.maximize();
+    }
     catch { setStatus('No pudimos abrir Central. Volvé a intentar más tarde.'); }
   }
   close() { this.element.minimize().catch(() => {}); }

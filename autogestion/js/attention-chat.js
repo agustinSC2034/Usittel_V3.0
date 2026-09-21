@@ -17,14 +17,15 @@ export class MockChatAdapter {
       <div class="attention-chat-body"><div class="attention-chat-log" role="log" aria-label="Conversación de prueba" aria-live="polite"></div>
       <div class="attention-chat-choices" aria-label="Elegí tu consulta"><button type="button" data-topic="customer">Soy cliente <span aria-hidden="true">→</span></button><button type="button" data-topic="sales">Quiero contratar <span aria-hidden="true">→</span></button><button type="button" data-topic="technical">Tengo un problema técnico <span aria-hidden="true">→</span></button></div></div>
       <form class="attention-chat-form"><label class="attention-chat-label" for="attention-chat-message">Mensaje de prueba</label><div><input id="attention-chat-message" name="preview-message" placeholder="Escribí un mensaje de prueba" autocomplete="off" maxlength="500" required><button type="submit" aria-label="Enviar mensaje de prueba">↑</button></div><p>No se envía ni se guarda. Usá datos ficticios.</p></form>`;
-    document.body.append(panel);
+    this.inline = document.getElementById('attention-chat-container');
+    (this.inline || document.body).append(panel);
     this.panel = panel;
     this.log = panel.querySelector('.attention-chat-log');
     this.choices = panel.querySelector('.attention-chat-choices');
     this.form = panel.querySelector('form');
     panel.querySelector('.attention-chat-close').addEventListener('click', () => this.close());
     panel.addEventListener('keydown', event => {
-      if (event.key !== 'Tab') return;
+      if (this.inline || event.key !== 'Tab') return;
       const controls = [...panel.querySelectorAll('button, a[href], input')].filter(el => !el.disabled && el.getClientRects().length);
       const first = controls[0], last = controls.at(-1);
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
@@ -41,10 +42,10 @@ export class MockChatAdapter {
       this.choices.hidden = true;
       const topic = choice.dataset.topic;
       if (topic === 'customer') {
-        this.message('En Mi USITTEL podés consultar tus facturas, pagos y el estado de tu servicio.');
+        this.message('En Mi USITTEL podés consultar tus facturas, pagos y el estado de tu servicio. Si necesitás ayuda, también podés seguir por acá.');
         this.link('Ir a Mi USITTEL', '/autogestion/');
       } else if (topic === 'sales') {
-        this.message('Conocé nuestros planes y consultá la cobertura para tu domicilio.');
+        this.message('En la atención real, esta consulta deberá pasar a ventas. Esta es una demostración: no se contactó a ningún asesor.');
         this.link('Ver planes y cobertura', '/pages/internet/');
       } else {
         this.message('Revisá que el equipo esté encendido y sus cables conectados. En la atención real, nuestro equipo podrá ayudarte a continuar.');
@@ -85,11 +86,13 @@ export class MockChatAdapter {
     this.choices.hidden = false;
     this.message('Hola 👋 ¿En qué podemos ayudarte?');
   }
-  open(trigger) {
+  open(trigger, intent) {
     if (this.panel.open) return;
     this.trigger = trigger || document.activeElement;
-    this.panel.showModal();
-    this.panel.querySelector('.attention-chat-close').focus();
+    if (this.inline) this.panel.show();
+    else this.panel.showModal();
+    if (intent === 'sales') this.choices.querySelector('[data-topic="sales"]').click();
+    if (!this.inline) this.panel.querySelector('.attention-chat-close').focus();
   }
   close() { if (this.panel.open) this.panel.close(); }
   destroy() { this.close(); this.panel.remove(); }
@@ -123,6 +126,6 @@ export function mountChatPreview({ floating = false, adapter = new MockChatAdapt
   const reset = () => { adapter.close(); adapter.reset(); };
   window.addEventListener('hashchange', reset);
   window.addEventListener('pagehide', reset);
-  controller = { open: trigger => adapter.open(trigger), reset };
+  controller = { open: (trigger, intent) => adapter.open(trigger, intent), reset };
   return controller;
 }

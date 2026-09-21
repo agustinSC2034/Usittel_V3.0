@@ -4,6 +4,8 @@
   "description": "",
   "main": "tailwind.config.js",
   "scripts": {
+    "dev:atencion": "node scripts/serve-attention-preview.cjs",
+    "test:atencion": "node tests/attention-preview.test.cjs",
     "build:public": "node scripts/build-public-shell.cjs && tailwindcss -i assets/css/tailwind.input.css -o assets/css/tailwind.output.css --minify",
     "check:public-shell": "node scripts/build-public-shell.cjs --check",
     "test:coverage": "node tests/coverage.test.cjs",

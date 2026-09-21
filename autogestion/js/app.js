@@ -3,6 +3,10 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
+import { mountChatPreview } from './attention-chat.js';
+
+const attentionPreview = mountChatPreview();
+if (attentionPreview) document.body.classList.add('attention-autogestion');
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -40,9 +44,9 @@ function openDialog(title, content) {
 }
 dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?.isConnected) lastTrigger.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'];
+const unavailable = ['recover', 'wifi', 'contact', 'password', 'upgrade-plan', 'addons', 'sales', 'speedtest', 'ticket', 'chat', 'download-receipt', 'receipt'].filter(action => action !== 'chat' || !attentionPreview);
 function render() {
-
+  attentionPreview?.reset();
   const demoStrip = document.querySelector('.demo-strip');
   demoStrip.textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
   demoStrip.hidden = runtime.mode !== 'demo';
@@ -131,6 +135,11 @@ document.addEventListener('click', async event => {
   const target = event.target.closest('[data-action]');
   if (!target || target.disabled) return;
   const action = target.dataset.action;
+  if (action === 'chat' && attentionPreview) {
+    if (dialog.open) dialog.close();
+    attentionPreview.open(document.querySelector('[data-attention-open]') || target);
+    return;
+  }
   const item = getInvoice(target.dataset.id);
   if(action==='service-request') {
     if(runtime.mode!=='phantom')return;

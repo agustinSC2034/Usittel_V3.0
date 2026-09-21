@@ -132,4 +132,12 @@ $safe=safeTicketFailureShape(['code'=>'500','message'=>['fixture-private']]);
 checkOp($safe['code_value']==='500' && $safe['code_type']==='string' && $safe['message_type']==='array');
 $safe=safeTicketFailureShape(['code'=>'private-code','message'=>'fixture-private']);
 checkOp(!array_key_exists('code_value',$safe));
+foreach([
+    'No hay datos de retorno para la consulta'=>'NO_DATA',
+    'No se ha definido correctamente parametro Periodo'=>'PERIOD_REQUIRED',
+    'Periodo inválido (formato)'=>'PERIOD_INVALID_FORMAT',
+    'Periodo inválido (inicio mayor que fin)'=>'PERIOD_INVERTED',
+    'IDTT inválido'=>'IDTT_INVALID','IDA inválido'=>'IDA_INVALID',
+] as $message=>$reason) checkOp(safeTicketFailureShape(['code'=>400,'message'=>$message])['documented_reason']===$reason);
+checkOp(!array_key_exists('documented_reason',safeTicketFailureShape(['code'=>400,'message'=>'fixture-private'])));
 echo $count;

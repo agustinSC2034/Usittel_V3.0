@@ -21,6 +21,20 @@ function safeTicketFailureShape(array $result): array {
         'code_present'=>array_key_exists('code',$result),'code_type'=>get_debug_type($code),
         'message_present'=>array_key_exists('message',$result),'message_type'=>get_debug_type($result['message']??null)];
     if(is_int($code) || is_string($code) && preg_match('/^[0-9]{1,3}$/D',$code)) $safe['code_value']=$code;
+    $message=$result['message']??null;
+    if(is_string($message)) {
+        $reason=match(trim($message)) {
+            'No hay datos de retorno para la consulta'=>'NO_DATA',
+            'No se ha definido correctamente parametro Periodo',
+            'No se ha definido correctamente parámetro Periodo'=>'PERIOD_REQUIRED',
+            'Periodo inválido (formato)','Periodo invalido (formato)'=>'PERIOD_INVALID_FORMAT',
+            'Periodo inválido (inicio mayor que fin)','Periodo invalido (inicio mayor que fin)'=>'PERIOD_INVERTED',
+            'IDTT inválido','IDTT invalido'=>'IDTT_INVALID',
+            'IDA inválido','IDA invalido'=>'IDA_INVALID',
+            default=>null,
+        };
+        if($reason!==null) $safe['documented_reason']=$reason;
+    }
     return $safe;
 }
 final class CurlTransport implements Transport, TicketTransport {

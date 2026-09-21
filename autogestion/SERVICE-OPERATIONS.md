@@ -238,6 +238,9 @@ primer mapping. Los listados Abierto/Pendiente devolvieron objetos con `code`, n
 listas. No se reinterpretan como cero: el inspector informa ahora solamente tipo
 y código numérico, y presencia/tipo de message sin publicar su contenido. Hace
 falta repetir esa lectura antes de decidir la semántica y las categorías reales.
+La documentación usa code 400 también para ausencia de resultados. El inspector
+compara internamente el mensaje con la lista cerrada de errores documentados y
+publica solo una etiqueta segura; cualquier texto distinto permanece oculto.
 
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real

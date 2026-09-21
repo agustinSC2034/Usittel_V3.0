@@ -54,6 +54,28 @@ html { scroll-behavior: smooth; scroll-padding-top: 104px; }
 .public-page footer .text-gray-400 { color: #b8c6d6; }
 .public-page footer a:hover { color: white; text-decoration: underline; }
 .whatsapp-float { border-radius: 50%; background: #168648; color: white; }
+.site-chat-launcher {
+  position: fixed; right: 20px; bottom: 20px; z-index: 1101;
+  display: inline-flex; width: 56px; height: 56px; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%; background: #008957; color: #fff;
+  box-shadow: 0 12px 32px #0c243d38; transition: transform .18s, background .18s;
+}
+.site-chat-launcher:hover { background: #00764b; transform: translateY(-2px); }
+.site-chat-panel {
+  position: fixed; right: 20px; bottom: 88px; z-index: 1100;
+  width: min(420px, calc(100vw - 40px)); height: min(680px, calc(100dvh - 112px));
+  overflow: hidden; border: 1px solid #dbe4e0; border-radius: 18px; background: #fff;
+  box-shadow: 0 24px 64px #102a3d3d;
+}
+.site-chat-panel[hidden] { display: none !important; }
+.site-chat-panel central-chat { display: block; width: 100%; height: 100%; }
+.site-chat-close {
+  position: absolute; top: 11px; right: 11px; z-index: 2;
+  display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%; background: #ffffffea; color: #173047;
+  box-shadow: 0 2px 10px #102a3d24; font-size: 26px; line-height: 1;
+}
+.site-chat-close:hover { background: #edf4f0; }
 @media (max-width: 1100px) {
   .navbar-container { padding-inline: 24px; gap: 16px; }
   .nav-left { gap: 24px; } .nav-links { gap: 16px; } .nav-actions { gap: 16px; }
@@ -77,6 +99,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 104px; }
   .public-page.menu-open { overflow: hidden; }
 }
 @media (max-width: 767px) { html { scroll-padding-top: 88px; } .public-page .container { padding-inline: 24px; } .public-page footer { padding-top:48px; } }
+@media (max-width: 640px) {
+  .site-chat-panel { inset: 0; width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
+  .site-chat-launcher { right: 16px; bottom: 16px; }
+  .public-page.site-chat-open { overflow: hidden; }
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } .public-page *, .public-page *::before, .public-page *::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
 
 /* Office maps keep directions usable even if the tile service is unavailable. */

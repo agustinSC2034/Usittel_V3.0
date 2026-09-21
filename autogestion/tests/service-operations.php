@@ -153,6 +153,20 @@ checkOp($matched['technical_profile_status']==='TECHNICAL_PROFILE_CANDIDATE_POSI
 checkOp($matched['profile_lookup_status']==='PROFILE_LOOKUP_OK');
 checkOp($matched['profiles'][0]['name_match_indices']===[0] && $matched['profiles'][1]['name_match_indices']===[0]);
 checkOp(!str_contains(json_encode($matched),'fixture-private'));
+$soap=new class implements SoapReadTransport {
+    public array $calls=[];
+    public function invoke(string $method,array $parameters): mixed {$this->calls[]=[$method,$parameters];return match($method) {
+        'autentificar'=>'fixture-token','consulta_abonado'=>['ID'=>8,'perfil'=>'fixture-current'],
+        'consulta_perfiles'=>['ID'=>$parameters['Id'],'Down'=>400],'desconectar'=>null,
+        default=>throw new Failure('FIXTURE_UNEXPECTED'),
+    };}
+};
+$byId=(new PhantomSoapClient($soap,$sc))->inspect(8,[],[166,167]);
+checkOp($soap->calls[2][1]===['token'=>'fixture-token','Id'=>166] && $soap->calls[3][1]===['token'=>'fixture-token','Id'=>167]);
+checkOp($byId['profile_lookup_status']==='PROFILE_LOOKUP_OK' && count($byId['profiles'])===2);
+checkOp($byId['profiles'][0]['descriptor']==='Id' && $byId['profiles'][0]['requested_id']===166 && $byId['profiles'][0]['exact_id_match']);
+rejectOp(fn()=>(new PhantomSoapClient(new TestSoap(),$sc))->inspect(8,[],[0]),'UPGRADE_CONFIGURATION');
+rejectOp(fn()=>(new PhantomSoapClient(new TestSoap(),$sc))->inspect(8,[],['166']),'UPGRADE_CONFIGURATION');
 foreach([null,0,'0',''] as $empty) {
     $shape=ticketInspectionShape(['IDTT'=>$empty,'Permitir'=>'1','Detalle'=>'fixture-private'],'existence');
     checkOp($shape['no_ticket_id'] && $shape['id_type']===get_debug_type($empty) && $shape['permit_value']==='1');

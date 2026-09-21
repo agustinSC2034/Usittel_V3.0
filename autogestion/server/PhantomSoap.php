@@ -97,10 +97,11 @@ final class NativeSoapReadTransport implements SoapReadTransport,SoapReadDiagnos
 }
 final class PhantomSoapClient {
     public function __construct(private SoapReadTransport $transport,private array $c) {}
-    public function inspect(int $ida,array $profiles): array {
+    public function inspect(int $ida,array $profiles,array $profileIds=[]): array {
         if($ida<1 || ($this->c['soap']['read_enabled']??false)!==true || ($this->c['soap']['lab_ida']??null)!==$ida) throw new Failure('SOAP_DISABLED',409);
-        if(count($profiles)>10) throw new Failure('UPGRADE_CONFIGURATION');
+        if(count($profiles)+count($profileIds)>10) throw new Failure('UPGRADE_CONFIGURATION');
         foreach($profiles as $name) if(!is_string($name) || $name==='' || strlen($name)>160) throw new Failure('UPGRADE_CONFIGURATION');
+        foreach($profileIds as $id) if(!is_int($id) || $id<1 || $id>1000000000) throw new Failure('UPGRADE_CONFIGURATION');
         $token=$this->transport->invoke('autentificar',['API_User'=>$this->c['api_user'],'API_Pass'=>$this->c['api_pass']]);
         if(!is_string($token) || trim($token)==='' || strlen($token)>512 || preg_match('/error|[<>\s]/i',$token)) throw new Failure('SOAP_AUTH');
         $report=['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','technical_profile_status'=>'TECHNICAL_PROFILE_UNKNOWN',
@@ -121,18 +122,24 @@ final class PhantomSoapClient {
                 'subscriber_identity_matches'=>$positional?null:$identity];
             if($positional) $report['subscriber_id_match_indices']=soapDirectMatchIndices($subscriber,$ida);
             $report['technical_profile_status']=$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN';
-            $results=[];$lookupsOk=count($profiles)>0;
+            $queries=[];
+            foreach($profiles as $name)$queries[]=['field'=>'Nombre','value'=>$name];
+            foreach($profileIds as $id)$queries[]=['field'=>'Id','value'=>$id];
+            $results=[];$lookupsOk=count($queries)>0;
             $subscriberProfileMatches=[];
-            foreach($profiles as $name) {
+            foreach($queries as $query) {
                 $report['profile_lookup_status']='PROFILE_LOOKUP_UNCONFIRMED';
-                $value=$this->transport->invoke('consulta_perfiles',['token'=>$token,'Nombre'=>$name]);
-                $row=soapInspectionRecord($value);$indices=soapDirectMatchIndices($value,$name);
-                $matched=($row['Nombre']??null)===$name || count($indices)===1;
+                $value=$this->transport->invoke('consulta_perfiles',['token'=>$token,$query['field']=>$query['value']]);
+                $row=soapInspectionRecord($value);$indices=soapDirectMatchIndices($value,$query['value']);
+                $matched=$query['field']==='Nombre'
+                    ? ($row['Nombre']??null)===$query['value'] || count($indices)===1
+                    : in_array((string)$query['value'],array_map('strval',array_intersect_key($row??[],array_flip(['Id','ID']))),true) || count($indices)===1;
                 $lookupsOk=$lookupsOk&&$matched;
-                $entry=['exact_name_match'=>$matched,'name_match_indices'=>$indices,'shape'=>soapSafeShape($value)];
+                $entry=['descriptor'=>$query['field'],'exact_match'=>$matched,'match_indices'=>$indices,'shape'=>soapSafeShape($value)];
+                if($query['field']==='Nombre') {$entry['exact_name_match']=$matched;$entry['name_match_indices']=$indices;$subscriberProfileMatches[]=soapDirectMatchIndices($subscriber,$query['value']);}
+                else {$entry['requested_id']=$query['value'];$entry['exact_id_match']=$matched;$entry['id_match_indices']=$indices;}
                 if($this->transport instanceof SoapReadDiagnosticTransport && ($response=$this->transport->lastResponseShape())!==null)$entry['response']=$response;
                 $results[]=$entry;
-                $subscriberProfileMatches[]=soapDirectMatchIndices($subscriber,$name);
             }
             if($positional) {
                 $report['configured_profile_match_indices']=$subscriberProfileMatches;
@@ -144,7 +151,7 @@ final class PhantomSoapClient {
                 'subscriber_id_match_indices'=>$positional?soapDirectMatchIndices($subscriber,$ida):[],
                 'configured_profile_match_indices'=>$subscriberProfileMatches,
                 'technical_profile_status'=>$report['technical_profile_status'],
-                'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($profiles===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
+                'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($queries===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
                 'profiles'=>$results];
             if($subscriberResponse!==null)$answer['subscriber_response']=$subscriberResponse;
             return $answer;

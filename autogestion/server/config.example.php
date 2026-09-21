@@ -24,7 +24,7 @@ return [
     // SSID/SSID_5G/Password in JSON body; confirm this contract in the first trial.
     'wifi' => ['enabled'=>false, 'lab_ida'=>null, 'models'=>[], 'dual_band_models'=>[]],
     // Read-only SOAP inspection, separate from any upgrade permission. See SERVICE-OPERATIONS.md.
-    'soap' => ['read_enabled'=>false,'lab_ida'=>null,'url'=>null,'profile_names'=>[]],
+    'soap' => ['read_enabled'=>false,'lab_ida'=>null,'url'=>null,'profile_names'=>[],'profile_ids'=>[]],
     // No production upgrade writer exists until billing + provisioning are demonstrated.
     'upgrade' => ['enabled'=>false,'lab_ida'=>null,'plans'=>[]],
     // Category/state names and no-ticket response MUST be confirmed in this installation.

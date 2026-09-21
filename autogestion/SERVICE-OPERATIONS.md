@@ -292,6 +292,14 @@ autenticación, endpoint, transporte y análisis del sobre funcionan. Falta obte
 desde el ABM de perfiles el ID o alias SOAP real para los perfiles de 200 y 500;
 el texto/value del selector de abonado no sirve como descriptor SOAP demostrado.
 
+La tabla real de Perfiles de Servicio no publica el ID en una columna ni en el
+editor. La lectura DOM del botón Modificar, sin abrir ni guardar cambios, confirmó
+`data-id=166` para empresa 200 del 1/3/26 y `data-id=167` para empresa 500 del
+1/3/26. `soap.profile_ids` permite consultar esos descriptores por `Id`; cuando
+contiene valores, el inspector prioriza los IDs y no repite las búsquedas fallidas
+por Nombre. La configuración privada sigue siendo manual y la consulta no autoriza
+ninguna escritura.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

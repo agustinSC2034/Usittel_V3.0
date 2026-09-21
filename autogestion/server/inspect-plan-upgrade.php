@@ -25,9 +25,11 @@ try {
     try {\MiUsittel\soapReadEndpoint($c);$r['soap']['endpoint_status']='HTTPS_SAME_HOST_PORT_OK';}
     catch(\MiUsittel\Failure $e) {$r['soap']['endpoint_status']='SOAP_CONFIGURATION_REQUIRED';}
     if(($c['soap']['read_enabled']??false)===true && ($c['soap']['lab_ida']??null)===$ida) {
-        try {$names=$c['soap']['profile_names']??array_values(array_unique(array_column($plans,'phantom_profile')));
+        try {$ids=$c['soap']['profile_ids']??[];
+            if(!is_array($ids)||!array_is_list($ids))throw new \MiUsittel\Failure('SOAP_CONFIGURATION');
+            $names=$ids===[]?($c['soap']['profile_names']??array_values(array_unique(array_column($plans,'phantom_profile')))):[];
             if(!is_array($names)||!array_is_list($names))throw new \MiUsittel\Failure('SOAP_CONFIGURATION');
-            $r['soap']=array_replace($r['soap'],(new \MiUsittel\PhantomSoapClient(new \MiUsittel\NativeSoapReadTransport($c),$c))->inspect($ida,$names));
+            $r['soap']=array_replace($r['soap'],(new \MiUsittel\PhantomSoapClient(new \MiUsittel\NativeSoapReadTransport($c),$c))->inspect($ida,$names,$ids));
             $r['technical_profile_status']=$r['soap']['technical_profile_status'];
             $r['technical_profile_confirmed']=$r['technical_profile_status']==='TECHNICAL_PROFILE_KNOWN';}
         catch(\Throwable $e) {$r['soap']['failure_code']=\MiUsittel\safeDiagnosticCode($e);}

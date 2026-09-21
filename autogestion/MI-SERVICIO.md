@@ -4,7 +4,7 @@
 
 Exclusión de telefonía preservada del commit fb9090f y cubierta por pruebas de
 campos prohibidos, incluyendo bonificaciones. Validación vigente de esta iteración:
-829 verificaciones con fixtures, 62 archivos PHP con sintaxis correcta, build y
+834 verificaciones con fixtures, 62 archivos PHP con sintaxis correcta, build y
 escaneo local de secretos correctos. Sin cambios de frontend ni nuevo QA visual.
 El chequeo leyó la configuración privada sin publicar valores y no contactó
 Phantom/SIRO. SOAP se carga explícitamente en el CLI mediante `-d extension=soap`.
@@ -16,6 +16,11 @@ nombres. `consulta_abonado` sí devolvió un resultado no nulo con 90 elementos:
 autenticación, endpoint y transporte funcionan. El próximo dato necesario es el ID
 o alias interno del ABM de perfiles de 200 y 500 Mbps. Permanece bloqueada toda
 escritura de upgrade, facturación y aprovisionamiento.
+
+La tabla de perfiles confirmó los identificadores internos mediante los botones de
+edición, sin aplicar cambios: 166 para empresa 200 del 1/3/26 y 167 para empresa
+500 del 1/3/26. El inspector acepta ahora `soap.profile_ids`; si se configuran,
+consulta por `Id` y evita repetir la búsqueda nula por los nombres comerciales.
 
 Resultado recibido: ausencia de ticket confirmada con IDTT int 0 y Permitir int 1.
 Snippet privado futuro: `'clear_response'=>['IDTT'=>0,'Permitir'=>1]`, manteniendo

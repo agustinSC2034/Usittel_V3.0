@@ -6,7 +6,8 @@ namespace MiUsittel;
 // or unfamiliar structure means unknown, never 'not contracted'. No recursive dump.
 function serviceProducts(array $record,array $config): ?array {
     $fields=$config['service_product_fields']??[];
-    $allowed=['Productos_Television','Producto_Television','Productos_Telefonia','Producto_Telefonia','Productos_Otros','Producto_Otros','Otros_Servicios','Servicios_Otros','Adicionales','Productos_Adicionales','Producto_Adicional','Set_Top_Box','STB'];
+    // USITTEL no ofrece telefonía desde Mi USITTEL; ese campo nunca se mapea a la UI.
+    $allowed=['Productos_Television','Producto_Television','Productos_Otros','Producto_Otros','Otros_Servicios','Servicios_Otros','Adicionales','Productos_Adicionales','Producto_Adicional','Set_Top_Box','STB'];
     if(!is_array($fields) || !array_is_list($fields) || !$fields || count($fields)>15) return null;
     $out=[];
     foreach($fields as $mapping) {

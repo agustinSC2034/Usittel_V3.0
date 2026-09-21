@@ -37,8 +37,8 @@ Inicio y Mi servicio comparten la lista products. null indica desconocido; []
 indica lista vacía confirmada por los campos configurados. No se deduce que un
 cliente carece de Sensa por la ausencia de un campo. El mapper acepta campos
 seleccionados por el operador mediante service_product_fields, de una lista
-cerrada: Productos_Television, Producto_Television, Productos_Telefonia,
-Producto_Telefonia, Productos_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Solo texto o listas de textos acotados; no
+cerrada: Productos_Television, Producto_Television, Productos_Otros,
+Producto_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Telefonía no se ofrece ni se mapea en Mi USITTEL. Solo texto o listas de textos acotados; no
 se extraen valores recursivamente de objetos desconocidos.
 
 La documentación histórica nombra Productos_Television, pero el formato de la

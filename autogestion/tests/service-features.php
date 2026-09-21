@@ -5,6 +5,14 @@ require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Phantom.php';
 $count=0;
 function verifyFeature(bool $ok): void {global $count;if(!$ok)throw new \RuntimeException('Feature assertion failed');$count++;}
 $c=['service_product_fields'=>['Productos_Television']];
+foreach(['Productos_Telefonia','Producto_Telefonia','Productos_Bonificaciones'] as $excluded) {
+    verifyFeature(serviceProducts([$excluded=>'fixture-hidden'],['service_product_fields'=>[$excluded]])===null);
+    verifyFeature(serviceProducts([$excluded=>[['Nombre'=>'fixture-hidden']]],['service_product_fields'=>[['field'=>$excluded,'label'=>'Nombre']]])===null);
+}
+$realFields=['service_product_fields'=>['Productos_Television','Productos_Otros']];
+verifyFeature(serviceProducts(['Productos_Television'=>'TV Sensa','Productos_Otros'=>'Set top box','Productos_Telefonia'=>'fixture-hidden','Productos_Bonificaciones'=>'fixture-hidden'],$realFields)===['TV Sensa','Set top box']);
+verifyFeature(serviceProducts(['Productos_Television'=>'','Productos_Otros'=>[]],$realFields)===[]);
+verifyFeature(serviceProducts(['Productos_Television'=>''],$realFields)===null);
 verifyFeature(serviceProducts(['Productos_Television'=>'TV Sensa'],[])===null);
 verifyFeature(serviceProducts(['Productos_Television'=>'TV Sensa'],$c)===['TV Sensa']);
 verifyFeature(serviceProducts(['Productos_Television'=>['TV Sensa','Pack Fútbol','TV Sensa']],$c)===['TV Sensa','Pack Fútbol']);

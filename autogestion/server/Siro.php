@@ -9,9 +9,10 @@ function siroCandidateConfig(array $c): ?array {
     foreach(['user','password','return_base'] as $key) if(!is_string($s[$key]??null) || $s[$key]==='') throw new Failure('SIRO_CONFIGURATION');
     $p=parse_url($s['return_base']);
     if(!$p || !in_array($p['scheme']??null,['https','http'],true) || empty($p['host']) || isset($p['user'],$p['pass']) || isset($p['query']) || isset($p['fragment'])
-        || ($p['path']??'')!=='/autogestion' || strlen($s['return_base'])>75
+        || !in_array($p['path']??'',['','/','/autogestion'],true) || strlen($s['return_base'])>75
         || ($p['scheme']==='http' && !in_array($p['host'],['127.0.0.1','localhost'],true))) throw new Failure('SIRO_CONFIGURATION');
     if(isset($p['user']) || isset($p['pass'])) throw new Failure('SIRO_CONFIGURATION');
+    $s['return_base']=rtrim($s['return_base'],'/');
     foreach(['receipt_start','receipt_end'] as $key) if(!is_int($s[$key]??null) || $s[$key]<0 || $s[$key]>99999) throw new Failure('SIRO_CONFIGURATION');
     if($s['receipt_start']>$s['receipt_end']) throw new Failure('SIRO_CONFIGURATION');
     $s['lab_ida']??=1;

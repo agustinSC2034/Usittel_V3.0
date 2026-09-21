@@ -11,23 +11,27 @@ try { $speed=\MiUsittel\speedtestConfig(\MiUsittel\config()); if($speed!==null) 
 header("Content-Security-Policy: default-src 'self'; script-src 'self' https://web.central.chat; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin."; object-src 'none'; frame-src https://web.central.chat; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
 header('Cache-Control: no-store');
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+if(!is_string($path)) {http_response_code(400);exit;}
+$prefixed=$path==='/autogestion' || str_starts_with($path,'/autogestion/');
+$mount=$prefixed?'/autogestion':'';
+$routePath=$prefixed?substr($path,strlen('/autogestion')):$path;
 // Return is a navigation hint only. Discard all provider query fields, never mark payment here.
-if($_SERVER['REQUEST_METHOD']==='GET' && preg_match('~^/autogestion/pago-(?:ok|error)/([a-f0-9]{32})$~D',$path,$returnMatch)) {
-    header('Location: /autogestion/#/facturas?attempt='.$returnMatch[1],true,303);exit;
+if($_SERVER['REQUEST_METHOD']==='GET' && preg_match('~^/pago-(?:ok|error)/([a-f0-9]{32})$~D',$routePath,$returnMatch)) {
+    header('Location: '.$mount.'/#/facturas?attempt='.$returnMatch[1],true,303);exit;
 }
-if(in_array($path,['/','/autogestion'],true)) {header('Location: /autogestion/');exit;}
-if(str_starts_with($path,'/autogestion/api/')) {
+if($path==='/autogestion') {header('Location: /autogestion/');exit;}
+if(str_starts_with($routePath,'/api/')) {
     try {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
         $posting=\MiUsittel\phantomPostingConfig($c);
         $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting,$dir));
-        \MiUsittel\api($c,$dir,$ph,substr($path,strlen('/autogestion/api/')),null,null,new \MiUsittel\PhantomPaymentHistory($c));
+        \MiUsittel\api($c,$dir,$ph,substr($routePath,strlen('/api/')),null,null,new \MiUsittel\PhantomPaymentHistory($c));
     } catch(\Throwable $e) {\MiUsittel\fail($e);}
 }
 if(!in_array($_SERVER['REQUEST_METHOD'],['GET','HEAD'],true)) {http_response_code(405);exit;}
-$relative=substr($path,strlen('/autogestion/'));
-if($path==='/autogestion/') $relative='index.html';
-if(!str_starts_with($path,'/autogestion/') || !preg_match('~^(index\.html|js/[a-z-]+\.js|vendor/librespeed/speedtest_worker\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
+$relative=ltrim($routePath,'/');
+if($routePath==='/') $relative='index.html';
+if(!preg_match('~^(index\.html|js/[a-z-]+\.js|vendor/librespeed/speedtest_worker\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
 $file=__DIR__.'/../'.$relative;
 if(!is_file($file)) {http_response_code(404);exit;}
 $types=['html'=>'text/html','css'=>'text/css','js'=>'text/javascript','png'=>'image/png','svg'=>'image/svg+xml','woff2'=>'font/woff2'];

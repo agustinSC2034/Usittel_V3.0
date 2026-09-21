@@ -286,7 +286,14 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   server.on('error',e=>{console.error('PHP no disponible:',e.code);process.exitCode=1;});server.stderr.on('data',b=>stderr+=b);
   for(let i=0;i<40;i++){try{await fetch(base+'bootstrap');break;}catch{await sleep(100);}}
   const a=jar();let r=await a.call('bootstrap');
-  check('cookie HttpOnly / SameSite y modo servidor',()=>{assert.match(r.headers.get('set-cookie'),/HttpOnly/i);assert.match(r.headers.get('set-cookie'),/SameSite=Strict/i);assert.equal(r.data.mode,'phantom');});
+  check('cookie HttpOnly / SameSite, scope prefijado y modo servidor',()=>{assert.match(r.headers.get('set-cookie'),/HttpOnly/i);assert.match(r.headers.get('set-cookie'),/SameSite=Strict/i);assert.match(r.headers.get('set-cookie'),/Path=\/autogestion\//i);assert.equal(r.data.mode,'phantom');});
+  const origin=base.replace('/autogestion/api/','');
+  const rootBootstrap=await fetch(origin+'/api/bootstrap');
+  check('subdominio raíz entrega API con cookie limitada a su raíz',()=>{assert.equal(rootBootstrap.status,200);assert.match(rootBootstrap.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
+  const rootPage=await fetch(origin+'/');const rootHtml=await rootPage.text();
+  check('subdominio raíz entrega la aplicación',()=>{assert.equal(rootPage.status,200);assert.match(rootPage.headers.get('content-type'),/^text\/html/);assert.match(rootHtml,/<title>Mi USITTEL/);});
+  const prefixedPage=await fetch(origin+'/autogestion/');const prefixedHtml=await prefixedPage.text();
+  check('ruta prefijada local continúa disponible',()=>{assert.equal(prefixedPage.status,200);assert.match(prefixedHtml,/<title>Mi USITTEL/);});
   check('API sin sesión',()=>{});assert.equal((await a.call('overview')).status,401);
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{noCsrf:true});check('CSRF login',()=>assert.equal(r.status,403));
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{headers:{Origin:'https://evil.invalid'}});check('origen cruzado rechazado',()=>assert.equal(r.status,403));

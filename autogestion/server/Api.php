@@ -12,7 +12,7 @@ function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
     ini_set('session.gc_maxlifetime',(string)$c['max_seconds']);
     session_save_path($dir); session_name('MIUSITTEL_'.strtoupper($c['mode']));
-    session_set_cookie_params(['lifetime'=>0,'path'=>'/autogestion/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
+    session_set_cookie_params(['lifetime'=>0,'path'=>sessionCookiePath(),'secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
     session_start();
     $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
         $c['customer_id_field']??null,$c['phantom_auth_mode']??null,$c['service_login_idas']??[1],'services-v2-payment-history']));
@@ -23,6 +23,10 @@ function startSession(array $c,string $dir): void {
     $_SESSION['config']=$fingerprint;
     $_SESSION['csrf']??=bin2hex(random_bytes(32));
     if(isset($_SESSION['ida'])) $_SESSION['last']=$now;
+}
+function sessionCookiePath(): string {
+    $path=parse_url($_SERVER['REQUEST_URI']??'/',PHP_URL_PATH);
+    return is_string($path) && ($path==='/autogestion' || str_starts_with($path,'/autogestion/')) ? '/autogestion/' : '/';
 }
 function jsonReply(array $data,int $code=200): never {
     http_response_code($code); header('Content-Type: application/json; charset=utf-8');

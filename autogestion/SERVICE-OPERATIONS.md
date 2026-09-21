@@ -242,6 +242,21 @@ La documentación usa code 400 también para ausencia de resultados. El inspecto
 compara internamente el mensaje con la lista cerrada de errores documentados y
 publica solo una etiqueta segura; cualquier texto distinto permanece oculto.
 
+Decisión de producto del 21/09/2026: no continuar con creación de tickets Phantom.
+Mantener `tickets.enabled=false`; no configurar clear_response, categorías,
+delegaciones ni mappings aunque la lectura haya confirmado IDTT=0/Permitir=1.
+El inspector ejecutado fue exclusivamente GET y no creó tickets. Las solicitudes
+de TV Sensa, packs, STB, Mesh y ayuda operativa se conectarán más adelante con un
+canal atendido por una persona. El proveedor y contrato de ese canal siguen sin
+definir; no se simula un envío ni una confirmación.
+
+El cambio automático que continúa en estudio es únicamente subir el perfil de
+Internet. Conserva el orden de validación SOAP read-only, relación comercial,
+facturación y aprovisionamiento antes de implementar cualquier escritura.
+Actualizar el número de WhatsApp/dato de contacto queda como operación separada:
+la pantalla actual no persiste ese cambio en Phantom y no debe presentarlo como
+guardado real.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

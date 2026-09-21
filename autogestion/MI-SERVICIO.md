@@ -18,6 +18,14 @@ Snippet privado futuro: `'clear_response'=>['IDTT'=>0,'Permitir'=>1]`, mantenien
 una segunda lectura estructural segura antes de afirmar que equivalen a listas
 vacías o definir el primer mapping real.
 
+Decisión posterior: no abrir tickets Phantom ni continuar ese mapping. Mantener
+`tickets.enabled=false`; el inspector ejecutado no realizó escrituras. Servicios
+y adicionales no automáticos se derivarán en una etapa futura a contacto humano.
+Solo continúa como candidato de autoservicio el upgrade del perfil de Internet,
+aún bloqueado hasta validar SOAP, facturación y Act. Perfiles. También queda
+pendiente implementar el cambio real del WhatsApp de contacto; el formulario de
+demostración actual no equivale a una actualización en Phantom.
+
 ## Entrega actual: operaciones controladas, 20/09/2026
 
 Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, flags, tickets,

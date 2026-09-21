@@ -3,11 +3,12 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
-const centralChat = document.querySelector('central-chat');
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
 const toastElement = document.querySelector('#toast');
+const githubPagesDemo = location.hostname.endsWith('.github.io');
+const siteRoot = githubPagesDemo ? `/${location.pathname.split('/').filter(Boolean)[0]}` : '';
 const views = { inicio: home, facturas: billing, servicio: service, soporte: support, cuenta: account };
 let authenticated = false;
 let paymentBusy = false;
@@ -133,8 +134,7 @@ document.addEventListener('click', async event => {
   const action = target.dataset.action;
   if (action === 'chat' || action === 'sales') {
     if (dialog.open) dialog.close();
-    try { await centralChat.show(); await centralChat.maximize(); }
-    catch { toast('No pudimos abrir el chat. Volvé a intentar más tarde.'); }
+    location.assign(`${siteRoot}/atencion${action === 'sales' ? '?intent=sales' : ''}`);
     return;
   }
   const item = getInvoice(target.dataset.id);
@@ -320,7 +320,6 @@ document.addEventListener('click', async event => {
   if (action === 'contact') return openDialog('Editar datos de contacto', `<form id="contact-form">${input('Correo electrónico', 'email', { value: customer.email, type: 'email', extra: 'maxlength="120"' })}${input('Teléfono', 'phone', { value: customer.phone, type: 'tel', required: false, extra: 'maxlength="30"' })}<p class="field-hint">Usá datos ficticios. Los cambios duran hasta que recargues la página.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'password') return openDialog('Cambiar contraseña', `<form id="password-form">${input('Contraseña actual', 'current-password', { type: 'password', autocomplete: 'off' })}${input('Nueva contraseña', 'new-password', { type: 'password', autocomplete: 'off', extra: 'minlength="8"', hint: 'Para esta demostración, usá al menos 8 caracteres.' })}${input('Repetir nueva contraseña', 'confirm-password', { type: 'password', autocomplete: 'off' })}<p class="field-hint">Usá valores de prueba. Ninguna contraseña se guarda ni se envía.</p>${button('Probar cambio', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
-    centralChat.minimize().catch(() => {});
     dataGeneration++;
     target.disabled = true;
     try {
@@ -447,7 +446,9 @@ async function loadOverview() {
 async function boot() {
   app.innerHTML = '<main id="main" class="page"><p role="status">Cargando Mi USITTEL…</p></main>';
   try {
-    const session = await request('bootstrap');
+    const session = githubPagesDemo
+      ? { mode: 'demo', backend: false, authenticated: false, payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }
+      : await request('bootstrap');
     runtime.backend = session.backend !== false;
     await initialize(session.mode); applyServices(session); authenticated = session.authenticated;
     const demoStrip = document.querySelector('.demo-strip');

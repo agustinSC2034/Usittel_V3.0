@@ -1,5 +1,15 @@
 # Integración local PHP / Phantom — 18/09/2026
 
+## Actualización 20/09/2026 — Mi servicio
+
+La implementación actual reutiliza sesión/multicontrato, Wi-Fi y transport REST.
+Se agregaron solicitudes comerciales con reserva persistente, propiedad verificada,
+seguimiento y outbox de notificaciones. SOAP es exclusivamente de lectura; no hay
+escritor de upgrades hasta confirmar administración, facturación y aprovisionamiento.
+Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, formatos, flags,
+pruebas y pendientes reales. No se modificó configuración privada ni hubo llamadas
+reales en esta entrega. Los conteos y estados de ensayos que siguen son históricos.
+
 ## Selección de contrato
 
 La etapa actual incorpora servicios asociados de Phantom y selección persistente. Prioriza `Conexiones_Asociadas` con reconsulta individual; solo si esa fuente no aporta otro contrato utiliza la búsqueda exacta por DNI/CUIT. Los contratos reales 1 y 1271 confirmaron respectivamente el respaldo documental y la asociación directa. El recorrido real de 1271 aceptó login, dos servicios, cambio de selección y actualización conjunta de dirección, plan, saldo y facturas, sin advertencias de asociación. Ver [SERVICES.md](SERVICES.md): authenticated_ida, authorized_services y selected_ida son conceptos separados. Las consultas y descargas usan selected_ida del servidor; nunca un IDA libre del navegador. SIRO multicontrato continúa bloqueado, sin nuevas escrituras. 418 verificaciones locales y aceptación visual real completada.

@@ -1,5 +1,18 @@
 # MVP — laboratorio IDA 1
 
+## Alcance actual, 20/09/2026
+
+El título y los ensayos de esta bitácora pertenecen a etapas anteriores; el alcance
+actual de login depende de la configuración privada y de selected_ida. No se debe
+interpretar un resultado histórico POST_UNCONFIRMED como estado actual de un pago.
+Agustín aportó posteriormente evidencia de saldo cero, factura PAGADA y descarga
+de comprobante. No se reejecutó ni revalidó esa escritura en esta entrega.
+
+La nueva etapa de Mi servicio está en [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md):
+solicitudes comerciales y Wi-Fi conservadores, notificaciones preparadas sin envío,
+upgrade bloqueado con inspector REST/SOAP. Los tres requieren laboratorio antes
+de ampliar habilitaciones; ningún flag peligroso se activó globalmente.
+
 ## Servicios asociados
 
 Selector discreto en Inicio solo cuando existen varios contratos autorizados; sesión, datos y descargas aislados por selección. Implementado y validado con fixtures/mobile/desktop y con una sesión Phantom real de dos servicios. El contrato 1271 confirmó asociación directa, cambio sin nuevo login y actualización conjunta de dirección, plan, saldo y facturas; el contrato 1 conserva el respaldo exacto por documento. Las asociaciones explícitas y documentales se verifican antes de autorizar. [Arquitectura](SERVICES.md). SIRO no se habilita para sesiones multicontrato en esta etapa. Este alcance reemplaza la exclusión histórica de múltiples contratos que figura más abajo.

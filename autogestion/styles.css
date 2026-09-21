@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.plan-upgrade { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1.5rem; }
+.service-requests { margin-block:2rem; padding-block:1.5rem; border-top:1px solid #d7e0e2; }
+.service-request-row { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-block:1.5rem; border-bottom:1px solid #d7e0e2; }
+.service-request-row h3 { margin-bottom:.5rem; }
+.service-request-row p { margin-block:.35rem; }
+
 /* Mi servicio: a quiet contract summary, clear controls and a live instrument. */
 .speed-external { margin:24px 0; }
 .speed-external .field-hint { margin-top:10px; }
@@ -49,7 +55,7 @@
 .speed-guidance strong { color:var(--ink); }
 .speed-credit { font-size:11px; color:var(--muted); margin-top:24px; }
 .service-addons { margin-top:36px; }
-.addon-options { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; padding:18px 0; }
+.addon-options { display:grid; grid-template-columns:repeat(2,1fr); gap:28px; padding:18px 0; }
 .addon-options>div>.icon { color:var(--green); margin-bottom:10px; }
 .addon-options h3 { margin:0 0 8px; }
 .addon-options p { font-size:14px; }

@@ -6,6 +6,7 @@ require_once __DIR__.'/Payments.php';
 require_once __DIR__.'/Services.php';
 require_once __DIR__.'/PaymentHistory.php';
 require_once __DIR__.'/Wifi.php';
+require_once __DIR__.'/ServiceRequests.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -52,6 +53,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
     $expected+=['service-connection'=>'POST','speedtest-start'=>'POST'];
     $expected+=['wifi-prepare'=>'POST','wifi-change'=>'POST'];
+    $expected+=['request-prepare'=>'POST','request-create'=>'POST','request-refresh'=>'POST','service-requests'=>'GET'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
@@ -115,6 +117,29 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $ph->scope($ids);$ida=$_SESSION['selected_ida'];
     // A revision is a precondition, never authorization. PHP's session lock serializes selection and reads.
     if(count($ids)>1 && ($_SERVER['HTTP_X_SERVICE_REVISION']??'')!==$_SESSION['service_revision']) throw new Failure('SERVICE_CHANGED',409);
+    $requests=new ServiceRequests(new ServiceRequestStore($dir),new PhantomTickets($ph,$c),$c);
+    if($route==='service-requests') jsonReply(['items'=>$requests->list($ida)]);
+    if($route==='request-prepare') {
+        $b=body();
+        if(array_keys($b)!==['type'] || !is_string($b['type'])) throw new Failure('BAD_REQUEST',400);
+        $m=ticketMapping($c,$ida,$b['type']);serviceReadLimit('request_prepared',5);
+        $products=serviceProducts($ph->serviceRecord($ida),$c);
+        if($b['type']!=='WIFI_HELP' && productContracted($products,$m)) throw new Failure('ALREADY_CONTRACTED',409);
+        $challenge=['id'=>bin2hex(random_bytes(16)),'ida'=>$ida,'type'=>$b['type'],'until'=>time()+600];
+        $_SESSION['request_challenge']=$challenge;
+        jsonReply(['requestId'=>$challenge['id'],'name'=>REQUEST_NAMES[$b['type']],'availabilityUnknown'=>$products===null]);
+    }
+    if($route==='request-create') {
+        if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('REQUEST_STORAGE');
+        $b=body();$challenge=$_SESSION['request_challenge']??[];
+        if(array_keys($b)!==['requestId','confirmed'] || !is_string($b['requestId']) || $b['confirmed']!==true) throw new Failure('BAD_REQUEST',400);
+        if(($challenge['id']??null)!==$b['requestId'] || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('REQUEST_EXPIRED',409);
+        jsonReply($requests->create($ida,$challenge['type'],$b['requestId'],fn()=>serviceProducts($ph->serviceRecord($ida),$c)));
+    }
+    if($route==='request-refresh') {
+        $b=body();if(array_keys($b)!==['requestId'] || !is_string($b['requestId']) || !preg_match('/^[a-f0-9]{32}$/D',$b['requestId'])) throw new Failure('BAD_REQUEST',400);
+        serviceReadLimit('request_checked',5);jsonReply($requests->refresh($ida,$b['requestId']));
+    }
     if($route==='service-connection') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
         serviceReadLimit('connection_checked');
@@ -131,8 +156,10 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         jsonReply(['requestId'=>$challenge['id'],'dualBand'=>$challenge['dualBand']]);
     }
     if($route==='wifi-change') {
-        $b=body();$challenge=$_SESSION['wifi_challenge']??[];$settings=wifiInput($b,$challenge['dualBand']??false);
-        if(($challenge['id']??null)!==$b['requestId'] || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('WIFI_EXPIRED',409);
+        if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('WIFI_REVIEW',409);
+        $b=body();$challenge=$_SESSION['wifi_challenge']??[];
+        if(($challenge['id']??null)!==($b['requestId']??null) || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('WIFI_EXPIRED',409);
+        $settings=wifiInput($b,$challenge['dualBand']);
         $model=wifiModel($ph->serviceRecord($ida));
         if($model!==$challenge['model'] || !wifiGate($c,$ida,$model) || wifiDualBand($c,$model)!==$challenge['dualBand']) throw new Failure('WIFI_UNAVAILABLE',409);
         $identity=$_SESSION['authenticated_ida'];$remote=$_SERVER['REMOTE_ADDR']??'unknown';
@@ -143,6 +170,11 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         rateLimitRelease($dir,'wifi',$remote,$identity);unset($account,$b['accountPassword']);
         $payloadHash=hash_hmac('sha256',json_encode($settings,JSON_THROW_ON_ERROR),$c['api_pass']);
         $result=applyWifiOnce($dir,$ida,$b['requestId'],$payloadHash,fn()=>$ph->configureWifi($ida,$settings));
+        if($result['state']==='UNKNOWN') {
+            // Fixed assistance text only: settings/password never enter the ticket service.
+            try {if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('REQUEST_STORAGE');$help=$requests->create($ida,'WIFI_HELP',$b['requestId'],fn()=>null);$result['assistance']=$help;}
+            catch(Failure $e) {if($e->kind!=='TICKETS_DISABLED') diagnostic($e);}
+        }
         unset($b,$settings);jsonReply($result);
     }
     if($route==='speedtest-start') {
@@ -156,7 +188,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         $b=body();$id=$b['serviceId']??null;
         if(array_keys($b)!==['serviceId'] || !is_string($id) || !preg_match('/^[1-9][0-9]{0,9}$/D',$id)) throw new Failure('BAD_REQUEST',400);
         if(!in_array((int)$id,$ids,true)) throw new Failure('FORBIDDEN',403);
-        $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));unset($_SESSION['invoice_history']);
+        $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));
+        unset($_SESSION['invoice_history'],$_SESSION['wifi_challenge'],$_SESSION['request_challenge']);
         jsonReply(['payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if(in_array($route,['payment-history','payment-receipt'],true)) {
@@ -209,7 +242,10 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($balance['debt']!==null && $balance['debt']==0 && array_filter($invoices['items'],fn($i)=>$i['status']==='Pendiente')) {
         $warnings[]='ACCOUNT_RECONCILIATION'; diagnostic(new Failure('ACCOUNT_RECONCILIATION'));
     }
-    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings]);
+    try {$requestList=$requests->list($ida);$requestListUnavailable=false;}
+    catch(Failure $e) {$requestList=[];$requestListUnavailable=true;diagnostic($e);}
+    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,
+        'serviceOptions'=>requestOptions($c,$ida,$profile['products']??null),'serviceRequests'=>$requestList,'serviceRequestsUnavailable'=>$requestListUnavailable]);
 }
 function diagnostic(Failure $e): void { error_log('mi-usittel event='.$e->kind); }
 function fail(\Throwable $e): never {
@@ -234,6 +270,10 @@ function fail(\Throwable $e): never {
         'WIFI_UNAVAILABLE'=>'El cambio de Wi-Fi todavía no está habilitado para este equipo. Podemos ayudarte por WhatsApp.',
         'WIFI_INPUT'=>'Usá de 8 a 20 caracteres: letras, números, @, _ o punto. La clave también admite # y $. Sin espacios.',
         'WIFI_AUTH'=>'La contraseña de Mi USITTEL no es correcta.',
+        'TICKETS_DISABLED','TICKETS_CONFIGURATION'=>'Esta solicitud todavía no está disponible desde tu cuenta.',
+        'TICKETS_REVIEW'=>'Ya hay una solicitud que necesita revisión. Contactanos para continuar.',
+        'REQUEST_EXPIRED'=>'Volvé a abrir la solicitud para continuar.',
+        'ALREADY_CONTRACTED'=>'Este adicional ya figura entre tus servicios contratados.',
         'WIFI_EXPIRED'=>'Volvé a abrir la configuración de Wi-Fi para continuar.',
         'WIFI_REVIEW'=>'No pudimos confirmar el cambio anterior. Contactanos antes de volver a intentarlo.',
         'WIFI_RATE_LIMIT'=>'Esperá cinco minutos antes de realizar otro cambio de Wi-Fi.',

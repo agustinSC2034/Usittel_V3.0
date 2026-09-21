@@ -37,6 +37,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   reset();scenario('services-two');const multi=jar();await login(multi);r=await multi.call('wifi-prepare',{});const old=r.data.requestId;
   await multi.call('select-service',{serviceId:'5'});r=await multi.call('wifi-change',payload(old));check('cambio de contrato invalida la preparación',()=>assert.equal(r.status,409));
   r=await multi.call('wifi-prepare',{});check('otro servicio no hereda habilitación Wi-Fi',()=>assert.equal(r.status,409));
+  await multi.call('select-service',{serviceId:'1'});r=await multi.call('wifi-change',payload(old));check('volver al contrato original no recupera el nonce descartado',()=>assert.equal(r.status,409));
   await multi.call('logout',{});await multi.call('bootstrap');r=await multi.call('wifi-change',payload(old));check('logout impide cambio Wi-Fi',()=>assert.equal(r.status,401));
   reset();fs.writeFileSync(config,enabled().replace("'dual_band_models'=>['Fixture-ONU']","'dual_band_models'=>[]"));
   const single=jar();await login(single);r=await single.call('wifi-prepare',{});const singleId=r.data.requestId;

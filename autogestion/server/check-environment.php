@@ -75,6 +75,15 @@ if(!$configPath) {
                     if($posting!==null && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de imputación','definir MI_USITTEL_RUNTIME privado y persistente');
                 } catch(Throwable) {$add('fail','Imputación Phantom','revisar HTTPS, host, ruta CRM, IDA y originante');}
                 $shapeErrors=[];
+                foreach(['wifi','tickets'] as $feature) {
+                    $s=$config[$feature]??[];$enabled=($s['enabled']??false)===true;
+                    $valid=is_array($s) && (!$enabled || is_int($s['lab_ida']??null) && $s['lab_ida']>0);
+                    $add(!$valid?'fail':($enabled?'warn':'ok'),$feature==='wifi'?'Cambios Wi-Fi':'Solicitudes de servicio',
+                        !$valid?'requiere un único contrato de laboratorio':($enabled?'habilitado solo para laboratorio; falta confirmar compatibilidad real':'deshabilitado; sin escrituras'));
+                    if($enabled && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de servicio','definir MI_USITTEL_RUNTIME privado y persistente');
+                }
+                $add('warn','Upgrade automático','bloqueado hasta validar perfil, facturación y aprovisionamiento; SOAP solo lectura');
+                $add('warn','Avisos de solicitudes','eventos locales; email y Webchat no conectados');
                 if(isset($config['lab_users']) && !is_array($config['lab_users'])) $shapeErrors[]='lab_users';
                 if(isset($config['service_login_idas']) && (!isset($loginIdasOk) || !$loginIdasOk)) $shapeErrors[]='service_login_idas';
                 if(isset($config['customer_path']) && !is_array($config['customer_path'])) $shapeErrors[]='customer_path';

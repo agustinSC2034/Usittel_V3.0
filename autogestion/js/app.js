@@ -84,8 +84,9 @@ const help = {
 };
 function wifiForm(requestId,dualBand) {
   return `<form id="wifi-live-form" data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
-    ${input('Nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
-    ${dualBand?input('Nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
+    <p class="field-hint">Ingresá los nuevos datos de tu red.${dualBand?' Elegí un nombre para cada banda; solo usarán el mismo nombre si lo escribís en ambos campos.':''}</p>
+    ${input('Nuevo nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
+    ${dualBand?input('Nuevo nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
     ${input('Nueva contraseña de Wi-Fi','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"',hint:'De 8 a 20 caracteres. Letras, números, @, _, punto, # y $. Sin espacios.'+(dualBand?' La misma clave para ambas redes.':'')})}
     ${input('Repetí la nueva contraseña','wifi-repeat',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"'})}
     ${input('Tu contraseña de Mi USITTEL','wifi-account-password',{type:'password',autocomplete:'current-password'})}
@@ -105,6 +106,10 @@ async function submitWifi(form,data) {
     if(generation!==dataGeneration||!authenticated||!form.isConnected)return;
     form.reset();
     result.textContent=response.state==='APPLIED'?'Los nuevos datos de Wi-Fi se aplicaron. Volvé a conectar tus dispositivos.':'No pudimos confirmar el cambio. Revisá tu conexión y contactanos antes de volver a intentarlo.';
+    if(response.assistance) {
+      runtime.serviceRequests=[response.assistance,...runtime.serviceRequests.filter(r=>r.id!==response.assistance.id)];
+      result.textContent+=' Podés seguir la solicitud de ayuda en Mi servicio.';
+    }
   } catch(error) {
     if(generation!==dataGeneration||!form.isConnected)return;
     result.textContent=error.status?error.message:'Se perdió la comunicación. El cambio podría haberse aplicado. Revisá tu Wi-Fi antes de volver a intentarlo.';
@@ -127,6 +132,27 @@ document.addEventListener('click', async event => {
   if (!target || target.disabled) return;
   const action = target.dataset.action;
   const item = getInvoice(target.dataset.id);
+  if(action==='service-request') {
+    if(runtime.mode!=='phantom')return;
+    target.disabled=true;const generation=dataGeneration;
+    try {
+      const p=await request('request-prepare',{type:target.dataset.type});
+      if(generation!==dataGeneration||!authenticated)return;
+      openDialog(e(p.name),`<p>${p.availabilityUnknown?'Consultaremos la disponibilidad para tu servicio.':'Vamos a recibir tu solicitud para este servicio.'} Te confirmaremos precio y condiciones antes de contratar.</p><form id="service-request-form" data-request-id="${e(p.requestId)}" data-generation="${generation}"><label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Quiero enviar esta solicitud.</label><p role="status" class="field-hint"></p>${button('Enviar solicitud','',{type:'submit'})}</form>`);
+    } catch(error) {if(generation===dataGeneration)await handleError(error);}
+    finally {if(target.isConnected)target.disabled=false;}
+    return;
+  }
+  if(action==='request-refresh') {
+    target.disabled=true;const generation=dataGeneration;
+    try {
+      const r=await request('request-refresh',{requestId:target.dataset.id});
+      if(generation!==dataGeneration||!authenticated)return;
+      runtime.serviceRequests=runtime.serviceRequests.map(old=>old.id===r.id?r:old);render();toast('Solicitud actualizada.');
+    } catch(error) {if(generation===dataGeneration)await handleError(error);}
+    finally {if(target.isConnected)target.disabled=false;}
+    return;
+  }
   if (action === 'connection-refresh') {
     if(runtime.connectionRefreshing)return;
     if(runtime.mode!=='phantom')return toast('Vista de demostración: no consulta un equipo real.');
@@ -329,6 +355,21 @@ document.addEventListener('submit', async event => {
   event.preventDefault();
   const data = new FormData(form);
   if(form.id==='wifi-live-form') {await submitWifi(form,data);return;}
+  if(form.id==='service-request-form') {
+    const submit=form.querySelector('[type="submit"]');if(submit.disabled)return;submit.disabled=true;
+    const generation=Number(form.dataset.generation);const result=form.querySelector('[role="status"]');
+    try {
+      const r=await request('request-create',{requestId:form.dataset.requestId,confirmed:data.get('confirmed')==='on'});
+      if(generation!==dataGeneration||!authenticated)return;
+      runtime.serviceRequests=[r,...runtime.serviceRequests.filter(old=>old.id!==r.id)];render();
+      toast(['UNKNOWN','SUBMITTING'].includes(r.state)?'Estamos revisando tu solicitud.':'Podés seguir tu solicitud en Mi servicio.');
+    } catch(error) {
+      if(generation!==dataGeneration||!form.isConnected)return;
+      result.textContent=error.status?error.message:'No pudimos confirmar el envío. Revisá tus solicitudes antes de continuar.';
+      if(error.status===401||error.code==='SERVICE_CHANGED')await handleError(error);
+    }
+    return;
+  }
   if (runtime.mode === 'phantom' && form.id !== 'login-form') return toast('Esta función todavía no está disponible.');
   if (form.id === 'login-form') {
     const submit = form.querySelector('[type="submit"]'); submit.disabled = true;

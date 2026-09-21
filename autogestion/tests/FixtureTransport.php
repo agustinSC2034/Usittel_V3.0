@@ -3,8 +3,31 @@ declare(strict_types=1);
 namespace MiUsittel;
 require_once __DIR__.'/../server/InvoiceDocuments.php';
 // Deliberately synthetic schema. Never included by the production router.
-final class FixtureTransport implements Transport {
+final class FixtureTransport implements Transport, TicketTransport {
     public function __construct(private string $dir) {}
+    public function ticketGet(string $url): array {
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$q);
+        if(($q['token']??null)!=='fixture-technical-token' || !in_array($q['IDA']??null,['1','5'],true)) throw new Failure('FORBIDDEN',403);
+        if($q['action']==='Phantom_Consultar_Estado_TT') return ['IDTT'=>null,'Permitir'=>1];
+        if($q['action']!=='Tickets_Help_Desk') throw new Failure('FORBIDDEN',403);
+        $row=['ID'=>'321','IDA'=>$q['IDA'],'Categoria'=>'Fixture TV','Estado'=>'Abierto'];
+        $scenario=trim(file_get_contents($this->dir.'/scenario'));
+        if(isset($q['IDTT'])) {
+            if($scenario==='ticket-foreign')$row['IDA']='999';
+            if($scenario==='ticket-ready')$row['Estado']='Resuelto';
+            if($scenario==='wifi-timeout')$row['Categoria']='Fixture WiFi';
+            return [$row];
+        }
+        return [];
+    }
+    public function ticketPost(string $url,array $body): array {
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$q);
+        if($q['action']!=='Phantom_Generar_TT' || ($body['token']??null)!=='fixture-technical-token' || !in_array($q['IDA']??null,['1','5'],true)) throw new Failure('FORBIDDEN',403);
+        file_put_contents($this->dir.'/trace.txt','Phantom_Generar_TT:'.$q['IDA']."\n",FILE_APPEND);
+        if(array_keys($body)!==['token','Categoria','Delegacion','Prioridad','Asunto','Detalle'] || preg_match('/TestWifi|Casa_test|SSID|Password/',$body['Detalle'])) throw new Failure('FIXTURE_SECRET');
+        if(trim(file_get_contents($this->dir.'/scenario'))==='ticket-timeout') throw new Failure('PHANTOM_TIMEOUT');
+        return ['ticket_id'=>'321'];
+    }
     public function authenticate(string $url,array $credentials): array {
         parse_str((string)parse_url($url,PHP_URL_QUERY),$query);
         if($query!==['action'=>'autentificar','JSON'=>'1'] || $credentials!==['api_user'=>'fixture-api','api_pass'=>'fixture-api-secret']) throw new \RuntimeException('Invalid fixture auth');

@@ -1,8 +1,8 @@
-# Mi USITTEL — frontend y backend local de lectura
+# Mi USITTEL — autogestión local
 
 Se conserva la interfaz aprobada y sus seis vistas con rutas por hash. HTML, módulos JavaScript nativos, Tailwind 3 y PHP, sin frameworks ni dependencias npm nuevas.
 
-**Estado:** backend y frontend implementados y probados con fixtures ficticios. No se validó un login contra Phantom real ni se consultaron cuentas reales. Faltan configuración privada y confirmación de campos opcionales mediante una respuesta controlada de IDA 1 o 5. No está listo para publicar.
+**Estado actual (20/09/2026):** login real, multicontrato, facturas/descargas, pagos SIRO y seguimiento ya implementados; las validaciones manuales anteriores están en INTEGRATION y MVP. Mi servicio incorpora solicitudes comerciales bajo compuerta de laboratorio, seguimiento, eventos locales y Wi-Fi protegido. Upgrade automático bloqueado: SOAP solo lectura hasta demostrar coherencia entre facturación y aprovisionamiento. [Alcance y evidencia actual](SERVICE-OPERATIONS.md). Esto no constituye aprobación de producción. Las referencias a fases de lectura/demo más abajo son antecedentes históricos, no límites del código actual.
 
 ## Ejecutar
 

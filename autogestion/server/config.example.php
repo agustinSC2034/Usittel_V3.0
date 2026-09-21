@@ -23,6 +23,14 @@ return [
     // Controlled Wi-Fi trial only. Exact models from a read-only inspection.
     // SSID/SSID_5G/Password in JSON body; confirm this contract in the first trial.
     'wifi' => ['enabled'=>false, 'lab_ida'=>null, 'models'=>[], 'dual_band_models'=>[]],
+    // Read-only SOAP inspection, separate from any upgrade permission. See SERVICE-OPERATIONS.md.
+    'soap' => ['read_enabled'=>false,'lab_ida'=>null,'url'=>null,'profile_names'=>[]],
+    // No production upgrade writer exists until billing + provisioning are demonstrated.
+    'upgrade' => ['enabled'=>false,'lab_ida'=>null,'plans'=>[]],
+    // Category/state names and no-ticket response MUST be confirmed in this installation.
+    'tickets' => ['enabled'=>false,'lab_ida'=>null,'clear_response'=>null,'products'=>[]],
+    // Event outbox only; no delivery adapter is connected in this stage.
+    'notifications' => ['email_enabled'=>false,'botmaker_enabled'=>false],
     // null uses the explicit laboratory mappings (see INTEGRATION.md).
     // Optional overrides are exact public paths, never credential fields.
     'profile_fields' => [

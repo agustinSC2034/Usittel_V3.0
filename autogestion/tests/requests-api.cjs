@@ -1,0 +1,41 @@
+module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings})=>{
+  const mapping="'category'=>'Fixture TV','delegation'=>'Fixture Sales','priority'=>2,'subject'=>'TV fixture','contracted_labels'=>['Fixture Sensa'],'states'=>['Abierto'=>'RECEIVED','Resuelto'=>'READY']";
+  const enabled=(ida=1)=>settings().replace("'mode'=>'phantom'",`'tickets'=>['enabled'=>true,'lab_ida'=>${ida},'clear_response'=>['IDTT'=>null,'Permitir'=>1],'products'=>['TV_SENSA'=>[${mapping}]]],'mode'=>'phantom'`);
+  const reset=()=>{const file=path.join(dir,'service-requests.json');if(fs.existsSync(file))fs.unlinkSync(file);scenario('normal');clearRate();};
+  const writes=()=>(fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Phantom_Generar_TT:/g)||[]).length;
+  reset();fs.writeFileSync(config,settings());const anon=jar();await anon.call('bootstrap');
+  let r=await anon.call('service-requests');check('solicitudes requieren sesión',()=>assert.equal(r.status,401));
+  const u=jar();await login(u);r=await u.call('request-prepare',{type:'TV_SENSA'});check('tickets apagados sin mapping no escriben',()=>assert.equal(r.data.error.code,'TICKETS_DISABLED'));
+  fs.writeFileSync(config,enabled());
+  r=await u.call('request-prepare',{type:'TV_SENSA'},{noCsrf:true});check('solicitudes requieren CSRF',()=>assert.equal(r.status,403));
+  r=await u.call('request-prepare',{type:'TV_SENSA',IDA:5});check('solicitud no recibe IDA ni categoría libres',()=>assert.equal(r.status,400));
+  r=await u.call('request-prepare',{type:'MESH'});check('mapping ausente bloqueado',()=>assert.equal(r.status,409));
+  r=await u.call('request-prepare',{type:'TV_SENSA'});const id=r.data.requestId;
+  check('preparación usa nonce y disponibilidad desconocida',()=>{assert.equal(r.status,200);assert.equal(r.data.availabilityUnknown,true);assert.match(id,/^[a-f0-9]{32}$/);});
+  for(const payload of [{requestId:id,confirmed:false},{requestId:id,confirmed:true,IDA:5}]){
+    r=await u.call('request-create',payload);check('confirmación y cuerpo cerrado',()=>assert.equal(r.status,400));
+  }
+  const before=writes();r=await u.call('request-create',{requestId:id,confirmed:true});check('ticket creado en selected_ida con estado real releído',()=>{assert.equal(r.status,200);assert.equal(r.data.state,'RECEIVED');assert.equal(writes(),before+1);});
+  r=await u.call('request-create',{requestId:id,confirmed:true});check('doble submit HTTP no duplica ticket',()=>assert.equal(writes(),before+1));
+  scenario('ticket-ready');r=await u.call('request-refresh',{requestId:id});check('estado preparado mapeado',()=>assert.equal(r.data.state,'READY'));
+  r=await u.call('service-requests');check('público sin ticket ni categorías internas',()=>{assert.equal(r.data.items.length,1);assert.doesNotMatch(r.text,/321|Fixture|Categoria|Delegacion/);});
+  r=await u.call('service-requests?IDA=5');check('listado no admite IDA',()=>assert.equal(r.status,400));
+  const foreign=jar();await login(foreign);scenario('ticket-foreign');r=await foreign.call('request-refresh',{requestId:id});check('ticket ajeno rechazado incluso si figura localmente',()=>assert.equal(r.status,403));
+  reset();scenario('services-two');fs.writeFileSync(config,enabled(5));const multi=jar();await login(multi);
+  r=await multi.call('request-prepare',{type:'TV_SENSA'});check('lab de ticket no se hereda al autenticado',()=>assert.equal(r.status,409));
+  await multi.call('select-service',{serviceId:'5'});r=await multi.call('request-prepare',{type:'TV_SENSA'});const old=r.data.requestId;
+  check('preparar en contrato seleccionado autorizado',()=>assert.equal(r.status,200));
+  const revision=multi.serviceRevision;await multi.call('select-service',{serviceId:'1'});await multi.call('select-service',{serviceId:'5'});
+  r=await multi.call('request-create',{requestId:old,confirmed:true},{headers:{'X-Service-Revision':revision}});check('revisión vieja rechazada',()=>assert.equal(r.status,409));
+  r=await multi.call('request-create',{requestId:old,confirmed:true});check('ida ida vuelta invalida nonce comercial',()=>assert.equal(r.data.error.code,'REQUEST_EXPIRED'));
+  await multi.call('logout',{});await multi.call('bootstrap');r=await multi.call('request-create',{requestId:old,confirmed:true});check('logout revoca ticket preparado',()=>assert.equal(r.status,401));
+  reset();fs.writeFileSync(config,enabled());const timeout=jar();await login(timeout);r=await timeout.call('request-prepare',{type:'TV_SENSA'});scenario('ticket-timeout');const nonce=r.data.requestId;const n=writes();
+  r=await timeout.call('request-create',{requestId:nonce,confirmed:true});check('timeout ticket incierto',()=>assert.equal(r.data.state,'UNKNOWN'));
+  r=await timeout.call('request-create',{requestId:nonce,confirmed:true});check('timeout no reintenta',()=>assert.equal(writes(),n+1));
+  reset();fs.writeFileSync(config,enabled().replace("'category'=>'Fixture TV'","'category'=>'Fixture WiFi'").replace("'TV_SENSA'=>","'WIFI_HELP'=>").replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'lab_ida'=>1,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'"));
+  const marker=path.join(dir,'wifi-change-1.json');if(fs.existsSync(marker))fs.unlinkSync(marker);
+  const wifi=jar();await login(wifi);r=await wifi.call('wifi-prepare',{});scenario('wifi-timeout');
+  r=await wifi.call('wifi-change',{requestId:r.data.requestId,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',accountPassword:' 00Lab-fixture! ',confirmed:true});
+  check('fallback Wi-Fi ticket propio sin password',()=>{assert.equal(r.data.state,'UNKNOWN');assert.equal(r.data.assistance?.state,'RECEIVED');assert.doesNotMatch(fs.readFileSync(path.join(dir,'service-requests.json'),'utf8'),/TestWifi|Casa_test|Password|SSID/);});
+  if(fs.existsSync(marker))fs.unlinkSync(marker);reset();fs.writeFileSync(config,settings());
+};

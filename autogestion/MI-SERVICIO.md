@@ -1,5 +1,18 @@
 # Mi servicio
 
+## Entrega actual: operaciones controladas, 20/09/2026
+
+Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, flags, tickets,
+notificaciones, inspector SOAP, Wi-Fi y bloqueos reales pendientes. Sustituye las
+notas históricas de alcance y conteo de tests conservadas más abajo.
+Sin llamadas reales ni cambios de configuración privada en esta entrega.
+
+Validación final: 758 verificaciones con fixtures, 62 archivos PHP con sintaxis
+correcta, build y escaneo local de secretos correctos. QA en Chromium: 1366×900
+y 390×844, sin desborde horizontal ni errores de consola. Se probó login ficticio,
+solicitud comercial, actualización a Completado y formulario Wi-Fi con dos nombres
+separados. No se ejecutó un cambio Wi-Fi ni una operación real contra proveedores.
+
 El plan contratado es la fuente de presentación de velocidad. No se infiere una
 velocidad medida desde ese texto ni se repite una fila vacía de velocidad. El
 domicilio continúa en Inicio y el selector de servicio; se quita de esta vista.

@@ -36,11 +36,15 @@ function wifiInput(array $body,bool $dualBand=true): array {
 // Shared per-contract lock and durable outcome. Never store SSIDs or passwords.
 // An uncertain result blocks subsequent writes until operator reconciliation.
 function applyWifiOnce(string $dir,int $ida,string $requestId,string $payloadHash,callable $write): array {
-    return locked($dir.'/wifi-change-'.$ida.'.json',function($file) use($requestId,$payloadHash,$write) {
-        $contents=stream_get_contents($file);
+    $path=$dir.'/wifi-change-'.$ida.'.json';
+    return locked($path.'.lock',function() use($path,$requestId,$payloadHash,$write) {
+        $contents=is_file($path)?file_get_contents($path):'';
+        if(is_file($path) && $contents==='') throw new Failure('WIFI_REVIEW',409);
         $last=$contents===''?[]:json_decode($contents,true);
         if(!is_array($last)) throw new Failure('WIFI_REVIEW',409);
-        if($last && (!isset($last['requestId'],$last['state'],$last['at']) || !in_array($last['state'],['APPLIED','UNKNOWN'],true))) throw new Failure('WIFI_REVIEW',409);
+        if($last && (!is_string($last['requestId']??null) || !preg_match('/^[a-f0-9]{32}$/D',$last['requestId']) || !is_int($last['at']??null)
+            || !is_string($last['payloadHash']??null) || !preg_match('/^[a-f0-9]{64}$/D',$last['payloadHash'])
+            || !in_array($last['state']??null,['APPLIED','UNKNOWN'],true))) throw new Failure('WIFI_REVIEW',409);
         if(($last['requestId']??null)===$requestId) {
             if(!is_string($last['payloadHash']??null) || !hash_equals($last['payloadHash'],$payloadHash)) throw new Failure('WIFI_EXPIRED',409);
             return ['state'=>$last['state']];
@@ -48,13 +52,22 @@ function applyWifiOnce(string $dir,int $ida,string $requestId,string $payloadHas
         if(($last['state']??null)==='UNKNOWN') throw new Failure('WIFI_REVIEW',409);
         if(($last['at']??0)>time()-300) throw new Failure('WIFI_RATE_LIMIT',429);
         $record=['requestId'=>$requestId,'payloadHash'=>$payloadHash,'state'=>'UNKNOWN','at'=>time()];
-        writeFileHandle($file,$record);fflush($file);
+        saveWifiState($path,$record);
         try {
             $result=$write();
             // A ticket creation also uses code 200. Only this exact response confirms a change.
             if(($result['code']??null)===200 && ($result['message']??null)==='Cambio Wifi aplicado exitosamente') $record['state']='APPLIED';
         } catch(\Throwable) { /* Unknown delivery: no retry, no upstream text or credentials in logs. */ }
-        writeFileHandle($file,$record);
+        saveWifiState($path,$record);
         return ['state'=>$record['state']];
     });
+}
+function saveWifiState(string $path,array $record): void {
+    // A crash while persisting the result must not erase the UNKNOWN reservation.
+    $temp=$path.'.'.bin2hex(random_bytes(8)).'.tmp';$handle=null;
+    try {
+        $json=json_encode($record,JSON_THROW_ON_ERROR);$handle=fopen($temp,'xb');
+        if(!$handle || !chmod($temp,0600) || fwrite($handle,$json)!==strlen($json) || !fflush($handle) || !fsync($handle)) throw new Failure('WIFI_REVIEW',409);
+        fclose($handle);$handle=null;if(!rename($temp,$path)) throw new Failure('WIFI_REVIEW',409);
+    } finally {if(is_resource($handle))fclose($handle);if(is_file($temp))unlink($temp);}
 }

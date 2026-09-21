@@ -32,6 +32,16 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
 (async()=>{
   await require('./speed-test.cjs')({check,assert,fs,path,root});
   const fixtureEnv={...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'};
+  const operations=spawnSync(php,[path.join(__dirname,'service-operations.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('solicitudes, aislamiento, SOAP de lectura y catálogo conservador',()=>{assert.equal(operations.status,0,operations.stdout+operations.stderr);assert.match(operations.stdout,/^[0-9]+$/);});count+=Number(operations.stdout)-1;
+  const requestDir=path.join(dir,'request-concurrent');fs.mkdirSync(requestDir);
+  const requestWorker=id=>new Promise((resolve,reject)=>{let out='',err='';const child=spawn(php,[path.join(__dirname,'request-concurrent.php'),id],{env:{...fixtureEnv,MI_USITTEL_RUNTIME:requestDir}});child.stdout.on('data',v=>out+=v);child.stderr.on('data',v=>err+=v);child.on('error',reject);child.on('exit',code=>code===0?resolve(out):reject(new Error(err)));});
+  const requestWorkers=await Promise.all([requestWorker('a'.repeat(32)),requestWorker('b'.repeat(32))]);
+  check('dos procesos y nonces distintos reservan un único ticket',()=>{assert.equal(requestWorkers[0],requestWorkers[1]);assert.equal(fs.readFileSync(path.join(requestDir,'writes'),'utf8'),'1');});
+  for(const [name,expected] of Object.entries({plain:'TICKET_OK',quoted:'PHANTOM_FORMAT',zero:'PHANTOM_FORMAT',html:'PHANTOM_FORMAT',error:'TICKETS_RESPONSE',array:'TICKETS_RESPONSE',large:'PHANTOM_RESPONSE_TOO_LARGE',timeout:'PHANTOM_TIMEOUT',redirect:'PHANTOM_HTTP',expired:'TOKEN_EXPIRED',http:'PHANTOM_HTTP'})) {
+    const result=spawnSync(php,[path.join(__dirname,'ticket-http.php'),name],{env:fixtureEnv,encoding:'utf8'});
+    check('ticket HTTP aislado '+name+': TLS y una sola escritura',()=>{assert.equal(result.status,0,result.stderr);assert.equal(result.stdout,expected);});
+  }
   const verification=spawnSync(php,[path.join(__dirname,'posting-verification.php')],{env:fixtureEnv,encoding:'utf8'});
   check('diagnóstico de registro sin datos privados ni escritura',()=>{assert.equal(verification.status,0,verification.stderr);assert.equal(verification.stdout,'7');});
   count+=6;
@@ -416,5 +426,6 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   await require('./service-features-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   await require('./wifi-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
+  await require('./requests-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   console.log(`${count} verificaciones completadas con fixtures; NO valida Phantom real.`);
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server?.kill());

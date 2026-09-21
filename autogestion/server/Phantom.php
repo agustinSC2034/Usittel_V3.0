@@ -11,7 +11,11 @@ interface Transport {
     public function post(string $url, array $body): array;
     public function authenticate(string $url,array $credentials): array;
 }
-final class CurlTransport implements Transport {
+interface TicketTransport {
+    public function ticketGet(string $url): array;
+    public function ticketPost(string $url,array $body): array;
+}
+final class CurlTransport implements Transport, TicketTransport {
     public function __construct(private array $config, private bool $inspectorAuthForm=false, private bool $inspectResponseFormat=false) {}
     public function authenticate(string $url,array $credentials): array {
         // Explicit laboratory contract: GET only for technical authentication.
@@ -29,7 +33,18 @@ final class CurlTransport implements Transport {
         return $this->request($url,[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>$encoded,
             CURLOPT_HTTPHEADER=>['Content-Type: '.($form?'application/x-www-form-urlencoded':'application/json'),'Accept: application/json']]);
     }
-    private function request(string $url,array $methodOptions): array {
+    public function ticketGet(string $url): array {
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$q);
+        if(!in_array($q['action']??null,['Tickets_Help_Desk','Phantom_Consultar_Estado_TT'],true)) throw new Failure('FORBIDDEN',403);
+        return $this->request($url,[CURLOPT_HTTPGET=>true,CURLOPT_HTTPHEADER=>['Accept: application/json']]);
+    }
+    public function ticketPost(string $url,array $body): array {
+        parse_str((string)parse_url($url,PHP_URL_QUERY),$q);
+        if(($q['action']??null)!=='Phantom_Generar_TT') throw new Failure('FORBIDDEN',403);
+        return $this->request($url,[CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>json_encode($body,JSON_THROW_ON_ERROR),
+            CURLOPT_HTTPHEADER=>['Content-Type: application/json','Accept: application/json']],true);
+    }
+    private function request(string $url,array $methodOptions,bool $ticketCreation=false): array {
         if(!extension_loaded('curl')) throw new Failure('CONFIGURATION');
         $parts=parse_url($url);
         if(($parts['scheme']??null)!=='https' || empty($parts['host']) || isset($parts['user']) || isset($parts['pass']) || isset($parts['fragment'])) throw new Failure('CONFIGURATION');
@@ -56,6 +71,8 @@ final class CurlTransport implements Transport {
         catch(\Throwable) { throw new Failure('PHANTOM_CURL_RUNTIME'); }
         finally { if($ch instanceof \CurlHandle) curl_close($ch); restore_error_handler(); }
         if ($ok===false) throw new Failure(self::diagnosticCodeForCurlFailure($errno,$curlError),$errno===CURLE_OPERATION_TIMEDOUT?504:503);
+        // Only the documented creation action accepts a bare decimal ticket ID.
+        if($ticketCreation && $code>=200 && $code<300 && preg_match('/^[1-9][0-9]{0,9}$/D',trim($response))) return ['ticket_id'=>trim($response)];
         return self::decodeHttpResponse($code,$response,$this->inspectResponseFormat);
     }
     public static function decodeHttpResponse(int $code,string $response,bool $diagnoseFormat=false): array {
@@ -175,6 +192,34 @@ final class Phantom {
     }
     public function serviceRecord(int $ida): array {
         return resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida,['InfoFTTH'=>1]),$ida,'ID');
+    }
+    public function upgradeInspectionRecord(int $ida): array {
+        return resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida,['InfoFTTH'=>1,'ImporteProdutos'=>1]),$ida,'ID');
+    }
+    public function ticketRead(int $ida,string $action,array $params=[]): array {
+        if($this->scope===null || !in_array($ida,$this->scope,true) || !in_array($action,['Tickets_Help_Desk','Phantom_Consultar_Estado_TT'],true)
+            || !$this->transport instanceof TicketTransport || array_diff(array_keys($params),['Periodo','Estado','IDTT'])) throw new Failure('FORBIDDEN',403);
+        for($i=0;$i<2;$i++) {
+            $url=$this->config['phantom_url'].'?'.http_build_query(['action'=>$action,'JSON'=>1,'IDA'=>$ida,'token'=>$this->token($i===1)]+$params);
+            try {
+                $result=$this->transport->ticketGet($url);
+                if(isset($result['code'])) {
+                    if(in_array((int)$result['code'],[401,403],true)) throw new Failure('TOKEN_EXPIRED');
+                    throw new Failure('TICKETS_RESPONSE');
+                }
+                return $result;
+            } catch(Failure $e) {if($e->kind!=='TOKEN_EXPIRED' || $i===1) throw $e;}
+        }
+        throw new Failure('TICKETS_RESPONSE');
+    }
+    public function createTicket(int $ida,array $body): string {
+        if($this->scope===null || !in_array($ida,$this->scope,true) || !$this->transport instanceof TicketTransport
+            || ($this->config['tickets']['enabled']??false)!==true || ($this->config['tickets']['lab_ida']??null)!==$ida) throw new Failure('TICKETS_DISABLED',409);
+        if(array_keys($body)!==['Categoria','Delegacion','Prioridad','Asunto','Detalle']) throw new Failure('BAD_REQUEST',400);
+        $url=$this->config['phantom_url'].'?'.http_build_query(['action'=>'Phantom_Generar_TT','JSON'=>1,'IDA'=>$ida,'Plataforma'=>'Mi USITTEL']);
+        $data=$this->transport->ticketPost($url,['token'=>$this->token()]+$body); // ONE write, never token retry.
+        if(!is_string($data['ticket_id']??null) || !preg_match('/^[1-9][0-9]{0,9}$/D',$data['ticket_id'])) throw new Failure('TICKETS_RESPONSE');
+        return $data['ticket_id'];
     }
     public function configureWifi(int $ida,array $settings): array {
         if($this->scope===null || !in_array($ida,$this->scope,true)) throw new Failure('FORBIDDEN',403);

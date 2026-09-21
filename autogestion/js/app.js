@@ -53,6 +53,8 @@ function render() {
   if (!authenticated) route = 'login';
   else if (route === 'login' || !views[route]) route = 'inicio';
   if (location.hash !== `#/${route}`) history.replaceState(null, '', `#/${route}`);
+  const chatLauncher = document.querySelector('body > [data-action="chat"]');
+  if (chatLauncher) chatLauncher.hidden = route === 'login';
   const changed = activeRoute !== route;
   activeRoute = route;
   const notice = runtime.warnings.length ? '<p class="demo-notice" role="status">Parte de la información no está disponible o requiere revisión. El saldo de cuenta y el estado de cada factura pueden diferir.</p>' : '';

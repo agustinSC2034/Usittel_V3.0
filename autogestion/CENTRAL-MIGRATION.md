@@ -25,8 +25,8 @@ ni un backend propio de chat. La línea de ventas/campañas queda en WhatsApp.
 
 La orientación vive en Centro de ayuda: Soy cliente → Mi USITTEL o chat;
 Quiero contratar → chat con intención de ventas, con igual importancia visual.
-La entrada `/atencion` abre el widget automáticamente dentro de una cabecera
-compacta USITTEL, sin volver a elegir un recorrido. En móvil ocupa el espacio
+La entrada `/atencion` abre el widget automáticamente sin cabecera externa ni
+título adicional: conserva la cabecera propia de Central. En móvil ocupa el espacio
 disponible. El cambio de Centro de ayuda solo se monta en loopback: la web pública
 conserva sus enlaces y operatoria actuales.
 Wi-Fi y upgrades no se anuncian como operaciones disponibles si aún no lo están.
@@ -156,8 +156,8 @@ La propiedad `mode="fill-container"` se verificó en el loader oficial para
 integrar el widget en nuestro contenedor sin cambiar su configuración global.
 En la prueba móvil, el modo integrado muestra directamente el compositor y sus
 sugerencias, sin la portada flotante anterior. `maximize()` por sí solo no
-demuestra continuidad de WhatsApp. `intent=sales` cambia únicamente el título de
-nuestra página (y el recorrido del mock). Se probó `prefill()` sin envío, pero no
+demuestra continuidad de WhatsApp. `intent=sales` solo cambia el recorrido del
+mock; en Central no cambia el título ni asigna bot. Se probó `prefill()` sin envío, pero no
 se observó el borrador en el widget real; no se dejó ese comportamiento sin validar.
 No asigna cola, no envía mensajes ni cambia los flujos de Botmaker.
 No se interpretan parámetros de identidad ni tokens de derivación.
@@ -220,3 +220,14 @@ relevantes de consola ni desborde horizontal en las vistas inspeccionadas.
 Pruebas de aislamiento del preview: 2/2; build público y check de shell correctos;
 escaneo local de secretos correcto. No hay cambios PHP ni se repitió la suite de
 Phantom: sus resultados anteriores arriba pertenecen al commit previo.
+
+### Primera conversación confirmada por Agustín
+
+El usuario envió un mensaje desde el widget y confirmó recepción en Botmaker y
+respuesta visible en nuestra página. Sus capturas muestran el cambio desde Master
+Bot a Instagram_chat. Esto verifica ida y vuelta de un visitante web, todavía no
+la continuidad de una derivación desde WhatsApp. Pendiente revisar las condiciones
+reales del Master Bot para distinguir Central y seleccionar el bot de atención
+correcto; no asumir un nombre de canal o variable ni modificar WhatsApp existente.
+Se eliminó la cabecera externa y el título de /atencion por pedido del usuario.
+Se conserva únicamente el aviso local de prueba y la interfaz propia de Central.

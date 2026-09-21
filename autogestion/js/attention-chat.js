@@ -18,6 +18,7 @@ export class MockChatAdapter {
       <div class="attention-chat-choices" aria-label="Elegí tu consulta"><button type="button" data-topic="customer">Soy cliente <span aria-hidden="true">→</span></button><button type="button" data-topic="sales">Quiero contratar <span aria-hidden="true">→</span></button><button type="button" data-topic="technical">Tengo un problema técnico <span aria-hidden="true">→</span></button></div></div>
       <form class="attention-chat-form"><label class="attention-chat-label" for="attention-chat-message">Mensaje de prueba</label><div><input id="attention-chat-message" name="preview-message" placeholder="Escribí un mensaje de prueba" autocomplete="off" maxlength="500" required><button type="submit" aria-label="Enviar mensaje de prueba">↑</button></div><p>No se envía ni se guarda. Usá datos ficticios.</p></form>`;
     this.inline = document.getElementById('attention-chat-container');
+    if (this.inline) panel.querySelector('.attention-chat-close').hidden = true;
     (this.inline || document.body).append(panel);
     this.panel = panel;
     this.log = panel.querySelector('.attention-chat-log');

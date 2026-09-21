@@ -20,7 +20,6 @@ export class CentralChatAdapter {
     this.element.addEventListener('central-chat-mount', () => {
       clearTimeout(this.timer);
       setStatus('Central conectado · Prueba local real. Los mensajes que envíes llegarán a USITTEL.');
-      if (container) document.querySelector('[data-attention-open]')?.setAttribute('hidden', '');
     }, { once: true });
     // Never log central-chat-event: its payload may contain customer data.
     this.timer = setTimeout(() => {

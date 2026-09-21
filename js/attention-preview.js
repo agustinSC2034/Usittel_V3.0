@@ -18,6 +18,5 @@ if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
   }
   // Entering /atencion is enough. No second landing choice and no fake handoff.
   const intent = new URLSearchParams(location.search).get('intent') === 'sales' ? 'sales' : null;
-  if (hub && intent === 'sales') document.querySelector('h1').textContent = 'Hablemos de tu próximo plan';
   if (chat && hub) chat.open(null, intent);
 }

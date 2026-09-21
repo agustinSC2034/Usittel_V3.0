@@ -257,6 +257,15 @@ Actualizar el número de WhatsApp/dato de contacto queda como operación separad
 la pantalla actual no persiste ese cambio en Phantom y no debe presentarlo como
 guardado real.
 
+Primera inspección SOAP real aportada para IDA 4950: HTTPS y host/puerto correctos,
+extensión disponible mediante CLI, SOAP_AUTH_OK y consulta_abonado ejecutada. La
+respuesta es una lista posicional de 90 strings; el manual solo afirma que devuelve
+un array y no documenta ese orden. No se asigna ningún índice a ID, perfil, producto,
+modelo ni dato personal. La identidad y el perfil técnico permanecen desconocidos,
+facturación y aprovisionamiento también. consulta_perfiles no se ejecutó porque la
+lista privada de nombres exactos estaba vacía. Resultado conservado:
+NOT_READY_FOR_UPGRADE_WRITE.
+
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real
 debe avanzar de a una acción: primero lectura/inspector; luego configuración

@@ -72,12 +72,16 @@ final class PhantomSoapClient {
         try {
             $subscriber=$this->transport->invoke('consulta_abonado',['token'=>$token,'Id'=>$ida]);
             $record=soapInspectionRecord($subscriber);
+            $positional=is_array($subscriber)&&array_is_list($subscriber);
             $identity=$record!==null && (isset($record['Id']) || isset($record['ID']));
             foreach(['Id','ID','IDA'] as $key) if(array_key_exists($key,$record??[]))
                 $identity=$identity&&(is_int($record[$key]) || is_string($record[$key]))&&(string)$record[$key]===(string)$ida;
+            $identityStatus=$positional?'SUBSCRIBER_IDENTITY_UNKNOWN_POSITIONAL':
+                ($identity?'SUBSCRIBER_IDENTITY_MATCH':'SUBSCRIBER_IDENTITY_UNCONFIRMED');
             $profile=$record['perfil']??null;
             $known=$identity && (is_string($profile)||is_int($profile)) && trim((string)$profile)!=='';
-            $report+=['subscriber'=>soapSafeShape($subscriber),'subscriber_identity_matches'=>$identity];
+            $report+=['subscriber'=>soapSafeShape($subscriber),'subscriber_identity_status'=>$identityStatus,
+                'subscriber_identity_matches'=>$positional?null:$identity];
             $report['technical_profile_status']=$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN';
             $results=[];$lookupsOk=count($profiles)>0;
             foreach($profiles as $name) {
@@ -88,7 +92,8 @@ final class PhantomSoapClient {
                 $results[]=['exact_name_match'=>$matched,'shape'=>soapSafeShape($value)];
             }
             return ['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','subscriber'=>soapSafeShape($subscriber),
-                'subscriber_identity_matches'=>$identity,'technical_profile_status'=>$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN',
+                'subscriber_identity_status'=>$identityStatus,'subscriber_identity_matches'=>$positional?null:$identity,
+                'technical_profile_status'=>$known?'TECHNICAL_PROFILE_KNOWN':'TECHNICAL_PROFILE_UNKNOWN',
                 'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($profiles===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
                 'profiles'=>$results];
         } catch(Failure $e) {
@@ -106,7 +111,13 @@ function soapSafeShape(mixed $value,int $depth=0): array {
     if(!is_array($value)) return $r;
     $r+=['count'=>count($value),'list'=>array_is_list($value)];
     if($depth>=2)return $r;
-    if(array_is_list($value)) $r['sample']=array_map(fn($v)=>soapSafeShape($v,$depth+1),array_slice($value,0,1));
+    if(array_is_list($value)) {
+        $r['sample']=array_map(fn($v)=>soapSafeShape($v,$depth+1),array_slice($value,0,1));
+        if($depth===0) {
+            $types=[];foreach($value as $item) {$type=get_debug_type($item);$types[$type]=($types[$type]??0)+1;}
+            ksort($types);$r['element_types']=$types;
+        }
+    }
     else foreach(['Id','ID','IDA','perfil','Perfil','Perfil_Internet','Producto_Internet','Productos_Internet','TipoCliente','ONU_Modelo','Phantom_Provissioning','Nombre','Down','Up','Precio','Importe'] as $field)
         if(array_key_exists($field,$value)) $r['fields'][$field]=soapSafeShape($value[$field],$depth+1);
     return $r;

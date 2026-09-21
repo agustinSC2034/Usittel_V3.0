@@ -84,8 +84,10 @@ checkOp(array_column($soap->calls,0)===['autentificar','consulta_abonado','consu
 checkOp($soap->calls[1][1]===['token'=>'fixture-token','Id'=>8]);
 checkOp(!preg_match('/fixture|never-output|Password|token/',json_encode($result)));
 checkOp($result['auth_status']==='SOAP_AUTH_OK' && $result['technical_profile_status']==='TECHNICAL_PROFILE_KNOWN' && $result['profile_lookup_status']==='PROFILE_LOOKUP_OK');
+checkOp($result['subscriber_identity_status']==='SUBSCRIBER_IDENTITY_MATCH' && $result['subscriber_identity_matches']===true);
 $soap=new TestSoap();$soap->scenario='foreign';$result=(new PhantomSoapClient($soap,$sc))->inspect(8,[]);
 checkOp($result['technical_profile_status']==='TECHNICAL_PROFILE_UNKNOWN' && $result['profile_lookup_status']==='PROFILE_LOOKUP_NOT_REQUESTED');
+checkOp($result['subscriber_identity_status']==='SUBSCRIBER_IDENTITY_UNCONFIRMED' && $result['subscriber_identity_matches']===false);
 $soap=new TestSoap();$soap->scenario='unknown';$result=(new PhantomSoapClient($soap,$sc))->inspect(8,['Fixture target']);
 checkOp($result['profile_lookup_status']==='PROFILE_LOOKUP_UNCONFIRMED');
 $soap=new TestSoap();$soap->scenario='auth';rejectOp(fn()=>(new PhantomSoapClient($soap,$sc))->inspect(8,[]),'SOAP_AUTH');checkOp(count($soap->calls)===1);
@@ -113,6 +115,19 @@ foreach(['http://fixture.example/PHANTOM/Includes/API.php','https://foreign.exam
 }
 checkOp(soapInspectionRecord('fixture-free-text')===null);
 checkOp(soapInspectionRecord([['ID'=>8],['ID'=>9]])===null);
+$shape=soapSafeShape(array_fill(0,90,'fixture-private'));
+checkOp($shape['count']===90 && $shape['list'] && $shape['element_types']===['string'=>90]);
+checkOp(!str_contains(json_encode($shape),'fixture-private'));
+$soap=new class implements SoapReadTransport {
+    public function invoke(string $method,array $parameters): mixed {return match($method) {
+        'autentificar'=>'fixture-token','consulta_abonado'=>array_fill(0,90,'fixture-private'),'desconectar'=>null,
+        default=>throw new Failure('FIXTURE_UNEXPECTED'),
+    };}
+};
+$positional=(new PhantomSoapClient($soap,$sc))->inspect(8,[]);
+checkOp($positional['subscriber_identity_status']==='SUBSCRIBER_IDENTITY_UNKNOWN_POSITIONAL');
+checkOp($positional['subscriber_identity_matches']===null && $positional['technical_profile_status']==='TECHNICAL_PROFILE_UNKNOWN');
+checkOp(!str_contains(json_encode($positional),'fixture-private'));
 foreach([null,0,'0',''] as $empty) {
     $shape=ticketInspectionShape(['IDTT'=>$empty,'Permitir'=>'1','Detalle'=>'fixture-private'],'existence');
     checkOp($shape['no_ticket_id'] && $shape['id_type']===get_debug_type($empty) && $shape['permit_value']==='1');

@@ -54,6 +54,16 @@ html { scroll-behavior: smooth; scroll-padding-top: 104px; }
 .public-page footer .text-gray-400 { color: #b8c6d6; }
 .public-page footer a:hover { color: white; text-decoration: underline; }
 .whatsapp-float { border-radius: 50%; background: #168648; color: white; }
+/* Central remains wired for the migration, but is not customer-facing yet. */
+#site-chat-panel, #site-chat-launcher { display: none !important; }
+.site-whatsapp-launcher {
+  position: fixed; right: 22px; bottom: 22px; z-index: 1101;
+  display: inline-flex; width: 58px; height: 58px; align-items: center; justify-content: center;
+  border-radius: 50%; background: #168648; color: #fff; font-size: 29px;
+  box-shadow: 0 12px 30px #0c243d38; transition: transform .18s, background .18s;
+  text-decoration: none;
+}
+.site-whatsapp-launcher:hover { background: #0f6f3a; color: #fff; transform: translateY(-2px); }
 .site-chat-launcher {
   position: fixed; right: 20px; bottom: 20px; z-index: 1101;
   display: inline-flex; width: 56px; height: 56px; align-items: center; justify-content: center;
@@ -102,6 +112,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 104px; }
 @media (max-width: 640px) {
   .site-chat-panel { inset: 0; width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
   .site-chat-launcher { right: 16px; bottom: 16px; }
+  .site-whatsapp-launcher { right: 16px; bottom: 16px; }
   .public-page.site-chat-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } .public-page *, .public-page *::before, .public-page *::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }

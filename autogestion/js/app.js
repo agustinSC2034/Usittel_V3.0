@@ -134,7 +134,7 @@ document.addEventListener('click', async event => {
   const action = target.dataset.action;
   if (action === 'chat' || action === 'sales') {
     if (dialog.open) dialog.close();
-    location.assign(`${siteRoot}/atencion${action === 'sales' ? '?intent=sales' : ''}`);
+    location.assign(`${siteRoot}/atencion/${action === 'sales' ? '?intent=sales' : ''}`);
     return;
   }
   const item = getInvoice(target.dataset.id);

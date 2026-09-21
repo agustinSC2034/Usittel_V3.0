@@ -25,7 +25,10 @@ test('preview isolates demo, config, CSP and filesystem from real operations', a
   assert.match(plain.headers.get('content-security-policy'), /frame-src https:\/\/web.central.chat/);
   const real = await fetch(base + '/atencion?chat-provider=central');
   assert.match(real.headers.get('content-security-policy'), /frame-src https:\/\/web.central.chat/);
-  assert.match(await real.text(), /<central-chat\b/);
+  const realHtml = await real.text();
+  assert.match(realHtml, /<central-chat\b/);
+  assert.match(realHtml, /href="atencion\/attention\.css"/);
+  assert.equal((await fetch(base + '/atencion/attention.css')).status, 200);
   const login = await fetch(base + '/autogestion/?chat-provider=central');
   assert.doesNotMatch(login.headers.get('content-security-policy'), /central\.chat/);
   const config = await fetch(base + '/attention-preview-config.json');

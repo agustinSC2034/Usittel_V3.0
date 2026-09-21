@@ -3,14 +3,17 @@
 ## Preparación de inspecciones, 21/09/2026
 
 Exclusión de telefonía preservada del commit fb9090f y cubierta por pruebas de
-campos prohibidos, incluyendo bonificaciones. Validación de esta iteración:
-797 verificaciones con fixtures, 62 archivos PHP con sintaxis correcta, build y
+campos prohibidos, incluyendo bonificaciones. Validación vigente de esta iteración:
+829 verificaciones con fixtures, 62 archivos PHP con sintaxis correcta, build y
 escaneo local de secretos correctos. Sin cambios de frontend ni nuevo QA visual.
-El chequeo se ejecutó sin cargar configuración privada; no verifica sus valores.
-PHP local 8.4.25 sin extensión SOAP: pendiente habilitarla antes de la lectura SOAP.
-No se contactó Phantom/SIRO real ni se modificaron configuraciones privadas.
-Próxima acción: inspección manual de tickets sobre laboratorio 4950 y esperar
-su resultado. Modelo ONU y SOAP se preparan después, uno por uno.
+El chequeo leyó la configuración privada sin publicar valores y no contactó
+Phantom/SIRO. SOAP se carga explícitamente en el CLI mediante `-d extension=soap`.
+
+El selector real del CRM confirmó que texto y value coinciden para los perfiles
+empresa 200 y 500 Mbps. No se guardó ningún cambio. El inspector SOAP read-only
+ahora informa además la estructura segura del sobre de respuesta, sin valores,
+para distinguir resultado nulo, vacío o con elementos. Permanece bloqueada toda
+escritura de upgrade, facturación y aprovisionamiento.
 
 Resultado recibido: ausencia de ticket confirmada con IDTT int 0 y Permitir int 1.
 Snippet privado futuro: `'clear_response'=>['IDTT'=>0,'Permitir'=>1]`, manteniendo

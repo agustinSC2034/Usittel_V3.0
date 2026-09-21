@@ -278,9 +278,15 @@ consulta_abonado, evidencia compatible con el abonado correcto pero todavía sin
 nombres de campo. Ninguno de los dos textos visibles del selector CRM (empresa
 200/500 Mbps) aparece en la respuesta posicional. consulta_perfiles por Nombre
 devolvió null para ambos, por lo que PROFILE_LOOKUP permanece UNCONFIRMED. Los
-textos comerciales del selector no se toman como alias técnicos SOAP y no se
-ensayan variantes inventadas. El siguiente dato read-only es el value interno de
-esas dos opciones del selector; no guardar ni ejecutar Act. Perfiles.
+textos comerciales del selector no se toman como alias técnicos SOAP ni se ensayan
+variantes inventadas.
+
+La lectura directa del selector CRM confirmó que el atributo value coincide
+exactamente con el texto visible tanto para empresa 200 como para empresa 500 Mbps;
+el perfil actual quedó seleccionado y no se guardó ningún cambio. La siguiente
+ejecución read-only agrega únicamente la forma del sobre SOAP (resultado ausente,
+nulo, vacío o con hijos), sin conservar ni publicar valores de Phantom. Esto permite
+distinguir una respuesta realmente nula de una envoltura que PHP no interpretó.
 
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real

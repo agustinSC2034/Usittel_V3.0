@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 
 interface SoapReadTransport {public function invoke(string $method,array $parameters): mixed;}
+interface SoapReadDiagnosticTransport {public function lastResponseShape(): ?array;}
 function soapReadEndpoint(array $c): string {
     $url=$c['soap']['url']??null;$p=is_string($url)?parse_url($url):[];
     $rest=parse_url($c['phantom_url']??'');
@@ -30,10 +31,34 @@ function soapDirectMatchIndices(mixed $value,string|int $expected): array {
         if((is_string($item)||is_int($item)) && (string)$item===(string)$expected) $out[]=$index;
     return $out;
 }
+// Report only the SOAP envelope structure. Element values are never retained or returned.
+function soapEnvelopeShape(string $xml): array {
+    $bucket=match(true) {strlen($xml)===0=>'0',strlen($xml)<=512=>'1-512',strlen($xml)<=4096=>'513-4096',default=>'>4096'};
+    $out=['format'=>'invalid_xml','bytes_bucket'=>$bucket];
+    if($xml==='' || preg_match('/<!DOCTYPE|<!ENTITY/i',$xml) || !class_exists('DOMDocument')) return $out;
+    $previous=libxml_use_internal_errors(true);$dom=new \DOMDocument();
+    try {$loaded=$dom->loadXML($xml,LIBXML_NONET|LIBXML_NOERROR|LIBXML_NOWARNING|LIBXML_COMPACT);}
+    finally {libxml_clear_errors();libxml_use_internal_errors($previous);}
+    if(!$loaded || !$dom->documentElement || $dom->documentElement->localName!=='Envelope') return $out;
+    $out['format']='soap_xml';$body=null;
+    foreach($dom->documentElement->childNodes as $node) if($node instanceof \DOMElement && $node->localName==='Body') {$body=$node;break;}
+    $out['body_present']=$body!==null;if($body===null)return $out;
+    $operation=null;foreach($body->childNodes as $node) if($node instanceof \DOMElement) {$operation=$node;break;}
+    if($operation===null)return $out;
+    if(preg_match('/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/D',$operation->localName))$out['operation']=$operation->localName;
+    $result=null;foreach($operation->childNodes as $node) if($node instanceof \DOMElement) {$result=$node;break;}
+    if($result===null){$out['result_present']=false;return $out;}
+    $out['result_present']=true;$children=0;foreach($result->childNodes as $node)if($node instanceof \DOMElement)$children++;
+    $nil=strtolower($result->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance','nil') ?: $result->getAttribute('xsi:nil'));
+    $safe=['nil'=>in_array($nil,['1','true'],true),'element_children'=>$children,'text_state'=>trim($result->textContent)===''?'empty':'nonempty'];
+    if(preg_match('/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/D',$result->localName))$safe['tag']=$result->localName;
+    $out['result']=$safe;return $out;
+}
 // No WSDL, trace, external entity fetching, redirects or arbitrary method names.
 // The only production SOAP capability in this delivery is read-only inspection.
 if(class_exists('SoapClient')) {
     final class BoundedSoapClient extends \SoapClient {
+        private ?array $lastResponseShape=null;
         public function __construct(private array $settings,private string $endpoint) {
             parent::__construct(null,['location'=>$endpoint,'uri'=>'PHANTOMAPI','trace'=>false,'exceptions'=>true,'cache_wsdl'=>WSDL_CACHE_NONE]);
         }
@@ -49,12 +74,14 @@ if(class_exists('SoapClient')) {
                 curl_setopt_array($ch,$options);$ok=curl_exec($ch);$status=curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$errno=curl_errno($ch);
                 if($ok===false) throw new Failure($errno===CURLE_OPERATION_TIMEDOUT?'SOAP_TIMEOUT':'SOAP_NETWORK');
                 if($status!==200 || preg_match('/<!DOCTYPE|<!ENTITY/i',$response)) throw new Failure('SOAP_RESPONSE');
+                $this->lastResponseShape=soapEnvelopeShape($response);
                 return $response;
             } finally {curl_close($ch);}
         }
+        public function lastResponseShape(): ?array {return $this->lastResponseShape;}
     }
 }
-final class NativeSoapReadTransport implements SoapReadTransport {
+final class NativeSoapReadTransport implements SoapReadTransport,SoapReadDiagnosticTransport {
     private mixed $client;
     public function __construct(array $c) {
         $url=soapReadEndpoint($c);
@@ -66,6 +93,7 @@ final class NativeSoapReadTransport implements SoapReadTransport {
         try {return $this->client->__soapCall($method,$parameters===[]?[]:[$parameters]);}
         catch(Failure $e) {throw $e;} catch(\Throwable) {throw new Failure('SOAP_RESPONSE');}
     }
+    public function lastResponseShape(): ?array {return $this->client->lastResponseShape();}
 }
 final class PhantomSoapClient {
     public function __construct(private SoapReadTransport $transport,private array $c) {}
@@ -79,6 +107,7 @@ final class PhantomSoapClient {
             'profile_lookup_status'=>'PROFILE_LOOKUP_NOT_REQUESTED'];
         try {
             $subscriber=$this->transport->invoke('consulta_abonado',['token'=>$token,'Id'=>$ida]);
+            $subscriberResponse=$this->transport instanceof SoapReadDiagnosticTransport?$this->transport->lastResponseShape():null;
             $record=soapInspectionRecord($subscriber);
             $positional=is_array($subscriber)&&array_is_list($subscriber);
             $identity=$record!==null && (isset($record['Id']) || isset($record['ID']));
@@ -100,7 +129,9 @@ final class PhantomSoapClient {
                 $row=soapInspectionRecord($value);$indices=soapDirectMatchIndices($value,$name);
                 $matched=($row['Nombre']??null)===$name || count($indices)===1;
                 $lookupsOk=$lookupsOk&&$matched;
-                $results[]=['exact_name_match'=>$matched,'name_match_indices'=>$indices,'shape'=>soapSafeShape($value)];
+                $entry=['exact_name_match'=>$matched,'name_match_indices'=>$indices,'shape'=>soapSafeShape($value)];
+                if($this->transport instanceof SoapReadDiagnosticTransport && ($response=$this->transport->lastResponseShape())!==null)$entry['response']=$response;
+                $results[]=$entry;
                 $subscriberProfileMatches[]=soapDirectMatchIndices($subscriber,$name);
             }
             if($positional) {
@@ -108,13 +139,15 @@ final class PhantomSoapClient {
                 if(count(array_filter($subscriberProfileMatches,fn($matches)=>count($matches)===1))===1)
                     $report['technical_profile_status']='TECHNICAL_PROFILE_CANDIDATE_POSITIONAL';
             }
-            return ['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','subscriber'=>soapSafeShape($subscriber),
+            $answer=['authenticated'=>true,'auth_status'=>'SOAP_AUTH_OK','subscriber'=>soapSafeShape($subscriber),
                 'subscriber_identity_status'=>$identityStatus,'subscriber_identity_matches'=>$positional?null:$identity,
                 'subscriber_id_match_indices'=>$positional?soapDirectMatchIndices($subscriber,$ida):[],
                 'configured_profile_match_indices'=>$subscriberProfileMatches,
                 'technical_profile_status'=>$report['technical_profile_status'],
                 'profile_lookup_status'=>$lookupsOk?'PROFILE_LOOKUP_OK':($profiles===[]?'PROFILE_LOOKUP_NOT_REQUESTED':'PROFILE_LOOKUP_UNCONFIRMED'),
                 'profiles'=>$results];
+            if($subscriberResponse!==null)$answer['subscriber_response']=$subscriberResponse;
+            return $answer;
         } catch(Failure $e) {
             $report['failure_code']=in_array($e->kind,['SOAP_TIMEOUT','SOAP_NETWORK','SOAP_RESPONSE','SOAP_CONFIGURATION','SOAP_METHOD_FORBIDDEN'],true)?$e->kind:'SOAP_RESPONSE';
             return $report;

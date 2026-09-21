@@ -11,8 +11,10 @@ Phantom/SIRO. SOAP se carga explícitamente en el CLI mediante `-d extension=soa
 
 El selector real del CRM confirmó que texto y value coinciden para los perfiles
 empresa 200 y 500 Mbps. No se guardó ningún cambio. El inspector SOAP read-only
-ahora informa además la estructura segura del sobre de respuesta, sin valores,
-para distinguir resultado nulo, vacío o con elementos. Permanece bloqueada toda
+confirmó después que Phantom devuelve explícitamente un resultado nulo para ambos
+nombres. `consulta_abonado` sí devolvió un resultado no nulo con 90 elementos:
+autenticación, endpoint y transporte funcionan. El próximo dato necesario es el ID
+o alias interno del ABM de perfiles de 200 y 500 Mbps. Permanece bloqueada toda
 escritura de upgrade, facturación y aprovisionamiento.
 
 Resultado recibido: ausencia de ticket confirmada con IDTT int 0 y Permitir int 1.

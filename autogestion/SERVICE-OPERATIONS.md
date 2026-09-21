@@ -283,10 +283,14 @@ variantes inventadas.
 
 La lectura directa del selector CRM confirmó que el atributo value coincide
 exactamente con el texto visible tanto para empresa 200 como para empresa 500 Mbps;
-el perfil actual quedó seleccionado y no se guardó ningún cambio. La siguiente
-ejecución read-only agrega únicamente la forma del sobre SOAP (resultado ausente,
-nulo, vacío o con hijos), sin conservar ni publicar valores de Phantom. Esto permite
-distinguir una respuesta realmente nula de una envoltura que PHP no interpretó.
+el perfil actual quedó seleccionado y no se guardó ningún cambio. La tercera
+inspección read-only confirmó una respuesta SOAP válida y explícitamente nula para
+ambos nombres: `consulta_perfilesResponse`, `return`, `xsi:nil=true`, sin texto ni
+hijos. PHP no descartó una estructura útil. En la misma ejecución,
+`consulta_abonadoResponse` devolvió un `return` no nulo con 90 hijos, por lo que
+autenticación, endpoint, transporte y análisis del sobre funcionan. Falta obtener
+desde el ABM de perfiles el ID o alias SOAP real para los perfiles de 200 y 500;
+el texto/value del selector de abonado no sirve como descriptor SOAP demostrado.
 
 Suite de fixtures y QA local: ver el cierre de entrega en MI-SERVICIO.md. Ningún
 fixture demuestra compatibilidad real con las tres ONUs. El plan de prueba real

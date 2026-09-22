@@ -1,5 +1,5 @@
 Options -Indexes
-DirectoryIndex disabled
+DirectoryIndex index.html
 
 # cPanel can retain the account-wide PHP 7.4 handler even when MultiPHP reports
 # PHP 8.2 for this subdomain. Mi USITTEL requires PHP 8; bind this document root
@@ -10,8 +10,9 @@ DirectoryIndex disabled
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteRule ^server/production-router\.php$ - [L]
-  RewriteRule ^ server/production-router.php [L]
+  # The document root is /public_html/autogestion. Keep the shell and assets static.
+  RewriteRule ^api(?:/|$) server/production-router.php [L]
+  RewriteRule ^pago-(?:ok|error)/[a-f0-9]{32}$ server/production-router.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>

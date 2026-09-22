@@ -1,11 +1,18 @@
 let csrf = '';
 let serviceRevision = '';
+const apiUrl = route => {
+  const [name, queryString] = route.split('?', 2);
+  const params = new URLSearchParams();
+  params.set('route', name);
+  if (queryString) for (const [key, value] of new URLSearchParams(queryString)) params.append(key, value);
+  return `server/production-router.php?${params.toString()}`;
+};
 const serviceHeaders = () => serviceRevision ? { 'X-Service-Revision': serviceRevision } : {};
 async function pdf(route, failureMessage) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 65000);
   try {
-    const response = await fetch(`api/${route}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: serviceHeaders() });
+    const response = await fetch(apiUrl(route), { credentials: 'same-origin', cache: 'no-store', signal: controller.signal, headers: serviceHeaders() });
     if (!response.ok) {
       const json = await response.json(); const error = new Error(json.error?.message || failureMessage);
       error.code = json.error?.code; error.status = response.status; throw error;
@@ -27,7 +34,7 @@ export async function request(route, data) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), route.startsWith('payment-') ? 110000 : 65000);
   try {
-    const response = await fetch(`api/${route}`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
+    const response = await fetch(apiUrl(route), { credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
       headers: serviceHeaders(),
       ...(data === undefined ? {} : { method: 'POST', headers: { ...serviceHeaders(), 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(data) }) });
     const json = await response.json();

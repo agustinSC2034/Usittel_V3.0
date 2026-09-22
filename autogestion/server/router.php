@@ -15,18 +15,34 @@ if(!is_string($path)) {http_response_code(400);exit;}
 $prefixed=$path==='/autogestion' || str_starts_with($path,'/autogestion/');
 $mount=$prefixed?'/autogestion':'';
 $routePath=$prefixed?substr($path,strlen('/autogestion')):$path;
+$physicalEntry=basename((string)parse_url($_SERVER['SCRIPT_NAME']??'',PHP_URL_PATH))==='production-router.php';
+$dispatchApi=static function(string $route): never {
+    try {
+        $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
+        $posting=\MiUsittel\phantomPostingConfig($c);
+        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting,$dir));
+        \MiUsittel\api($c,$dir,$ph,$route,null,null,new \MiUsittel\PhantomPaymentHistory($c));
+    } catch(\Throwable $e) {\MiUsittel\fail($e);}
+};
+$redirectPaymentReturn=static function(string $mount): never {
+    $result=$_GET['result']??null; $attempt=$_GET['attempt']??null;
+    if(!is_string($result) || !is_string($attempt) || !in_array($result,['ok','error'],true) || !preg_match('/\A[a-f0-9]{32}\z/D',$attempt)) {http_response_code(400);exit;}
+    header('Location: '.$mount.'/#/facturas?attempt='.$attempt,true,303);exit;
+};
+if($physicalEntry) {
+    $route=$_GET['route']??null;
+    if(!is_string($route) || strlen($route)>64 || !preg_match('/\A[a-z][a-z0-9-]*\z/D',$route)) {http_response_code(400);exit;}
+    if($route==='payment-return') $redirectPaymentReturn($mount);
+    unset($_GET['route']);
+    $dispatchApi($route);
+}
 // Return is a navigation hint only. Discard all provider query fields, never mark payment here.
 if($_SERVER['REQUEST_METHOD']==='GET' && preg_match('~^/pago-(?:ok|error)/([a-f0-9]{32})$~D',$routePath,$returnMatch)) {
     header('Location: '.$mount.'/#/facturas?attempt='.$returnMatch[1],true,303);exit;
 }
 if($path==='/autogestion') {header('Location: /autogestion/');exit;}
 if(str_starts_with($routePath,'/api/')) {
-    try {
-        $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();
-        $posting=\MiUsittel\phantomPostingConfig($c);
-        $ph=new \MiUsittel\Phantom($c,$dir,new \MiUsittel\CurlTransport($c),$posting===null?null:new \MiUsittel\PhantomCrmHttp($c,$posting,$dir));
-        \MiUsittel\api($c,$dir,$ph,substr($routePath,strlen('/api/')),null,null,new \MiUsittel\PhantomPaymentHistory($c));
-    } catch(\Throwable $e) {\MiUsittel\fail($e);}
+    $dispatchApi(substr($routePath,strlen('/api/')));
 }
 if(!in_array($_SERVER['REQUEST_METHOD'],['GET','HEAD'],true)) {http_response_code(405);exit;}
 $relative=ltrim($routePath,'/');

@@ -14,11 +14,11 @@ let server, stderr='', count=0, base;
 function check(name, fn) { fn(); count++; console.log(`OK ${name}`); }
 async function freePort() { return new Promise(resolve=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const port=s.address().port;s.close(()=>resolve(port));});}); }
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
-function jar() {
+function jar(endpoint=route => base+route) {
   return {cookie:'',csrf:'',serviceRevision:'', async call(route,body,opts={}) {
     const headers={Cookie:this.cookie,...(this.serviceRevision?{'X-Service-Revision':this.serviceRevision}:{}),...opts.headers};
     if(body!==undefined) {headers['Content-Type']='application/json';if(!opts.noCsrf) headers['X-CSRF-Token']=this.csrf;}
-    const response=await fetch(base+route,{method:body===undefined?'GET':'POST',headers,body:body===undefined?undefined:JSON.stringify(body)});
+    const response=await fetch(endpoint(route),{method:body===undefined?'GET':'POST',headers,body:body===undefined?undefined:JSON.stringify(body)});
     const set=response.headers.get('set-cookie'); if(set) this.cookie=set.split(';')[0];
     const text=await response.text(); let data;try{data=JSON.parse(text);}catch{data=text;}
     if(data.csrf) this.csrf=data.csrf;
@@ -288,12 +288,23 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const a=jar();let r=await a.call('bootstrap');
   check('cookie HttpOnly / SameSite, scope prefijado y modo servidor',()=>{assert.match(r.headers.get('set-cookie'),/HttpOnly/i);assert.match(r.headers.get('set-cookie'),/SameSite=Strict/i);assert.match(r.headers.get('set-cookie'),/Path=\/autogestion\//i);assert.equal(r.data.mode,'phantom');});
   const origin=base.replace('/autogestion/api/','');
+  const physicalEndpoint=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return origin+'/server/production-router.php?'+params.toString();};
+  const direct=jar(physicalEndpoint);
   const rootBootstrap=await fetch(origin+'/api/bootstrap');
   check('subdominio raíz entrega API con cookie limitada a su raíz',()=>{assert.equal(rootBootstrap.status,200);assert.match(rootBootstrap.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
   const rootPage=await fetch(origin+'/');const rootHtml=await rootPage.text();
   check('subdominio raíz entrega la aplicación',()=>{assert.equal(rootPage.status,200);assert.match(rootPage.headers.get('content-type'),/^text\/html/);assert.match(rootHtml,/<title>Mi USITTEL/);});
   const prefixedPage=await fetch(origin+'/autogestion/');const prefixedHtml=await prefixedPage.text();
   check('ruta prefijada local continúa disponible',()=>{assert.equal(prefixedPage.status,200);assert.match(prefixedHtml,/<title>Mi USITTEL/);});
+  r=await direct.call('bootstrap');check('entrypoint físico bootstrap',()=>assert.equal(r.status,200));
+  r=await direct.call('login',{username:'000001',password:' 00Lab-fixture! '},{noCsrf:true});check('entrypoint físico POST login exige CSRF',()=>assert.equal(r.status,403));
+  r=await direct.call('login',{username:'000001',password:' 00Lab-fixture! '});check('entrypoint físico POST login',()=>assert.equal(r.status,200));
+  r=await direct.call('invoices?offset=0');check('entrypoint físico GET con query',()=>assert.equal(r.status,200));
+  r=await direct.call('payment-receipt?id=00053321');check('entrypoint físico PDF',()=>{assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^application\/pdf/);assert.match(r.text,/^%PDF-1\.7/);});
+  const returnAttempt='a'.repeat(32);
+  r=await fetch(physicalEndpoint('payment-return?result=ok&attempt='+returnAttempt+'&IdResultado=forged'),{redirect:'manual'});check('entrypoint físico payment return descarta query externa',()=>{assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/#/facturas?attempt='+returnAttempt);});
+  r=await fetch(physicalEndpoint('route-does-not-exist'));check('route inexistente conserva 404',()=>assert.equal(r.status,404));
+  r=await fetch(physicalEndpoint('bootstrap/../login'));check('route manipulada se rechaza antes de Api',()=>assert.equal(r.status,400));
   check('API sin sesión',()=>{});assert.equal((await a.call('overview')).status,401);
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{noCsrf:true});check('CSRF login',()=>assert.equal(r.status,403));
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{headers:{Origin:'https://evil.invalid'}});check('origen cruzado rechazado',()=>assert.equal(r.status,403));
@@ -429,7 +440,6 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('logs sin secretos',()=>assert.doesNotMatch(stderr,/00Lab-fixture|fixture-api-secret|fixture-technical-token|do-not-expose/));
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
-  await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
   await require('./service-features-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   await require('./wifi-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});

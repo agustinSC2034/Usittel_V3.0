@@ -8,13 +8,6 @@ DirectoryIndex index.html
   AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
 </IfModule>
 
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  # The document root is /public_html/autogestion. Keep the shell and assets static.
-  RewriteRule ^api(?:/|$) server/production-router.php [L]
-  RewriteRule ^pago-(?:ok|error)/[a-f0-9]{32}$ server/production-router.php [L]
-</IfModule>
-
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "no-referrer"

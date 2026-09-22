@@ -3,6 +3,7 @@
 import { chatPreviewEnabled } from './attention-chat.js';
 
 const SDK = 'https://web.central.chat/widget/core.js';
+const CHANNEL_KEY = 'wiOT-40q9iiyNBb8NahcAg|SZaCDgFymGhOoc4aJwuCMQ';
 const setStatus = text => {
   const note = document.querySelector('.attention-preview-note');
   if (note) { note.textContent = text; note.setAttribute('role', 'status'); }
@@ -35,6 +36,28 @@ export class CentralChatAdapter {
   close() { this.element.minimize().catch(() => {}); }
   reset() { this.close(); }
   destroy() { clearTimeout(this.timer); this.element.remove(); }
+}
+
+let centralPromise;
+export function openCentralChat() { return centralPromise?.then(adapter => adapter?.open()); }
+export function initializeCentralChat() {
+  if (centralPromise) return centralPromise;
+  centralPromise = (async () => {
+    const fallback = document.querySelector('[data-central-fallback]');
+    try {
+      if (!customElements.get('central-chat')) await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const timer = setTimeout(() => reject(new Error('SDK timeout')), 15000);
+        script.src = SDK; script.referrerPolicy = 'no-referrer';
+        script.onload = () => { clearTimeout(timer); resolve(); };
+        script.onerror = () => { clearTimeout(timer); reject(new Error('SDK unavailable')); };
+        document.head.append(script);
+      });
+      if (!document.querySelector('#central-chat-mount') || !customElements.get('central-chat')) throw new Error('Central unavailable');
+      const adapter = new CentralChatAdapter(CHANNEL_KEY); adapter.mount(); fallback?.setAttribute('hidden', ''); return adapter;
+    } catch { if (fallback) fallback.hidden = false; return null; }
+  })();
+  return centralPromise;
 }
 
 export async function createCentralPreview(mount) {

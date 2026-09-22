@@ -248,7 +248,10 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     try {$requestList=$requests->list($ida);$requestListUnavailable=false;}
     catch(Failure $e) {$requestList=[];$requestListUnavailable=true;diagnostic($e);}
-    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,
+    $upgradeCatalog=[];
+    try { foreach(upgradeCatalog($c) as $plan) $upgradeCatalog[]=['current'=>$plan['current'],'target'=>$plan['target'],'public_name'=>$plan['public_name'],'current_down'=>$plan['current_down'],'speed_down'=>$plan['speed_down']]; }
+    catch(Failure $e) { $warnings[]='UPGRADE_UNAVAILABLE'; diagnostic($e); }
+    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,'upgradeCatalog'=>$upgradeCatalog,
         'serviceOptions'=>requestOptions($c,$ida,$profile['products']??null),'serviceRequests'=>$requestList,'serviceRequestsUnavailable'=>$requestListUnavailable]);
 }
 function diagnostic(Failure $e): void { error_log('mi-usittel event='.$e->kind); }

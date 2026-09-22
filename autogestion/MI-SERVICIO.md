@@ -1,5 +1,41 @@
 # Mi servicio
 
+## Iteración UX de Mi servicio
+
+La pantalla queda ordenada como plan contratado y conexión, Tus servicios,
+Mejorá tu servicio y Herramientas. Inicio reutiliza `customer.connectionState`,
+que proviene de la lectura pública de `Consulta_Cliente_Avanzada` con
+`InfoFTTH=1`; solo `online` y `offline` se traducen a En línea y Sin conexión.
+Los demás valores son No disponible y `Estado_Servicio` no se usa como
+conectividad. El saldo y las facturas siguen disponibles en sus módulos.
+
+`serviceProducts()` mantiene el contrato: `null` significa detalle desconocido
+y `[]` significa campos configurados consultados sin productos. La UI muestra
+siempre el plan de Internet y agrega los labels públicos confirmados sin
+duplicarlos; con `null` informa que el detalle no está disponible.
+
+La normalización visual está en `js/service-catalog.js`. Usa aliases exactos,
+configurables y vacíos por defecto hasta confirmar los labels reales de
+`Productos_Television` y `Productos_Otros`. Un producto desconocido se muestra
+como texto, pero no activa ofertas. Las ofertas solo aparecen con ausencia
+demostrable: Sensa, Pack Sensa condicionado a Sensa, STB condicionado a TV y
+Sensa, Mesh, y upgrades con destino ascendente del catálogo configurado.
+El catálogo de upgrades se expone solo como lectura pública mínima; no habilita
+SOAP write, facturación ni aprovisionamiento. Los tickets Phantom no forman
+parte de esta experiencia.
+
+Las acciones comerciales y `¿No podés ingresar? / Contactanos` abren el mismo
+widget oficial Central de Mi USITTEL, antes y después del login, sin IDA, DNI,
+saldo, factura ni datos Phantom. Si el SDK no carga queda visible el WhatsApp
+actual. Esto no cambia el estado público de `usittel.com.ar`, que mantiene
+Central oculto.
+
+Pendiente de configuración/manual: confirmar aliases públicos con el inspector
+read-only y colocarlos en el catálogo; configurar la lista privada de
+`service_product_fields` sin automatizar su edición; validar visualmente contra
+un entorno con PHP 8.2 y credenciales de laboratorio. Wi-Fi físico y upgrade
+write siguen sin estar validados ni habilitados.
+
 ## Preparación de inspecciones, 21/09/2026
 
 Exclusión de telefonía preservada del commit fb9090f y cubierta por pruebas de

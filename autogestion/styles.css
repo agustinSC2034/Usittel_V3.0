@@ -406,3 +406,12 @@
   .home-shortcuts { grid-template-columns:1fr; gap:0; margin-bottom:24px; }
   .page-inicio .balance-content { grid-template-columns:1fr; }
 }
+.service-offers { margin-top:36px; padding-top:28px; border-top:1px solid var(--line); }
+.offer-options { display:grid; gap:0; }
+.offer-options .commercial-option { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.home-connection { border-left:1px solid var(--line); padding-left:36px; }
+.central-fallback { position:fixed; right:16px; bottom:88px; z-index:41; padding:10px 14px; border-radius:999px; background:#fff; box-shadow:0 8px 24px #10203824; color:var(--green); font-size:13px; }
+@media(max-width:700px) {
+  .home-connection { border-left:0; border-top:1px solid var(--line); padding:24px 0 0; }
+  .offer-options .commercial-option { align-items:flex-start; flex-direction:column; gap:10px; }
+}

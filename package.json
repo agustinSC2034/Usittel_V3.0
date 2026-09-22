@@ -12,7 +12,7 @@
     "test:mesh": "node tests/mesh-calculator.test.cjs",
     "check:mi-usittel": "node autogestion/check.cjs",
     "dev:mi-usittel:php": "node autogestion/start-php.cjs",
-    "test:mi-usittel": "node autogestion/tests/run.cjs",
+    "test:mi-usittel": "node autogestion/tests/run.cjs && node autogestion/tests/service-catalog.test.cjs",
     "dev:mi-usittel": "node autogestion/serve.cjs",
     "build:mi-usittel": "tailwindcss -c autogestion/tailwind.config.cjs -i autogestion/styles.css -o autogestion/assets/app.css --minify",
     "watch:mi-usittel": "npm run build:mi-usittel -- --watch",

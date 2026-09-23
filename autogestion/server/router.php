@@ -15,7 +15,7 @@ if(!is_string($path)) {http_response_code(400);exit;}
 $prefixed=$path==='/autogestion' || str_starts_with($path,'/autogestion/');
 $mount=$prefixed?'/autogestion':'';
 $routePath=$prefixed?substr($path,strlen('/autogestion')):$path;
-$physicalEntry=basename((string)parse_url($_SERVER['SCRIPT_NAME']??'',PHP_URL_PATH))==='production-router.php';
+$physicalEntry=basename((string)parse_url($_SERVER['SCRIPT_NAME']??'',PHP_URL_PATH))==='api.php';
 $dispatchApi=static function(string $route): never {
     try {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();

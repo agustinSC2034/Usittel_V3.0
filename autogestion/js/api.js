@@ -5,7 +5,7 @@ const apiUrl = route => {
   const params = new URLSearchParams();
   params.set('route', name);
   if (queryString) for (const [key, value] of new URLSearchParams(queryString)) params.append(key, value);
-  return `server/production-router.php?${params.toString()}`;
+  return `api.php?${params.toString()}`;
 };
 const serviceHeaders = () => serviceRevision ? { 'X-Service-Revision': serviceRevision } : {};
 async function pdf(route, failureMessage) {

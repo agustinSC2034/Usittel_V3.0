@@ -7,6 +7,7 @@ require_once __DIR__.'/Services.php';
 require_once __DIR__.'/PaymentHistory.php';
 require_once __DIR__.'/Wifi.php';
 require_once __DIR__.'/ServiceRequests.php';
+require_once __DIR__.'/PhantomSoap.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');

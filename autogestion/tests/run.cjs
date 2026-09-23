@@ -288,7 +288,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const a=jar();let r=await a.call('bootstrap');
   check('cookie HttpOnly / SameSite, scope prefijado y modo servidor',()=>{assert.match(r.headers.get('set-cookie'),/HttpOnly/i);assert.match(r.headers.get('set-cookie'),/SameSite=Strict/i);assert.match(r.headers.get('set-cookie'),/Path=\/autogestion\//i);assert.equal(r.data.mode,'phantom');});
   const origin=base.replace('/autogestion/api/','');
-  const physicalEndpoint=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return origin+'/server/production-router.php?'+params.toString();};
+  const physicalEndpoint=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return origin+'/api.php?'+params.toString();};
   const direct=jar(physicalEndpoint);
   const rootBootstrap=await fetch(origin+'/api/bootstrap');
   check('subdominio raíz entrega API con cookie limitada a su raíz',()=>{assert.equal(rootBootstrap.status,200);assert.match(rootBootstrap.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
@@ -305,6 +305,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   r=await fetch(physicalEndpoint('payment-return?result=ok&attempt='+returnAttempt+'&IdResultado=forged'),{redirect:'manual'});check('entrypoint físico payment return descarta query externa',()=>{assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/#/facturas?attempt='+returnAttempt);});
   r=await fetch(physicalEndpoint('route-does-not-exist'));check('route inexistente conserva 404',()=>assert.equal(r.status,404));
   r=await fetch(physicalEndpoint('bootstrap/../login'));check('route manipulada se rechaza antes de Api',()=>assert.equal(r.status,400));
+  r=await direct.call('logout',{});check('entrypoint físico logout y cookie raíz',()=>{assert.equal(r.status,200);assert.match(r.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
   check('API sin sesión',()=>{});assert.equal((await a.call('overview')).status,401);
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{noCsrf:true});check('CSRF login',()=>assert.equal(r.status,403));
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{headers:{Origin:'https://evil.invalid'}});check('origen cruzado rechazado',()=>assert.equal(r.status,403));
@@ -328,7 +329,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   clearRate();scenario('timeout');const providerFailure=jar();await providerFailure.call('bootstrap');r=await providerFailure.call('login',{username:'000001',password:' 00Lab-fixture! '});check('fallo del proveedor no consume intentos de credenciales',()=>{assert.equal(r.status,504);const state=JSON.parse(fs.readFileSync(path.join(dir,'attempts.json'),'utf8'));assert.equal(Object.keys(state.buckets).length,0);});scenario('normal');
   const oldCookie=a.cookie;r=await login(a);check('login fixture suspendido y regeneración',()=>{assert.equal(r.status,200);assert.notEqual(a.cookie,oldCookie);});
   r=await a.call('bootstrap');check('sesión persiste al recargar',()=>assert.equal(r.data.authenticated,true));
-  r=await a.call('overview');check('whitelist, conectividad pública y saldo independiente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
+  r=await a.call('overview');check('whitelist, conectividad pública y saldo independiente',()=>{assert.equal(r.status,200,r.text);assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
   r=await a.call('payment-history');check('movimientos reales públicos omiten cookie y capability',()=>{assert.equal(r.status,200);assert.equal(r.data.items.length,2);assert.equal(r.data.items[1].method,'Efectivo');assert.doesNotMatch(r.text,/opaque-session|MDEyMzQ1Njc4OWFiY2RlZg/);});
   r=await a.call('payment-receipt?id=00053321');check('comprobante de pago PDF ligado al movimiento exacto',()=>{assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^application\/pdf/);assert.match(r.text,/^%PDF-1\.7/);});
   r=await a.call('payment-receipt?id=00052001');check('capability de otro movimiento no se sustituye',()=>assert.equal(r.status,404));
@@ -440,6 +441,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('logs sin secretos',()=>assert.doesNotMatch(stderr,/00Lab-fixture|fixture-api-secret|fixture-technical-token|do-not-expose/));
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
+  await require('./payment-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base});
   await require('./service-features-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});
   await require('./services-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});
   await require('./wifi-api.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings});

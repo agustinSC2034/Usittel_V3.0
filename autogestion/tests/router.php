@@ -8,7 +8,7 @@ require_once __DIR__.'/FixtureTransport.php';
 require_once __DIR__.'/PaymentFixture.php';
 require_once __DIR__.'/PaymentHistoryFixture.php';
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
-$physical=str_ends_with($path,'/server/production-router.php');
+$physical=str_ends_with($path,'/api.php');
 $mount=str_starts_with($path,'/autogestion/')?'/autogestion':'';
 if($physical) {
     $route=$_GET['route']??null;

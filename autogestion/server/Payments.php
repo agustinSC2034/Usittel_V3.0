@@ -31,8 +31,8 @@ function paymentRequest(array $a,array $s): array {
     $returnBase=rtrim($s['return_base'],'/');
     $returnQuery='route=payment-return&attempt='.$a['attempt_id'];
     return ['nro_cliente_empresa'=>$a['cpe'],'nro_comprobante'=>$a['receipt'],'Concepto'=>'Factura'.$a['idt'],
-        'Importe'=>$a['cents']/100,'URL_OK'=>$returnBase.'/server/production-router.php?'.$returnQuery.'&result=ok',
-        'URL_ERROR'=>$returnBase.'/server/production-router.php?'.$returnQuery.'&result=error','IdReferenciaOperacion'=>$a['reference']];
+        'Importe'=>$a['cents']/100,'URL_OK'=>$returnBase.'/api.php?'.$returnQuery.'&result=ok',
+        'URL_ERROR'=>$returnBase.'/api.php?'.$returnQuery.'&result=error','IdReferenciaOperacion'=>$a['reference']];
 }
 function paymentPublic(array $a,bool $checkout=false): array {
     $posting=$a['posting_state']??'NOT_POSTED';

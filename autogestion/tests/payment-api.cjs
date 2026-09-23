@@ -1,5 +1,5 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep,base})=>{
-  const physical=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return base.replace(/\/api\/$/,'/server/production-router.php')+'?'+params.toString();};
+  const physical=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return base.replace(/\/api\/$/,'/api.php')+'?'+params.toString();};
   const configured=(idle=900)=>settings('phantom',idle).replace("'mode'=>'phantom'","'mode'=>'phantom','siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70020]");
   fs.writeFileSync(config,configured());clearRate();scenario('normal');
   const u=jar();const signedIn=await login(u);await u.call('invoices');
@@ -24,7 +24,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   check('retorno descarta query y conserva solo attempt_id',()=>{assert.equal(ret.status,303);assert.equal(ret.headers.get('location'),'/autogestion/#/facturas?attempt='+a.data.attempt_id);});
   const errorRet=await fetch(physical('payment-return?result=error&attempt='+a.data.attempt_id+'&Estado=RECHAZADA&Importe=1&IDA=5'),{redirect:'manual'});
   check('retorno ERROR falsificado no modifica resultado',()=>{assert.equal(errorRet.status,303);assert.equal(errorRet.headers.get('location'),'/autogestion/#/facturas?attempt='+a.data.attempt_id);});
-  const rootRet=await fetch(physical('payment-return?result=ok&attempt='+a.data.attempt_id+'&IdResultado=forged').replace('/autogestion/server/','/server/'),{redirect:'manual'});
+  const rootRet=await fetch(physical('payment-return?result=ok&attempt='+a.data.attempt_id+'&IdResultado=forged').replace('/autogestion/api.php','/api.php'),{redirect:'manual'});
   check('retorno físico del subdominio raíz conserva solo attempt_id',()=>{assert.equal(rootRet.status,303);assert.equal(rootRet.headers.get('location'),'/#/facturas?attempt='+a.data.attempt_id);});
   r=await u.call('payments');check('lista privada mantiene pendiente tras retorno falso',()=>{assert.equal(r.data.items[0].state,'PENDING');assert.equal(r.data.items[0].checkout_url,undefined);});
   scenario('cancelled');r=await u.call('payment-reconcile',{attempt_id:a.data.attempt_id});check('cancelación real se consulta backend',()=>assert.equal(r.data.state,'CANCELLED'));

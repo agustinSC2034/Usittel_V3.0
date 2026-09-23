@@ -42,7 +42,7 @@ Antes de la verificación Phantom no se modifica el estado original ni se descue
 - `server/Payments.php`: importe en centavos, identidad del intento, comprobante único, persistencia y reconciliación separada de creación.
 - `server/Api.php`: sesión propia, IDA de sesión exclusivamente, CSRF para POST y listas explícitas de campos. `payment-create` recibe únicamente `{idt: "..."}`. El IDT debe estar en el historial autorizado; vuelve a consultarse su posición en Phantom y debe coincidir, pertenecer al cliente y tener Estado IMPAGA. No hay datos demo ni importe del navegador.
 - `GET payments`: estados públicos propios, sin CPE, comprobantes internos, referencias ni hash. `POST payment-reconcile` recibe únicamente attempt_id y verifica pertenencia a la sesión.
-- `server/production-router.php`: el retorno propio usa `?route=payment-return&result=ok|error&attempt=<attempt_id>` y redirige a Facturas sin interpretar ni conservar la query del proveedor. No confirma ningún pago.
+- `api.php`: el retorno propio usa `?route=payment-return&result=ok|error&attempt=<attempt_id>` y redirige a Facturas sin interpretar ni conservar la query del proveedor. No confirma ningún pago.
 - `js/payment-view.js` y frontend existente: preparación, salida al checkout oficial, lista de intentos y consulta de estado. Facturas y Movimientos se presentan en pestañas internas separadas; el retorno SIRO abre Movimientos. No iframe ni proxy del checkout.
 
 La URL de checkout es el único dato externo necesario que recibe el navegador; se exige exactamente `https://siropagos.bancoroela.com.ar/Home/Pago/<hash válido>`. Ese enlace contiene inevitablemente el identificador SIRO del checkout. Nunca se entrega Hash_Descarga de Phantom, credenciales ni respuestas SIRO crudas.

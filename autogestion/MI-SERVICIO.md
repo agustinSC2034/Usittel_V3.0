@@ -1,40 +1,62 @@
 # Mi servicio
 
-## Iteración UX de Mi servicio
+## Iteración productiva de servicios, 23/09/2026
 
-La pantalla queda ordenada como plan contratado y conexión, Tus servicios,
-Mejorá tu servicio y Herramientas. Inicio reutiliza `customer.connectionState`,
-que proviene de la lectura pública de `Consulta_Cliente_Avanzada` con
-`InfoFTTH=1`; solo `online` y `offline` se traducen a En línea y Sin conexión.
-Los demás valores son No disponible y `Estado_Servicio` no se usa como
-conectividad. El saldo y las facturas siguen disponibles en sus módulos.
+La pantalla queda ordenada como Plan contratado y conexión, Tus servicios,
+Podés sumar y Herramientas. El plan de Internet se muestra siempre. La detección
+y las reglas comerciales se calculan en el servidor; JavaScript solo presenta la
+lista pública recibida y abre Central.
 
-`serviceProducts()` mantiene el contrato: `null` significa detalle desconocido
-y `[]` significa campos configurados consultados sin productos. La UI muestra
-siempre el plan de Internet y agrega los labels públicos confirmados sin
-duplicarlos; con `null` informa que el detalle no está disponible.
+`serviceProducts()` conserva su contrato: `null` significa que no se pudo
+determinar el detalle y `[]` que los campos configurados se leyeron correctamente
+sin adicionales. Con `null` no se ofrecen Sensa, packs, STB ni Mesh por ausencia.
+Con una lista conocida, `service_catalog` reconoce exclusivamente aliases exactos.
+Un label no catalogado se muestra en Tus servicios, pero nunca prueba presencia o
+ausencia para una oferta. Los duplicados se eliminan y las cantidades inequívocas
+se conservan como `× N`.
 
-La normalización visual está en `js/service-catalog.js`. Usa aliases exactos,
-configurables y vacíos por defecto hasta confirmar los labels reales de
-`Productos_Television` y `Productos_Otros`. Un producto desconocido se muestra
-como texto, pero no activa ofertas. Las ofertas solo aparecen con ausencia
-demostrable: Sensa, Pack Sensa condicionado a Sensa, STB condicionado a TV y
-Sensa, Mesh, y upgrades con destino ascendente del catálogo configurado.
-El catálogo de upgrades se expone solo como lectura pública mínima; no habilita
-SOAP write, facturación ni aprovisionamiento. Los tickets Phantom no forman
-parte de esta experiencia.
+El catálogo comercial es privado y server-side. Cada entrada valida `id`, `type`,
+nombre, descripción, precio, moneda, dependencias, exclusiones y flag `enabled`.
+Sensa y Mesh requieren ausencia confirmada; cada pack y STB requieren Sensa y
+desaparecen al reconocer el mismo producto. Un STB adicional puede modelarse como
+otra oferta sin exclusión, sin inventar un máximo. Las ofertas de velocidad solo
+aparecen con una coincidencia exacta del plan actual, velocidad destino superior,
+precio confirmado y oferta habilitada. No usan SOAP ni escriben Phantom.
 
-Las acciones comerciales y `¿No podés ingresar? / Contactanos` abren el mismo
-widget oficial Central de Mi USITTEL, antes y después del login, sin IDA, DNI,
-saldo, factura ni datos Phantom. Si el SDK no carga queda visible el WhatsApp
-actual. Esto no cambia el estado público de `usittel.com.ar`, que mantiene
-Central oculto.
+Precios públicos cargados en la plantilla: Sensa $19.999/mes, Pack Fútbol
+$24.999/mes, Pack HBO $8.999/mes, Universal+ $7.999/mes, Set Top Box $7.750/mes
+y Wi-Fi Mesh $6.999/mes. El plan de 1.000 Mbps figura a $54.999/mes, pero su oferta
+queda deshabilitada hasta confirmar el precio aplicable a upgrades de clientes
+existentes y cargar los labels exactos de planes de origen.
 
-Pendiente de configuración/manual: confirmar aliases públicos con el inspector
-read-only y colocarlos en el catálogo; configurar la lista privada de
-`service_product_fields` sin automatizar su edición; validar visualmente contra
-un entorno con PHP 8.2 y credenciales de laboratorio. Wi-Fi físico y upgrade
-write siguen sin estar validados ni habilitados.
+Todas las CTA comerciales abren la instancia existente de Central. El DOM conserva
+solo un identificador local de intención; no se transmite IDA, documento, saldo,
+factura, credenciales, tokens ni contexto Phantom. No se crean tickets.
+
+Wi-Fi ya no usa `wifi.lab_ida`: cualquier `selected_ida` autorizado por la sesión
+puede preparar el cambio si `ONU_Modelo` coincide exactamente con `wifi.models`.
+`dual_band_models` debe ser un subconjunto exacto. Se mantienen CSRF, nonce,
+reautenticación, HMAC, lock persistente, expiración, Ticket=0, una sola escritura
+y estado UNKNOWN sin retry. Ningún modelo se habilita por similitud.
+
+Inspector read-only para hasta tres contratos:
+
+```bash
+MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime php /home4/usittel/public_html/autogestion/server/inspect-service-catalog.php IDA1 IDA2 IDA3
+```
+
+La salida contiene solo IDA, modelo saneado, dual-band conocido, elegibilidad
+Wi-Fi y labels/cantidades públicos de `Productos_Television` y `Productos_Otros`.
+No realiza escrituras. Pendiente manual: ejecutar esa lectura con los tres equipos,
+confirmar físicamente bandas/compatibilidad, cargar modelos y aliases exactos en la
+configuración privada y recién entonces decidir `wifi.enabled`. El upgrade write
+permanece pausado y Wi-Fi no se marca como validado físicamente.
+
+Validación local de esta iteración: 870 aserciones con fixtures, 64 archivos PHP
+y 28 archivos JavaScript con sintaxis correcta, build y escaneo de secretos sin
+hallazgos. QA visual en 1366×900 y 390×844: jerarquía correcta, una sola instancia
+de Central, sin errores de consola ni desborde horizontal. No se contactó Phantom
+ni SIRO real y no se ejecutó ninguna escritura.
 
 ## Preparación de inspecciones, 21/09/2026
 
@@ -118,7 +140,7 @@ Configuración recomendada, para colocar manualmente en el archivo privado:
 Productos_Telefonia, Producto_Telefonia y Productos_Bonificaciones quedan fuera
 de la allowlist incluso mediante descriptores. No alimentan products, Inicio,
 Mi servicio ni la comprobación de productos contratados para solicitudes.
-El inspector puede reconocer su estructura; no los publica como servicios.
+El inspector productivo no los recorre ni los publica como servicios.
 Sin configuración o con un campo ausente/incompatible el resultado es null;
 con ambos campos soportados presentes y vacíos es []. Configuración privada
 sin modificaciones automáticas.
@@ -131,23 +153,22 @@ cerrada: Productos_Television, Producto_Television, Productos_Otros,
 Producto_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Telefonía no se ofrece ni se mapea en Mi USITTEL. Solo texto o listas de textos acotados; no
 se extraen valores recursivamente de objetos desconocidos.
 
-La documentación histórica nombra Productos_Television, pero el formato de la
-instalación debe verificarse antes de configurar el mapper. Inspector manual:
-`inspect-service-features.php <IDA>`: una lectura, solo presencia/tipos/cantidad.
-No imprime nombres, direcciones, documentos, contraseñas ni valores de productos.
-También informa ONU_Modelo saneado. Para listas de objetos se admite descriptor
+La instalación debe verificarse antes de cargar aliases. El inspector actual
+`inspect-service-catalog.php` publica solamente labels de los dos campos confirmados,
+cantidad inequívoca y modelo ONU saneado. Para listas de objetos se admite descriptor
 explícito {field, label, quantity}; label debe ser una clave permitida y quantity
 Cantidad. Cantidades entre 1 y 99; estructuras inválidas quedan desconocidas.
 Ejemplo PHP: ['field'=>'Set_Top_Box','label'=>'Nombre','quantity'=>'Cantidad'].
 Los campos de Sensa, packs y STB deben confirmarse con el inspector antes de activar
 su mapeo; no se mezclan productos potenciales con servicios contratados.
-Los enlaces comerciales abren el WhatsApp ya publicado de USITTEL sin adjuntar
-datos personales. No contratan, envían mensajes ni cambian el abono automáticamente.
+Los enlaces comerciales abren Central sin adjuntar datos personales. No contratan,
+envían mensajes ni cambian el abono automáticamente.
 
 ## Wi-Fi
 
 Implementados POST wifi-prepare y wifi-change con sesión, CSRF y selected_ida.
-Deshabilitado por defecto: wifi.enabled, lab_ida único y lista exacta models.
+Deshabilitado por defecto: `wifi.enabled`; la compatibilidad usa la lista exacta
+`models` para cualquier contrato autorizado por la sesión, sin gate por IDA.
 ONU_Modelo se consulta con InfoFTTH=1; dual_band_models habilita SSID_5G solo
 para modelos validados. No se infiere soporte a partir del nombre del plan.
 
@@ -160,7 +181,7 @@ el token. Ticket=0; solo el mensaje exacto de cambio aplicado confirma éxito.
 
 La documentación describe Configurar_Wifi pero no conserva el request completo.
 El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren
-prueba controlada real. No habilitar globalmente antes de esa prueba. No se cambió
+prueba controlada real. No habilitar modelos antes de esa prueba. No se cambió
 configuración privada ni ninguna ONU en esta entrega.
 
 ## Speedtest

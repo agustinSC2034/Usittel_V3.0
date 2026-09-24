@@ -220,12 +220,13 @@ con API.php en lugar de API_Rest.php, CA válida y soap.profile_names exactos.
 Las credenciales técnicas existentes deben ser aceptadas por SOAP; no se prueba aquí.
 No habilitar upgrade ni agregar métodos de escritura.
 
-Para Wi-Fi se conserva inspect-service-features.php: el IDA 4950 aportado no devolvió
-ONU_Modelo. Necesitamos un IDA controlado con ONU y su modelo exacto devuelto por
-esa lectura; después confirmar físicamente sus bandas. Solo entonces definir
-wifi.lab_ida, wifi.models y, si corresponde, wifi.dual_band_models. Obtener el
-modelo no autoriza el cambio. La prueba futura será una escritura expresamente
-confirmada, sin retries; ambos SSID explícitos para dual-band, Ticket=0.
+Para Wi-Fi se usa `inspect-service-catalog.php` con hasta tres IDA controlados.
+Devuelve solamente IDA, modelo saneado, compatibilidad configurada y labels públicos.
+Después hay que confirmar físicamente las bandas. Solo entonces se agregan nombres
+exactos a `wifi.models` y, cuando corresponda, `wifi.dual_band_models`. No existe
+`wifi.lab_ida`: la compatibilidad validada pertenece al modelo y se aplica a cualquier
+`selected_ida` autorizado por la sesión. La prueba futura será una escritura
+expresamente confirmada, sin retries; ambos SSID explícitos para dual-band, Ticket=0.
 
 Orden manual: primero ejecutar únicamente inspect-service-requests.php sobre 4950
 y revisar el resultado. Después se acuerda la lectura del modelo, luego SOAP.

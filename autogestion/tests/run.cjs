@@ -267,12 +267,9 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const traceAfterSchema=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
   check('chequeo local pasa sin red ni secretos',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/PHP/);assert.match(command.stdout,/cURL/);assert.match(command.stdout,/no contactó Phantom/);assert.doesNotMatch(command.stdout,/fixture-api-secret|fixture-api\b/);assert.equal(fs.readFileSync(path.join(dir,'trace.txt'),'utf8'),traceAfterSchema);});
-  const multiLoginConfig=path.join(dir,'multi-login.php');fs.writeFileSync(multiLoginConfig,settings().replace("'allowed_idas'=>[1,5],","'allowed_idas'=>[1,5],'service_login_idas'=>[1,1271],"));
-  command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:multiLoginConfig,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
-  check('chequeo confirma múltiples contratos iniciales sin exponer IDs',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/2 contratos iniciales configurados/);assert.doesNotMatch(command.stdout,/1271/);});
-  const allLoginConfig=path.join(dir,'all-login.php');fs.writeFileSync(allLoginConfig,settings().replace("'allowed_idas'=>[1,5],","'allowed_idas'=>[1,5],'service_login_idas'=>'all',"));
-  command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:allLoginConfig,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
-  check('chequeo reconoce todos los contratos sin ampliar pagos',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/Todos los contratos; credenciales exactas obligatorias/);});
+  const portalConfig=path.join(dir,'portal-login.php');fs.writeFileSync(portalConfig,settings().replace("'lab_users'=>", "'login_users'=>['confirmado'=>4242],'lab_users'=>"));
+  command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:portalConfig,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
+  check('chequeo confirma portal global sin exponer IDs',()=>{assert.equal(command.status,0,command.stdout+command.stderr);assert.match(command.stdout,/Contratos numéricos habilitados/);assert.doesNotMatch(command.stdout,/4242/);});
   const incomplete=path.join(dir,'incomplete.php');fs.writeFileSync(incomplete,settings().replace("'fixture-api'","''").replace("'fixture-api-secret'","''"));
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:incomplete,MI_USITTEL_RUNTIME:dir},encoding:'utf8'});
   check('chequeo avisa credenciales faltantes sin imprimir valores',()=>{assert.equal(command.status,0);assert.match(command.stdout,/⚠️ Credenciales Phantom/);assert.doesNotMatch(command.stdout,/api_pass\s*=>/);});
@@ -311,7 +308,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '},{headers:{Origin:'https://evil.invalid'}});check('origen cruzado rechazado',()=>assert.equal(r.status,403));
   r=await a.call('login',{username:'000001',password:'00Lab-fixture!'});check('no recorta contraseña',()=>assert.equal(r.status,401));
   r=await a.call('login',{username:'1',password:' 00Lab-fixture! '});check('IDA candidato no autoriza usuario distinto',()=>assert.equal(r.status,401));
-  r=await a.call('login',{username:'000014',password:' 00Lab-fixture! '});check('IDA fuera de laboratorio rechazado',()=>assert.equal(r.status,401));
+  scenario('production-user');clearRate();const productionUser=jar();r=await login(productionUser,'004242');check('login de contrato productivo fuera del laboratorio',()=>{assert.equal(r.status,200);assert.equal(r.data.selectedServiceId,'4242');assert.deepEqual(r.data.services.map(s=>s.id),['4242']);});
+  r=await productionUser.call('overview?IDA=1');check('contrato productivo no acepta IDA del navegador',()=>assert.equal(r.status,400));await productionUser.call('logout',{});scenario('normal');
   scenario('missing-credentials');r=await a.call('login',{username:'000001',password:' 00Lab-fixture! '});check('sin campos de credenciales rechaza',()=>assert.equal(r.status,401));scenario('normal');
   for(const fixture of ['numeric-password','numeric-user','empty-password','wrong-identity','missing-identity','numeric-identity','alternate-identity','empty-customer','object-customer','duplicate-customer','ambiguous-customer']) {
     clearRate();scenario(fixture);const j=jar();r=await login(j);
@@ -325,11 +323,10 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const pendingTrace=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');const pending=jar();r=await login(pending);
   check('identidad pendiente bloquea login antes de llamar al proveedor',()=>{assert.equal(r.data.error.code,'LAB_IDENTITY_PENDING');assert.equal(fs.readFileSync(path.join(dir,'trace.txt'),'utf8'),pendingTrace);});
   fs.writeFileSync(config,settings());
-  clearRate();const disallowed=jar();r=await login(disallowed,'000005');check('IDA 5 no entra al portal aunque esté en configuración histórica',()=>assert.equal(r.status,401));
   clearRate();scenario('timeout');const providerFailure=jar();await providerFailure.call('bootstrap');r=await providerFailure.call('login',{username:'000001',password:' 00Lab-fixture! '});check('fallo del proveedor no consume intentos de credenciales',()=>{assert.equal(r.status,504);const state=JSON.parse(fs.readFileSync(path.join(dir,'attempts.json'),'utf8'));assert.equal(Object.keys(state.buckets).length,0);});scenario('normal');
   const oldCookie=a.cookie;r=await login(a);check('login fixture suspendido y regeneración',()=>{assert.equal(r.status,200);assert.notEqual(a.cookie,oldCookie);});
   r=await a.call('bootstrap');check('sesión persiste al recargar',()=>assert.equal(r.data.authenticated,true));
-  r=await a.call('overview');check('whitelist, conectividad pública y saldo independiente',()=>{assert.equal(r.status,200,r.text);assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
+  r=await a.call('overview');check('whitelist, conectividad pública, catálogo desconocido y saldo independiente',()=>{assert.equal(r.status,200,r.text);assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].amount,20000.25);assert.equal(r.data.customer.serviceStatus,'Suspendido');assert.equal(r.data.customer.connectionState,'online');assert.equal(r.data.customer.equipmentState,'offline');assert.equal(r.data.nextDue,null);assert.deepEqual(r.data.servicePresentation,{known:false,items:[]});assert.deepEqual(r.data.commercialOffers,[]);assert.doesNotMatch(r.text,/Autogestion|fixture-technical-token|Hash_Descarga|do-not-expose|fixture-api-secret|Conexiones_Asociadas|MAC_GPONSN|WanMac|Usuario_PPPoE|OLT_IP|ID_Caja_NAP/);});
   r=await a.call('payment-history');check('movimientos reales públicos omiten cookie y capability',()=>{assert.equal(r.status,200);assert.equal(r.data.items.length,2);assert.equal(r.data.items[1].method,'Efectivo');assert.doesNotMatch(r.text,/opaque-session|MDEyMzQ1Njc4OWFiY2RlZg/);});
   r=await a.call('payment-receipt?id=00053321');check('comprobante de pago PDF ligado al movimiento exacto',()=>{assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^application\/pdf/);assert.match(r.text,/^%PDF-1\.7/);});
   r=await a.call('payment-receipt?id=00052001');check('capability de otro movimiento no se sustituye',()=>assert.equal(r.status,404));
@@ -396,8 +393,12 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   });
   check('Mi servicio usa solo datos públicos y separa consulta y medición',()=>{
     const views=fs.readFileSync(path.join(root,'js','service-view.js'),'utf8');
+    const apiSource=fs.readFileSync(path.join(root,'server','Api.php'),'utf8');
     assert.doesNotMatch(views,/customer\.equipmentState|Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion|speed\.cloudflare/);
     assert.doesNotMatch(views,/Domicilio de instalación|Velocidad del plan/);
+    assert.match(views,/runtime\.commercialOffers/);assert.match(views,/formatOfferPrice/);assert.match(views,/data-action="chat"/);assert.match(views,/data-chat-topic/);
+    assert.doesNotMatch(views,/selectedServiceId|selected_ida|DNI|CUIT|saldo|factura|fetch\(|api\(/i);
+    assert.doesNotMatch(apiSource,/PhantomSoap|upgradeCatalog|modificar_abonado|Act\. Perfiles/);
   });
   check('Facturas separa comprobantes y movimientos con pestañas accesibles',()=>{
     const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');
@@ -437,7 +438,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['api_user']"));r=await mapping.call('overview');check('mapeos limitados a lista pública explícita',()=>assert.equal(r.status,503));
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>['join'=>[['Nombre'],['Producto_Internet']]]"));r=await mapping.call('overview');check('composición de campos explícitos',()=>assert.equal(r.data.customer.name,'Cliente de pruebas Plan de laboratorio'));
   fs.writeFileSync(config,settings().replace("'name'=>['Nombre']", "'name'=>null").replace("'balance_path'=>['test_balance']", "'balance_path'=>null"));r=await mapping.call('overview');check('mapeos explícitos de laboratorio y Balance independiente del legado',()=>{assert.equal(r.data.customer.name,'Cliente de pruebas');assert.equal(r.data.account.debt,12500.75);});
-  const trace=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');check('solo auth/lecturas IDA 1',()=>{assert.doesNotMatch(trace,/:5|:14|:999|Imputar|Promesa|Actualizar/);});
+  const trace=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');check('login global sólo lee candidatos autorizados por sesión',()=>{assert.match(trace,/Consulta_Cliente_Avanzada:4242/);assert.doesNotMatch(trace,/:999|Imputar|Promesa|Actualizar/);});
   check('logs sin secretos',()=>assert.doesNotMatch(stderr,/00Lab-fixture|fixture-api-secret|fixture-technical-token|do-not-expose/));
   fs.writeFileSync(config,settings());clearRate();scenario('normal');
   await require('./invoices.cjs')({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings,sleep});

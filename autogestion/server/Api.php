@@ -7,7 +7,6 @@ require_once __DIR__.'/Services.php';
 require_once __DIR__.'/PaymentHistory.php';
 require_once __DIR__.'/Wifi.php';
 require_once __DIR__.'/ServiceRequests.php';
-require_once __DIR__.'/PhantomSoap.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -15,8 +14,8 @@ function startSession(array $c,string $dir): void {
     session_save_path($dir); session_name('MIUSITTEL_'.strtoupper($c['mode']));
     session_set_cookie_params(['lifetime'=>0,'path'=>sessionCookiePath(),'secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off'), 'httponly'=>true,'samesite'=>'Strict']);
     session_start();
-    $fingerprint=hash('sha256',json_encode([$c['mode'],$c['allowed_idas'],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
-        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,$c['service_login_idas']??[1],'services-v2-payment-history']));
+    $fingerprint=hash('sha256',json_encode([$c['mode'],$c['login_users']??[],$c['lab_users'],$c['phantom_url']??'',$c['api_user']??'',
+        $c['customer_id_field']??null,$c['phantom_auth_mode']??null,'services-v3-global-login']));
     $now=time();
     if (isset($_SESSION['ida']) && (($_SESSION['config']??'')!==$fingerprint || $now-($_SESSION['last']??0)>=$c['idle_seconds'] || $now-($_SESSION['started']??0)>=$c['max_seconds'])) {
         $_SESSION=[]; session_regenerate_id(true);
@@ -147,15 +146,15 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     if($route==='service-connection') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
-        serviceReadLimit('connection_checked');
+        serviceReadLimit('connection_checked_'.$ida);
         jsonReply($ph->connection($ida));
     }
     if($route==='wifi-prepare') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
-        if(($c['wifi']['enabled']??false)!==true || ($c['wifi']['lab_ida']??null)!==$ida) throw new Failure('WIFI_UNAVAILABLE',409);
-        serviceReadLimit('wifi_prepared',10);
+        if(($c['wifi']['enabled']??false)!==true) throw new Failure('WIFI_UNAVAILABLE',409);
+        serviceReadLimit('wifi_prepared_'.$ida,10);
         $model=wifiModel($ph->serviceRecord($ida));
-        if(!wifiGate($c,$ida,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
+        if(!wifiGate($c,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
         $challenge=['id'=>bin2hex(random_bytes(16)),'ida'=>$ida,'model'=>$model,'dualBand'=>wifiDualBand($c,$model),'until'=>time()+600];
         $_SESSION['wifi_challenge']=$challenge;
         jsonReply(['requestId'=>$challenge['id'],'dualBand'=>$challenge['dualBand']]);
@@ -166,7 +165,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(($challenge['id']??null)!==($b['requestId']??null) || ($challenge['ida']??null)!==$ida || ($challenge['until']??0)<time()) throw new Failure('WIFI_EXPIRED',409);
         $settings=wifiInput($b,$challenge['dualBand']);
         $model=wifiModel($ph->serviceRecord($ida));
-        if($model!==$challenge['model'] || !wifiGate($c,$ida,$model) || wifiDualBand($c,$model)!==$challenge['dualBand']) throw new Failure('WIFI_UNAVAILABLE',409);
+        if($model!==$challenge['model'] || !wifiGate($c,$model) || wifiDualBand($c,$model)!==$challenge['dualBand']) throw new Failure('WIFI_UNAVAILABLE',409);
         $identity=$_SESSION['authenticated_ida'];$remote=$_SERVER['REMOTE_ADDR']??'unknown';
         rateLimitBegin($dir,'wifi',$remote,$identity);
         try { $account=$ph->customer($identity); }
@@ -174,7 +173,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(!is_string($account['Autogestion_Pass']??null) || !hash_equals($account['Autogestion_Pass'],$b['accountPassword'])) throw new Failure('WIFI_AUTH',403);
         rateLimitRelease($dir,'wifi',$remote,$identity);unset($account,$b['accountPassword']);
         $payloadHash=hash_hmac('sha256',json_encode($settings,JSON_THROW_ON_ERROR),$c['api_pass']);
-        $result=applyWifiOnce($dir,$ida,$b['requestId'],$payloadHash,fn()=>$ph->configureWifi($ida,$settings));
+        $result=applyWifiOnce($dir,$ida,$b['requestId'],$payloadHash,fn()=>$ph->configureWifi($ida,$model,$settings));
         if($result['state']==='UNKNOWN') {
             // Fixed assistance text only: settings/password never enter the ticket service.
             try {if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('REQUEST_STORAGE');$help=$requests->create($ida,'WIFI_HELP',$b['requestId'],fn()=>null);$result['assistance']=$help;}
@@ -249,17 +248,18 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     try {$requestList=$requests->list($ida);$requestListUnavailable=false;}
     catch(Failure $e) {$requestList=[];$requestListUnavailable=true;diagnostic($e);}
-    $upgradeCatalog=[];
-    try { foreach(upgradeCatalog($c) as $plan) $upgradeCatalog[]=['current'=>$plan['current'],'target'=>$plan['target'],'public_name'=>$plan['public_name'],'current_down'=>$plan['current_down'],'speed_down'=>$plan['speed_down']]; }
-    catch(Failure $e) { $warnings[]='UPGRADE_UNAVAILABLE'; diagnostic($e); }
-    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,'upgradeCatalog'=>$upgradeCatalog,
+    try {$servicePresentation=serviceProductState($profile['products']??null,$c);$offers=commercialOffers($profile['plan']??null,$profile['products']??null,$c);}
+    catch(Failure $e) {$servicePresentation=['known'=>false,'items'=>[]];$offers=[];$warnings[]='COMMERCIAL_UNAVAILABLE';diagnostic($e);}
+    unset($servicePresentation['ids']);
+    jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,
+        'servicePresentation'=>$servicePresentation,'commercialOffers'=>$offers,
         'serviceOptions'=>requestOptions($c,$ida,$profile['products']??null),'serviceRequests'=>$requestList,'serviceRequestsUnavailable'=>$requestListUnavailable]);
 }
 function diagnostic(Failure $e): void { error_log('mi-usittel event='.$e->kind); }
 function fail(\Throwable $e): never {
     $f=$e instanceof Failure?$e:new Failure('INTERNAL'); diagnostic($f);
     $message=match($f->kind) {
-        'INVALID_CREDENTIALS'=>'Usuario o contraseña incorrectos, o cuenta no habilitada para este laboratorio.',
+        'INVALID_CREDENTIALS'=>'Usuario o contraseña incorrectos.',
         'UNAUTHENTICATED'=>'Tu sesión venció. Volvé a ingresar.',
         'RATE_LIMIT'=>'Se alcanzó el límite de intentos. Intentá nuevamente en 15 minutos.',
         'CSRF'=>'La sesión del formulario cambió. Recargá la página.',

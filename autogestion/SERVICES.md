@@ -39,16 +39,16 @@ POST select-service acepta únicamente serviceId string y exige CSRF, sesión y 
 
 El frontend invalida las respuestas en vuelo con una generación local, limpia datos y muestra carga antes del POST. Solo renderiza la nueva respuesta. Recarga conserva selección; logout borra lista, selección y datos. El selector usa la dirección como botón en Inicio, con chevron solo si hay varios contratos y un modal pequeño compatible con teclado en móvil/desktop. Un solo servicio conserva la presentación sin interacción.
 
-## Laboratorio y siguiente validación real
+## Autorización productiva
 
-El acceso inicial continúa limitado por defecto al IDA 1. Una futura habilitación privada puede declarar `service_login_idas` (lista explícita de hasta tres enteros positivos) y el mapeo lab_users ya existente para nombres personalizados. Esta opción define candidatos de login; no autoriza contratos adicionales por sí sola y no evita la comparación exacta de credenciales. No se modificó ese archivo ni se hardcodearon ejemplos del usuario.
+Todo usuario decimal positivo de hasta diez dígitos puede identificar un contrato candidato. Esto no lo autoriza: Phantom debe devolver un único registro con identidad coincidente y `Autogestion_User`/`Autogestion_Pass` deben coincidir exactamente. Recién entonces el servidor descubre y revalida contratos asociados, crea `authorized_services` y fija `selected_ida` dentro de ese conjunto. Ningún ID enviado por el navegador amplía el alcance.
 
-El siguiente paso manual es reiniciar el servidor local para cargar este commit e ingresar normalmente con las credenciales del contrato 1. El login debe mostrar dos servicios, mantener el 1 como selección inicial y permitir pasar al 5 sin volver a autenticar. No hace falta volver a ejecutar el inspector ni compartir documentos o credenciales.
+`allowed_idas` y `service_login_idas` dejaron de participar en el login productivo. `login_users` es un mapa opcional, sin contraseñas, reservado a usernames no numéricos ya confirmados. El alias histórico `lab_users` se acepta solo por compatibilidad; no limita los contratos numéricos. SIRO, imputación, tickets y SOAP conservan sus compuertas independientes.
 
 ## Validación
 
 418 verificaciones con fixtures: conserva regresiones anteriores y añade 1/2/3 servicios, prioridad de asociación directa sin búsqueda documental redundante, asociación vacía, búsqueda exacta por documento con dos contratos, timeout del respaldo documental con degradación segura, DNI↔CUIT personal válido, CUIT incompatible o inválido, chequeo privado de múltiples contratos iniciales, raíz ausente, tipos incorrectos, duplicados, reconsulta por ID, selección válida/inválida, CSRF, IDA manipulada, revisión obsoleta, perfil/saldo/facturas/PDF por servicio, recarga, logout y expiración. La UX del selector ya fue validada en 390×844 y 1365×900 con fixtures; este cambio no altera su HTML/CSS.
 
-## Ingreso de todos los contratos en el portal local
+## Ingreso global
 
-Por solicitud de Agustín, service_login_idas admite el valor explícito `all`, además de la lista de laboratorio. Un usuario numérico identifica únicamente el candidato; Phantom debe confirmar ID y credenciales exactas antes de crear sesión. No hay barrido de clientes. Los usuarios personalizados siguen requiriendo lab_users privado. La consulta inicial se limita al candidato y las lecturas posteriores a authorized_services/selected_ida. Cambiar la opción invalida sesiones existentes. SIRO e imputación conservan sus compuertas de laboratorio independientes. Esta ampliación no habilita producción ni modifica la configuración privada automáticamente.
+No existe un modo `all` que deba activarse: los contratos numéricos son candidatos por defecto. No hay barrido de clientes. La consulta inicial se limita al candidato y las lecturas posteriores a `authorized_services`/`selected_ida`. Cambiar aliases de `login_users` invalida sesiones existentes. La configuración privada no se modifica automáticamente.

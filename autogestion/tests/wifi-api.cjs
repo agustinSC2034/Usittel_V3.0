@@ -1,7 +1,7 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings})=>{
-  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'lab_ida'=>1,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'");
+  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'");
   const marker=path.join(dir,'wifi-change-1.json');
-  const reset=()=>{if(fs.existsSync(marker))fs.unlinkSync(marker);clearRate();scenario('normal');};
+  const reset=()=>{for(const ida of [1,5,4242]){const file=path.join(dir,`wifi-change-${ida}.json`);if(fs.existsSync(file))fs.unlinkSync(file);}clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
   const payload=id=>({requestId:id,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',accountPassword:' 00Lab-fixture! ',confirmed:true});
   reset();fs.writeFileSync(config,settings());const disabled=jar();await login(disabled);
@@ -36,7 +36,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   check('modelo no validado bloqueado',()=>assert.equal(r.data.error.code,'WIFI_UNAVAILABLE'));
   reset();scenario('services-two');const multi=jar();await login(multi);r=await multi.call('wifi-prepare',{});const old=r.data.requestId;
   await multi.call('select-service',{serviceId:'5'});r=await multi.call('wifi-change',payload(old));check('cambio de contrato invalida la preparación',()=>assert.equal(r.status,409));
-  r=await multi.call('wifi-prepare',{});check('otro servicio no hereda habilitación Wi-Fi',()=>assert.equal(r.status,409));
+  r=await multi.call('wifi-prepare',{});check('modelo permitido habilita Wi-Fi sin lab_ida en otro contrato propio',()=>{assert.equal(r.status,200);assert.equal(r.data.dualBand,true);});
   await multi.call('select-service',{serviceId:'1'});r=await multi.call('wifi-change',payload(old));check('volver al contrato original no recupera el nonce descartado',()=>assert.equal(r.status,409));
   await multi.call('logout',{});await multi.call('bootstrap');r=await multi.call('wifi-change',payload(old));check('logout impide cambio Wi-Fi',()=>assert.equal(r.status,401));
   reset();fs.writeFileSync(config,enabled().replace("'dual_band_models'=>['Fixture-ONU']","'dual_band_models'=>[]"));

@@ -46,6 +46,7 @@ function documentCandidateIds(array $rows,string $source,int $rootId): array {
     return array_values($ids);
 }
 function discoverServices(Phantom $ph,int $rootId,?callable $inspect=null): array {
+    $ph->scope([$rootId]);
     $root=$ph->customer($rootId);
     if($inspect!==null) $inspect('root',$root);
     $rows=[$rootId=>$root];$candidates=[];$success=false;$warning=false;

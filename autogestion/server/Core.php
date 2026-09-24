@@ -13,7 +13,7 @@ final class InspectionFailure extends \RuntimeException {
     }
 }
 function config(): array {
-    $c = ['mode'=>'demo', 'allowed_idas'=>[], 'lab_users'=>[], 'idle_seconds'=>900, 'max_seconds'=>28800,
+    $c = ['mode'=>'demo', 'login_users'=>[], 'lab_users'=>[], 'allowed_idas'=>[], 'idle_seconds'=>900, 'max_seconds'=>28800,
         'timeout_seconds'=>10, 'connect_timeout_seconds'=>4, 'customer_path'=>[], 'profile_fields'=>[],
         'balance_path'=>null, 'ca_file'=>null,'phantom_auth_mode'=>'get-query-lab','customer_id_field'=>null];
     $path = getenv('MI_USITTEL_CONFIG');
@@ -27,18 +27,15 @@ function config(): array {
     }
     if (!in_array($c['mode'], ['demo','phantom'], true)) throw new Failure('CONFIGURATION');
     if($c['phantom_auth_mode']!=='get-query-lab' || !in_array($c['customer_id_field'],[null,'ID','IDAx'],true)
-        || !is_array($c['lab_users']) || !is_array($c['profile_fields'])) throw new Failure('CONFIGURATION');
+        || !validLoginUsers($c['login_users']) || !validLoginUsers($c['lab_users']) || !is_array($c['profile_fields'])) throw new Failure('CONFIGURATION');
     foreach (['idle_seconds','max_seconds','timeout_seconds','connect_timeout_seconds'] as $key) {
         if (!is_int($c[$key]) || $c[$key] < 1) throw new Failure('CONFIGURATION');
     }
     if ($c['timeout_seconds'] > 30 || $c['connect_timeout_seconds'] > 10) throw new Failure('CONFIGURATION');
-    if (!is_array($c['allowed_idas']) || array_diff($c['allowed_idas'], [1,5])) throw new Failure('CONFIGURATION');
-    if(!validLoginScope($c['service_login_idas']??[1])) throw new Failure('CONFIGURATION');
-    $c['allowed_idas'] = array_map('intval', $c['allowed_idas']);
     if ($c['mode'] === 'phantom') {
         $url = parse_url($c['phantom_url'] ?? '');
         if (($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment'])
-            || !is_string($c['api_user'] ?? null) || $c['api_user'] === '' || !is_string($c['api_pass'] ?? null) || $c['api_pass'] === '' || !$c['allowed_idas']) throw new Failure('CONFIGURATION');
+            || !is_string($c['api_user'] ?? null) || $c['api_user'] === '' || !is_string($c['api_pass'] ?? null) || $c['api_pass'] === '') throw new Failure('CONFIGURATION');
     }
     return $c;
 }
@@ -92,18 +89,21 @@ function rateLimitRelease(string $dir, string $user, string $ip, ?int $candidate
         writeFileHandle($f,$state);
     });
 }
-function validLoginScope(mixed $scope): bool {
-    if($scope==='all') return true;
-    if(!is_array($scope) || !array_is_list($scope) || $scope===[] || count($scope)>3) return false;
-    foreach($scope as $id) if(!is_int($id) || $id<1 || $id>9999999999) return false;
+function validLoginUsers(mixed $users): bool {
+    if(!is_array($users) || count($users)>100) return false;
+    foreach($users as $user=>$ida) {
+        if(!is_string($user) || $user==='' || strlen($user)>128 || preg_match('/[\x00-\x1f\x7f]/',$user)
+            || !is_int($ida) || $ida<1 || $ida>9999999999) return false;
+    }
     return true;
 }
 function resolveUser(string $user, array $c): ?int {
-    $candidate = $c['lab_users'][$user] ?? null;
+    // Numeric portal users are contract candidates, never authorization. The
+    // exact Phantom credentials must still match before their server-side
+    // associated contracts are discovered and stored in the session.
+    $candidate = $c['login_users'][$user] ?? $c['lab_users'][$user] ?? null;
     if ($candidate === null && preg_match('/^[0-9]{1,10}$/D', $user)) $candidate = (int)$user;
-    $scope=$c['service_login_idas']??array_values(array_intersect([1],$c['allowed_idas']));
-    return is_int($candidate) && $candidate>=1 && $candidate<=9999999999
-        && ($scope==='all' || is_array($scope) && in_array($candidate,$scope,true)) ? $candidate : null;
+    return is_int($candidate) && $candidate>=1 && $candidate<=9999999999 ? $candidate : null;
 }
 function atPath(array $value, ?array $path): mixed {
     if ($path === null) return null;

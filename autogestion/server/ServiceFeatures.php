@@ -43,6 +43,104 @@ function serviceProducts(array $record,array $config): ?array {
     return array_values(array_unique($out));
 }
 
+function serviceCatalog(array $config): array {
+    $raw=$config['service_catalog']??[];
+    if(!is_array($raw) || array_is_list($raw) && $raw!==[] || count($raw)>30) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
+    $out=[];$seenAliases=[];
+    foreach($raw as $id=>$entry) {
+        if(!is_string($id) || !preg_match('/^[a-z][a-z0-9_]{0,39}$/D',$id) || !is_array($entry) || array_is_list($entry)
+            || array_diff(array_keys($entry),['type','public_name','aliases'])) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
+        $type=$entry['type']??null;$name=$entry['public_name']??null;$aliases=$entry['aliases']??null;
+        if(!in_array($type,['sensa','sensa_pack','stb','mesh'],true) || !publicCatalogText($name,80)
+            || !is_array($aliases) || !array_is_list($aliases) || count($aliases)>20) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
+        $clean=[];
+        foreach($aliases as $alias) {
+            if(!publicCatalogText($alias,160) || isset($seenAliases[$alias])) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
+            $seenAliases[$alias]=true;$clean[]=$alias;
+        }
+        $out[$id]=['type'=>$type,'public_name'=>$name,'aliases'=>$clean];
+    }
+    return $out;
+}
+function publicCatalogText(mixed $value,int $max): bool {
+    return is_string($value) && $value!=='' && strlen($value)<=$max && trim($value)===$value
+        && !preg_match('/[<>@\x00-\x1f]|https?:/i',$value);
+}
+function productLabelParts(string $value): array {
+    if(preg_match('/\A(.+?) × ([1-9][0-9]?)\z/u',$value,$match)) return ['label'=>$match[1],'quantity'=>(int)$match[2]];
+    return ['label'=>$value,'quantity'=>null];
+}
+function serviceProductState(?array $products,array $config): array {
+    if($products===null) return ['known'=>false,'items'=>[],'ids'=>[]];
+    $catalog=serviceCatalog($config);$byAlias=[];
+    foreach($catalog as $id=>$entry) foreach($entry['aliases'] as $alias) $byAlias[$alias]=$id;
+    $known=[];$unknown=[];$ids=[];
+    foreach($products as $value) {
+        if(!is_string($value)) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
+        $parts=productLabelParts($value);$id=$byAlias[$parts['label']]??null;
+        if($id===null) {
+            $item=['label'=>$parts['label'],'quantity'=>$parts['quantity']];
+            if(!isset($unknown[$parts['label']]) || ($item['quantity']??0)>($unknown[$parts['label']]['quantity']??0)) $unknown[$parts['label']]=$item;
+            continue;
+        }
+        $ids[$id]=true;$item=['label'=>$catalog[$id]['public_name'],'quantity'=>$parts['quantity']];
+        if(!isset($known[$id]) || ($item['quantity']??0)>($known[$id]['quantity']??0)) $known[$id]=$item;
+    }
+    return ['known'=>true,'items'=>array_values([...$known,...$unknown]),'ids'=>array_keys($ids)];
+}
+function commercialCatalog(array $config): array {
+    $raw=$config['commercial_catalog']??[];
+    if(!is_array($raw) || !array_is_list($raw) || count($raw)>40) throw new Failure('COMMERCIAL_CONFIGURATION');
+    $out=[];$ids=[];
+    foreach($raw as $entry) {
+        $allowed=['id','type','public_name','description','price_monthly','price_once','currency','requires','excludes','enabled','current_plans','target_speed'];
+        if(!is_array($entry) || array_is_list($entry) || array_diff(array_keys($entry),$allowed)) throw new Failure('COMMERCIAL_CONFIGURATION');
+        $id=$entry['id']??null;$type=$entry['type']??null;$monthly=$entry['price_monthly']??null;$once=$entry['price_once']??null;
+        if(!is_string($id) || !preg_match('/^[a-z][a-z0-9_]{0,39}$/D',$id) || isset($ids[$id])
+            || !in_array($type,['sensa','sensa_pack','stb','mesh','speed'],true)
+            || !publicCatalogText($entry['public_name']??null,100) || !publicCatalogText($entry['description']??null,240)
+            || ($entry['currency']??null)!=='ARS' || !is_bool($entry['enabled']??null)
+            || !validCommercialPrice($monthly) || !validCommercialPrice($once) || ($monthly===null && $once===null)
+            || !validCatalogIds($entry['requires']??null) || !validCatalogIds($entry['excludes']??null)) throw new Failure('COMMERCIAL_CONFIGURATION');
+        $plans=$entry['current_plans']??[];$target=$entry['target_speed']??null;
+        if(!is_array($plans) || array_is_list($plans) && $plans!==[] || count($plans)>30) throw new Failure('COMMERCIAL_CONFIGURATION');
+        foreach($plans as $label=>$speed) if(!publicCatalogText($label,160) || !is_int($speed) || $speed<1 || $speed>100000) throw new Failure('COMMERCIAL_CONFIGURATION');
+        if($type==='speed' && (!is_int($target) || $target<1 || $target>100000)) throw new Failure('COMMERCIAL_CONFIGURATION');
+        if($type!=='speed' && ($plans!==[] || $target!==null)) throw new Failure('COMMERCIAL_CONFIGURATION');
+        $ids[$id]=true;$out[]=$entry;
+    }
+    return $out;
+}
+function validCommercialPrice(mixed $value): bool {return $value===null || is_int($value) && $value>0 && $value<100000000;}
+function validCatalogIds(mixed $ids): bool {
+    if(!is_array($ids) || !array_is_list($ids) || count($ids)>15) return false;
+    foreach($ids as $id) if(!is_string($id) || !preg_match('/^[a-z][a-z0-9_]{0,39}$/D',$id)) return false;
+    return count($ids)===count(array_unique($ids));
+}
+function commercialOffers(?string $plan,?array $products,array $config): array {
+    $catalog=serviceCatalog($config);$state=serviceProductState($products,$config);$contracted=array_fill_keys($state['ids'],true);$offers=[];
+    foreach(commercialCatalog($config) as $offer) {
+        if($offer['enabled']!==true) continue;
+        if($offer['type']==='speed') {
+            $current=is_string($plan)?($offer['current_plans'][$plan]??null):null;
+            if(!is_int($current) || $offer['target_speed']<=$current) continue;
+        } else {
+            if(!$state['known']) continue;
+            $references=array_unique([...$offer['requires'],...$offer['excludes']]);$evidence=true;
+            foreach($references as $id) {
+                if(!isset($catalog[$id]) || ($products!==[] && $catalog[$id]['aliases']===[])) {$evidence=false;break;}
+            }
+            if(!$evidence) continue;
+            foreach($offer['requires'] as $id) if(!isset($contracted[$id])) {$evidence=false;break;}
+            foreach($offer['excludes'] as $id) if(isset($contracted[$id])) {$evidence=false;break;}
+            if(!$evidence) continue;
+        }
+        $offers[]=['id'=>$offer['id'],'type'=>$offer['type'],'public_name'=>$offer['public_name'],'description'=>$offer['description'],
+            'price_monthly'=>$offer['price_monthly'],'price_once'=>$offer['price_once'],'currency'=>$offer['currency']];
+    }
+    return $offers;
+}
+
 // Shape only, no product values, network secrets, personal identifiers or recursion into customers.
 function serviceFeatureShape(mixed $value,int $depth=0): array {
     $out=['type'=>get_debug_type($value),'nonempty'=>$value!==null && $value!=='' && $value!==[]];
@@ -53,6 +151,27 @@ function serviceFeatureShape(mixed $value,int $depth=0): array {
     else {
         foreach(['ID','Nombre','Descripcion','Producto','Nombre_Producto','Cantidad','Estado','Importe'] as $key)
             if(array_key_exists($key,$value)) $out['fields'][$key]=serviceFeatureShape($value[$key],$depth+1);
+    }
+    return $out;
+}
+// Read-only operator output: only public labels from the two confirmed fields.
+function inspectPublicProductLabels(array $record): array {
+    $out=[];
+    foreach(['Productos_Television','Productos_Otros'] as $field) {
+        if(!array_key_exists($field,$record)) continue;
+        $value=$record[$field];$items=is_string($value)?[$value]:(is_array($value)&&array_is_list($value)?$value:[]);
+        foreach(array_slice($items,0,30) as $item) {
+            $quantity=null;$label=$item;
+            if(is_array($item) && !array_is_list($item)) {
+                $label=$item['Nombre']??$item['Descripcion']??$item['Producto']??$item['Nombre_Producto']??null;
+                $rawQuantity=$item['Cantidad']??null;
+                if(is_int($rawQuantity) || is_string($rawQuantity) && ctype_digit($rawQuantity)) {
+                    $number=(int)$rawQuantity;if($number>=1 && $number<=99) $quantity=$number;
+                }
+            }
+            if(!is_string($label) || !publicCatalogText(trim($label),160)) continue;
+            $out[]=['field'=>$field,'label'=>trim($label),'quantity'=>$quantity];
+        }
     }
     return $out;
 }

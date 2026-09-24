@@ -176,8 +176,7 @@ final class Phantom {
     private ?array $scope=null;
     public function scope(array $ids): void { $this->scope=$ids; }
     private function read(string $action,int $ida,array $params=[]): array {
-        $initial=$this->config['service_login_idas']??array_values(array_intersect([1],$this->config['allowed_idas']));
-        if (!in_array($ida,$this->scope ?? (is_array($initial)?$initial:[]),true)) throw new Failure('FORBIDDEN',403);
+        if ($this->scope===null || !in_array($ida,$this->scope,true)) throw new Failure('FORBIDDEN',403);
         if (!in_array($action,['Consulta_Cliente_Avanzada','Phantom_Ultima_Factura','Phantom_Mi_Estado_Cuenta'],true)) throw new Failure('FORBIDDEN',403);
         return $this->readAuthorized($action,['IDA'=>$ida]+$params);
     }
@@ -243,9 +242,9 @@ final class Phantom {
         if(!is_string($data['ticket_id']??null) || !preg_match('/^[1-9][0-9]{0,9}$/D',$data['ticket_id'])) throw new Failure('TICKETS_RESPONSE');
         return $data['ticket_id'];
     }
-    public function configureWifi(int $ida,array $settings): array {
+    public function configureWifi(int $ida,string $model,array $settings): array {
         if($this->scope===null || !in_array($ida,$this->scope,true)) throw new Failure('FORBIDDEN',403);
-        if(($this->config['wifi']['enabled']??false)!==true || ($this->config['wifi']['lab_ida']??null)!==$ida) throw new Failure('WIFI_UNAVAILABLE',409);
+        if(!wifiGate($this->config,$model)) throw new Failure('WIFI_UNAVAILABLE',409);
         if(!in_array(array_keys($settings),[['SSID','SSID_5G','Password'],['SSID','Password']],true)) throw new Failure('BAD_REQUEST',400);
         // Deliberately no readAuthorized retry loop for this write.
         return $this->raw('Configurar_Wifi',['IDA'=>$ida],['token'=>$this->token(),'Ticket'=>0]+$settings);

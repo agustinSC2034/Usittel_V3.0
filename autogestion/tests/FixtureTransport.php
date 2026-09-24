@@ -41,7 +41,7 @@ final class FixtureTransport implements Transport, TicketTransport {
         if(isset($query['InfoFTTH'])) file_put_contents($this->dir.'/trace.txt','InfoFTTH:'.$query['InfoFTTH']."\n",FILE_APPEND);
         $scenario=trim(@file_get_contents($this->dir.'/scenario')?:'normal');
         if($action==='Configurar_Wifi') {
-            if(($query['IDA']??null)!=='1' || !in_array(array_keys($body),[['token','Ticket','SSID','SSID_5G','Password'],['token','Ticket','SSID','Password']],true) || $body['Ticket']!==0) throw new \RuntimeException('Invalid fixture Wi-Fi contract');
+            if(!in_array($query['IDA']??null,['1','5','4242'],true) || !in_array(array_keys($body),[['token','Ticket','SSID','SSID_5G','Password'],['token','Ticket','SSID','Password']],true) || $body['Ticket']!==0) throw new \RuntimeException('Invalid fixture Wi-Fi contract');
             if($scenario==='wifi-timeout') throw new Failure('PHANTOM_TIMEOUT',504);
             if($scenario==='wifi-expired') throw new Failure('TOKEN_EXPIRED');
             if($scenario==='wifi-ticket') return ['code'=>200,'message'=>'Ticket para cambio de Wifi generado correctamente'];
@@ -58,7 +58,7 @@ final class FixtureTransport implements Transport, TicketTransport {
         if(($body['token']??'')!=='fixture-technical-token') throw new \RuntimeException('Token absent');
         if($scenario==='expired-always') throw new Failure('TOKEN_EXPIRED');
         $documentRead=$action==='Consulta_Cliente_Avanzada' && isset($query['Documento']);
-        if(!$documentRead && !in_array((int)($query['IDA']??0),[1,5,6,7],true)) throw new \RuntimeException('Unapproved IDA');
+        if(!$documentRead && !in_array((int)($query['IDA']??0),[1,5,6,7,4242],true)) throw new \RuntimeException('Unapproved IDA');
         if($scenario==='expired-once' && !file_exists($this->dir.'/expired')) {touch($this->dir.'/expired');throw new Failure('TOKEN_EXPIRED');}
         if($scenario==='functional') return ['code'=>500,'message'=>'Private upstream failure'];
         if(str_starts_with($scenario,'services-')) {
@@ -85,7 +85,8 @@ final class FixtureTransport implements Transport, TicketTransport {
         }
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
-            $record=['ID'=>'1','IDAx'=>'99','Autogestion_User'=>$scenario==='custom-user'?'laboratorio':'000001', 'Autogestion_Pass'=>' 00Lab-fixture! ',
+            $requested=(int)($query['IDA']??1);$production=$scenario==='production-user';
+            $record=['ID'=>(string)($production?$requested:1),'IDAx'=>'99','Autogestion_User'=>$production?str_pad((string)$requested,6,'0',STR_PAD_LEFT):($scenario==='custom-user'?'laboratorio':'000001'), 'Autogestion_Pass'=>' 00Lab-fixture! ',
                 'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline','ONU_Modelo'=>$scenario==='wifi-unknown-model'?'Other-ONU':'Fixture-ONU',
                 'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
                 'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
@@ -93,6 +94,7 @@ final class FixtureTransport implements Transport, TicketTransport {
                 'test_name'=>$scenario==='missing'?null:'Cliente de pruebas', 'test_address'=>'Calle ficticia 123', 'test_plan'=>'Plan de laboratorio',
                 'technical_meta'=>['connection'=>['state'=>'fixture-state','ports'=>[['kind'=>'ethernet','enabled'=>true]]]],
                 'Conexiones_Asociadas'=>[['IDA'=>999,'Autogestion_Pass'=>'do-not-expose']], 'DNI'=>'do-not-expose', 'Tarjeta'=>'do-not-expose'];
+            if($production)$record['Conexiones_Asociadas']=[];
             if($scenario==='missing-credentials') unset($record['Autogestion_User'],$record['Autogestion_Pass']);
             if($scenario==='missing') {$record['Estado_Conexion']=null;$record['Estado_ONU']=null;}
             if($scenario==='unknown-connectivity') {$record['Estado_Conexion']='SYNCING';$record['Estado_ONU']=['unexpected'];}

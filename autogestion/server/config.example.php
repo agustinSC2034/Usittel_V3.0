@@ -7,22 +7,45 @@ return [
     'phantom_url' => 'https://phantom.usittel.com.ar/PHANTOM/Includes/API_Rest.php',
     'api_user' => '',
     'api_pass' => '',
-    'allowed_idas' => [1], // Legacy lab scope; initial login is configured below, associated services are server-authorized.
-    // Optional initial login candidates AFTER the safe service inspection is reviewed.
-    // This does not authorize associated contracts by itself; exact credentials still required.
-    'service_login_idas' => [1], // Use 'all' to allow any numeric contract username or private lab_users mapping; exact credentials remain required.
-    'lab_users' => [], // e.g. 'actual-custom-username' => 1. NO passwords.
+    // Portal authorization: every positive numeric contract can be a login candidate.
+    // Phantom credentials must match exactly; only server-discovered contracts enter the session.
+    // Optional aliases are for confirmed non-numeric usernames only. Never store passwords here.
+    'login_users' => [], // e.g. 'confirmed-username' => 1234
+    // Legacy CLI inspectors only. This list does NOT restrict portal login or PDFs.
+    'allowed_idas' => [1],
     'idle_seconds' => 900,
     'max_seconds' => 28800,
     'timeout_seconds' => 10,
     'connect_timeout_seconds' => 4,
-    // Optional, after validating actual product fields; see MI-SERVICIO.md.
-    'service_product_fields' => [],
+    // Confirmed public fields. null and [] retain different meanings; see MI-SERVICIO.md.
+    'service_product_fields' => ['Productos_Television','Productos_Otros'],
+    // Exact Phantom labels only. Keep aliases empty until the read-only inspector confirms them.
+    'service_catalog' => [
+        'sensa' => ['type'=>'sensa','public_name'=>'Sensa','aliases'=>[]],
+        'pack_futbol' => ['type'=>'sensa_pack','public_name'=>'Pack Fútbol','aliases'=>[]],
+        'pack_hbo' => ['type'=>'sensa_pack','public_name'=>'Pack HBO','aliases'=>[]],
+        'pack_universal' => ['type'=>'sensa_pack','public_name'=>'Universal+','aliases'=>[]],
+        'stb' => ['type'=>'stb','public_name'=>'Set Top Box','aliases'=>[]],
+        'mesh' => ['type'=>'mesh','public_name'=>'Wi-Fi Mesh','aliases'=>[]],
+    ],
+    // Public prices verified on usittel.com.ar on 2026-09-23. Offers remain
+    // conservative: non-empty unknown product lists never prove absence.
+    'commercial_catalog' => [
+        ['id'=>'sensa','type'=>'sensa','public_name'=>'Sensa','description'=>'Más de 100 canales en vivo y contenido on-demand.','price_monthly'=>19999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>['sensa'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        ['id'=>'pack_futbol','type'=>'sensa_pack','public_name'=>'Pack Fútbol','description'=>'Viví todos los partidos de la liga argentina.','price_monthly'=>24999,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['pack_futbol'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        ['id'=>'pack_hbo','type'=>'sensa_pack','public_name'=>'Pack HBO','description'=>'Canales premium y acceso a la app MAX.','price_monthly'=>8999,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['pack_hbo'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        ['id'=>'pack_universal','type'=>'sensa_pack','public_name'=>'Universal+','description'=>'Canales premium y acceso a la app de streaming.','price_monthly'=>7999,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['pack_universal'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        ['id'=>'stb','type'=>'stb','public_name'=>'Set Top Box','description'=>'Convertí tu TV en Smart TV con Sensa y tus apps favoritas.','price_monthly'=>7750,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['stb'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        ['id'=>'mesh','type'=>'mesh','public_name'=>'Wi-Fi Mesh','description'=>'Mejorá la cobertura Wi-Fi de tu hogar.','price_monthly'=>6999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>['mesh'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
+        // Speed offers require exact current Phantom plan labels and confirmed
+        // existing-customer prices. They stay disabled until both are supplied.
+        ['id'=>'internet_1000','type'=>'speed','public_name'=>'Internet 1000 Mbps','description'=>'Llevá tu conexión a la máxima velocidad.','price_monthly'=>54999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>[],'enabled'=>false,'current_plans'=>[],'target_speed'=>1000],
+    ],
     // HTTPS base containing LibreSpeed garbage.php/empty.php; never localhost.
     'speedtest_server' => null,
-    // Controlled Wi-Fi trial only. Exact models from a read-only inspection.
+    // Global Wi-Fi compatibility. Exact models from a read-only inspection.
     // SSID/SSID_5G/Password in JSON body; confirm this contract in the first trial.
-    'wifi' => ['enabled'=>false, 'lab_ida'=>null, 'models'=>[], 'dual_band_models'=>[]],
+    'wifi' => ['enabled'=>false, 'models'=>[], 'dual_band_models'=>[]],
     // Read-only SOAP inspection, separate from any upgrade permission. See SERVICE-OPERATIONS.md.
     'soap' => ['read_enabled'=>false,'lab_ida'=>null,'url'=>null,'profile_names'=>[],'profile_ids'=>[]],
     // No production upgrade writer exists until billing + provisioning are demonstrated.

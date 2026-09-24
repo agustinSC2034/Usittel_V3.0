@@ -2,19 +2,34 @@
 declare(strict_types=1);
 namespace MiUsittel;
 
-function wifiGate(array $config,int $ida,string $model): bool {
+function wifiGate(array $config,string $model): bool {
     $wifi=$config['wifi']??[];
     return is_array($wifi) && ($wifi['enabled']??false)===true
-        && ($wifi['lab_ida']??null)===$ida && $model!==''
-        && is_array($wifi['models']??null) && in_array($model,$wifi['models'],true);
+        && validWifiModelLists($wifi) && $model!=='' && in_array($model,$wifi['models'],true);
+}
+function validWifiModelLists(array $wifi): bool {
+    $models=$wifi['models']??null;$dual=$wifi['dual_band_models']??null;
+    if(!is_array($models) || !is_array($dual) || !array_is_list($models) || !array_is_list($dual)) return false;
+    foreach(array_merge($models,$dual) as $model) if(!is_string($model) || wifiModel(['ONU_Modelo'=>$model])!==$model) return false;
+    return count($models)===count(array_unique($models)) && count($dual)===count(array_unique($dual))
+        && !array_diff($dual,$models);
 }
 function wifiModel(array $record): string {
     $value=$record['ONU_Modelo']??null;
     return is_string($value) && preg_match('/^[a-zA-Z0-9][a-zA-Z0-9 ._()+\/-]{0,79}$/D',$value) ? $value : '';
 }
 function wifiDualBand(array $config,string $model): bool {
-    $models=$config['wifi']['dual_band_models']??[];
-    return is_array($models) && in_array($model,$models,true);
+    $wifi=$config['wifi']??[];
+    return is_array($wifi) && validWifiModelLists($wifi) && in_array($model,$wifi['dual_band_models'],true);
+}
+function inspectServiceCatalogRows(Phantom $phantom,array $config,array $ids): array {
+    $phantom->scope($ids);$report=[];
+    foreach($ids as $ida) {
+        $record=$phantom->serviceRecord($ida);$model=wifiModel($record);
+        $report[]=['ida'=>$ida,'model'=>$model?:null,'dual_band_known'=>$model!==''&&wifiDualBand($config,$model),
+            'wifi_eligible'=>$model!==''&&wifiGate($config,$model),'products'=>inspectPublicProductLabels($record)];
+    }
+    return $report;
 }
 function wifiInput(array $body,bool $dualBand=true): array {
     $keys=['requestId','ssid','ssid5','password','accountPassword','confirmed'];

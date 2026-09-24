@@ -1,17 +1,18 @@
 import {customer,runtime,planLabel,connectivityLabel} from './data.js';
-import {normalizeServices,serviceOffers} from './service-catalog.js';
+import {formatOfferPrice,offerCta} from './service-catalog.js';
 import {status,icon,button,escapeHTML as e} from './components.js';
 
 const offerButton=(type,label)=>`<button type="button" class="text-action" data-action="chat" data-chat-topic="${e(type)}">${label} ${icon('arrow-right')}</button>`;
 export function contractedProducts() {
-  const state=normalizeServices(customer.products);
-  if (!state.known) return '<p class="field-hint">El detalle de servicios adicionales no está disponible en este momento.</p>';
-  return `<ul class="contracted-products" aria-label="Tus servicios"><li>${icon('check')}${e(planLabel(customer.plan))}</li>${state.labels.map(p=>`<li>${icon('check')}${e(p)}</li>`).join('')}</ul>`;
+  const state=runtime.servicePresentation || (Array.isArray(customer.products)?{known:true,items:customer.products.map(label=>({label,quantity:null}))}:{known:false,items:[]});
+  const internet=`<li>${icon('check')}<span>${e(planLabel(customer.plan))}</span></li>`;
+  if (!state.known) return `<ul class="contracted-products" aria-label="Tus servicios">${internet}</ul><p class="field-hint">El detalle de servicios adicionales no está disponible en este momento.</p>`;
+  return `<ul class="contracted-products" aria-label="Tus servicios">${internet}${state.items.map(item=>`<li>${icon('check')}<span>${e(item.label)}${item.quantity?` × ${e(item.quantity)}`:''}</span></li>`).join('')}</ul>`;
 }
 function offersSection() {
-  const offers=serviceOffers(customer.products,customer.plan,runtime.upgradeCatalog);
+  const offers=runtime.commercialOffers;
   if (!offers.length) return '';
-  return `<section class="service-offers" aria-labelledby="offers-title"><h2 id="offers-title">Mejorá tu servicio</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3>${e(o.label)}</h3><p>${o.type==='speed'?'Más velocidad para tu conexión.':'Consultá disponibilidad, precio y condiciones.'}</p></div>${offerButton(o.type,o.type==='speed'?'Quiero mejorar':'Me interesa')}</div>`).join('')}</div></section>`;
+  return `<section class="service-offers" aria-labelledby="offers-title"><p class="eyebrow">Opciones para vos</p><h2 id="offers-title">Podés sumar</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3>${e(o.public_name)}</h3><p>${e(o.description)}</p><p class="offer-price">${e(formatOfferPrice(o))}</p></div>${offerButton(o.id,offerCta(o.type))}</div>`).join('')}</div></section>`;
 }
 export function servicePage() {
   const detail=runtime.connectionDetails;
@@ -19,9 +20,8 @@ export function servicePage() {
   const checked=detail?.checkedAt ? new Date(detail.checkedAt).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : null;
   return `<h1 tabindex="-1">Mi servicio</h1>
   <div class="service-top-grid">
-    <section class="contract-summary" aria-labelledby="plan-title"><p class="eyebrow">Tu plan contratado</p>
-      <h2 id="plan-title">${e(planLabel(customer.plan))}</h2><div class="plan-bottom">${status(customer.serviceStatus)}<button class="text-action" data-action="show-speedtest">${icon('activity')}Probar velocidad</button></div>
-      ${contractedProducts()}
+    <section class="contract-summary" aria-labelledby="plan-title"><p class="eyebrow">Plan contratado</p>
+      <h2 id="plan-title">${e(planLabel(customer.plan))}</h2><div class="plan-bottom">${status(customer.serviceStatus)}</div>
     </section>
     <section class="connection-summary" aria-labelledby="connectivity-title">
       <div class="section-heading"><h2 id="connectivity-title">Estado de tu conexión</h2><button class="billing-refresh" data-action="connection-refresh" aria-label="Actualizar estado de conexión" title="Actualizar estado" ${runtime.connectionRefreshing?'disabled aria-busy="true"':''}>${icon('refresh-cw',runtime.connectionRefreshing?'spinning':'')}</button></div>
@@ -29,8 +29,9 @@ export function servicePage() {
       <p class="field-hint" role="status">${runtime.connectionRefreshing?'Consultando estado…':runtime.connectionError?e(runtime.connectionError):`${checked?'Consultado a las '+e(checked)+'. ':''}Último estado informado. Puede demorar en actualizarse.`}</p>
     </section>
   </div>
-  <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}<button type="button" class="text-action" data-action="show-speedtest">${icon('activity')}Test de velocidad</button></div></section>
+  <section class="contracted-services-section" aria-labelledby="contracted-title"><p class="eyebrow">Incluidos en tu cuenta</p><h2 id="contracted-title">Tus servicios</h2>${contractedProducts()}</section>
   ${offersSection()}
+  <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}<button type="button" class="text-action" data-action="show-speedtest">${icon('activity')}Test de velocidad</button></div></section>
   ${speedtestSection()}
   `;
 }

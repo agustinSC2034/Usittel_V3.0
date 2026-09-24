@@ -33,20 +33,19 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   await u.call('logout',{});r=await u.call('bootstrap');check('logout borra lista y selección',()=>{assert.deepEqual(r.data.services,[]);assert.equal(r.data.selectedServiceId,null);assert.equal(r.data.authenticated,false);});
   r=await u.call('invoice-document?id=500');check('logout revoca descarga',()=>assert.equal(r.status,401));
   fs.writeFileSync(config,settings('phantom',1));clearRate();await login(u);await sleep(1100);r=await u.call('overview');check('sesión multi vencida',()=>assert.equal(r.status,401));
-  const allSettings=settings().replace("'allowed_idas'=>[1,5],", "'allowed_idas'=>[1,5],'service_login_idas'=>'all',");
-  fs.writeFileSync(config,allSettings);scenario('services-one');clearRate();
+  fs.writeFileSync(config,settings());scenario('services-one');clearRate();
   const any=jar();
   r=await login(any,'000006','wrong');check('todos los contratos sigue exigiendo contraseña exacta',()=>assert.equal(r.status,401));
   r=await any.call('bootstrap');check('credenciales erróneas no crean autorización',()=>assert.equal(r.data.authenticated,false));
   r=await login(any,'6');check('ID candidato no sustituye al usuario exacto de autogestión',()=>assert.equal(r.status,401));
-  r=await login(any,'000006');check('login de contrato fuera de lista en modo all',()=>{assert.equal(r.status,200);assert.equal(r.data.selectedServiceId,'6');assert.deepEqual(r.data.services.map(s=>s.id),['6']);assert.equal(r.data.payments_enabled,false);});
-  r=await any.call('overview');check('all entrega únicamente datos del contrato autenticado',()=>{assert.equal(r.status,200);assert.equal(r.data.account.debt,60);assert.equal(r.data.invoices.items[0].id,'600');});
-  r=await any.call('select-service',{serviceId:'1'});check('all no autoriza seleccionar otro contrato',()=>assert.equal(r.status,403));
-  r=await any.call('invoice-document?id=100');check('all no autoriza PDF de otro contrato',()=>assert.equal(r.status,404));
+  r=await login(any,'000006');check('login global de contrato válido',()=>{assert.equal(r.status,200);assert.equal(r.data.selectedServiceId,'6');assert.deepEqual(r.data.services.map(s=>s.id),['6']);assert.equal(r.data.payments_enabled,false);});
+  r=await any.call('overview');check('portal global entrega únicamente datos del contrato autenticado',()=>{assert.equal(r.status,200);assert.equal(r.data.account.debt,60);assert.equal(r.data.invoices.items[0].id,'600');});
+  r=await any.call('select-service',{serviceId:'1'});check('portal global no autoriza seleccionar otro contrato',()=>assert.equal(r.status,403));
+  r=await any.call('invoice-document?id=100');check('portal global no autoriza PDF de otro contrato',()=>assert.equal(r.status,404));
   for(const route of ['payment-create','payment-post','payment-reconcile']) {
-    r=await any.call(route,{idt:'600'});check('all mantiene pagos de laboratorio restringidos: '+route,()=>assert.equal(r.status,409));
+    r=await any.call(route,{idt:'600'});check('portal global mantiene pagos de laboratorio restringidos: '+route,()=>assert.equal(r.status,409));
   }
-  fs.writeFileSync(config,settings());r=await any.call('overview');check('cambiar alcance de login invalida la sesión previa',()=>assert.equal(r.status,401));
-  clearRate();r=await login(any,'000006');check('lista restringida sigue bloqueando otros contratos',()=>assert.equal(r.status,401));
+  fs.writeFileSync(config,settings().replace("'lab_users'=>", "'login_users'=>['confirmado'=>7],'lab_users'=>"));r=await any.call('overview');check('cambiar aliases de login invalida la sesión previa',()=>assert.equal(r.status,401));
+  fs.writeFileSync(config,settings());clearRate();r=await login(any,'000006');check('portal restaurado mantiene acceso global con credenciales exactas',()=>assert.equal(r.status,200));
   scenario('normal');
 };

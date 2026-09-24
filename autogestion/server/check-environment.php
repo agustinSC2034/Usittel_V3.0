@@ -46,17 +46,11 @@ if(!$configPath) {
                     $urlOk=($url['scheme']??'')==='https' && !empty($url['host'])
                         && !isset($url['user']) && !isset($url['pass']) && !isset($url['query']) && !isset($url['fragment']);
                     $add($urlOk?'ok':'fail','URL Phantom',$urlOk?'HTTPS válida':'falta una URL HTTPS válida y sin credenciales/query');
-                    $idas=$config['allowed_idas']??null;
-                    $idasOk=is_array($idas) && $idas!==[] && array_diff($idas,[1,5])===[];
-                    $idasOk=$idasOk && in_array(1,$idas,true);
-                    $loginIdas=$config['service_login_idas']??[1];
-                    $loginIdasOk=\MiUsittel\validLoginScope($loginIdas);
-                    $accountsOk=$idasOk && $loginIdasOk;
-                    $loginCount=is_array($loginIdas)?count($loginIdas):0;
-                    $loginDetail=$loginIdas==='all'?'Todos los contratos; credenciales exactas obligatorias; servicios autorizados en servidor':$loginCount.' contrato'.($loginCount===1?'':'s').' inicial'.($loginCount===1?'':'es').' configurado'.($loginCount===1?'':'s').'; servicios asociados se autorizan en servidor';
-                    $add($accountsOk?'ok':'fail','Cuentas de laboratorio',$accountsOk?$loginDetail:'revisar allowed_idas y service_login_idas');
+                    $aliases=$config['login_users']??[];
+                    $accountsOk=\MiUsittel\validLoginUsers($aliases);
+                    $add($accountsOk?'ok':'fail','Autorización del portal',$accountsOk?'Contratos numéricos habilitados; credenciales exactas y servicios asociados autorizados en servidor':'login_users debe ser un mapa opcional sin contraseñas');
                     $authOk=($config['phantom_auth_mode']??'get-query-lab')==='get-query-lab';
-                    $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET explícito de laboratorio; lecturas POST':'usar get-query-lab');
+                    $add($authOk?'ok':'fail','Autenticación técnica',$authOk?'GET técnico confirmado; lecturas POST':'usar get-query-lab');
                     $identity=$config['customer_id_field']??null;
                     $add($identity===null?'warn':(in_array($identity,['ID','IDAx'],true)?'ok':'fail'),'Identidad del abonado',
                         $identity===null?'pendiente de validación; login bloqueado':(in_array($identity,['ID','IDAx'],true)?'campo configurado; requiere confirmación real':'campo no permitido'));
@@ -75,17 +69,17 @@ if(!$configPath) {
                     if($posting!==null && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de imputación','definir MI_USITTEL_RUNTIME privado y persistente');
                 } catch(Throwable) {$add('fail','Imputación Phantom','revisar HTTPS, host, ruta CRM, IDA y originante');}
                 $shapeErrors=[];
-                foreach(['wifi','tickets'] as $feature) {
-                    $s=$config[$feature]??[];$enabled=($s['enabled']??false)===true;
-                    $valid=is_array($s) && (!$enabled || is_int($s['lab_ida']??null) && $s['lab_ida']>0);
-                    $add(!$valid?'fail':($enabled?'warn':'ok'),$feature==='wifi'?'Cambios Wi-Fi':'Solicitudes de servicio',
-                        !$valid?'requiere un único contrato de laboratorio':($enabled?'habilitado solo para laboratorio; falta confirmar compatibilidad real':'deshabilitado; sin escrituras'));
-                    if($enabled && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de servicio','definir MI_USITTEL_RUNTIME privado y persistente');
-                }
+                $wifi=$config['wifi']??[];$wifiEnabled=($wifi['enabled']??false)===true;
+                $models=$wifi['models']??[];$dual=$wifi['dual_band_models']??[];
+                $wifiValid=is_array($wifi) && is_array($models) && array_is_list($models) && is_array($dual) && array_is_list($dual) && array_diff($dual,$models)===[];
+                $add($wifiValid?($wifiEnabled?'warn':'ok'):'fail','Cambios Wi-Fi',!$wifiValid?'revisar allowlists exactas de modelos':($wifiEnabled?'habilitado globalmente solo para modelos exactos configurados':'deshabilitado; sin escrituras'));
+                if($wifiEnabled && !getenv('MI_USITTEL_RUNTIME'))$add('fail','Persistencia de servicio','definir MI_USITTEL_RUNTIME privado y persistente');
+                $tickets=$config['tickets']??[];$ticketsEnabled=($tickets['enabled']??false)===true;
+                $ticketsValid=is_array($tickets) && (!$ticketsEnabled || is_int($tickets['lab_ida']??null) && $tickets['lab_ida']>0);
+                $add(!$ticketsValid?'fail':($ticketsEnabled?'warn':'ok'),'Solicitudes de servicio',!$ticketsValid?'requiere un contrato controlado':($ticketsEnabled?'habilitado para un contrato controlado':'deshabilitado; sin escrituras'));
                 $add('warn','Upgrade automático','bloqueado hasta validar perfil, facturación y aprovisionamiento; SOAP solo lectura');
                 $add('warn','Avisos de solicitudes','eventos locales; email y Webchat no conectados');
-                if(isset($config['lab_users']) && !is_array($config['lab_users'])) $shapeErrors[]='lab_users';
-                if(isset($config['service_login_idas']) && (!isset($loginIdasOk) || !$loginIdasOk)) $shapeErrors[]='service_login_idas';
+                if(isset($config['login_users']) && !\MiUsittel\validLoginUsers($config['login_users'])) $shapeErrors[]='login_users';
                 if(isset($config['customer_path']) && !is_array($config['customer_path'])) $shapeErrors[]='customer_path';
                 if(isset($config['profile_fields']) && !is_array($config['profile_fields'])) $shapeErrors[]='profile_fields';
                 if(array_key_exists('balance_path',$config) && $config['balance_path']!==null && !is_array($config['balance_path'])) $shapeErrors[]='balance_path';

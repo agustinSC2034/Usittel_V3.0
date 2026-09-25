@@ -24,7 +24,7 @@ export function servicePage() {
   const detail=runtime.connectionDetails;
   const state=detail?.connectionState ?? customer.connectionState;
   const checked=detail?.checkedAt ? new Date(detail.checkedAt).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : null;
-  return `<h1 tabindex="-1">Mi servicio</h1>
+  return `<section class="service-overview" aria-label="Resumen de Mi servicio"><h1 tabindex="-1">Mi servicio</h1>
   <div class="service-top-grid">
     <section class="contract-summary" aria-labelledby="plan-title"><p class="eyebrow">Plan contratado</p>
       <h2 id="plan-title">${e(planLabel(customer.plan))}</h2><div class="plan-bottom">${status(customer.serviceStatus)}</div>
@@ -34,7 +34,7 @@ export function servicePage() {
       <div class="connection-reading"><span class="connection-symbol">${icon(state==='offline'?'wifi-off':'wifi')}</span><div><p class="field-hint">Conexión a internet</p>${status(connectivityLabel(state))}</div></div>
       <p class="field-hint" role="status">${runtime.connectionRefreshing?'Consultando estado…':runtime.connectionError?e(runtime.connectionError):`${checked?'Consultado a las '+e(checked)+'. ':''}Último estado informado. Puede demorar en actualizarse.`}</p>
     </section>
-  </div>
+  </div></section>
   <section class="contracted-services-section" aria-labelledby="contracted-title"><p class="eyebrow">Incluidos en tu cuenta</p><h2 id="contracted-title">Tus servicios</h2>${contractedProducts()}</section>
   <section class="service-tools" aria-labelledby="tools-title"><p class="eyebrow">A tu alcance</p><h2 id="tools-title">Herramientas</h2><div class="service-tools-grid">
   <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}<button type="button" class="text-action" data-action="show-speedtest">${icon('activity')}Test de velocidad</button></div></section>

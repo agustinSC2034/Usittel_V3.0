@@ -402,7 +402,11 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   });
   check('Mi servicio usa solo datos públicos y separa consulta y medición',()=>{
     const views=fs.readFileSync(path.join(root,'js','service-view.js'),'utf8');
+    const styles=fs.readFileSync(path.join(root,'styles.css'),'utf8');
     const apiSource=fs.readFileSync(path.join(root,'server','Api.php'),'utf8');
+    assert.match(views,/class="service-overview"[\s\S]*class="service-top-grid"/);
+    assert.match(styles,/\.service-overview \{[^}]*background:#fff/);
+    assert.match(styles,/@media\(max-width:700px\)[\s\S]*\.service-overview \{ padding:24px 20px/);
     assert.doesNotMatch(views,/customer\.equipmentState|Dirección IP|MAC|GPON|PPPoE|OLT|NAP|Uptime|Estado_ONU|Estado_Conexion|speed\.cloudflare/);
     assert.doesNotMatch(views,/Domicilio de instalación|Velocidad del plan/);
     assert.match(views,/runtime\.commercialOffers/);assert.match(views,/formatOfferPrice/);assert.match(views,/data-action="chat"/);assert.match(views,/data-chat-topic/);

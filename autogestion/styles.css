@@ -15,10 +15,18 @@
 .speed-external .field-hint { margin-top:10px; }
 .wifi-confirm { display:flex; align-items:flex-start; gap:10px; font-size:14px; margin:20px 0; }
 .wifi-confirm input { width:18px; height:18px; flex-shrink:0; margin-top:3px; }
-.service-top-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:40px; margin-bottom:32px; }
+.service-overview { padding:30px 32px 32px; border:1px solid var(--line); border-radius:18px; background:#fff; }
+.service-overview h1 { margin-bottom:30px; }
+.service-top-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:32px; }
 .contract-summary h2 { font-size:28px; max-width:570px; margin:10px 0 18px; line-height:1.4; }
+.service-overview .contract-summary h2 { overflow-wrap:anywhere; }
 .plan-bottom { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.service-overview .plan-bottom .status { padding:4px 11px; border-radius:999px; background:#e9f4ed; }
+.service-overview .plan-bottom .status-danger { background:#f8e9e7; }
+.service-overview .plan-bottom .status-pending { background:#fbf0dc; }
+.service-overview .plan-bottom .status-neutral { background:#eef0f1; }
 .connection-summary { border-left:1px solid var(--line); padding-left:36px; }
+.service-overview .connection-summary { padding-left:32px; }
 .connection-summary .section-heading { margin-bottom:15px; }
 .connection-reading { display:flex; gap:14px; align-items:center; margin-bottom:18px; }
 .connection-reading .status { font-size:20px; }
@@ -28,6 +36,7 @@
 .contracted-products li { display:flex; align-items:center; gap:6px; color:var(--green); font-size:14px; }
 .contracted-products li span { color:var(--ink); }
 .contracted-services-section { padding:28px 0; border-top:1px solid var(--line); }
+.service-overview + .contracted-services-section { border-top:0; }
 .contracted-services-section h2 { margin:5px 0 10px; }
 .service-wifi { border-top:1px solid var(--line); padding:28px 0; display:flex; justify-content:space-between; align-items:center; gap:24px; }
 .service-wifi h2 { margin:5px 0 7px; }
@@ -68,8 +77,11 @@
 @keyframes dial-glow { to { stroke:#40af80; } }
 @media(max-width:700px) {
  .service-top-grid,.speed-test-layout { grid-template-columns:1fr; gap:26px; }
+ .service-overview { padding:24px 20px; }
+ .service-overview h1 { margin-bottom:24px; }
  .contract-summary h2 { font-size:24px; }
  .connection-summary { border-left:0; border-top:1px solid var(--line); padding:24px 0 0; }
+ .service-overview .connection-summary { padding:24px 0 0; }
  .service-wifi { flex-direction:column; align-items:stretch; }
  .wifi-actions { align-items:flex-start; }
  .service-speedtest { padding:24px 16px; }

@@ -2,7 +2,7 @@ import {customer,runtime,planLabel,connectivityLabel} from './data.js';
 import {formatOfferPrice,offerCta} from './service-catalog.js';
 import {status,icon,button,escapeHTML as e} from './components.js';
 
-const offerButton=(type,label)=>`<button type="button" class="text-action" data-action="chat" data-chat-topic="${e(type)}">${label} ${icon('arrow-right')}</button>`;
+const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${e(type)}">${label} ${icon('arrow-right')}</button>`;
 export function contractedProducts() {
   const state=runtime.servicePresentation || (Array.isArray(customer.products)?{known:true,items:customer.products.map(label=>({label,quantity:null}))}:{known:false,items:[]});
   const internet=`<li>${icon('check')}<span>${e(planLabel(customer.plan))}</span></li>`;
@@ -30,9 +30,11 @@ export function servicePage() {
     </section>
   </div>
   <section class="contracted-services-section" aria-labelledby="contracted-title"><p class="eyebrow">Incluidos en tu cuenta</p><h2 id="contracted-title">Tus servicios</h2>${contractedProducts()}</section>
-  ${offersSection()}
+  <section class="service-tools" aria-labelledby="tools-title"><p class="eyebrow">A tu alcance</p><h2 id="tools-title">Herramientas</h2><div class="service-tools-grid">
   <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}<button type="button" class="text-action" data-action="show-speedtest">${icon('activity')}Test de velocidad</button></div></section>
   ${speedtestSection()}
+  </div></section>
+  ${offersSection()}
   `;
 }
 function speedtestSection() {
@@ -40,6 +42,6 @@ function speedtestSection() {
     <div class="speed-intro"><span class="eyebrow">Desde este dispositivo</span><h2 id="speed-title">Probá tu conexión</h2><p class="muted">Medí la velocidad de tu conexión con el test de USITTEL.</p></div>
     <div class="speed-external"><a class="button" id="speedtest-link" href="http://velocidad.usittel.com.ar/speedtest/" target="_blank" rel="noopener noreferrer">${icon('external-link')}Abrir test de USITTEL</a><p class="field-hint">Se abre en una nueva pestaña.</p></div>
 
-      <div class="speed-guidance"><h3>Para una buena medición</h3><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN.</li></ol></div>
+      <details class="speed-guidance"><summary>Para una buena medición</summary><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN.</li></ol></details>
   </section>`;
 }

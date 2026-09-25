@@ -238,7 +238,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     // Profile failure is recoverable, never replaced by fixtures. Optional sections
     // fail independently so an invoice outage cannot become a zero-debt account.
-    $profile=$ph->profile($ida); $warnings=[];
+    $profileDetails=$ph->profileWithServiceEntries($ida);$profile=$profileDetails['profile'];$productEntries=$profileDetails['entries'];$warnings=[];
     try {$balance=$ph->balance($ida);} catch(Failure $e) {$balance=['balance'=>null,'debt'=>null,'credit'=>null];$warnings[]='BALANCE_UNAVAILABLE';diagnostic($e);}
     unset($_SESSION['invoice_history']);
     try {$invoices=invoiceDocumentAvailability(rememberInvoicePage($ph->invoices($ida)),$documents);} catch(Failure $e) {$invoices=['items'=>[],'offset'=>0,'nextOffset'=>null,'endReached'=>false];$warnings[]='INVOICES_UNAVAILABLE';diagnostic($e);}
@@ -248,7 +248,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     try {$requestList=$requests->list($ida);$requestListUnavailable=false;}
     catch(Failure $e) {$requestList=[];$requestListUnavailable=true;diagnostic($e);}
-    try {$servicePresentation=serviceProductState($profile['products']??null,$c);$offers=commercialOffers($profile['plan']??null,$profile['products']??null,$c);}
+    try {$servicePresentation=serviceProductState($profile['products']??null,$c,$productEntries);$offers=commercialOffers($profile['plan']??null,$profile['products']??null,$c,$productEntries);}
     catch(Failure $e) {$servicePresentation=['known'=>false,'items'=>[]];$offers=[];$warnings[]='COMMERCIAL_UNAVAILABLE';diagnostic($e);}
     unset($servicePresentation['ids']);
     jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,

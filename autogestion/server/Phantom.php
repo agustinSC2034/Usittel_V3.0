@@ -206,6 +206,10 @@ final class Phantom {
     public function profile(int $ida): array {
         return $this->publicProfile($this->customer($ida));
     }
+    public function profileWithServiceEntries(int $ida): array {
+        $record=$this->customer($ida);
+        return ['profile'=>$this->publicProfile($record),'entries'=>serviceProductEntries($record,$this->config)];
+    }
     public function connection(int $ida): array {
         $raw=resolveCustomerRecord($this->read('Consulta_Cliente_Avanzada',$ida,['InfoFTTH'=>1]),$ida,'ID');
         return ['connectionState'=>$this->publicConnectivityState($raw['Estado_Conexion']??null),

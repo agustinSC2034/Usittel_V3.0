@@ -1,5 +1,30 @@
 # Mi servicio
 
+## Productos_Otros fechado e IPTV, 25/09/2026
+
+La lectura real confirmó entradas `FECHA - CATEGORIA - PRODUCTO` separadas por
+`;` en `Productos_Otros`. Un único parser valida fechas `d/m/yy` o `dd/mm/yy`,
+límites de texto y separadores exactos; descarta la fecha y conserva la categoría
+solo internamente. Una cantidad inequívoca al principio (`4 USITTEL MESH`)
+produce `USITTEL MESH × 4`; números dentro del nombre no se interpretan. El
+inspector read-only usa ese mismo parser y muestra campo, categoría, label y
+cantidad, más `derived.sensa`. No vuelca la respuesta Phantom ni datos personales.
+
+La categoría exactamente `IPTV` dentro de `Productos_Otros` prueba que el cliente
+tiene Sensa. El nombre del producto IPTV permanece separado: un pack sin alias
+exacto se muestra con su label original, sin atribuirlo a un pack catalogado.
+La lista pública `products` no recibe un producto Sensa ficticio: la derivación
+solo entra en `servicePresentation` y en las reglas comerciales. `WiFi +` exacto
+se ignora por completo, incluso si era el único producto. `Productos_Television`
+igual a `-` continúa vacío. Un texto fuera del formato confirmado conserva la
+semántica literal anterior, sin categoría ni inferencia IPTV.
+
+Sigue siendo necesaria la carga manual de aliases exactos en la configuración
+privada, por ejemplo `mesh.aliases = ['USITTEL MESH']` en la sintaxis PHP del
+catálogo. Sin ese alias no se reconoce Mesh como contratado. No se habilitaron
+modelos Wi-Fi ni escrituras; primero corresponde revisar otra vez la salida real
+del inspector para los contratos autorizados.
+
 ## Iteración productiva de servicios, 23/09/2026
 
 La pantalla queda ordenada como Plan contratado y conexión, Tus servicios,

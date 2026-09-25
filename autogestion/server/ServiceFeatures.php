@@ -4,7 +4,7 @@ namespace MiUsittel;
 
 // Product fields must be confirmed by an operator before being mapped. A missing
 // or unfamiliar structure means unknown, never 'not contracted'. No recursive dump.
-function serviceProducts(array $record,array $config): ?array {
+function serviceProductEntries(array $record,array $config): ?array {
     $fields=$config['service_product_fields']??[];
     // USITTEL no ofrece telefonía desde Mi USITTEL; ese campo nunca se mapea a la UI.
     $allowed=['Productos_Television','Producto_Television','Productos_Otros','Producto_Otros','Otros_Servicios','Servicios_Otros','Adicionales','Productos_Adicionales','Producto_Adicional','Set_Top_Box','STB'];
@@ -35,11 +35,42 @@ function serviceProducts(array $record,array $config): ?array {
                 }
                 $item=$item[$labelKey]??null;
             }
-            if(!is_string($item) || strlen($item)>160 || preg_match('/[<>@\x00-\x1f]|https?:/i',$item)) return null;
-            $item=trim($item);if($item==='' || $item==='-') continue;
-            $out[]=$item.($quantity!==null?' × '.$quantity:'');
+            if(!is_string($item)) return null;
+            foreach(parseServiceProductText($field,$item,$quantity)??[null] as $entry) {
+                if($entry===null) return null;
+                if($entry['label']==='WiFi +') continue;
+                $out[$entry['field']."\0".($entry['category']??'')."\0".$entry['label']."\0".($entry['quantity']??'')]=$entry;
+            }
         }
     }
+    return array_values($out);
+}
+// Only Productos_Otros has a confirmed dated multi-product format. An invalid
+// string retains the previous literal-label semantics; it provides no category.
+function parseServiceProductText(string $field,string $text,?int $quantity=null): ?array {
+    if(strlen($text)>2048 || preg_match('/[<>@\x00-\x1f]|https?:/i',$text)) return null;
+    $text=trim($text);if($text==='' || $text==='-') return [];
+    if($field==='Productos_Otros' && $quantity===null) {
+        $segments=explode(';',$text);$parsed=[];$valid=count($segments)<=20;
+        foreach($segments as $segment) {
+            $segment=trim($segment);if($segment==='') continue;
+            if(!preg_match('/\A(\d{1,2})\/(\d{1,2})\/(\d{2}) - ([^;]+?) - (.+)\z/uD',$segment,$m)
+                || !checkdate((int)$m[2],(int)$m[1],2000+(int)$m[3])
+                || !publicCatalogText(trim($m[4]),80) || !publicCatalogText(trim($m[5]),160)) {$valid=false;break;}
+            $label=trim($m[5]);$amount=null;
+            if(preg_match('/\A([1-9][0-9]?) (.+)\z/uD',$label,$qty)) {$amount=(int)$qty[1];$label=$qty[2];}
+            $parsed[]=['field'=>$field,'category'=>trim($m[4]),'label'=>$label,'quantity'=>$amount];
+        }
+        if($valid && $parsed!==[]) return $parsed;
+    }
+    if(!publicCatalogText($text,160)) return null;
+    return [['field'=>$field,'category'=>null,'label'=>$text,'quantity'=>$quantity]];
+}
+function serviceProducts(array $record,array $config): ?array {
+    $entries=serviceProductEntries($record,$config);
+    if($entries===null) return null;
+    $out=[];
+    foreach($entries as $entry) $out[]=$entry['label'].($entry['quantity']!==null?' × '.$entry['quantity']:'');
     return array_values(array_unique($out));
 }
 
@@ -70,14 +101,16 @@ function productLabelParts(string $value): array {
     if(preg_match('/\A(.+?) × ([1-9][0-9]?)\z/u',$value,$match)) return ['label'=>$match[1],'quantity'=>(int)$match[2]];
     return ['label'=>$value,'quantity'=>null];
 }
-function serviceProductState(?array $products,array $config): array {
+function serviceProductState(?array $products,array $config,?array $entries=null): array {
     if($products===null) return ['known'=>false,'items'=>[],'ids'=>[]];
     $catalog=serviceCatalog($config);$byAlias=[];
     foreach($catalog as $id=>$entry) foreach($entry['aliases'] as $alias) $byAlias[$alias]=$id;
     $known=[];$unknown=[];$ids=[];
     foreach($products as $value) {
         if(!is_string($value)) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
-        $parts=productLabelParts($value);$id=$byAlias[$parts['label']]??null;
+        $parts=productLabelParts($value);
+        if($parts['label']==='WiFi +') continue;
+        $id=$byAlias[$parts['label']]??null;
         if($id===null) {
             $item=['label'=>$parts['label'],'quantity'=>$parts['quantity']];
             if(!isset($unknown[$parts['label']]) || ($item['quantity']??0)>($unknown[$parts['label']]['quantity']??0)) $unknown[$parts['label']]=$item;
@@ -85,6 +118,16 @@ function serviceProductState(?array $products,array $config): array {
         }
         $ids[$id]=true;$item=['label'=>$catalog[$id]['public_name'],'quantity'=>$parts['quantity']];
         if(!isset($known[$id]) || ($item['quantity']??0)>($known[$id]['quantity']??0)) $known[$id]=$item;
+    }
+    // Exact administrative category, confirmed by USITTEL as SENSA evidence.
+    // This sidecar is never added to the raw public products list.
+    if($entries!==null) foreach($entries as $entry) {
+        if(($entry['field']??null)!=='Productos_Otros' || ($entry['category']??null)!=='IPTV') continue;
+        foreach($catalog as $id=>$definition) if($definition['type']==='sensa') {
+            $ids[$id]=true;
+            $known[$id]=['label'=>$definition['public_name'],'quantity'=>null];
+            unset($unknown[$definition['public_name']]);
+        }
     }
     return ['known'=>true,'items'=>array_values([...$known,...$unknown]),'ids'=>array_keys($ids)];
 }
@@ -117,8 +160,11 @@ function validCatalogIds(mixed $ids): bool {
     foreach($ids as $id) if(!is_string($id) || !preg_match('/^[a-z][a-z0-9_]{0,39}$/D',$id)) return false;
     return count($ids)===count(array_unique($ids));
 }
-function commercialOffers(?string $plan,?array $products,array $config): array {
-    $catalog=serviceCatalog($config);$state=serviceProductState($products,$config);$contracted=array_fill_keys($state['ids'],true);$offers=[];
+function commercialOffers(?string $plan,?array $products,array $config,?array $entries=null): array {
+    $catalog=serviceCatalog($config);$state=serviceProductState($products,$config,$entries);$contracted=array_fill_keys($state['ids'],true);$offers=[];
+    $relevantProducts=$products===null?null:array_values(array_filter($products,fn($value)=>productLabelParts($value)['label']!=='WiFi +'));
+    $iptv=false;
+    if($entries!==null) foreach($entries as $entry) if(($entry['field']??null)==='Productos_Otros' && ($entry['category']??null)==='IPTV') $iptv=true;
     foreach(commercialCatalog($config) as $offer) {
         if($offer['enabled']!==true) continue;
         if($offer['type']==='speed') {
@@ -128,7 +174,7 @@ function commercialOffers(?string $plan,?array $products,array $config): array {
             if(!$state['known']) continue;
             $references=array_unique([...$offer['requires'],...$offer['excludes']]);$evidence=true;
             foreach($references as $id) {
-                if(!isset($catalog[$id]) || ($products!==[] && $catalog[$id]['aliases']===[])) {$evidence=false;break;}
+                if(!isset($catalog[$id]) || ($relevantProducts!==[] && $catalog[$id]['aliases']===[] && !($iptv && $catalog[$id]['type']==='sensa'))) {$evidence=false;break;}
             }
             if(!$evidence) continue;
             foreach($offer['requires'] as $id) if(!isset($contracted[$id])) {$evidence=false;break;}
@@ -160,7 +206,7 @@ function inspectPublicProductLabels(array $record): array {
     foreach(['Productos_Television','Productos_Otros'] as $field) {
         if(!array_key_exists($field,$record)) continue;
         $value=$record[$field];$items=is_string($value)?[$value]:(is_array($value)&&array_is_list($value)?$value:[]);
-        foreach(array_slice($items,0,30) as $item) {
+        foreach(array_slice($items,0,20) as $item) {
             $quantity=null;$label=$item;
             if(is_array($item) && !array_is_list($item)) {
                 $label=$item['Nombre']??$item['Descripcion']??$item['Producto']??$item['Nombre_Producto']??null;
@@ -169,8 +215,8 @@ function inspectPublicProductLabels(array $record): array {
                     $number=(int)$rawQuantity;if($number>=1 && $number<=99) $quantity=$number;
                 }
             }
-            if(!is_string($label) || !publicCatalogText(trim($label),160)) continue;
-            $out[]=['field'=>$field,'label'=>trim($label),'quantity'=>$quantity];
+            if(!is_string($label)) continue;
+            foreach(parseServiceProductText($field,$label,$quantity)??[] as $entry) if($entry['label']!=='WiFi +') $out[]=$entry;
         }
     }
     return $out;

@@ -26,8 +26,10 @@ function inspectServiceCatalogRows(Phantom $phantom,array $config,array $ids): a
     $phantom->scope($ids);$report=[];
     foreach($ids as $ida) {
         $record=$phantom->serviceRecord($ida);$model=wifiModel($record);
+        $products=inspectPublicProductLabels($record);
         $report[]=['ida'=>$ida,'model'=>$model?:null,'dual_band_known'=>$model!==''&&wifiDualBand($config,$model),
-            'wifi_eligible'=>$model!==''&&wifiGate($config,$model),'products'=>inspectPublicProductLabels($record)];
+            'wifi_eligible'=>$model!==''&&wifiGate($config,$model),'products'=>$products,
+            'derived'=>['sensa'=>in_array('IPTV',array_column($products,'category'),true)]];
     }
     return $report;
 }

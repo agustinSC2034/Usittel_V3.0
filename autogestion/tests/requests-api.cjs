@@ -32,7 +32,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   reset();fs.writeFileSync(config,enabled());const timeout=jar();await login(timeout);r=await timeout.call('request-prepare',{type:'TV_SENSA'});scenario('ticket-timeout');const nonce=r.data.requestId;const n=writes();
   r=await timeout.call('request-create',{requestId:nonce,confirmed:true});check('timeout ticket incierto',()=>assert.equal(r.data.state,'UNKNOWN'));
   r=await timeout.call('request-create',{requestId:nonce,confirmed:true});check('timeout no reintenta',()=>assert.equal(writes(),n+1));
-  reset();fs.writeFileSync(config,enabled().replace("'category'=>'Fixture TV'","'category'=>'Fixture WiFi'").replace("'TV_SENSA'=>","'WIFI_HELP'=>").replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'"));
+  reset();fs.writeFileSync(config,enabled().replace("'category'=>'Fixture TV'","'category'=>'Fixture WiFi'").replace("'TV_SENSA'=>","'WIFI_HELP'=>").replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10'],'dual_band_models'=>['EG8145X6-10']],'mode'=>'phantom'"));
   const marker=path.join(dir,'wifi-change-1.json');if(fs.existsSync(marker))fs.unlinkSync(marker);
   const wifi=jar();await login(wifi);r=await wifi.call('wifi-prepare',{});scenario('wifi-timeout');
   r=await wifi.call('wifi-change',{requestId:r.data.requestId,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',accountPassword:' 00Lab-fixture! ',confirmed:true});

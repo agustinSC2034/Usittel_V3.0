@@ -77,7 +77,7 @@ final class FixtureTransport implements Transport, TicketTransport {
                 return [['ID'=>$scenario==='services-wrong' && $ida===5?'8':(string)$ida,'IDAx'=>'999',
                     'Autogestion_User'=>$ida===6?'000006':'000001','Autogestion_Pass'=>' 00Lab-fixture! ',
                     'Direccion'=>$scenario==='services-missing'?null:'Calle fixture '.$ida,'Producto_Internet'=>'Plan fixture '.$ida,
-                    'Estado_Servicio'=>'Activo','ONU_Modelo'=>'Fixture-ONU','Conexiones_Asociadas'=>$ida===1?$links:[],
+                    'Estado_Servicio'=>'Activo','ONU_Modelo'=>'V5R022C00S408','ONU_SW'=>'EG8145X6-10','Conexiones_Asociadas'=>$ida===1?$links:[],
                     'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout','services-document-only-timeout'],true)?'12345678':null]];
             }
             if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];
@@ -87,7 +87,8 @@ final class FixtureTransport implements Transport, TicketTransport {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');
             $requested=(int)($query['IDA']??1);$production=$scenario==='production-user';
             $record=['ID'=>(string)($production?$requested:1),'IDAx'=>'99','Autogestion_User'=>$production?str_pad((string)$requested,6,'0',STR_PAD_LEFT):($scenario==='custom-user'?'laboratorio':'000001'), 'Autogestion_Pass'=>' 00Lab-fixture! ',
-                'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline','ONU_Modelo'=>$scenario==='wifi-unknown-model'?'Other-ONU':'Fixture-ONU',
+                'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline',
+                'ONU_Modelo'=>'V5R022C00S408','ONU_SW'=>$scenario==='wifi-unknown-model'?'Other-ONU':'EG8145X6-10',
                 'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
                 'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
                 'Email'=>'cliente@example.invalid','Telefono'=>'fixture-phone','Balance_CC'=>'9999999',

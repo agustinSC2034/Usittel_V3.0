@@ -43,9 +43,11 @@ return [
     ],
     // HTTPS base containing LibreSpeed garbage.php/empty.php; never localhost.
     'speedtest_server' => null,
-    // Global Wi-Fi compatibility. Exact models from a read-only inspection.
+    // Global Wi-Fi compatibility. model_field remains null until the exact
+    // Phantom field is confirmed by a controlled read-only inspection.
+    // ONU_Modelo contains the chipset in the observed installation, not model.
     // SSID/SSID_5G/Password in JSON body; confirm this contract in the first trial.
-    'wifi' => ['enabled'=>false, 'models'=>[], 'dual_band_models'=>[]],
+    'wifi' => ['enabled'=>false, 'model_field'=>null, 'models'=>[], 'dual_band_models'=>[]],
     // Read-only SOAP inspection, separate from any upgrade permission. See SERVICE-OPERATIONS.md.
     'soap' => ['read_enabled'=>false,'lab_ida'=>null,'url'=>null,'profile_names'=>[],'profile_ids'=>[]],
     // No production upgrade writer exists until billing + provisioning are demonstrated.

@@ -18,7 +18,8 @@ try {
         'billing_status'=>'BILLING_RELATION_UNKNOWN','provisioning_status'=>'PROVISIONING_RELATION_UNKNOWN',
         'administrative_plan'=>$plan,'technical_profile'=>null,
         'technical_profile_confirmed'=>false,'billing_confirmed'=>false,'provisioning_confirmed'=>false,
-        'model'=>\MiUsittel\wifiModel($raw)?:null,'technology'=>in_array($raw['TipoCliente']??null,['FTTH','EOC','W','Satelite','METRO'],true)?$raw['TipoCliente']:null,
+        'chipset'=>\MiUsittel\wifiChipset($raw)?:null,'model'=>\MiUsittel\wifiDeviceModel($raw,$c)?:null,
+        'technology'=>in_array($raw['TipoCliente']??null,['FTTH','EOC','W','Satelite','METRO'],true)?$raw['TipoCliente']:null,
         'products'=>\MiUsittel\inspectServiceRecord($raw),'configured_targets'=>array_values(array_map(fn($p)=>$p['public_name'],$plans)),
         'soap'=>['enabled'=>($c['soap']['read_enabled']??false)===true,'extension_available'=>extension_loaded('soap'),
             'auth_status'=>'SOAP_AUTH_NOT_CHECKED','profile_lookup_status'=>'PROFILE_LOOKUP_NOT_REQUESTED']];

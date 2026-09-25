@@ -7,7 +7,7 @@ function verifyFeature(bool $ok): void {global $count;if(!$ok)throw new \Runtime
 final class ServiceCatalogTransport implements Transport {
     public function __construct(private ?array $record=null) {}
     public function authenticate(string $url,array $credentials): array {return ['token'=>'fixture-token'];}
-    public function post(string $url,array $body): array {return [$this->record??['ID'=>'23','Nombre'=>'private-person','DNI'=>'private-dni','ONU_Modelo'=>'Fixture-ONU','Productos_Television'=>'TV Sensa','Productos_Otros'=>[['Nombre'=>'Set top box','Cantidad'=>'2','Password'=>'private-secret']]]];}
+    public function post(string $url,array $body): array {return [$this->record??['ID'=>'23','Nombre'=>'private-person','DNI'=>'private-dni','ONU_Modelo'=>'V5R022C00S408','ONU_SW'=>'EG8145X6-10','Productos_Television'=>'TV Sensa','Productos_Otros'=>[['Nombre'=>'Set top box','Cantidad'=>'2','Password'=>'private-secret']]]];}
 }
 $c=['service_product_fields'=>['Productos_Television']];
 foreach(['Productos_Telefonia','Producto_Telefonia','Productos_Bonificaciones'] as $excluded) {
@@ -58,9 +58,11 @@ verifyFeature(!in_array('mesh',array_column(commercialOffers('Otro',['Producto d
 $labels=inspectPublicProductLabels(['Productos_Television'=>'TV Sensa','Productos_Otros'=>[['Nombre'=>'Set top box','Cantidad'=>'2','Password'=>'private']],'DNI'=>'private']);
 verifyFeature($labels===[['field'=>'Productos_Television','category'=>null,'label'=>'TV Sensa','quantity'=>null],['field'=>'Productos_Otros','category'=>null,'label'=>'Set top box','quantity'=>2]] && !str_contains(json_encode($labels),'private'));
 $inspectorConfig=['phantom_url'=>'https://fixture.invalid/API_Rest.php','api_user'=>'fixture','api_pass'=>'fixture','customer_id_field'=>'ID',
-    'wifi'=>['enabled'=>true,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']]];
+    'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10'],'dual_band_models'=>[]]];
 $inspectorRows=inspectServiceCatalogRows(new Phantom($inspectorConfig,sys_get_temp_dir(),new ServiceCatalogTransport()),$inspectorConfig,[23]);
-verifyFeature($inspectorRows===[['ida'=>23,'model'=>'Fixture-ONU','dual_band_known'=>true,'wifi_eligible'=>true,'products'=>$labels,'derived'=>['sensa'=>false]]]);
+verifyFeature($inspectorRows===[['ida'=>23,'chipset'=>'V5R022C00S408','model'=>'EG8145X6-10',
+    'equipment_candidates'=>['ONU_SW'=>'EG8145X6-10'],'dual_band_known'=>false,'wifi_eligible'=>true,
+    'products'=>$labels,'derived'=>['sensa'=>false]]]);
 // Confirmed real Phantom strings: dated administrative category is metadata,
 // not part of the public label. IPTV means SENSA, not a guessed pack alias.
 $realRecord=['Productos_Television'=>'-','Productos_Otros'=>'1/3/26 - RES - 4 USITTEL MESH;1/3/26 - IPTV - Pack GOLF Channel;'];
@@ -170,6 +172,28 @@ verifyFeature($ida4950State['items']===[
 verifyFeature(!array_intersect($ida4950Offers,['sensa','mesh']) && count(array_intersect($ida4950Offers,['pack_futbol','pack_hbo','pack_universal','stb']))===4);
 verifyFeature(!preg_match('/private-person|private-dni|private-secret/',json_encode($inspectorRows)));
 verifyFeature(!validWifiModelLists(['models'=>['Fixture-ONU'],'dual_band_models'=>['Other-ONU']]));
+// ONU_SW is a fixture-only candidate name, not a confirmed Phantom production key.
+$wifiCases=[
+    ['V5R022C00S408','EG8145X6-10'],
+    ['V5R020C10S214','HG8145V5'],
+    ['V5R022C10S232','EG8041V5'],
+];
+foreach($wifiCases as [$chipset,$model]) {
+    $record=['ONU_Modelo'=>$chipset,'ONU_SW'=>$model,'ONU_Firmware'=>'V5R022C10S232',
+        'ONU_Password'=>'private-secret','DNI'=>'private-dni','Nombre'=>'private-person'];
+    $configured=['wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>[$model],'dual_band_models'=>[]]];
+    verifyFeature(wifiChipset($record)===$chipset && wifiDeviceModel($record,$configured)===$model && wifiGate($configured,$model));
+    verifyFeature(!wifiGate($configured,$chipset) && !wifiDualBand($configured,$model));
+    verifyFeature(wifiDeviceModel($record,['wifi'=>['model_field'=>null]])==='');
+    verifyFeature(wifiDeviceModel($record,['wifi'=>['model_field'=>'ONU_Modelo']])==='');
+    verifyFeature(wifiDeviceModel($record,['wifi'=>['model_field'=>'ONU_Firmware']])==='');
+    verifyFeature(wifiDeviceModel(['ONU_SW'=>$chipset],$configured)==='');
+    verifyFeature(wifiDeviceModel(['ONU_SW'=>''],$configured)==='' && !wifiGate($configured,''));
+    verifyFeature(!wifiGate($configured,$model.'-other') && !wifiGate($configured,strtolower($model)));
+    verifyFeature(wifiEquipmentCandidates($record)===['ONU_SW'=>$model,'ONU_Firmware'=>'V5R022C10S232']);
+    verifyFeature(!str_contains(json_encode(wifiEquipmentCandidates($record)),'private'));
+}
+verifyFeature(!validWifiModelLists(['models'=>['EG8145X6-10'],'dual_band_models'=>['HG8145V5']]));
 verifyFeature((new PhantomInvoiceDocuments(['mode'=>'phantom']))->available());
 verifyFeature(!(new PhantomInvoiceDocuments(['mode'=>'demo']))->available());
 $report=inspectServiceRecord(['Nombre'=>'fixture-person','Autogestion_Pass'=>'test-private','Otros_Servicios'=>[['Nombre'=>'fixture-product','Cantidad'=>2,'Password'=>'fixture-secret']],'Producto_Adicional'=>'fixture-extra']);

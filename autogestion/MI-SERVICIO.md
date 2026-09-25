@@ -59,7 +59,9 @@ solo un identificador local de intención; no se transmite IDA, documento, saldo
 factura, credenciales, tokens ni contexto Phantom. No se crean tickets.
 
 Wi-Fi ya no usa `wifi.lab_ida`: cualquier `selected_ida` autorizado por la sesión
-puede preparar el cambio si `ONU_Modelo` coincide exactamente con `wifi.models`.
+puede preparar el cambio solo si el modelo leído desde `wifi.model_field` coincide
+exactamente con `wifi.models`. En los tres equipos observados `ONU_Modelo` contiene
+el chipset, no el modelo; nunca sirve como fuente de elegibilidad Wi-Fi.
 `dual_band_models` debe ser un subconjunto exacto. Se mantienen CSRF, nonce,
 reautenticación, HMAC, lock persistente, expiración, Ticket=0, una sola escritura
 y estado UNKNOWN sin retry. Ningún modelo se habilita por similitud.
@@ -67,21 +69,28 @@ y estado UNKNOWN sin retry. Ningún modelo se habilita por similitud.
 Inspector read-only para hasta tres contratos:
 
 ```bash
-MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime php /home4/usittel/public_html/autogestion/server/inspect-service-catalog.php IDA1 IDA2 IDA3
+MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime php /home4/usittel/public_html/autogestion/server/inspect-service-catalog.php 5122 19 2124
 ```
 
-La salida contiene solo IDA, modelo saneado, dual-band conocido, elegibilidad
-Wi-Fi y labels/cantidades públicos de `Productos_Television` y `Productos_Otros`.
-No realiza escrituras. Pendiente manual: ejecutar esa lectura con los tres equipos,
-confirmar físicamente bandas/compatibilidad, cargar modelos y aliases exactos en la
-configuración privada y recién entonces decidir `wifi.enabled`. El upgrade write
+El inspector acepta como máximo tres IDA y, por ahora, solo 5122, 19 y 2124.
+La salida contiene IDA, chipset saneado desde `ONU_Modelo`, candidatos técnicos
+seguros (solo claves ONU/ONT/FTTH permitidas y valores escalares acotados), modelo
+solo si `wifi.model_field` ya fue confirmado/configurado, dual-band conocido,
+elegibilidad Wi-Fi y labels/cantidades públicos de productos. No incluye respuesta
+Phantom completa ni datos personales y no realiza escrituras. Si aún no hay campo
+de modelo confirmado, `model` es null y `wifi_eligible` es false, incluso con
+`wifi.enabled=true`. El nombre JSON real del modelo no está probado por repo/docs:
+`ONU_SW` en tests es solamente una clave de fixture, NO una instrucción para
+configurar producción. Pendiente manual: ejecutar la lectura autorizada de esos
+tres equipos, verificar qué campo contiene exactamente EG8145X6-10, HG8145V5 y
+EG8041V5, confirmar físicamente bandas/compatibilidad y recién entonces configurar
+`wifi.model_field`, `wifi.models` y `wifi.dual_band_models`. El upgrade write
 permanece pausado y Wi-Fi no se marca como validado físicamente.
 
-Validación local de esta iteración: 870 aserciones con fixtures, 64 archivos PHP
-y 28 archivos JavaScript con sintaxis correcta, build y escaneo de secretos sin
-hallazgos. QA visual en 1366×900 y 390×844: jerarquía correcta, una sola instancia
-de Central, sin errores de consola ni desborde horizontal. No se contactó Phantom
-ni SIRO real y no se ejecutó ninguna escritura.
+Validación local de esta preparación Wi-Fi: 944 verificaciones con fixtures más
+6 del catálogo, 64 archivos PHP y 28 JavaScript con sintaxis correcta, build y
+escaneo de secretos sin hallazgos. No se contactó Phantom ni SIRO real ni se
+ejecutó ninguna escritura en ONUs.
 
 ## Preparación de inspecciones, 21/09/2026
 
@@ -178,9 +187,9 @@ cerrada: Productos_Television, Producto_Television, Productos_Otros,
 Producto_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Telefonía no se ofrece ni se mapea en Mi USITTEL. Solo texto o listas de textos acotados; no
 se extraen valores recursivamente de objetos desconocidos.
 
-El inspector actual `inspect-service-catalog.php` publica productos normalizados
+El inspector `inspect-service-catalog.php` publica productos normalizados
 con campo, categoría administrativa, label, cantidad y estado derivado de Sensa,
-además del modelo ONU saneado. Para listas de objetos se admite descriptor
+además del chipset y candidatos técnicos saneados. Para listas de objetos se admite descriptor
 explícito {field, label, quantity}; label debe ser una clave permitida y quantity
 Cantidad. Cantidades entre 1 y 99; estructuras inválidas quedan desconocidas.
 Ejemplo PHP: ['field'=>'Set_Top_Box','label'=>'Nombre','quantity'=>'Cantidad'].
@@ -195,8 +204,31 @@ envían mensajes ni cambian el abono automáticamente.
 Implementados POST wifi-prepare y wifi-change con sesión, CSRF y selected_ida.
 Deshabilitado por defecto: `wifi.enabled`; la compatibilidad usa la lista exacta
 `models` para cualquier contrato autorizado por la sesión, sin gate por IDA.
-ONU_Modelo se consulta con InfoFTTH=1; dual_band_models habilita SSID_5G solo
-para modelos validados. No se infiere soporte a partir del nombre del plan.
+`ONU_Modelo` se consulta con InfoFTTH=1, pero contiene el chipset en la evidencia
+de laboratorio y nunca pasa al gate. `wifi.model_field` queda null hasta confirmar
+la clave JSON exacta del modelo/SW. Se rechaza `ONU_Modelo` y campos de firmware,
+hardware o chipset como `model_field`, además de valores con forma de chipset.
+`dual_band_models` habilita SSID_5G solo para modelos validados y debe ser subconjunto
+de `models`. No se infiere soporte a partir del nombre del plan ni del modelo.
+
+Bloque seguro de referencia para configuración manual actual (no activar aún):
+
+```php
+'wifi' => [
+    'enabled' => false,
+    'model_field' => null, // reemplazar solo por el nombre JSON exacto confirmado
+    'models' => [],
+    'dual_band_models' => [],
+],
+```
+
+Salida esperada **antes** de confirmar `model_field`: para 5122, 19 y 2124,
+`chipset` respectivamente V5R022C00S408, V5R020C10S214 y V5R022C10S232;
+`model: null`, `dual_band_known: false` y `wifi_eligible: false` en los tres.
+`equipment_candidates` puede incluir la clave/valor del modelo real, pero eso
+requiere la lectura; no está confirmado qué clave será. Después de mapear el
+campo exacto, se espera que `model` refleje respectivamente EG8145X6-10,
+HG8145V5 y EG8041V5. La compatibilidad seguirá false hasta habilitación manual.
 
 Exige clave actual de autogestión, confirmación y nombres/claves validados.
 Un nonce vincula servicio y modelo durante 10 minutos. El bloqueo persistente

@@ -56,6 +56,13 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   }
   const featureTests=spawnSync(php,[path.join(__dirname,'service-features.php')],{env:fixtureEnv,encoding:'utf8'});
   check('productos públicos y configuración de medición segura',()=>{assert.equal(featureTests.status,0,featureTests.stderr);assert.match(featureTests.stdout,/^[0-9]+$/);});count+=Number(featureTests.stdout)-1;
+  for(const args of [['1'],['5122','19','2124','5']]) {
+    const inspector=spawnSync(php,[path.join(root,'server','inspect-service-catalog.php'),...args],{env:fixtureEnv,encoding:'utf8'});
+    check('inspector Wi-Fi rechaza IDA fuera del laboratorio o más de tres',()=>{
+      assert.equal(inspector.status,1);assert.match(inspector.stderr,/INSPECTOR_ARGUMENTS/);
+      assert.equal(inspector.stdout,'');
+    });
+  }
   const serviceTests=spawnSync(php,[path.join(__dirname,'services-unit.php')],{env:fixtureEnv,encoding:'utf8'});
   check('reglas de asociación y recuperación de selección',()=>{assert.equal(serviceTests.status,0,serviceTests.stderr);assert.match(serviceTests.stdout,/^[0-9]+$/);});
   count+=Number(serviceTests.stdout)-1;

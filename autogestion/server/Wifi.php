@@ -10,13 +10,44 @@ function wifiGate(array $config,string $model): bool {
 function validWifiModelLists(array $wifi): bool {
     $models=$wifi['models']??null;$dual=$wifi['dual_band_models']??null;
     if(!is_array($models) || !is_array($dual) || !array_is_list($models) || !array_is_list($dual)) return false;
-    foreach(array_merge($models,$dual) as $model) if(!is_string($model) || wifiModel(['ONU_Modelo'=>$model])!==$model) return false;
+    foreach(array_merge($models,$dual) as $model) if(!is_string($model) || !wifiSafeEquipmentValue($model)) return false;
     return count($models)===count(array_unique($models)) && count($dual)===count(array_unique($dual))
         && !array_diff($dual,$models);
 }
-function wifiModel(array $record): string {
+function wifiSafeEquipmentValue(mixed $value): bool {
+    return is_string($value) && (bool)preg_match('/^[A-Za-z0-9][A-Za-z0-9._+\/-]{0,79}$/D',$value);
+}
+function wifiChipset(array $record): string {
     $value=$record['ONU_Modelo']??null;
-    return is_string($value) && preg_match('/^[a-zA-Z0-9][a-zA-Z0-9 ._()+\/-]{0,79}$/D',$value) ? $value : '';
+    return wifiSafeEquipmentValue($value) ? $value : '';
+}
+// The production model key is not confirmed. A missing mapping always fails closed.
+// ONU_Modelo is the observed chipset and can never be used as a model source.
+function wifiCandidateField(mixed $key): bool {
+    return is_string($key) && $key!=='ONU_Modelo' && (bool)preg_match(
+        '/^(?:(?:ONU|ONT|FTTH)_(?:Modelo|Model|Software|SW|Firmware|Chipset|Hardware|Version(?:SW|HW)?)|(?:Modelo|Model|Software|SW|Firmware|Chipset|Hardware|Version(?:SW|HW)?)_(?:ONU|ONT|FTTH))$/D',
+        $key
+    );
+}
+function wifiModelField(mixed $key): bool {
+    return wifiCandidateField($key) && (bool)preg_match(
+        '/^(?:(?:ONU|ONT|FTTH)_(?:Modelo|Model|Software|SW)|(?:Modelo|Model|Software|SW)_(?:ONU|ONT|FTTH))$/D',
+        $key
+    );
+}
+function wifiDeviceModel(array $record,array $config): string {
+    $field=$config['wifi']['model_field']??null;
+    if(!wifiModelField($field)) return '';
+    $value=$record[$field]??null;
+    return wifiSafeEquipmentValue($value) && !preg_match('/^V[0-9]+R[0-9]+C[0-9]+S[0-9]+$/D',$value) ? $value : '';
+}
+function wifiEquipmentCandidates(array $record): array {
+    $out=[];
+    foreach($record as $field=>$value) {
+        if(!wifiCandidateField($field) || !wifiSafeEquipmentValue($value)) continue;
+        $out[$field]=$value;
+    }
+    return $out;
 }
 function wifiDualBand(array $config,string $model): bool {
     $wifi=$config['wifi']??[];
@@ -25,9 +56,10 @@ function wifiDualBand(array $config,string $model): bool {
 function inspectServiceCatalogRows(Phantom $phantom,array $config,array $ids): array {
     $phantom->scope($ids);$report=[];
     foreach($ids as $ida) {
-        $record=$phantom->serviceRecord($ida);$model=wifiModel($record);
+        $record=$phantom->serviceRecord($ida);$model=wifiDeviceModel($record,$config);
         $products=inspectPublicProductLabels($record);
-        $report[]=['ida'=>$ida,'model'=>$model?:null,'dual_band_known'=>$model!==''&&wifiDualBand($config,$model),
+        $report[]=['ida'=>$ida,'chipset'=>wifiChipset($record)?:null,'model'=>$model?:null,
+            'equipment_candidates'=>wifiEquipmentCandidates($record),'dual_band_known'=>$model!==''&&wifiDualBand($config,$model),
             'wifi_eligible'=>$model!==''&&wifiGate($config,$model),'products'=>$products,
             'derived'=>['sensa'=>in_array('IPTV',array_column($products,'category'),true)]];
     }

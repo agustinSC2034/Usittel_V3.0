@@ -10,9 +10,9 @@ try {
     $c=\MiUsittel\config();if($c['mode']!=='phantom' || $c['customer_id_field']!=='ID')throw new \MiUsittel\Failure('CONFIGURATION');
     $ph=new \MiUsittel\Phantom($c,\MiUsittel\privateDir(),new \MiUsittel\CurlTransport($c));$ph->scope([(int)$argv[1]]);
     $raw=$ph->serviceRecord((int)$argv[1]);
-    $report=['equipment'=>['model_present'=>array_key_exists('ONU_Modelo',$raw),'model'=>\MiUsittel\wifiModel($raw)?:null],
+    $report=['equipment'=>['chipset'=>\MiUsittel\wifiChipset($raw)?:null,'model'=>\MiUsittel\wifiDeviceModel($raw,$c)?:null],
         'products'=>\MiUsittel\inspectServiceRecord($raw)];
     echo json_encode($report,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR).PHP_EOL;
-    echo 'Solo modelo de equipo y estructura de productos. Sin datos personales ni cambios en el servicio.'.PHP_EOL;
+    echo 'Solo chipset, modelo configurado y estructura de productos. Sin datos personales ni cambios en el servicio.'.PHP_EOL;
 } catch(\Throwable $e) {exit(\MiUsittel\writeInspectorFailure('service_features',$e));}
 finally {unset($raw,$value);}

@@ -1,11 +1,17 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings})=>{
-  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'models'=>['Fixture-ONU'],'dual_band_models'=>['Fixture-ONU']],'mode'=>'phantom'");
+  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10'],'dual_band_models'=>['EG8145X6-10']],'mode'=>'phantom'");
   const marker=path.join(dir,'wifi-change-1.json');
   const reset=()=>{for(const ida of [1,5,4242]){const file=path.join(dir,`wifi-change-${ida}.json`);if(fs.existsSync(file))fs.unlinkSync(file);}clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
   const payload=id=>({requestId:id,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',accountPassword:' 00Lab-fixture! ',confirmed:true});
   reset();fs.writeFileSync(config,settings());const disabled=jar();await login(disabled);
   let r=await disabled.call('wifi-prepare',{});check('Wi-Fi deshabilitado por defecto',()=>assert.equal(r.status,409));
+  fs.writeFileSync(config,enabled().replace("'model_field'=>'ONU_SW'","'model_field'=>null"));
+  const unmapped=jar();await login(unmapped);r=await unmapped.call('wifi-prepare',{});
+  check('sin campo de modelo confirmado el gate permanece cerrado',()=>assert.equal(r.data.error.code,'WIFI_UNAVAILABLE'));
+  fs.writeFileSync(config,enabled().replace("'model_field'=>'ONU_SW'","'model_field'=>'ONU_Modelo'").replaceAll('EG8145X6-10','V5R022C00S408'));
+  const chipset=jar();await login(chipset);r=await chipset.call('wifi-prepare',{});
+  check('ONU_Modelo aunque esté listado nunca habilita por chipset',()=>assert.equal(r.data.error.code,'WIFI_UNAVAILABLE'));
   fs.writeFileSync(config,enabled());const u=jar();await login(u);
   r=await u.call('wifi-prepare',{}, {noCsrf:true});check('preparar Wi-Fi exige CSRF',()=>assert.equal(r.status,403));
   r=await u.call('wifi-prepare',{IDA:5});check('preparación no admite IDA',()=>assert.equal(r.status,400));
@@ -39,7 +45,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await multi.call('wifi-prepare',{});check('modelo permitido habilita Wi-Fi sin lab_ida en otro contrato propio',()=>{assert.equal(r.status,200);assert.equal(r.data.dualBand,true);});
   await multi.call('select-service',{serviceId:'1'});r=await multi.call('wifi-change',payload(old));check('volver al contrato original no recupera el nonce descartado',()=>assert.equal(r.status,409));
   await multi.call('logout',{});await multi.call('bootstrap');r=await multi.call('wifi-change',payload(old));check('logout impide cambio Wi-Fi',()=>assert.equal(r.status,401));
-  reset();fs.writeFileSync(config,enabled().replace("'dual_band_models'=>['Fixture-ONU']","'dual_band_models'=>[]"));
+  reset();fs.writeFileSync(config,enabled().replace("'dual_band_models'=>['EG8145X6-10']","'dual_band_models'=>[]"));
   const single=jar();await login(single);r=await single.call('wifi-prepare',{});const singleId=r.data.requestId;
   check('modelo sin doble banda no ofrece red 5 GHz',()=>assert.equal(r.data.dualBand,false));
   r=await single.call('wifi-change',payload(singleId));check('no admite inyectar SSID 5 GHz',()=>assert.equal(r.status,400));

@@ -286,6 +286,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('cookie HttpOnly / SameSite, scope prefijado y modo servidor',()=>{assert.match(r.headers.get('set-cookie'),/HttpOnly/i);assert.match(r.headers.get('set-cookie'),/SameSite=Strict/i);assert.match(r.headers.get('set-cookie'),/Path=\/autogestion\//i);assert.equal(r.data.mode,'phantom');});
   const origin=base.replace('/autogestion/api/','');
   const physicalEndpoint=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return origin+'/api.php?'+params.toString();};
+  const prefixedPhysicalEndpoint=route=>{const [name,query]=route.split('?',2);const params=new URLSearchParams(query||'');params.set('route',name);return origin+'/autogestion/api.php?'+params.toString();};
   const direct=jar(physicalEndpoint);
   const rootBootstrap=await fetch(origin+'/api/bootstrap');
   check('subdominio raíz entrega API con cookie limitada a su raíz',()=>{assert.equal(rootBootstrap.status,200);assert.match(rootBootstrap.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
@@ -294,6 +295,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const prefixedPage=await fetch(origin+'/autogestion/');const prefixedHtml=await prefixedPage.text();
   check('ruta prefijada local continúa disponible',()=>{assert.equal(prefixedPage.status,200);assert.match(prefixedHtml,/<title>Mi USITTEL/);});
   r=await direct.call('bootstrap');check('entrypoint físico bootstrap',()=>assert.equal(r.status,200));
+  r=await fetch(prefixedPhysicalEndpoint('bootstrap'));const prefixedBootstrap=await r.json();check('entrypoint físico local prefijado api.php dispatch bootstrap',()=>{assert.equal(r.status,200);assert.equal(prefixedBootstrap.mode,'phantom');});
   r=await direct.call('login',{username:'000001',password:' 00Lab-fixture! '},{noCsrf:true});check('entrypoint físico POST login exige CSRF',()=>assert.equal(r.status,403));
   r=await direct.call('login',{username:'000001',password:' 00Lab-fixture! '});check('entrypoint físico POST login',()=>assert.equal(r.status,200));
   r=await direct.call('invoices?offset=0');check('entrypoint físico GET con query',()=>assert.equal(r.status,200));

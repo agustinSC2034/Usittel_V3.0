@@ -15,7 +15,9 @@ if(!is_string($path)) {http_response_code(400);exit;}
 $prefixed=$path==='/autogestion' || str_starts_with($path,'/autogestion/');
 $mount=$prefixed?'/autogestion':'';
 $routePath=$prefixed?substr($path,strlen('/autogestion')):$path;
-$physicalEntry=basename((string)parse_url($_SERVER['SCRIPT_NAME']??'',PHP_URL_PATH))==='api.php';
+// The PHP built-in server keeps SCRIPT_NAME tied to router.php in some router
+// setups; use the normalized request path so local and physical api.php match.
+$physicalEntry=$routePath==='/api.php';
 $dispatchApi=static function(string $route): never {
     try {
         $c=\MiUsittel\config();$dir=\MiUsittel\privateDir();

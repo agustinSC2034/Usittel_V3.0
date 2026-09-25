@@ -1,29 +1,29 @@
 # Mi servicio
 
-## Productos_Otros fechado e IPTV, 25/09/2026
+## Catálogo de servicios confirmado, 26/09/2026
 
-La lectura real confirmó entradas `FECHA - CATEGORIA - PRODUCTO` separadas por
-`;` en `Productos_Otros`. Un único parser valida fechas `d/m/yy` o `dd/mm/yy`,
-límites de texto y separadores exactos; descarta la fecha y conserva la categoría
-solo internamente. Una cantidad inequívoca al principio (`4 USITTEL MESH`)
-produce `USITTEL MESH × 4`; números dentro del nombre no se interpretan. El
-inspector read-only usa ese mismo parser y muestra campo, categoría, label y
-cantidad, más `derived.sensa`. No vuelca la respuesta Phantom ni datos personales.
+Un único parser valida entradas `FECHA - CATEGORIA - PRODUCTO` en los campos
+confirmados `Productos_Television` y `Productos_Otros`, separa entradas por `;`,
+descarta fechas y conserva la categoría solo internamente. Extrae cantidades solo
+al inicio: `1 Set Top Box` y `4 USITTEL MESH` se convierten en labels sin prefijo y
+su cantidad. El inspector usa el mismo parser y muestra campo, categoría, label,
+cantidad y `derived.sensa`, sin respuesta Phantom cruda ni datos personales.
 
-La categoría exactamente `IPTV` dentro de `Productos_Otros` prueba que el cliente
-tiene Sensa. El nombre del producto IPTV permanece separado: un pack sin alias
-exacto se muestra con su label original, sin atribuirlo a un pack catalogado.
-La lista pública `products` no recibe un producto Sensa ficticio: la derivación
-solo entra en `servicePresentation` y en las reglas comerciales. `WiFi +` exacto
-se ignora por completo, incluso si era el único producto. `Productos_Television`
-igual a `-` continúa vacío. Un texto fuera del formato confirmado conserva la
-semántica literal anterior, sin categoría ni inferencia IPTV.
+La categoría exacta `IPTV` en cualquiera de esos dos campos confirma Sensa. El
+producto exacto `Abono Básico` solo actúa como esa evidencia y no se muestra por
+separado. El resto de nombres IPTV se conserva como servicio; solo los aliases
+exactos confirmados del catálogo se presentan con su nombre amigable y su oferta
+correspondiente desaparece al estar contratado. `WiFi +` exacto se ignora por
+completo. `USITTEL MESH`, `Pack Futbol`, `HBO`, `Universal+` y `Set Top Box` ya
+tienen aliases exactos confirmados en `config.example.php`; no se copian a la
+configuración privada automáticamente.
 
-Sigue siendo necesaria la carga manual de aliases exactos en la configuración
-privada, por ejemplo `mesh.aliases = ['USITTEL MESH']` en la sintaxis PHP del
-catálogo. Sin ese alias no se reconoce Mesh como contratado. No se habilitaron
-modelos Wi-Fi ni escrituras; primero corresponde revisar otra vez la salida real
-del inspector para los contratos autorizados.
+`Hot Go Play` y `Pack GOLF Channel` se muestran como productos sin mapear y no
+activan ofertas propias. `Punto WiFi - ESTACIÓN TANDIL` conserva ese nombre como
+producto desconocido; no se confunde con Mesh, Sensa ni STB. No se aplican
+coincidencias parciales. La muestra `Productos_Television = '-'` sigue siendo
+vacía. Un texto con estructura no confirmada conserva el tratamiento literal
+conservador, sin categoría ni inferencias.
 
 ## Iteración productiva de servicios, 23/09/2026
 
@@ -178,14 +178,15 @@ cerrada: Productos_Television, Producto_Television, Productos_Otros,
 Producto_Otros, Otros_Servicios, Adicionales y Set_Top_Box/STB, entre otros alias cerrados. Telefonía no se ofrece ni se mapea en Mi USITTEL. Solo texto o listas de textos acotados; no
 se extraen valores recursivamente de objetos desconocidos.
 
-La instalación debe verificarse antes de cargar aliases. El inspector actual
-`inspect-service-catalog.php` publica solamente labels de los dos campos confirmados,
-cantidad inequívoca y modelo ONU saneado. Para listas de objetos se admite descriptor
+El inspector actual `inspect-service-catalog.php` publica productos normalizados
+con campo, categoría administrativa, label, cantidad y estado derivado de Sensa,
+además del modelo ONU saneado. Para listas de objetos se admite descriptor
 explícito {field, label, quantity}; label debe ser una clave permitida y quantity
 Cantidad. Cantidades entre 1 y 99; estructuras inválidas quedan desconocidas.
 Ejemplo PHP: ['field'=>'Set_Top_Box','label'=>'Nombre','quantity'=>'Cantidad'].
-Los campos de Sensa, packs y STB deben confirmarse con el inspector antes de activar
-su mapeo; no se mezclan productos potenciales con servicios contratados.
+Los aliases de Mesh, packs confirmados y STB figuran en config.example.php como
+referencia. La configuración privada requiere actualización manual independiente;
+no se mezclan productos potenciales con servicios contratados.
 Los enlaces comerciales abren Central sin adjuntar datos personales. No contratan,
 envían mensajes ni cambian el abono automáticamente.
 

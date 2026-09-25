@@ -19,17 +19,17 @@ return [
     'connect_timeout_seconds' => 4,
     // Confirmed public fields. null and [] retain different meanings; see MI-SERVICIO.md.
     'service_product_fields' => ['Productos_Television','Productos_Otros'],
-    // Exact Phantom labels only. Keep aliases empty until the read-only inspector confirms them.
+    // Exact aliases confirmed from Phantom product selection; private config is updated manually.
     'service_catalog' => [
         'sensa' => ['type'=>'sensa','public_name'=>'Sensa','aliases'=>[]],
-        'pack_futbol' => ['type'=>'sensa_pack','public_name'=>'Pack Fútbol','aliases'=>[]],
-        'pack_hbo' => ['type'=>'sensa_pack','public_name'=>'Pack HBO','aliases'=>[]],
-        'pack_universal' => ['type'=>'sensa_pack','public_name'=>'Universal+','aliases'=>[]],
-        'stb' => ['type'=>'stb','public_name'=>'Set Top Box','aliases'=>[]],
-        'mesh' => ['type'=>'mesh','public_name'=>'Wi-Fi Mesh','aliases'=>[]],
+        'pack_futbol' => ['type'=>'sensa_pack','public_name'=>'Pack Fútbol','aliases'=>['Pack Futbol']],
+        'pack_hbo' => ['type'=>'sensa_pack','public_name'=>'Pack HBO','aliases'=>['HBO']],
+        'pack_universal' => ['type'=>'sensa_pack','public_name'=>'Universal+','aliases'=>['Universal+']],
+        'stb' => ['type'=>'stb','public_name'=>'Set Top Box','aliases'=>['Set Top Box']],
+        'mesh' => ['type'=>'mesh','public_name'=>'Wi-Fi Mesh','aliases'=>['USITTEL MESH']],
     ],
     // Public prices verified on usittel.com.ar on 2026-09-23. Offers remain
-    // conservative: non-empty unknown product lists never prove absence.
+    // conservative: offers require configured exact aliases or structural evidence.
     'commercial_catalog' => [
         ['id'=>'sensa','type'=>'sensa','public_name'=>'Sensa','description'=>'Más de 100 canales en vivo y contenido on-demand.','price_monthly'=>19999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>['sensa'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
         ['id'=>'pack_futbol','type'=>'sensa_pack','public_name'=>'Pack Fútbol','description'=>'Viví todos los partidos de la liga argentina.','price_monthly'=>24999,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['pack_futbol'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],

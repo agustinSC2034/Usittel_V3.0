@@ -100,6 +100,74 @@ foreach(['1/3/26 - iptv - Pack Ejemplo Nuevo','32/3/26 - IPTV - Pack Ejemplo Nue
     verifyFeature($entries===null || !in_array('IPTV',array_column($entries,'category'),true));
 }
 verifyFeature(serviceProducts(['Productos_Television'=>'-','Productos_Otros'=>'Mesh 4'],$realFields)===['Mesh 4']);
+$confirmedCatalog=$catalogConfig;
+$confirmedCatalog['service_catalog']['pack_hbo']['aliases']=['HBO'];
+$confirmedCatalog['service_catalog']['pack_futbol']['aliases']=['Pack Futbol'];
+$confirmedCatalog['service_catalog']['pack_universal']['aliases']=['Universal+'];
+$confirmedCatalog['service_catalog']['stb']['aliases']=['Set Top Box'];
+$confirmedCatalog['service_catalog']['mesh']['aliases']=['USITTEL MESH'];
+$exampleCatalog=serviceCatalog(require __DIR__.'/../server/config.example.php');
+verifyFeature($exampleCatalog['pack_futbol']['aliases']===['Pack Futbol'] && $exampleCatalog['pack_hbo']['aliases']===['HBO']
+    && $exampleCatalog['pack_universal']['aliases']===['Universal+'] && $exampleCatalog['stb']['aliases']===['Set Top Box']
+    && $exampleCatalog['mesh']['aliases']===['USITTEL MESH'] && $exampleCatalog['sensa']['aliases']===[]);
+foreach(['pack_futbol'=>['Pack Fútbol','Pack Futbol'],'pack_universal'=>['Universal+','Universal+']] as $id=>$definition) {
+    $confirmedCatalog['service_catalog'][$id]=['type'=>'sensa_pack','public_name'=>$definition[0],'aliases'=>[$definition[1]]];
+    $confirmedCatalog['commercial_catalog'][]=['id'=>$id,'type'=>'sensa_pack','public_name'=>$definition[0],'description'=>'Fixture comercial.',
+        'price_monthly'=>1000,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>[$id],
+        'enabled'=>true,'current_plans'=>[],'target_speed'=>null];
+}
+$parseRealProduct=static function(string $field,string $raw) use ($realFields,$confirmedCatalog): array {
+    $record=['Productos_Television'=>'-','Productos_Otros'=>''];$record[$field]=$raw;
+    $entries=serviceProductEntries($record,$realFields);
+    $products=serviceProducts($record,$realFields);
+    return [$entries,$products,serviceProductState($products,$confirmedCatalog,$entries),commercialOffers(null,$products,$confirmedCatalog,$entries)];
+};
+[$entries,$products,$state,$offers]=$parseRealProduct('Productos_Television','1/8/25 - IPTV - Abono Básico');
+verifyFeature($products===[] && $state['items']===[['label'=>'Sensa','quantity'=>null]] && $state['ids']===['sensa']);
+verifyFeature(!in_array('sensa',array_column($offers,'id'),true));
+$confirmedPackCases=[
+    'Pack Futbol'=>['Pack Fútbol','pack_futbol'],
+    'HBO'=>['Pack HBO','pack_hbo'],
+    'Universal+'=>['Universal+','pack_universal'],
+];
+foreach($confirmedPackCases as $raw=>$expected) {
+    [$entries,$products,$state,$offers]=$parseRealProduct('Productos_Otros','1/4/25 - IPTV - '.$raw);
+    verifyFeature($state['items']===[['label'=>'Sensa','quantity'=>null],['label'=>$expected[0],'quantity'=>null]] && in_array($expected[1],$state['ids'],true));
+    verifyFeature(!in_array($expected[1],array_column($offers,'id'),true) && !in_array('sensa',array_column($offers,'id'),true));
+}
+foreach(['Hot Go Play','Pack GOLF Channel'] as $unknownIptvPack) {
+    [$entries,$products,$state]=$parseRealProduct('Productos_Otros','1/4/25 - IPTV - '.$unknownIptvPack);
+    verifyFeature($state['items']===[['label'=>'Sensa','quantity'=>null],['label'=>$unknownIptvPack,'quantity'=>null]] && $state['ids']===['sensa']);
+}
+foreach([1,2] as $quantity) {
+    [$entries,$products,$state,$offers]=$parseRealProduct('Productos_Otros','1/4/25 - IPTV - '.$quantity.' Set Top Box');
+    verifyFeature($products===['Set Top Box × '.$quantity] && $state['items']===[['label'=>'Sensa','quantity'=>null],['label'=>'Set Top Box','quantity'=>$quantity]]);
+    verifyFeature(!in_array('stb',array_column($offers,'id'),true));
+}
+[$entries,$products,$state,$offers]=$parseRealProduct('Productos_Otros','1/3/26 - RES - 4 USITTEL MESH');
+verifyFeature($entries===[['field'=>'Productos_Otros','category'=>'RES','label'=>'USITTEL MESH','quantity'=>4]] && $state['items']===[['label'=>'Wi-Fi Mesh','quantity'=>4]] && $state['ids']===['mesh']);
+verifyFeature(!in_array('mesh',array_column($offers,'id'),true));
+[$entries,$products,$state]=$parseRealProduct('Productos_Otros','15/6/24 - RES & COM ($) - WiFi +');
+verifyFeature($products===[] && $entries===[] && $state['items']===[] && $state['ids']===[]);
+[$entries,$products,$state]=$parseRealProduct('Productos_Otros','1/4/25 - Punto WiFi - ESTACIÓN TANDIL');
+verifyFeature($products===['Punto WiFi - ESTACIÓN TANDIL'] && $state['items']===[['label'=>'Punto WiFi - ESTACIÓN TANDIL','quantity'=>null]] && $state['ids']===[]);
+verifyFeature(!in_array('mesh',$state['ids'],true) && !in_array('sensa',$state['ids'],true) && !in_array('stb',$state['ids'],true));
+$ida2505=['Productos_Television'=>'1/8/25 - IPTV - Abono Básico','Productos_Otros'=>'15/6/24 - RES & COM ($) - WiFi +;1/4/25 - IPTV - 1 Set Top Box;1/8/25 - IPTV - Pack Futbol'];
+$ida2505Entries=serviceProductEntries($ida2505,$realFields);$ida2505Products=serviceProducts($ida2505,$realFields);
+$ida2505State=serviceProductState($ida2505Products,$confirmedCatalog,$ida2505Entries);
+$ida2505Offers=array_column(commercialOffers('Plan', $ida2505Products,$confirmedCatalog,$ida2505Entries),'id');
+verifyFeature($ida2505Products===['Set Top Box × 1','Pack Futbol'] && $ida2505State['items']===[
+    ['label'=>'Sensa','quantity'=>null],['label'=>'Set Top Box','quantity'=>1],['label'=>'Pack Fútbol','quantity'=>null],
+]);
+verifyFeature(!array_intersect($ida2505Offers,['sensa','pack_futbol','stb']) && count(array_intersect($ida2505Offers,['pack_hbo','pack_universal','mesh']))===3);
+$ida4950=['Productos_Television'=>'-','Productos_Otros'=>'1/3/26 - RES - 4 USITTEL MESH;1/8/25 - IPTV - Pack GOLF Channel'];
+$ida4950Entries=serviceProductEntries($ida4950,$realFields);$ida4950Products=serviceProducts($ida4950,$realFields);
+$ida4950State=serviceProductState($ida4950Products,$confirmedCatalog,$ida4950Entries);
+$ida4950Offers=array_column(commercialOffers('Plan', $ida4950Products,$confirmedCatalog,$ida4950Entries),'id');
+verifyFeature($ida4950State['items']===[
+    ['label'=>'Sensa','quantity'=>null],['label'=>'Wi-Fi Mesh','quantity'=>4],['label'=>'Pack GOLF Channel','quantity'=>null],
+]);
+verifyFeature(!array_intersect($ida4950Offers,['sensa','mesh']) && count(array_intersect($ida4950Offers,['pack_futbol','pack_hbo','pack_universal','stb']))===4);
 verifyFeature(!preg_match('/private-person|private-dni|private-secret/',json_encode($inspectorRows)));
 verifyFeature(!validWifiModelLists(['models'=>['Fixture-ONU'],'dual_band_models'=>['Other-ONU']]));
 verifyFeature((new PhantomInvoiceDocuments(['mode'=>'phantom']))->available());

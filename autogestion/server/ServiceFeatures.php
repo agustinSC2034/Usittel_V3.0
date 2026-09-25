@@ -50,7 +50,7 @@ function serviceProductEntries(array $record,array $config): ?array {
 function parseServiceProductText(string $field,string $text,?int $quantity=null): ?array {
     if(strlen($text)>2048 || preg_match('/[<>@\x00-\x1f]|https?:/i',$text)) return null;
     $text=trim($text);if($text==='' || $text==='-') return [];
-    if($field==='Productos_Otros' && $quantity===null) {
+    if(in_array($field,['Productos_Television','Productos_Otros'],true) && $quantity===null) {
         $segments=explode(';',$text);$parsed=[];$valid=count($segments)<=20;
         foreach($segments as $segment) {
             $segment=trim($segment);if($segment==='') continue;
@@ -70,7 +70,11 @@ function serviceProducts(array $record,array $config): ?array {
     $entries=serviceProductEntries($record,$config);
     if($entries===null) return null;
     $out=[];
-    foreach($entries as $entry) $out[]=$entry['label'].($entry['quantity']!==null?' × '.$entry['quantity']:'');
+    foreach($entries as $entry) {
+        if($entry['category']==='IPTV' && $entry['label']==='Abono Básico') continue;
+        $label=$entry['category']==='Punto WiFi'?'Punto WiFi - '.$entry['label']:$entry['label'];
+        $out[]=$label.($entry['quantity']!==null?' × '.$entry['quantity']:'');
+    }
     return array_values(array_unique($out));
 }
 
@@ -105,7 +109,7 @@ function serviceProductState(?array $products,array $config,?array $entries=null
     if($products===null) return ['known'=>false,'items'=>[],'ids'=>[]];
     $catalog=serviceCatalog($config);$byAlias=[];
     foreach($catalog as $id=>$entry) foreach($entry['aliases'] as $alias) $byAlias[$alias]=$id;
-    $known=[];$unknown=[];$ids=[];
+    $known=[];$unknown=[];$ids=[];$derivedSensaId=null;
     foreach($products as $value) {
         if(!is_string($value)) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
         $parts=productLabelParts($value);
@@ -122,13 +126,15 @@ function serviceProductState(?array $products,array $config,?array $entries=null
     // Exact administrative category, confirmed by USITTEL as SENSA evidence.
     // This sidecar is never added to the raw public products list.
     if($entries!==null) foreach($entries as $entry) {
-        if(($entry['field']??null)!=='Productos_Otros' || ($entry['category']??null)!=='IPTV') continue;
+        if(!in_array($entry['field']??null,['Productos_Television','Productos_Otros'],true) || ($entry['category']??null)!=='IPTV') continue;
         foreach($catalog as $id=>$definition) if($definition['type']==='sensa') {
             $ids[$id]=true;
+            $derivedSensaId=$id;
             $known[$id]=['label'=>$definition['public_name'],'quantity'=>null];
             unset($unknown[$definition['public_name']]);
         }
     }
+    if($derivedSensaId!==null && isset($known[$derivedSensaId])) $known=[$derivedSensaId=>$known[$derivedSensaId]]+$known;
     return ['known'=>true,'items'=>array_values([...$known,...$unknown]),'ids'=>array_keys($ids)];
 }
 function commercialCatalog(array $config): array {
@@ -164,7 +170,7 @@ function commercialOffers(?string $plan,?array $products,array $config,?array $e
     $catalog=serviceCatalog($config);$state=serviceProductState($products,$config,$entries);$contracted=array_fill_keys($state['ids'],true);$offers=[];
     $relevantProducts=$products===null?null:array_values(array_filter($products,fn($value)=>productLabelParts($value)['label']!=='WiFi +'));
     $iptv=false;
-    if($entries!==null) foreach($entries as $entry) if(($entry['field']??null)==='Productos_Otros' && ($entry['category']??null)==='IPTV') $iptv=true;
+    if($entries!==null) foreach($entries as $entry) if(in_array($entry['field']??null,['Productos_Television','Productos_Otros'],true) && ($entry['category']??null)==='IPTV') $iptv=true;
     foreach(commercialCatalog($config) as $offer) {
         if($offer['enabled']!==true) continue;
         if($offer['type']==='speed') {

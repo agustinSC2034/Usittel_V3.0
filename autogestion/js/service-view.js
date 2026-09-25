@@ -3,6 +3,12 @@ import {formatOfferPrice,offerCta} from './service-catalog.js';
 import {status,icon,button,escapeHTML as e} from './components.js';
 
 const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${e(type)}">${label} ${icon('arrow-right')}</button>`;
+function offerMark(offer) {
+  const logos={sensa:'brand-sensa.png',pack_hbo:'brand-hbo.svg',pack_universal:'brand-universal.svg',pack_futbol:'brand-futbol.png'};
+  if(Object.hasOwn(logos,offer.id)) return `<img class="offer-brand${offer.id==='pack_universal'?' offer-brand-monochrome':''}${offer.id==='pack_futbol'?' offer-brand-crest':''}" src="assets/${logos[offer.id]}" width="60" height="38" alt="" aria-hidden="true">`;
+  const symbol=offer.type==='mesh'?'wifi':offer.type==='speed'?'zap':offer.type==='stb'?'tv':null;
+  return symbol?icon(symbol,'offer-symbol'):'';
+}
 export function contractedProducts() {
   const state=runtime.servicePresentation || (Array.isArray(customer.products)?{known:true,items:customer.products.map(label=>({label,quantity:null}))}:{known:false,items:[]});
   const internet=`<li>${icon('check')}<span>${e(planLabel(customer.plan))}</span></li>`;
@@ -12,7 +18,7 @@ export function contractedProducts() {
 function offersSection() {
   const offers=runtime.commercialOffers;
   if (!offers.length) return '';
-  return `<section class="service-offers" aria-labelledby="offers-title"><p class="eyebrow">Opciones para vos</p><h2 id="offers-title">Podés sumar</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3>${e(o.public_name)}</h3><p>${e(o.description)}</p><p class="offer-price">${e(formatOfferPrice(o))}</p></div>${offerButton(o.id,offerCta(o.type))}</div>`).join('')}</div></section>`;
+  return `<section class="service-offers" aria-labelledby="offers-title"><p class="eyebrow">Opciones para vos</p><h2 id="offers-title">Podés sumar</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3 class="offer-heading">${offerMark(o)}<span>${e(o.public_name)}</span></h3><p>${e(o.description)}</p><p class="offer-price">${e(formatOfferPrice(o))}</p></div>${offerButton(o.id,offerCta(o.type))}</div>`).join('')}</div></section>`;
 }
 export function servicePage() {
   const detail=runtime.connectionDetails;

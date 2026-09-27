@@ -18,6 +18,7 @@ export async function initialize(mode) {
   if (mode === 'demo') {
     const demo = await import('./demo-data.js');
     customer = { ...demo.customer, speed: '300 Mbps' }; invoices = demo.invoices.map(i => ({ ...i })); ticket = { ...demo.ticket }; debt = demo.debt; nextDue = '20/09/2026';
+    runtime.endReached = true;
     runtime.servicePresentation = demo.servicePresentation; runtime.commercialOffers = demo.commercialOffers;
   }
 }

@@ -55,7 +55,7 @@ export function initializeCentralChat() {
       });
       if (!document.querySelector('#central-chat-mount') || !customElements.get('central-chat')) throw new Error('Central unavailable');
       const adapter = new CentralChatAdapter(CHANNEL_KEY); adapter.mount(); fallback?.setAttribute('hidden', ''); return adapter;
-    } catch { if (fallback) fallback.hidden = false; return null; }
+    } catch { return null; }
   })();
   return centralPromise;
 }

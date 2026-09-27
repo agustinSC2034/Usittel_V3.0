@@ -8,11 +8,16 @@ function offerMark(offer) {
   if(visual.asset) return `<img class="offer-brand${offer.id==='pack_universal'?' offer-brand-monochrome':''}${offer.id==='pack_futbol'?' offer-brand-crest':''}" src="assets/${visual.asset}" width="60" height="38" alt="" aria-hidden="true">`;
   return visual.symbol?icon(visual.symbol,'offer-symbol'):'';
 }
+export const SPEEDTEST_URL = 'http://velocidad.usittel.com.ar/speedtest/';
 export function contractedProducts() {
   const state=serviceDisplayState(runtime.servicePresentation);
-  const internet=`<li>${icon('check')}<span>${e(planLabel(customer.plan))}</span></li>`;
-  if (!state.known) return `<ul class="contracted-products" aria-label="Tus servicios">${internet}</ul><p class="field-hint">El detalle de servicios adicionales no está disponible en este momento.</p>`;
-  return `<ul class="contracted-products" aria-label="Tus servicios">${internet}${state.items.map(item=>`<li>${icon('check')}<span>${e(item.label)}${item.quantity?` × ${e(item.quantity)}`:''}</span></li>`).join('')}</ul>`;
+  if (!state.known) return '<p class="field-hint">El detalle de servicios adicionales no está disponible en este momento.</p>';
+  return `<ul class="contracted-products" aria-label="Tus servicios">${state.items.map(item=>`<li>${icon('check')}<span>${e(item.label)}${item.quantity?` × ${e(item.quantity)}`:''}</span></li>`).join('')}</ul>`;
+}
+export function contractedSection() {
+  const state=serviceDisplayState(runtime.servicePresentation);
+  if (state.known && state.items.length === 0) return '';
+  return `<section class="contracted-services-section" aria-labelledby="contracted-title">${state.known ? '<p class="eyebrow">Incluidos en tu cuenta</p><h2 id="contracted-title">Tus servicios</h2>' : '<h2 id="contracted-title">Servicios adicionales</h2>'}${contractedProducts()}</section>`;
 }
 function offersSection() {
   const offers=runtime.commercialOffers;
@@ -34,9 +39,9 @@ export function servicePage() {
       <p class="field-hint" role="status">${runtime.connectionRefreshing?'Consultando estado…':runtime.connectionError?e(runtime.connectionError):`${checked?'Consultado a las '+e(checked)+'. ':''}Último estado informado. Puede demorar en actualizarse.`}</p>
     </section>
   </div></section>
-  <section class="contracted-services-section" aria-labelledby="contracted-title"><p class="eyebrow">Incluidos en tu cuenta</p><h2 id="contracted-title">Tus servicios</h2>${contractedProducts()}</section>
+  ${contractedSection()}
   <section class="service-tools" aria-labelledby="tools-title"><p class="eyebrow">A tu alcance</p><h2 id="tools-title">Herramientas</h2><div class="service-tools-grid">
-  <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}<button type="button" class="text-action" data-action="show-speedtest">${icon('activity')}Test de velocidad</button></div></section>
+  <section class="service-wifi" aria-labelledby="wifi-title"><div><span class="eyebrow">Herramientas</span><h2 id="wifi-title">Configurá tu Wi-Fi</h2><p class="muted">Cambiá el nombre y la contraseña de tus redes.</p></div><div class="wifi-actions">${button('Configurar Wi-Fi','wifi-settings',{secondary:true,iconName:'wifi'})}</div></section>
   ${speedtestSection()}
   </div></section>
   ${offersSection()}
@@ -45,7 +50,7 @@ export function servicePage() {
 function speedtestSection() {
   return `<section id="service-speedtest" class="service-speedtest" aria-labelledby="speed-title" tabindex="-1">
     <div class="speed-intro"><span class="eyebrow">Desde este dispositivo</span><h2 id="speed-title">Probá tu conexión</h2><p class="muted">Medí la velocidad de tu conexión con el test de USITTEL.</p></div>
-    <div class="speed-external"><a class="button" id="speedtest-link" href="http://velocidad.usittel.com.ar/speedtest/" target="_blank" rel="noopener noreferrer">${icon('external-link')}Abrir test de USITTEL</a><p class="field-hint">Se abre en una nueva pestaña.</p></div>
+    <div class="speed-external"><a class="button" id="speedtest-link" href="${SPEEDTEST_URL}" target="_blank" rel="noopener noreferrer">${icon('external-link')}Abrir test de USITTEL</a><p class="field-hint">Se abre en una nueva pestaña.</p></div>
 
       <details class="speed-guidance"><summary>Para una buena medición</summary><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN.</li></ol></details>
   </section>`;

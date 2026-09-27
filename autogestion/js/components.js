@@ -8,6 +8,11 @@ export const routes = [
   ['servicio', 'Mi servicio', 'wifi'], ['soporte', 'Soporte', 'headphones'], ['cuenta', 'Mi cuenta', 'user'],
 ];
 export const status = value => `<span class="status status-${['Pagada','Activo','Pago confirmado','Pago registrado','En línea'].includes(value) ? 'success' : value === 'Vencida' || value === 'Suspendido' ? 'danger' : ['Pendiente','En revisión','Sin conexión'].includes(value) ? 'pending' : 'neutral'}">${escapeHTML(value)}</span>`;
+export function operationAlert(tone, title, description = '') {
+  const safeTone = ['success', 'warning', 'error', 'info'].includes(tone) ? tone : 'info';
+  const symbols = { success: 'check', warning: 'alert-triangle', error: 'alert-circle', info: 'info' };
+  return `<div class="operation-alert operation-alert-${safeTone}">${icon(symbols[safeTone])}<div><strong>${escapeHTML(title)}</strong>${description ? `<p>${escapeHTML(description)}</p>` : ''}</div></div>`;
+}
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);

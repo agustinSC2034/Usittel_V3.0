@@ -1,6 +1,6 @@
 import { request, invoicePdf, paymentReceiptPdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices, planLabel, addressLabel } from './data.js';
-import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, escapeHTML as e } from './components.js';
+import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat } from './central-chat.js';
@@ -43,6 +43,12 @@ function openDialog(title, content) {
 }
 dialog.addEventListener('close', () => { dialog.innerHTML = ''; if (lastTrigger?.isConnected) lastTrigger.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
+document.addEventListener('toggle', event => {
+  const item = event.target;
+  if (!(item instanceof HTMLDetailsElement) || !item.matches('.faq-item')) return;
+  if (item.open) document.querySelectorAll('.faq-item[open]').forEach(other => { if (other !== item) other.open = false; });
+  item.querySelector('summary')?.setAttribute('aria-expanded', String(item.open));
+}, true);
 const unavailable = ['wifi', 'contact', 'password', 'speedtest', 'ticket', 'download-receipt', 'receipt'];
 function render() {
   const demoStrip = document.querySelector('.demo-strip');
@@ -79,11 +85,6 @@ function invoiceDialog(item, receipt = false) {
   if (runtime.mode === 'phantom') { const visible=invoiceVisibleStatus(item); return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(visible.label)}${visible.hint ? `<p class="field-hint">${e(visible.hint)}</p>` : ''}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' ? invoicePayButton(item) : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div>`); }
   openDialog(receipt ? 'Comprobante de pago' : 'Detalle de factura', `<p class="demo-caption">Documento de ejemplo · Sin validez fiscal</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Servicio</dt><dd>${e(planLabel(customer.plan))}</dd></div><div><dt>Domicilio</dt><dd>${e(addressLabel(customer.address))}</dd></div><div><dt>Vencimiento</dt><dd>${item.due}</dd></div>${receipt ? `<div><dt>Fecha de pago de ejemplo</dt><dd>${item.paidAt}</dd></div>` : '<div><dt>Concepto</dt><dd>Abono mensual</dd></div>'}</dl><div class="dialog-actions">${!receipt && item.status !== 'Pagada' ? button('Pagar', 'pay', { iconName: 'external-link', attrs: `data-id="${item.id}"` }) : ''}${button(receipt ? 'Descargar comprobante' : 'Descargar factura', receipt ? 'download-receipt' : 'download-invoice', { secondary: !receipt && item.status !== 'Pagada', iconName: 'download', attrs: `data-id="${item.id}"` })}</div>`);
 }
-const help = {
-  'help-internet': ['No tengo internet', 'Revisá que el equipo esté encendido y que sus cables estén conectados. Si ves una luz roja o el problema continúa, contanos qué sucede por el chat.'],
-  'help-wifi': ['Problemas con el Wi-Fi', 'Probá acercarte al equipo y verificá si el problema ocurre en más de un dispositivo. Si tenés conexión por cable, compará su funcionamiento con el Wi-Fi.'],
-  'help-invoice': ['Consultas sobre facturas', 'En Facturas podés consultar tus períodos, descargar los documentos y ver los comprobantes de los pagos registrados. El botón Pagar te llevará al portal de SIRO cuando el servicio esté habilitado.'],
-};
 function wifiForm(requestId,dualBand) {
   const field=(label,name,type='text')=>`${input(label,name,{type,autocomplete:type==='password'?'new-password':'off',extra:`autocapitalize="off" spellcheck="false" aria-describedby="${name}-error${name.startsWith('ssid')?` ${name}-preview`:''}"`})}<p class="wifi-field-error" id="${name}-error" role="alert" hidden></p>${name.startsWith('ssid')?`<p class="wifi-ssid-preview field-hint" id="${name}-preview" hidden></p>`:''}`;
   const ssidField=(label,name)=>`<div class="field"><label for="${name}">${label}</label><div class="wifi-ssid-input"><span id="${name}-prefix">${WIFI_SSID_PREFIX}</span><input id="${name}" name="${name}" type="text" required autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="${name}-prefix ${name}-error ${name}-preview"></div></div><p class="wifi-field-error" id="${name}-error" role="alert" hidden></p><p class="wifi-ssid-preview field-hint" id="${name}-preview" hidden></p>`;
@@ -94,7 +95,7 @@ function wifiForm(requestId,dualBand) {
     ${field('Nueva contraseña','wifi-new-password','password')}
     ${field('Repetí la contraseña','wifi-repeat','password')}
     <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.</label>
-    <p class="field-hint" role="status" id="wifi-result"></p>
+    <div role="status" aria-live="polite" id="wifi-result"></div>
     ${button('Guardar cambios','',{type:'submit'})}</form>`;
 }
 function wifiFieldResult(form,name) {
@@ -119,23 +120,32 @@ async function submitWifi(form,data) {
   const names=['ssid',...(form.elements.ssid5?['ssid5']:[]),'wifi-new-password','wifi-repeat'];
   const values={};let firstInvalid=null;
   for(const name of names) {values[name]=wifiFieldResult(form,name);if(values[name]===null && firstInvalid===null) firstInvalid=form.elements[name];}
-  if(firstInvalid) {result.textContent='Revisá el campo señalado.';firstInvalid.focus();return;}
-  if(data.get('confirmed')!=='on') {result.textContent='Confirmá que tendrás que volver a conectar tus dispositivos.';form.elements.confirmed.focus();return;}
+  if(firstInvalid) {result.innerHTML=operationAlert('error','Revisá el campo señalado.');firstInvalid.focus();return;}
+  if(data.get('confirmed')!=='on') {result.innerHTML=operationAlert('error','Confirmá que tendrás que volver a conectar tus dispositivos.');form.elements.confirmed.focus();return;}
   submit.disabled=true;const generation=Number(form.dataset.generation);
-  result.textContent='Aplicando cambios…';
+  result.innerHTML=operationAlert('info','Aplicando cambios…');
   try {
     const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:values.ssid,ssid5:values.ssid5||'',password:values['wifi-new-password'],confirmed:true});
     if(generation!==dataGeneration||!authenticated||!form.isConnected)return;
     form.reset();
     for(const preview of form.querySelectorAll('.wifi-ssid-preview')) {preview.textContent='';preview.hidden=true;}
-    result.textContent=response.state==='APPLIED'?'Los nuevos datos de Wi-Fi se aplicaron. Volvé a conectar tus dispositivos.':'No pudimos confirmar el cambio. Revisá tu conexión y contactanos antes de volver a intentarlo.';
+    result.innerHTML=response.state==='APPLIED'
+      ? operationAlert('success','Wi-Fi actualizado correctamente.','Los nuevos datos se aplicaron. Volvé a conectar tus dispositivos con el nuevo nombre y contraseña.')
+      : operationAlert('warning','No pudimos confirmar el resultado del cambio.','Antes de volver a intentarlo, verificá si tu red Wi-Fi ya cambió.');
     if(response.assistance) {
       runtime.serviceRequests=[response.assistance,...runtime.serviceRequests.filter(r=>r.id!==response.assistance.id)];
-      result.textContent+=' Podés seguir la solicitud de ayuda en Mi servicio.';
+      result.insertAdjacentHTML('beforeend','<p class="field-hint">Podés seguir la solicitud de ayuda en Mi servicio.</p>');
     }
   } catch(error) {
     if(generation!==dataGeneration||!form.isConnected)return;
-    result.textContent=error.status?error.message:'Se perdió la comunicación. El cambio podría haberse aplicado. Revisá tu Wi-Fi antes de volver a intentarlo.';
+    // Only a documented pre-write rejection can be shown as an error here.
+    // A transport/server failure after submission has an uncertain outcome.
+    const rejectedBeforeWrite=['WIFI_INPUT','WIFI_UNAVAILABLE','WIFI_EXPIRED','WIFI_RATE_LIMIT','CSRF','SERVICE_CHANGED'].includes(error.code);
+    result.innerHTML=error.code==='WIFI_INPUT'
+      ? operationAlert('error','Revisá los datos de Wi-Fi.',error.message)
+      : rejectedBeforeWrite
+        ? operationAlert('error','No pudimos realizar el cambio de Wi-Fi.',error.code==='WIFI_UNAVAILABLE'?'Este equipo todavía no está habilitado para el cambio desde Mi USITTEL. Contactanos para recibir ayuda.':error.message)
+        : operationAlert('warning','No pudimos confirmar el resultado del cambio.','Antes de volver a intentarlo, verificá si tu red Wi-Fi ya cambió.');
     // Only validation failures are known to precede a write.
     if(error.code==='WIFI_INPUT')submit.disabled=false;
     if(error.status===401||error.code==='SERVICE_CHANGED')await handleError(error);
@@ -158,7 +168,7 @@ document.addEventListener('click', async event => {
     if (dialog.open) dialog.close();
     const chat = await initializeCentralChat();
     if (chat) await openCentralChat();
-    else document.querySelector('[data-central-fallback]')?.focus();
+    else document.querySelector('[data-central-fallback]')?.click();
     return;
   }
   const item = getInvoice(target.dataset.id);
@@ -171,7 +181,6 @@ document.addEventListener('click', async event => {
     finally {if(generation===dataGeneration){runtime.connectionRefreshing=false;render();}}
     return;
   }
-  if(action==='show-speedtest') {document.querySelector('#service-speedtest')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});document.querySelector('#speedtest-link')?.focus({preventScroll:true});return;}
   if(action==='wifi-settings') {
     if(runtime.mode!=='phantom')return toast('La configuración real requiere iniciar sesión en tu cuenta.');
     target.disabled=true;const generation=dataGeneration;
@@ -330,7 +339,6 @@ document.addEventListener('click', async event => {
     return;
   }
   if (action === 'ticket') return openDialog('Seguimiento del ticket', `<p class="eyebrow">${ticket.id} · Caso de ejemplo</p><h3>${ticket.title}</h3>${status(ticket.status)}<ol class="ticket-timeline"><li><time>15/09/2026 · 10:30</time><strong>Consulta recibida</strong><p>La conexión Wi-Fi se interrumpe por momentos.</p></li><li><time>16/09/2026 · 09:15</time><strong>En revisión</strong><p>El equipo de soporte está revisando tu consulta.</p></li></ol>${button('Consultar por este ticket', 'chat', { iconName: 'message-circle' })}`);
-  if (help[action]) return openDialog(help[action][0], `<p>${help[action][1]}</p><div class="dialog-actions">${button('Abrir chat', 'chat', { iconName: 'message-circle' })}</div>`);
   if (action === 'speedtest') {
     clearInterval(speedTimer);
     const progress = document.querySelector('#speed-progress');
@@ -394,14 +402,17 @@ document.addEventListener('submit', async event => {
   }
 });
 async function handleError(error) {
+  const message=error.code==='WIFI_UNAVAILABLE'
+    ? 'El cambio de Wi-Fi todavía no está habilitado para este equipo. Contactanos para recibir ayuda.'
+    : error.message;
   if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
     dataGeneration++;
     authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
-    render(); toast(error.message);
-  } else toast(error.message);
+    render(); toast(message);
+  } else toast(message);
 }
 async function refreshPayments(reconcile = true) {
   if ((!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) || !authenticated) return;

@@ -106,7 +106,7 @@ function productLabelParts(string $value): array {
     return ['label'=>$value,'quantity'=>null];
 }
 function serviceProductState(?array $products,array $config,?array $entries=null): array {
-    if($products===null) return ['known'=>false,'items'=>[],'ids'=>[]];
+    if($products===null) return ['known'=>false,'items'=>[],'ids'=>[],'unmapped'=>false];
     $catalog=serviceCatalog($config);$byAlias=[];
     foreach($catalog as $id=>$entry) foreach($entry['aliases'] as $alias) $byAlias[$alias]=$id;
     $known=[];$unknown=[];$ids=[];$derivedSensaId=null;
@@ -135,7 +135,7 @@ function serviceProductState(?array $products,array $config,?array $entries=null
         }
     }
     if($derivedSensaId!==null && isset($known[$derivedSensaId])) $known=[$derivedSensaId=>$known[$derivedSensaId]]+$known;
-    return ['known'=>true,'items'=>array_values([...$known,...$unknown]),'ids'=>array_keys($ids)];
+    return ['known'=>true,'items'=>array_values([...$known,...$unknown]),'ids'=>array_keys($ids),'unmapped'=>$unknown!==[]];
 }
 function commercialCatalog(array $config): array {
     $raw=$config['commercial_catalog']??[];
@@ -177,7 +177,9 @@ function commercialOffers(?string $plan,?array $products,array $config,?array $e
             $current=is_string($plan)?($offer['current_plans'][$plan]??null):null;
             if(!is_int($current) || $offer['target_speed']<=$current) continue;
         } else {
-            if(!$state['known']) continue;
+            // An unmapped public label may be any additional service. Exact
+            // aliases cannot prove its absence, so only show it to the client.
+            if(!$state['known'] || $state['unmapped']) continue;
             $references=array_unique([...$offer['requires'],...$offer['excludes']]);$evidence=true;
             foreach($references as $id) {
                 if(!isset($catalog[$id]) || ($relevantProducts!==[] && $catalog[$id]['aliases']===[] && !($iptv && $catalog[$id]['type']==='sensa'))) {$evidence=false;break;}

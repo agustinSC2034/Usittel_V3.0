@@ -29,7 +29,8 @@ return [
         'mesh' => ['type'=>'mesh','public_name'=>'Wi-Fi Mesh','aliases'=>['USITTEL MESH']],
     ],
     // Public prices verified on usittel.com.ar on 2026-09-23. Offers remain
-    // conservative: offers require configured exact aliases or structural evidence.
+    // conservative: offers require exact aliases or structural evidence and
+    // are suppressed when any public additional product remains unmapped.
     'commercial_catalog' => [
         ['id'=>'sensa','type'=>'sensa','public_name'=>'Sensa','description'=>'Más de 100 canales en vivo y contenido on-demand.','price_monthly'=>19999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>['sensa'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
         ['id'=>'pack_futbol','type'=>'sensa_pack','public_name'=>'Pack Fútbol','description'=>'Viví todos los partidos de la liga argentina.','price_monthly'=>24999,'price_once'=>null,'currency'=>'ARS','requires'=>['sensa'],'excludes'=>['pack_futbol'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],

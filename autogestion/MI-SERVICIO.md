@@ -18,12 +18,28 @@ completo. `USITTEL MESH`, `Pack Futbol`, `HBO`, `Universal+` y `Set Top Box` ya
 tienen aliases exactos confirmados en `config.example.php`; no se copian a la
 configuración privada automáticamente.
 
+Si aparece cualquier producto público sin alias exacto, se muestra con su label
+saneado y su cantidad, pero no se publican ofertas de Sensa, packs, STB ni Mesh:
+su ausencia no quedó demostrada. Las ofertas de velocidad se evalúan por separado
+solo con coincidencia exacta del plan y un destino ascendente habilitado. El
+backend decide contrataciones y ofertas; `js/service-catalog.js` concentra la
+presentación de precios, CTA y marcas, sin volver a interpretar Phantom.
+
 `Hot Go Play` y `Pack GOLF Channel` se muestran como productos sin mapear y no
 activan ofertas propias. `Punto WiFi - ESTACIÓN TANDIL` conserva ese nombre como
 producto desconocido; no se confunde con Mesh, Sensa ni STB. No se aplican
 coincidencias parciales. La muestra `Productos_Television = '-'` sigue siendo
 vacía. Un texto con estructura no confirmada conserva el tratamiento literal
 conservador, sin categoría ni inferencias.
+
+Pendiente de comprobación manual en Phantom: que ambos campos configurados estén
+presentes para los contratos que se quieran ofertar; los labels exactos de
+cualquier producto aún no catalogado y sus cantidades, especialmente nuevas
+variantes de Sensa, packs, STB y Mesh; y los nombres exactos de los planes de
+origen junto con el precio aplicable a clientes existentes antes de habilitar
+una oferta de velocidad. `Producto_Internet` es la fuente del plan, separado de
+`Productos_Television` y `Productos_Otros`. No se consulta telefonía ni
+bonificaciones para esta decisión.
 
 ## Iteración productiva de servicios, 23/09/2026
 

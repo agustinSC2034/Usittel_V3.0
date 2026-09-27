@@ -244,7 +244,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     catch(Failure $e) {$requestList=[];$requestListUnavailable=true;diagnostic($e);}
     try {$servicePresentation=serviceProductState($profile['products']??null,$c,$productEntries);$offers=commercialOffers($profile['plan']??null,$profile['products']??null,$c,$productEntries);}
     catch(Failure $e) {$servicePresentation=['known'=>false,'items'=>[]];$offers=[];$warnings[]='COMMERCIAL_UNAVAILABLE';diagnostic($e);}
-    unset($servicePresentation['ids']);
+    unset($servicePresentation['ids'],$servicePresentation['unmapped']);
     jsonReply(['customer'=>$profile,'account'=>$balance,'invoices'=>$invoices,'nextDue'=>null,'warnings'=>$warnings,
         'servicePresentation'=>$servicePresentation,'commercialOffers'=>$offers,
         'serviceOptions'=>requestOptions($c,$ida,$profile['products']??null),'serviceRequests'=>$requestList,'serviceRequestsUnavailable'=>$requestListUnavailable]);

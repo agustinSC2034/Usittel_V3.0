@@ -42,17 +42,44 @@ $catalogConfig=['service_catalog'=>[
     ['id'=>'mesh','type'=>'mesh','public_name'=>'Wi-Fi Mesh','description'=>'Mejorá la cobertura de tu hogar.','price_monthly'=>6999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>['mesh'],'enabled'=>true,'current_plans'=>[],'target_speed'=>null],
     ['id'=>'internet_500','type'=>'speed','public_name'=>'Internet 500 Mbps','description'=>'Más velocidad para tu conexión.','price_monthly'=>43999,'price_once'=>null,'currency'=>'ARS','requires'=>[],'excludes'=>[],'enabled'=>true,'current_plans'=>['Plan 300 exacto'=>300],'target_speed'=>500],
 ]];
-verifyFeature(serviceProductState(null,$catalogConfig)===['known'=>false,'items'=>[],'ids'=>[]]);
-verifyFeature(serviceProductState([],$catalogConfig)===['known'=>true,'items'=>[],'ids'=>[]]);
+verifyFeature(serviceProductState(null,$catalogConfig)===['known'=>false,'items'=>[],'ids'=>[],'unmapped'=>false]);
+verifyFeature(serviceProductState([],$catalogConfig)===['known'=>true,'items'=>[],'ids'=>[],'unmapped'=>false]);
 $state=serviceProductState(['TV Sensa','Set top box × 2','Producto desconocido','TV Sensa'],$catalogConfig);
 verifyFeature($state['ids']===['sensa','stb'] && $state['items']===[['label'=>'Sensa','quantity'=>null],['label'=>'Set Top Box','quantity'=>2],['label'=>'Producto desconocido','quantity'=>null]]);
+verifyFeature($state['unmapped']===true && commercialOffers('Otro',['TV Sensa','Producto desconocido'],$catalogConfig)===[]);
 verifyFeature(serviceProductState(['Otro exacto × 1','Otro exacto × 3','Otro exacto × 3'],$catalogConfig)['items']===[['label'=>'Otro exacto','quantity'=>3]]);
 verifyFeature(serviceProductState(['tv sensa'],$catalogConfig)['ids']===[]); // exact aliases only
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',null,$catalogConfig),'id')===['internet_500']);
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',[],$catalogConfig),'id')===['sensa','mesh','internet_500']);
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa'],$catalogConfig),'id')===['pack_hbo','stb','mesh','internet_500']);
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa','HBO Exacto','Set top box','Mesh Exacto'],$catalogConfig),'id')===['internet_500']);
+verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa','Producto desconocido'],$catalogConfig),'id')===['internet_500']);
 verifyFeature(commercialOffers('Plan 500 exacto',[], $catalogConfig)[0]['id']==='sensa');
+$contractFixtures=[
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'','Productos_Otros'=>''],
+        'products'=>[],'ids'=>[],'offers'=>['sensa','mesh','internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'TV Sensa','Productos_Otros'=>''],
+        'products'=>['TV Sensa'],'ids'=>['sensa'],'offers'=>['pack_hbo','stb','mesh','internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'TV Sensa','Productos_Otros'=>'Set top box × 2'],
+        'products'=>['TV Sensa','Set top box × 2'],'ids'=>['sensa','stb'],'offers'=>['pack_hbo','mesh','internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'','Productos_Otros'=>'Mesh Exacto'],
+        'products'=>['Mesh Exacto'],'ids'=>['mesh'],'offers'=>['sensa','internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'TV Sensa','Productos_Otros'=>['Set top box × 2','HBO Exacto','Mesh Exacto']],
+        'products'=>['TV Sensa','Set top box × 2','HBO Exacto','Mesh Exacto'],'ids'=>['sensa','stb','pack_hbo','mesh'],'offers'=>['internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'TV Sensa'],
+        'products'=>null,'ids'=>[],'offers'=>['internet_500']],
+    ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'','Productos_Otros'=>'Producto Phantom nuevo'],
+        'products'=>['Producto Phantom nuevo'],'ids'=>[],'offers'=>['internet_500']],
+];
+foreach($contractFixtures as $fixtureIndex=>$fixture) {
+    $record=$fixture['record'];$products=serviceProducts($record,$realFields);
+    $state=serviceProductState($products,$catalogConfig,serviceProductEntries($record,$realFields));
+    $offerIds=array_column(commercialOffers($record['Producto_Internet'],$products,$catalogConfig,serviceProductEntries($record,$realFields)),'id');
+    if($products!==$fixture['products'] || $state['ids']!==$fixture['ids'] || $offerIds!==$fixture['offers'])
+        throw new \RuntimeException('Contract fixture '.$fixtureIndex.' failed: '.json_encode(['products'=>$products,'ids'=>$state['ids'],'offers'=>$offerIds]));
+    verifyFeature(true);
+    verifyFeature(!in_array($record['Producto_Internet'],array_column($state['items'],'label'),true));
+}
 $noAliases=$catalogConfig;$noAliases['service_catalog']['mesh']['aliases']=[];
 verifyFeature(!in_array('mesh',array_column(commercialOffers('Otro',['Producto desconocido'],$noAliases),'id'),true));
 $labels=inspectPublicProductLabels(['Productos_Television'=>'TV Sensa','Productos_Otros'=>[['Nombre'=>'Set top box','Cantidad'=>'2','Password'=>'private']],'DNI'=>'private']);
@@ -83,7 +110,7 @@ $derived=serviceProductState(serviceProducts($realRecord,$realFields),$catalogCo
 verifyFeature($derived['ids']===['sensa'] && $derived['items']===[['label'=>'Sensa','quantity'=>null],['label'=>'USITTEL MESH','quantity'=>4],['label'=>'Pack GOLF Channel','quantity'=>null]]);
 $noSensaAlias=$catalogConfig;$noSensaAlias['service_catalog']['sensa']['aliases']=[];
 $derivedOffers=array_column(commercialOffers('Otro',serviceProducts($realRecord,$realFields),$noSensaAlias,$realEntries),'id');
-verifyFeature(!in_array('sensa',$derivedOffers,true) && in_array('pack_hbo',$derivedOffers,true) && in_array('stb',$derivedOffers,true));
+verifyFeature($derivedOffers===[]); // Unmapped IPTV/RES labels cannot prove a pack or STB absent.
 $withMeshAlias=$noSensaAlias;$withMeshAlias['service_catalog']['mesh']['aliases']=['USITTEL MESH'];
 verifyFeature(!in_array('mesh',array_column(commercialOffers('Otro',serviceProducts($realRecord,$realFields),$withMeshAlias,$realEntries),'id'),true));
 $wifiPlus=['Productos_Television'=>'-','Productos_Otros'=>'15/3/24 - RES & COM ($) - WiFi +'];
@@ -169,7 +196,7 @@ $ida4950Offers=array_column(commercialOffers('Plan', $ida4950Products,$confirmed
 verifyFeature($ida4950State['items']===[
     ['label'=>'Sensa','quantity'=>null],['label'=>'Wi-Fi Mesh','quantity'=>4],['label'=>'Pack GOLF Channel','quantity'=>null],
 ]);
-verifyFeature(!array_intersect($ida4950Offers,['sensa','mesh']) && count(array_intersect($ida4950Offers,['pack_futbol','pack_hbo','pack_universal','stb']))===4);
+verifyFeature($ida4950Offers===[]); // GOLF remains visible, but no absence-based offer is justified.
 verifyFeature(!preg_match('/private-person|private-dni|private-secret/',json_encode($inspectorRows)));
 verifyFeature(!validWifiModelLists(['models'=>['Fixture-ONU'],'dual_band_models'=>['Other-ONU']]));
 // ONU_SW is a fixture-only candidate name, not a confirmed Phantom production key.

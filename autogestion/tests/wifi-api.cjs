@@ -1,5 +1,5 @@
 module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,config,settings})=>{
-  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10'],'dual_band_models'=>['EG8145X6-10']],'mode'=>'phantom'");
+  const enabled=()=>settings().replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10','HG8145X6-10'],'dual_band_models'=>['EG8145X6-10']],'mode'=>'phantom'");
   const marker=path.join(dir,'wifi-change-1.json');
   const reset=()=>{for(const ida of [1,5,4242]){const file=path.join(dir,`wifi-change-${ida}.json`);if(fs.existsSync(file))fs.unlinkSync(file);}clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
@@ -17,6 +17,13 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await u.call('wifi-prepare',{IDA:5});check('preparación no admite IDA',()=>assert.equal(r.status,400));
   r=await u.call('wifi-prepare',{});const id=r.data.requestId;
   check('preparación devuelve solo nonce sin datos del equipo',()=>{assert.equal(r.status,200);assert.deepEqual(Object.keys(r.data),['requestId','dualBand']);assert.equal(r.data.dualBand,true);assert.match(id,/^[a-f0-9]{32}$/);});
+  reset();scenario('wifi-hg8145x6-10');const newModel=jar();await login(newModel);
+  r=await newModel.call('wifi-prepare',{});const newModelId=r.data.requestId;
+  check('HG8145X6-10 exacto supera la allowlist en escenario fixture',()=>{assert.equal(r.status,200);assert.equal(r.data.dualBand,false);});
+  const newModelWrites=writes();
+  r=await newModel.call('wifi-change',{...payload(newModelId),ssid5:''});
+  check('HG8145X6-10 exacto conserva el flujo protegido hasta el cambio fixture',()=>{assert.deepEqual(r.data,{state:'APPLIED'});assert.equal(writes(),newModelWrites+1);});
+  reset();
   const before=writes();
   r=await u.call('wifi-change',payload(id),{noCsrf:true});check('cambio Wi-Fi exige CSRF',()=>assert.equal(r.status,403));
   for(const override of [{IDA:5},{Ticket:1},{confirmed:false},{ssid:'WiFiCasa'},{ssid:'USITTEL_'},{ssid:'USITTEL_WiFi#Casa'},{ssid5:'USITTEL_'},{ssid5:'USITTEL_'+('A'.repeat(13))},{password:'bad password'},{requestId:'f'.repeat(32)}]) {

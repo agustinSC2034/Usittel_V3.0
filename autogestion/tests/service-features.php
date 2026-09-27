@@ -199,6 +199,9 @@ verifyFeature($ida4950State['items']===[
 verifyFeature($ida4950Offers===[]); // GOLF remains visible, but no absence-based offer is justified.
 verifyFeature(!preg_match('/private-person|private-dni|private-secret/',json_encode($inspectorRows)));
 verifyFeature(!validWifiModelLists(['models'=>['Fixture-ONU'],'dual_band_models'=>['Other-ONU']]));
+$exactWifiModels=['wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10','HG8145X6-10'],'dual_band_models'=>['EG8145X6-10']]];
+verifyFeature(wifiGate($exactWifiModels,'HG8145X6-10') && !wifiDualBand($exactWifiModels,'HG8145X6-10'));
+verifyFeature(!wifiGate($exactWifiModels,'HG8145X6-10-OTHER') && !wifiGate($exactWifiModels,'hg8145x6-10'));
 // ONU_SW is a fixture-only candidate name, not a confirmed Phantom production key.
 $wifiCases=[
     ['V5R022C00S408','EG8145X6-10'],

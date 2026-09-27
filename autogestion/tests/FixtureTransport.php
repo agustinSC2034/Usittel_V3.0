@@ -88,7 +88,7 @@ final class FixtureTransport implements Transport, TicketTransport {
             $requested=(int)($query['IDA']??1);$production=$scenario==='production-user';
             $record=['ID'=>(string)($production?$requested:1),'IDAx'=>'99','Autogestion_User'=>$production?str_pad((string)$requested,6,'0',STR_PAD_LEFT):($scenario==='custom-user'?'laboratorio':'000001'), 'Autogestion_Pass'=>' 00Lab-fixture! ',
                 'Estado_Servicio'=>'Suspendido','Estado_Conexion'=>'Online','Estado_ONU'=>'Offline','ONU_Status'=>$scenario==='unknown-connectivity'?'Loss':'Offline',
-                'ONU_Modelo'=>'V5R022C00S408','ONU_SW'=>$scenario==='wifi-unknown-model'?'Other-ONU':'EG8145X6-10',
+                'ONU_Modelo'=>'V5R022C00S408','ONU_SW'=>match($scenario) {'wifi-unknown-model'=>'Other-ONU','wifi-hg8145x6-10'=>'HG8145X6-10',default=>'EG8145X6-10'},
                 'Nombre'=>$scenario==='missing'?null:'Cliente de pruebas','Apellido'=>null,'Razon_Social'=>null,
                 'Direccion'=>'Calle ficticia','Dir_Numero'=>'123','Ciudad'=>'Tandil','Producto_Internet'=>'Plan de laboratorio',
                 'Email'=>'cliente@example.invalid','Telefono'=>'fixture-phone','Balance_CC'=>'9999999',

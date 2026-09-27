@@ -14,6 +14,8 @@
   let toastTimer = null;
   let adminUnlocked = false;
   let stageBeforeAdmin = 'welcome';
+  let networkAvailable = false;
+  let connectionCheck = 0;
   const DRAFT_BACKUP_KEY = 'usittel-expotan-active-draft';
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
   const entryDraft = () => ({ stage, questions: draft?.questions || [], answers: draft?.answers || [], form: draft?.form || {} });
@@ -27,10 +29,22 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { element.hidden = true; }, 4500);
   }
-  function connection() {
-    const online = navigator.onLine;
-    document.getElementById('connection-dot').classList.toggle('offline', !online);
-    document.getElementById('connection-label').textContent = online ? 'Con conexión' : 'Sin conexión';
+  async function connection() {
+    const check = ++connectionCheck;
+    if (!navigator.onLine) networkAvailable = false;
+    else {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 4000);
+        try { networkAvailable = (await fetch(`./online.txt?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal })).ok; }
+        finally { clearTimeout(timer); }
+      } catch { networkAvailable = false; }
+    }
+    if (check !== connectionCheck) return;
+    document.getElementById('connection-dot').classList.toggle('offline', !networkAvailable);
+    document.getElementById('connection-label').textContent = networkAvailable ? 'Sitio accesible' : 'Sin acceso al sitio';
+    const label = document.getElementById('connectivity-text');
+    if (label) label.textContent = networkAvailable ? 'sitio accesible' : 'sin acceso al sitio';
   }
   function setScreen(html) { screen.innerHTML = html; screen.focus({ preventScroll: true }); }
   function cancelReset() { clearTimeout(resetTimer); clearInterval(resetInterval); resetTimer = null; resetInterval = null; }
@@ -155,7 +169,7 @@
     const rows = await store.all();
     const counts = { synced: 0, pending: 0, error: 0 };
     rows.forEach(row => counts[row.syncStatus]++);
-    setScreen(`<section class="panel admin-panel"><div class="admin-head"><div><p class="eyebrow">Administración local</p><h1>Panel del stand</h1></div><button id="exit-admin" class="button secondary">Volver al kiosco</button></div><div class="stat-grid"><div class="stat"><strong>${rows.length}</strong><span>Participantes</span></div><div class="stat"><strong>${counts.synced}</strong><span>Sincronizados</span></div><div class="stat"><strong>${counts.pending}</strong><span>Pendientes</span></div><div class="stat"><strong>${counts.error}</strong><span>Con error</span></div></div><p class="admin-status">Conexión: ${navigator.onLine ? 'online' : 'offline'} · Endpoint: ${cfg.appsScriptUrl ? 'configurado' : 'sin configurar'} · <span id="cache-status">Comprobando cache…</span></p><div class="admin-actions"><button id="sync-now" class="button primary">Forzar sincronización</button><button id="export-csv" class="button ghost">Exportar respaldo completo CSV</button></div><label class="field">Buscar por nombre o DNI<input class="search" id="admin-search" type="search" placeholder="Buscar participantes" autocomplete="off"></label><div class="records" id="records" aria-label="Participantes registrados"></div></section>`);
+    setScreen(`<section class="panel admin-panel"><div class="admin-head"><div><p class="eyebrow">Administración local</p><h1>Panel del stand</h1></div><button id="exit-admin" class="button secondary">Volver al kiosco</button></div><div class="stat-grid"><div class="stat"><strong>${rows.length}</strong><span>Participantes</span></div><div class="stat"><strong>${counts.synced}</strong><span>Sincronizados</span></div><div class="stat"><strong>${counts.pending}</strong><span>Pendientes</span></div><div class="stat"><strong>${counts.error}</strong><span>Con error</span></div></div><p class="admin-status">Conexión: <span id="connectivity-text">${networkAvailable ? 'sitio accesible' : 'sin acceso al sitio'}</span> · Endpoint: ${cfg.appsScriptUrl ? 'configurado' : 'sin configurar'} · <span id="cache-status">Comprobando cache…</span></p><div class="admin-actions"><button id="sync-now" class="button primary">Forzar sincronización</button><button id="export-csv" class="button ghost">Exportar respaldo completo CSV</button></div><label class="field">Buscar por nombre o DNI<input class="search" id="admin-search" type="search" placeholder="Buscar participantes" autocomplete="off"></label><div class="records" id="records" aria-label="Participantes registrados"></div></section>`);
     const records = document.getElementById('records');
     const renderRows = query => {
       records.replaceChildren();
@@ -216,7 +230,8 @@
     connection(); wireAdmin();
     window.addEventListener('online', () => { connection(); sync.run(store, cfg, () => { if (stage === 'admin') admin().catch(() => {}); }).catch(() => {}); });
     window.addEventListener('offline', connection);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) sync.run(store, cfg).catch(() => {}); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { connection(); sync.run(store, cfg).catch(() => {}); } });
+    setInterval(connection, 30000);
     if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./sw.js').catch(() => toast('No se pudo preparar el modo offline.'));
     try {
       await store.all(); // Fail closed if local persistence is unavailable.

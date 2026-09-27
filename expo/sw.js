@@ -1,4 +1,4 @@
-const CACHE = 'usittel-expo-v3';
+const CACHE = 'usittel-expo-v4';
 const ASSETS = [
   './', './index.html', './styles.css', './settings.js', './core.js', './store.js', './sync.js', './app.js',
   '../assets/img/logos/usittel_logo_and_name_blanco.webp', '../assets/img/logos/usittel-logo_and_name.webp',

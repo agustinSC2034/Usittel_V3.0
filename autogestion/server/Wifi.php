@@ -70,15 +70,26 @@ function wifiInput(array $body,bool $dualBand=true): array {
     if(array_diff(array_keys($body),$keys) || count($body)!==count($keys)
         || !is_string($body['requestId']??null) || !preg_match('/^[a-f0-9]{32}$/D',$body['requestId'])
         || ($body['confirmed']??null)!==true) throw new Failure('BAD_REQUEST',400);
-    foreach(['ssid','ssid5','password'] as $key) {
-        if($key==='ssid5' && !$dualBand) {
-            if($body[$key]!=='') throw new Failure('WIFI_INPUT',400);
-            continue;
-        }
-        $pattern=$key==='password'?'/^[a-zA-Z0-9@_.#$]{8,20}$/D':'/^[a-zA-Z0-9@_.]{8,20}$/D';
-        if(!is_string($body[$key]??null) || !preg_match($pattern,$body[$key])) throw new Failure('WIFI_INPUT',400);
-    }
-    return ['SSID'=>$body['ssid']]+($dualBand?['SSID_5G'=>$body['ssid5']]:[])+['Password'=>$body['password']];
+    if(!is_string($body['ssid5']??null) || !$dualBand && $body['ssid5']!=='') throw new Failure('WIFI_INPUT',400);
+    $ssid=wifiNormalizedSsid($body['ssid']??null);
+    $ssid5=$dualBand?wifiNormalizedSsid($body['ssid5']):null;
+    $password=$body['password']??null;
+    if($ssid===null || $dualBand && $ssid5===null || !wifiAllowedText($password,8,20)) throw new Failure('WIFI_INPUT',400);
+    return ['SSID'=>$ssid]+($dualBand?['SSID_5G'=>$ssid5]:[])+['Password'=>$password];
+}
+
+function wifiNormalizedSsid(mixed $value): ?string {
+    if(!is_string($value)) return null;
+    $normalized=str_replace(' ','_',strtr($value,[
+        'á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u',
+        'Á'=>'A','É'=>'E','Í'=>'I','Ó'=>'O','Ú'=>'U',
+    ]));
+    return wifiAllowedText($normalized,5,20)?$normalized:null;
+}
+function wifiAllowedText(mixed $value,int $minimum,int $maximum): bool {
+    if(!is_string($value) || !preg_match('/\A[A-Za-zñÑ0-9,.:;*+_@=!-]+\z/u',$value)) return false;
+    $length=preg_match_all('/./u',$value);
+    return $length!==false && $length>=$minimum && $length<=$maximum;
 }
 
 // Shared per-contract lock and durable outcome. Never store SSIDs or passwords.

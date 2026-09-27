@@ -35,7 +35,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   reset();fs.writeFileSync(config,enabled().replace("'category'=>'Fixture TV'","'category'=>'Fixture WiFi'").replace("'TV_SENSA'=>","'WIFI_HELP'=>").replace("'mode'=>'phantom'","'wifi'=>['enabled'=>true,'model_field'=>'ONU_SW','models'=>['EG8145X6-10'],'dual_band_models'=>['EG8145X6-10']],'mode'=>'phantom'"));
   const marker=path.join(dir,'wifi-change-1.json');if(fs.existsSync(marker))fs.unlinkSync(marker);
   const wifi=jar();await login(wifi);r=await wifi.call('wifi-prepare',{});scenario('wifi-timeout');
-  r=await wifi.call('wifi-change',{requestId:r.data.requestId,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',confirmed:true});
+  r=await wifi.call('wifi-change',{requestId:r.data.requestId,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi!123',confirmed:true});
   check('fallback Wi-Fi ticket propio sin password',()=>{assert.equal(r.data.state,'UNKNOWN');assert.equal(r.data.assistance?.state,'RECEIVED');assert.doesNotMatch(fs.readFileSync(path.join(dir,'service-requests.json'),'utf8'),/TestWifi|Casa_test|Password|SSID/);});
   if(fs.existsSync(marker))fs.unlinkSync(marker);reset();fs.writeFileSync(config,settings());
 };

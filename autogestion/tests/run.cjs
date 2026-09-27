@@ -415,17 +415,20 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   });
   check('formulario Wi-Fi simplificado y payload sin contraseña de cuenta',()=>{
     const appSource=fs.readFileSync(path.join(root,'js','app.js'),'utf8');
-    const wifiForm=appSource.match(/function wifiForm\([\s\S]*?\n}\nasync function submitWifi/);
+    const wifiForm=appSource.match(/function wifiForm\([\s\S]*?\n}\nfunction wifiFieldResult/);
     assert.ok(wifiForm);assert.match(appSource,/openDialog\('Configurar Wi-Fi',wifiForm/);
     assert.match(wifiForm[0],/Ingresá los nuevos datos de tu red\./);
     for(const label of ['Nombre de red 2,4 GHz','Nombre de red 5 GHz','Nueva contraseña','Repetí la contraseña',
       'Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.','Guardar cambios']) assert.ok(wifiForm[0].includes(label),label);
-    assert.match(wifiForm[0],/8 a 20 caracteres\. Sin espacios\./);
+    assert.match(wifiForm[0],/novalidate/);
+    assert.match(wifiForm[0],/wifi-ssid-preview/);
     assert.match(wifiForm[0],/name="confirmed" required/);
     assert.doesNotMatch(wifiForm[0],/accountPassword|wifi-account-password|Tu contraseña de Mi USITTEL/);
     const requestPayload=appSource.match(/request\('wifi-change',\{([^}]+)\}\)/);
     assert.ok(requestPayload);assert.doesNotMatch(requestPayload[1],/accountPassword/);
-    assert.match(appSource,/data\.get\('wifi-new-password'\)!==data\.get\('wifi-repeat'\)/);
+    assert.match(appSource,/validateWifiSsid/);
+    assert.match(appSource,/validateWifiPassword/);
+    assert.match(appSource,/ssid:values\.ssid,ssid5:values\.ssid5\|\|''/);
   });
   check('Facturas separa comprobantes y movimientos con pestañas accesibles',()=>{
     const views=fs.readFileSync(path.join(root,'js','views.js'),'utf8');

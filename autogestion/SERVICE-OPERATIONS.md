@@ -186,10 +186,15 @@ No se encontró una lectura oficial de SSIDs actuales en las operaciones revisad
 no se hizo scraping de mi_wifi.php ni se dedujo el comportamiento del formulario
 viejo de un solo nombre. Esto no afirma que ninguna versión del proveedor lo ofrezca.
 
-Conjunto conservador server-side: 8–20 caracteres, letras/números/@/punto/guion
-bajo; la contraseña además admite # y $. Se rechazan espacios para no depender
-de la sustitución silenciosa documentada por Phantom. No se amplían rangos por
-el frontend anterior. Modelos y dual_band_models siguen siendo allowlists exactas.
+SSID 2,4/5 GHz: 5–20 caracteres después de reemplazar solo espacios normales
+por `_` y vocales con tilde (minúsculas y mayúsculas) por su equivalente sin
+tilde. `ñ/Ñ` se conservan. Contraseña: 8–20 caracteres y sin normalización
+silenciosa; los espacios, tildes y caracteres no permitidos se rechazan. En ambos
+casos solo se admiten letras, números, `ñ/Ñ` y `, . : ; * + _ - @ = !`.
+El formulario muestra el SSID exacto que se aplicará cuando cambia por la
+normalización. PHP valida de nuevo el payload y aplica la misma normalización;
+ningún bypass del navegador amplía la entrada. Modelos y dual_band_models siguen
+siendo allowlists exactas.
 
 Ticket=0 siempre. Solo code=200 más el mensaje exacto de cambio aplicado produce
 APPLIED. Un mensaje de ticket, timeout, token vencido o respuesta desconocida

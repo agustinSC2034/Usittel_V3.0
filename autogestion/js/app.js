@@ -4,6 +4,7 @@ import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVi
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat } from './central-chat.js';
+import { validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -84,27 +85,48 @@ const help = {
   'help-invoice': ['Consultas sobre facturas', 'En Facturas podés consultar tus períodos, descargar los documentos y ver los comprobantes de los pagos registrados. El botón Pagar te llevará al portal de SIRO cuando el servicio esté habilitado.'],
 };
 function wifiForm(requestId,dualBand) {
-  return `<form id="wifi-live-form" data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
+  const field=(label,name,type='text')=>`${input(label,name,{type,autocomplete:type==='password'?'new-password':'off',extra:`autocapitalize="off" spellcheck="false" aria-describedby="${name}-error${name.startsWith('ssid')?` ${name}-preview`:''}"`})}<p class="wifi-field-error" id="${name}-error" role="alert" hidden></p>${name.startsWith('ssid')?`<p class="wifi-ssid-preview field-hint" id="${name}-preview" hidden></p>`:''}`;
+  return `<form id="wifi-live-form" novalidate data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
     <p class="field-hint">Ingresá los nuevos datos de tu red.</p>
-    ${input('Nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
-    ${dualBand?input('Nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
-    ${input('Nueva contraseña','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.#$]{8,20}"',hint:'8 a 20 caracteres. Sin espacios.'})}
-    ${input('Repetí la contraseña','wifi-repeat',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.#$]{8,20}"'})}
+    ${field('Nombre de red 2,4 GHz','ssid')}
+    ${dualBand?field('Nombre de red 5 GHz','ssid5'):''}
+    ${field('Nueva contraseña','wifi-new-password','password')}
+    ${field('Repetí la contraseña','wifi-repeat','password')}
     <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.</label>
     <p class="field-hint" role="status" id="wifi-result"></p>
     ${button('Guardar cambios','',{type:'submit'})}</form>`;
 }
+function wifiFieldResult(form,name) {
+  const value=form.elements[name].value;
+  const validation=name.startsWith('ssid')?validateWifiSsid(value):validateWifiPassword(value);
+  const error=name==='wifi-repeat' && !validation.error && value!==form.elements['wifi-new-password'].value
+    ? 'Las contraseñas de Wi-Fi no coinciden.' : validation.error;
+  const message=form.querySelector(`[id="${name}-error"]`);
+  message.textContent=error||'';message.hidden=!error;
+  if(error) form.elements[name].setAttribute('aria-invalid','true');
+  else form.elements[name].removeAttribute('aria-invalid');
+  if(name.startsWith('ssid')) {
+    const preview=form.querySelector(`[id="${name}-preview"]`);
+    preview.hidden=!!error || !validation.changed;
+    preview.textContent=preview.hidden?'':`Nombre que se aplicará: ${validation.value}`;
+  }
+  return error?null:validation.value;
+}
 async function submitWifi(form,data) {
   const submit=form.querySelector('[type="submit"]');if(submit.disabled)return;
   const result=form.querySelector('#wifi-result');
-  if(data.get('wifi-new-password')!==data.get('wifi-repeat')) {result.textContent='Las contraseñas de Wi-Fi no coinciden.';return;}
-  if(!/^[a-zA-Z0-9@_.#$]{8,20}$/.test(String(data.get('wifi-new-password')))) {result.textContent='Revisá los caracteres permitidos para la clave.';return;}
+  const names=['ssid',...(form.elements.ssid5?['ssid5']:[]),'wifi-new-password','wifi-repeat'];
+  const values={};let firstInvalid=null;
+  for(const name of names) {values[name]=wifiFieldResult(form,name);if(values[name]===null && firstInvalid===null) firstInvalid=form.elements[name];}
+  if(firstInvalid) {result.textContent='Revisá el campo señalado.';firstInvalid.focus();return;}
+  if(data.get('confirmed')!=='on') {result.textContent='Confirmá que tendrás que volver a conectar tus dispositivos.';form.elements.confirmed.focus();return;}
   submit.disabled=true;const generation=Number(form.dataset.generation);
   result.textContent='Aplicando cambios…';
   try {
-    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:data.get('ssid'),ssid5:data.get('ssid5')||'',password:data.get('wifi-new-password'),confirmed:data.get('confirmed')==='on'});
+    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:values.ssid,ssid5:values.ssid5||'',password:values['wifi-new-password'],confirmed:true});
     if(generation!==dataGeneration||!authenticated||!form.isConnected)return;
     form.reset();
+    for(const preview of form.querySelectorAll('.wifi-ssid-preview')) {preview.textContent='';preview.hidden=true;}
     result.textContent=response.state==='APPLIED'?'Los nuevos datos de Wi-Fi se aplicaron. Volvé a conectar tus dispositivos.':'No pudimos confirmar el cambio. Revisá tu conexión y contactanos antes de volver a intentarlo.';
     if(response.assistance) {
       runtime.serviceRequests=[response.assistance,...runtime.serviceRequests.filter(r=>r.id!==response.assistance.id)];
@@ -329,7 +351,14 @@ document.addEventListener('click', async event => {
     }, 300);
   }
 });
-document.addEventListener('input', event => { if (event.target.id === 'confirm-password' || event.target.id === 'new-password') document.querySelector('#confirm-password')?.setCustomValidity(''); });
+document.addEventListener('input', event => {
+  if (event.target.id === 'confirm-password' || event.target.id === 'new-password') document.querySelector('#confirm-password')?.setCustomValidity('');
+  const form=event.target.closest('form');
+  if(form?.id!=='wifi-live-form' || !['ssid','ssid5','wifi-new-password','wifi-repeat'].includes(event.target.name)) return;
+  wifiFieldResult(form,event.target.name);
+  if(event.target.name==='wifi-new-password' && form.elements['wifi-repeat'].value) wifiFieldResult(form,'wifi-repeat');
+  form.querySelector('#wifi-result').textContent='';
+});
 document.addEventListener('submit', async event => {
   const form = event.target;
   event.preventDefault();

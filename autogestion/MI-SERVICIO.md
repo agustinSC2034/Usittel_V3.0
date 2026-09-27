@@ -259,6 +259,14 @@ mensaje exacto de cambio aplicado confirma éxito. El formulario no pide la clav
 actual de Mi USITTEL y el backend no reconsulta credenciales para autorizar este
 cambio.
 
+Antes del primer ensayo real, los nombres de red se aceptan con 5–20 caracteres
+después de convertir solo espacios normales a `_` y vocales acentuadas a su
+forma sin tilde; `ñ/Ñ` se conserva. Se muestra el nombre resultante antes de la
+confirmación. Contraseña de 8–20 caracteres sin cambios automáticos; espacios y
+acentos se rechazan con mensajes específicos. SSID y clave admiten únicamente
+letras, números, `ñ/Ñ` y `, . : ; * + _ - @ = !`. Ambas bandas comparten estas
+reglas y pueden tener nombres iguales. El servidor repite la validación.
+
 La documentación describe Configurar_Wifi pero no conserva el request completo.
 El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren
 prueba controlada real. No habilitar modelos antes de esa prueba. No se cambió

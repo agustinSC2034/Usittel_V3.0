@@ -15,6 +15,10 @@
 .speed-external .field-hint { margin-top:10px; }
 .wifi-confirm { display:flex; align-items:flex-start; gap:10px; font-size:14px; margin:20px 0; }
 .wifi-confirm input { width:18px; height:18px; flex-shrink:0; margin-top:3px; }
+#wifi-live-form .field { margin-bottom:8px; }
+#wifi-live-form input[aria-invalid="true"] { border-color:#b03c32; }
+.wifi-field-error { color:#b03c32; font-size:13px; margin:0 0 16px; line-height:1.45; }
+.wifi-ssid-preview { margin:0 0 16px; }
 .service-overview { padding:30px 32px 32px; border:1px solid var(--line); border-radius:18px; background:#fff; }
 .service-overview h1 { margin-bottom:30px; }
 .service-top-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:32px; }

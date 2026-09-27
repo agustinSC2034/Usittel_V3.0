@@ -17,6 +17,12 @@
 .wifi-confirm input { width:18px; height:18px; flex-shrink:0; margin-top:3px; }
 #wifi-live-form .field { margin-bottom:8px; }
 #wifi-live-form input[aria-invalid="true"] { border-color:#b03c32; }
+.wifi-ssid-input { display:flex; align-items:center; min-width:0; height:49px; border:1px solid #bec8d0; border-radius:7px; background:#fff; }
+.wifi-ssid-input:focus-within { outline:2px solid var(--green); outline-offset:2px; }
+.wifi-ssid-input:has(input[aria-invalid="true"]) { border-color:#b03c32; }
+.wifi-ssid-input span { padding-left:14px; font-weight:600; white-space:nowrap; }
+.wifi-ssid-input input { min-width:0; flex:1; width:auto; height:47px; padding-left:0; border:0; box-shadow:none; }
+.wifi-ssid-input input:focus { outline:none; }
 .wifi-field-error { color:#b03c32; font-size:13px; margin:0 0 16px; line-height:1.45; }
 .wifi-ssid-preview { margin:0 0 16px; }
 .service-overview { padding:30px 32px 32px; border:1px solid var(--line); border-radius:18px; background:#fff; }

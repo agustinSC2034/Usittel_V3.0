@@ -3,7 +3,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   const marker=path.join(dir,'wifi-change-1.json');
   const reset=()=>{for(const ida of [1,5,4242]){const file=path.join(dir,`wifi-change-${ida}.json`);if(fs.existsSync(file))fs.unlinkSync(file);}clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
-  const payload=id=>({requestId:id,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi!123',confirmed:true});
+  const payload=id=>({requestId:id,ssid:'USITTEL_Casa_test',ssid5:'USITTEL_Casa_test_5G',password:'TestWifi!123',confirmed:true});
   reset();fs.writeFileSync(config,settings());const disabled=jar();await login(disabled);
   let r=await disabled.call('wifi-prepare',{});check('Wi-Fi deshabilitado por defecto',()=>assert.equal(r.status,409));
   fs.writeFileSync(config,enabled().replace("'model_field'=>'ONU_SW'","'model_field'=>null"));
@@ -19,7 +19,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   check('preparación devuelve solo nonce sin datos del equipo',()=>{assert.equal(r.status,200);assert.deepEqual(Object.keys(r.data),['requestId','dualBand']);assert.equal(r.data.dualBand,true);assert.match(id,/^[a-f0-9]{32}$/);});
   const before=writes();
   r=await u.call('wifi-change',payload(id),{noCsrf:true});check('cambio Wi-Fi exige CSRF',()=>assert.equal(r.status,403));
-  for(const override of [{IDA:5},{Ticket:1},{confirmed:false},{ssid:'WiFi#Casa'},{ssid5:'abc'},{password:'bad password'},{requestId:'f'.repeat(32)}]) {
+  for(const override of [{IDA:5},{Ticket:1},{confirmed:false},{ssid:'WiFiCasa'},{ssid:'USITTEL_'},{ssid:'USITTEL_WiFi#Casa'},{ssid5:'USITTEL_'},{ssid5:'USITTEL_'+('A'.repeat(13))},{password:'bad password'},{requestId:'f'.repeat(32)}]) {
     r=await u.call('wifi-change',{...payload(id),...override});check('Wi-Fi rechaza parámetros o confirmación inválidos',()=>assert.ok([400,409].includes(r.status)));
   }
   r=await u.call('wifi-change',{...payload(id),accountPassword:'legacy-field'});check('Wi-Fi rechaza el campo de contraseña de cuenta legado',()=>assert.equal(r.status,400));
@@ -33,7 +33,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
     assert.doesNotMatch(changeTrace,/Autogestion_Pass|accountPassword|00Lab-fixture/);
   });
   r=await u.call('wifi-change',payload(id));check('doble envío ejecuta una sola escritura',()=>{assert.deepEqual(r.data,{state:'APPLIED'});assert.equal(writes(),before+1);});
-  r=await u.call('wifi-change',{...payload(id),ssid:'Different'});check('nonce no puede reutilizarse para otra clave o red',()=>assert.equal(r.data.error.code,'WIFI_EXPIRED'));
+  r=await u.call('wifi-change',{...payload(id),ssid:'USITTEL_Different'});check('nonce no puede reutilizarse para otra clave o red',()=>assert.equal(r.data.error.code,'WIFI_EXPIRED'));
   check('archivo y respuesta sin contraseña ni SSID',()=>assert.doesNotMatch(fs.readFileSync(marker,'utf8'),/TestWifi|Casa_test|00Lab|SSID|Password/));
   const u2=jar();await login(u2);r=await u2.call('wifi-prepare',{});r=await u2.call('wifi-change',payload(r.data.requestId));
   check('límite de cambios compartido entre sesiones',()=>assert.equal(r.data.error.code,'WIFI_RATE_LIMIT'));

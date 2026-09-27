@@ -191,6 +191,9 @@ por `_` y vocales con tilde (minúsculas y mayúsculas) por su equivalente sin
 tilde. `ñ/Ñ` se conservan. Contraseña: 8–20 caracteres y sin normalización
 silenciosa; los espacios, tildes y caracteres no permitidos se rechazan. En ambos
 casos solo se admiten letras, números, `ñ/Ñ` y `, . : ; * + _ - @ = !`.
+Ambos SSID llevan el prefijo exacto `USITTEL_`, no editable en el formulario y
+obligatorio también para la API. Se exige un sufijo no vacío de hasta 12
+caracteres, porque el máximo de 20 se aplica al nombre completo.
 El formulario muestra el SSID exacto que se aplicará cuando cambia por la
 normalización. PHP valida de nuevo el payload y aplica la misma normalización;
 ningún bypass del navegador amplía la entrada. Modelos y dual_band_models siguen

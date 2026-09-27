@@ -4,7 +4,7 @@ import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVi
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat } from './central-chat.js';
-import { validateWifiSsid, validateWifiPassword } from './wifi-input.js';
+import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -86,10 +86,11 @@ const help = {
 };
 function wifiForm(requestId,dualBand) {
   const field=(label,name,type='text')=>`${input(label,name,{type,autocomplete:type==='password'?'new-password':'off',extra:`autocapitalize="off" spellcheck="false" aria-describedby="${name}-error${name.startsWith('ssid')?` ${name}-preview`:''}"`})}<p class="wifi-field-error" id="${name}-error" role="alert" hidden></p>${name.startsWith('ssid')?`<p class="wifi-ssid-preview field-hint" id="${name}-preview" hidden></p>`:''}`;
+  const ssidField=(label,name)=>`<div class="field"><label for="${name}">${label}</label><div class="wifi-ssid-input"><span id="${name}-prefix">${WIFI_SSID_PREFIX}</span><input id="${name}" name="${name}" type="text" required autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="${name}-prefix ${name}-error ${name}-preview"></div></div><p class="wifi-field-error" id="${name}-error" role="alert" hidden></p><p class="wifi-ssid-preview field-hint" id="${name}-preview" hidden></p>`;
   return `<form id="wifi-live-form" novalidate data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
     <p class="field-hint">Ingresá los nuevos datos de tu red.</p>
-    ${field('Nombre de red 2,4 GHz','ssid')}
-    ${dualBand?field('Nombre de red 5 GHz','ssid5'):''}
+    ${ssidField('Nombre de red 2,4 GHz','ssid')}
+    ${dualBand?ssidField('Nombre de red 5 GHz','ssid5'):''}
     ${field('Nueva contraseña','wifi-new-password','password')}
     ${field('Repetí la contraseña','wifi-repeat','password')}
     <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.</label>
@@ -98,7 +99,7 @@ function wifiForm(requestId,dualBand) {
 }
 function wifiFieldResult(form,name) {
   const value=form.elements[name].value;
-  const validation=name.startsWith('ssid')?validateWifiSsid(value):validateWifiPassword(value);
+  const validation=name.startsWith('ssid')?validateWifiSsid(WIFI_SSID_PREFIX+value):validateWifiPassword(value);
   const error=name==='wifi-repeat' && !validation.error && value!==form.elements['wifi-new-password'].value
     ? 'Las contraseñas de Wi-Fi no coinciden.' : validation.error;
   const message=form.querySelector(`[id="${name}-error"]`);

@@ -101,18 +101,21 @@ foreach([['speed_down'=>50],['speed_up'=>50],['speed_down'=>100,'speed_up'=>100]
     rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['TEST'=>array_replace($p,$override)]]]),'UPGRADE_NOT_UPWARD');
 rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['free profile'=>$p]]]),'UPGRADE_CONFIGURATION');
 rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['TEST'=>array_replace($p,['price_cents'=>1.1])]]]),'UPGRADE_CONFIGURATION');
-$wifi=['requestId'=>str_repeat('d',32),'ssid'=>'Fixture24','ssid5'=>'Fixture_5G','password'=>'Fixture!123','confirmed'=>true];
-checkOp(wifiInput($wifi)===['SSID'=>'Fixture24','SSID_5G'=>'Fixture_5G','Password'=>'Fixture!123']);
-checkOp(wifiInput(array_replace($wifi,['ssid5'=>'Fixture24']))['SSID_5G']==='Fixture24');
+$wifi=['requestId'=>str_repeat('d',32),'ssid'=>'USITTEL_Fixture24','ssid5'=>'USITTEL_Fixture_5G','password'=>'Fixture!123','confirmed'=>true];
+checkOp(wifiInput($wifi)===['SSID'=>'USITTEL_Fixture24','SSID_5G'=>'USITTEL_Fixture_5G','Password'=>'Fixture!123']);
+checkOp(wifiInput(array_replace($wifi,['ssid5'=>'USITTEL_Fixture24']))['SSID_5G']==='USITTEL_Fixture24');
 rejectOp(fn()=>wifiInput($wifi+['accountPassword'=>'fixture-only']),'BAD_REQUEST');
 rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid5'=>''])),'WIFI_INPUT');
-checkOp(wifiInput(array_replace($wifi,['ssid5'=>'']),false)===['SSID'=>'Fixture24','Password'=>'Fixture!123']);
-checkOp(wifiInput(array_replace($wifi,['ssid'=>'Mi Casa','ssid5'=>'Agustín-5G']))===['SSID'=>'Mi_Casa','SSID_5G'=>'Agustin-5G','Password'=>'Fixture!123']);
-checkOp(wifiInput(array_replace($wifi,['ssid'=>'ÁéÍóÚñÑ_1','ssid5'=>'ÁéÍóÚñÑ_1']))['SSID']==='AeIoUñÑ_1');
-checkOp(wifiInput(array_replace($wifi,['ssid'=>'A,.:;*+_-@=!ñÑ1']))['SSID']==='A,.:;*+_-@=!ñÑ1');
-foreach([4,5,20,21] as $length) {
-    $case=array_replace($wifi,['ssid'=>str_repeat('A',$length),'ssid5'=>str_repeat('A',$length)]);
-    if($length>=5 && $length<=20) checkOp(wifiInput($case)['SSID']===str_repeat('A',$length));
+checkOp(wifiInput(array_replace($wifi,['ssid5'=>'']),false)===['SSID'=>'USITTEL_Fixture24','Password'=>'Fixture!123']);
+checkOp(wifiInput(array_replace($wifi,['ssid'=>'USITTEL_Mi Casa','ssid5'=>'USITTEL_Agustín-5G']))===['SSID'=>'USITTEL_Mi_Casa','SSID_5G'=>'USITTEL_Agustin-5G','Password'=>'Fixture!123']);
+checkOp(wifiInput(array_replace($wifi,['ssid'=>'USITTEL_ÁéÍóÚñÑ_1','ssid5'=>'USITTEL_ÁéÍóÚñÑ_1']))['SSID']==='USITTEL_AeIoUñÑ_1');
+checkOp(wifiInput(array_replace($wifi,['ssid'=>'USITTEL_A,.:;*+_-@=!']))['SSID']==='USITTEL_A,.:;*+_-@=!');
+foreach(['Mi Casa','usittel_Casa','USITTEL_'] as $withoutFixedPrefix)
+    rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid'=>$withoutFixedPrefix])),'WIFI_INPUT');
+foreach([0,1,12,13] as $length) {
+    $ssid='USITTEL_'.str_repeat('A',$length);
+    $case=array_replace($wifi,['ssid'=>$ssid,'ssid5'=>$ssid]);
+    if($length>=1 && $length<=12) checkOp(wifiInput($case)['SSID']===$ssid);
     else rejectOp(fn()=>wifiInput($case),'WIFI_INPUT');
 }
 foreach([7,8,20,21] as $length) {
@@ -121,8 +124,8 @@ foreach([7,8,20,21] as $length) {
     else rejectOp(fn()=>wifiInput($case),'WIFI_INPUT');
 }
 foreach(['/','\\','$','%','<','>','?','¿','#',"\t","\n","\r","\u{00A0}"] as $forbidden) {
-    rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid'=>'Casa'.$forbidden.'WiFi'])),'WIFI_INPUT');
-    rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid5'=>'Casa'.$forbidden.'WiFi'])),'WIFI_INPUT');
+    rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid'=>'USITTEL_Casa'.$forbidden.'WiFi'])),'WIFI_INPUT');
+    rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid5'=>'USITTEL_Casa'.$forbidden.'WiFi'])),'WIFI_INPUT');
     rejectOp(fn()=>wifiInput(array_replace($wifi,['password'=>'Clave'.$forbidden.'123'])),'WIFI_INPUT');
 }
 foreach(['Clave Casa','Claveá123','ClaveÁ123'] as $password)

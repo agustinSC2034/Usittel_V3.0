@@ -79,12 +79,15 @@ function wifiInput(array $body,bool $dualBand=true): array {
 }
 
 function wifiNormalizedSsid(mixed $value): ?string {
-    if(!is_string($value)) return null;
-    $normalized=str_replace(' ','_',strtr($value,[
+    $prefix='USITTEL_';
+    if(!is_string($value) || !str_starts_with($value,$prefix)) return null;
+    $suffix=substr($value,strlen($prefix));
+    if($suffix==='') return null;
+    $normalized=$prefix.str_replace(' ','_',strtr($suffix,[
         'á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u',
         'Á'=>'A','É'=>'E','Í'=>'I','Ó'=>'O','Ú'=>'U',
     ]));
-    return wifiAllowedText($normalized,5,20)?$normalized:null;
+    return wifiAllowedText($normalized,strlen($prefix)+1,20)?$normalized:null;
 }
 function wifiAllowedText(mixed $value,int $minimum,int $maximum): bool {
     if(!is_string($value) || !preg_match('/\A[A-Za-zñÑ0-9,.:;*+_@=!-]+\z/u',$value)) return false;

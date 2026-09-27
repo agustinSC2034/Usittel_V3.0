@@ -422,11 +422,13 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
       'Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.','Guardar cambios']) assert.ok(wifiForm[0].includes(label),label);
     assert.match(wifiForm[0],/novalidate/);
     assert.match(wifiForm[0],/wifi-ssid-preview/);
+    assert.match(wifiForm[0],/class="wifi-ssid-input"><span id="\$\{name\}-prefix">\$\{WIFI_SSID_PREFIX\}<\/span><input/);
     assert.match(wifiForm[0],/name="confirmed" required/);
     assert.doesNotMatch(wifiForm[0],/accountPassword|wifi-account-password|Tu contraseña de Mi USITTEL/);
     const requestPayload=appSource.match(/request\('wifi-change',\{([^}]+)\}\)/);
     assert.ok(requestPayload);assert.doesNotMatch(requestPayload[1],/accountPassword/);
     assert.match(appSource,/validateWifiSsid/);
+    assert.match(appSource,/validateWifiSsid\(WIFI_SSID_PREFIX\+value\)/);
     assert.match(appSource,/validateWifiPassword/);
     assert.match(appSource,/ssid:values\.ssid,ssid5:values\.ssid5\|\|''/);
   });

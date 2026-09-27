@@ -1,5 +1,6 @@
 const allowed = /^[A-Za-zñÑ0-9,.:;*+_@=!-]$/u;
 const accents = { á: 'a', é: 'e', í: 'i', ó: 'o', ú: 'u', Á: 'A', É: 'E', Í: 'I', Ó: 'O', Ú: 'U' };
+export const WIFI_SSID_PREFIX = 'USITTEL_';
 
 const characterError = (value, label) => {
   for (const character of value) {
@@ -12,11 +13,14 @@ const characterError = (value, label) => {
 
 export function validateWifiSsid(value) {
   if (typeof value !== 'string') return { error: 'El nombre de la red no es válido.' };
-  const normalized = value.replace(/[áéíóúÁÉÍÓÚ]/gu, character => accents[character]).replaceAll(' ', '_');
+  if (!value.startsWith(WIFI_SSID_PREFIX)) return { error: 'El nombre de la red debe comenzar con USITTEL_.' };
+  const suffix = value.slice(WIFI_SSID_PREFIX.length);
+  if (!suffix) return { error: 'Agregá un nombre después de USITTEL_.' };
+  const normalized = WIFI_SSID_PREFIX + suffix.replace(/[áéíóúÁÉÍÓÚ]/gu, character => accents[character]).replaceAll(' ', '_');
   const error = characterError(normalized, 'El nombre de la red');
   if (error) return { error };
   const length = [...normalized].length;
-  if (length < 5 || length > 20) return { error: 'El nombre de la red debe tener entre 5 y 20 caracteres.' };
+  if (length > 20) return { error: 'Podés agregar hasta 12 caracteres después de USITTEL_.' };
   return { value: normalized, changed: normalized !== value };
 }
 

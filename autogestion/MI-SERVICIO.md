@@ -266,6 +266,10 @@ confirmación. Contraseña de 8–20 caracteres sin cambios automáticos; espaci
 acentos se rechazan con mensajes específicos. SSID y clave admiten únicamente
 letras, números, `ñ/Ñ` y `, . : ; * + _ - @ = !`. Ambas bandas comparten estas
 reglas y pueden tener nombres iguales. El servidor repite la validación.
+Cada SSID empieza obligatoriamente con `USITTEL_`: el prefijo aparece fijo y
+separado del texto editable en ambas bandas. El cliente debe agregar al menos un
+carácter; el máximo de 20 caracteres del SSID completo deja hasta 12 para el
+sufijo. El backend rechaza un prefijo cambiado u omitido.
 
 La documentación describe Configurar_Wifi pero no conserva el request completo.
 El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren

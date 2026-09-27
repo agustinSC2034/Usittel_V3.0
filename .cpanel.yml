@@ -4,6 +4,8 @@ deployment:
     - export DEPLOYPATH=/home4/usittel/public_html/
     - /bin/cp .htaccess .user.ini php.ini index.html home.php "$DEPLOYPATH"
     - /bin/cp -R assets atencion datos-personales includes internet-fibra-optica-tandil js pages "$DEPLOYPATH"
+    - /bin/mkdir -p "$DEPLOYPATH/expo"
+    - /bin/cp expo/index.html expo/styles.css expo/settings.js expo/core.js expo/store.js expo/sync.js expo/app.js expo/sw.js expo/online.txt "$DEPLOYPATH/expo/"
     - /bin/mkdir -p "$DEPLOYPATH/autogestion/assets" "$DEPLOYPATH/autogestion/js" "$DEPLOYPATH/autogestion/vendor/librespeed" "$DEPLOYPATH/autogestion/server"
     - /bin/cp autogestion/.htaccess autogestion/index.html autogestion/api.php "$DEPLOYPATH/autogestion/"
     - /bin/cp autogestion/assets/* "$DEPLOYPATH/autogestion/assets/"

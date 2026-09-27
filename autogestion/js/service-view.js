@@ -2,7 +2,7 @@ import {customer,runtime,planLabel,connectivityLabel} from './data.js';
 import {formatOfferPrice,offerCta,offerVisual,serviceDisplayState} from './service-catalog.js';
 import {status,icon,button,escapeHTML as e} from './components.js';
 
-const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${e(type)}">${label} ${icon('arrow-right')}</button>`;
+const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${type==='speed'?'upgrade-speed':'additional-service'}">${label} ${icon('arrow-right')}</button>`;
 function offerMark(offer) {
   const visual=offerVisual(offer);
   if(visual.asset) return `<img class="offer-brand${offer.id==='pack_universal'?' offer-brand-monochrome':''}${offer.id==='pack_futbol'?' offer-brand-crest':''}" src="assets/${visual.asset}" width="60" height="38" alt="" aria-hidden="true">`;
@@ -22,7 +22,7 @@ export function contractedSection() {
 function offersSection() {
   const offers=runtime.commercialOffers;
   if (!offers.length) return '';
-  return `<section class="service-offers" aria-labelledby="offers-title"><p class="eyebrow">Opciones para vos</p><h2 id="offers-title">Podés sumar</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3 class="offer-heading">${offerMark(o)}<span>${e(o.public_name)}</span></h3><p>${e(o.description)}</p><p class="offer-price">${e(formatOfferPrice(o))}</p></div>${offerButton(o.id,offerCta(o.type))}</div>`).join('')}</div></section>`;
+  return `<section class="service-offers" aria-labelledby="offers-title"><p class="eyebrow">Opciones para vos</p><h2 id="offers-title">Podés sumar</h2><div class="offer-options">${offers.map(o=>`<div class="commercial-option"><div><h3 class="offer-heading">${offerMark(o)}<span>${e(o.public_name)}</span></h3><p>${e(o.description)}</p><p class="offer-price">${e(formatOfferPrice(o))}</p>${o.type==='speed'?'<p class="offer-assistive">Podés solicitar una mejora de velocidad desde nuestro chat.</p>':''}</div>${offerButton(o.type,offerCta(o.type))}</div>`).join('')}</div></section>`;
 }
 export function servicePage() {
   const detail=runtime.connectionDetails;

@@ -6,7 +6,7 @@ const assert = require('node:assert/strict');
   assert.equal(formatOfferPrice({currency:'ARS',price_monthly:null,price_once:10000}),'$10.000 pago único');
   assert.equal(formatOfferPrice({currency:'ARS',price_monthly:7750,price_once:10000}),'$7.750 por mes · $10.000 pago único');
   assert.equal(formatOfferPrice({currency:'USD',price_monthly:1,price_once:null}),'1 por mes');
-  assert.equal(offerCta('speed'),'Quiero mejorar mi plan');
+  assert.equal(offerCta('speed'),'Solicitar mejora de plan');
   assert.equal(offerCta('mesh'),'Me interesa');
   assert.deepEqual(serviceDisplayState(null),{known:false,items:[]});
   assert.deepEqual(serviceDisplayState({known:true,items:[{label:'Set Top Box',quantity:2}]}),{known:true,items:[{label:'Set Top Box',quantity:2}]});

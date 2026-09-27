@@ -1,5 +1,35 @@
 # Mi servicio
 
+## Alcance funcional de Mi USITTEL v1 — 27/09/2026
+
+Automático: login y sesión, selección de contratos autorizados, lectura del estado de
+conexión, facturas y PDF, pagos y movimientos habilitados por sus compuertas,
+presentación de productos contratados, cambio de Wi-Fi en modelos exactos
+habilitados y acceso al test de velocidad. Esta lista describe capacidades ya
+implementadas, no sustituye la QA integral ni autoriza un despliegue.
+
+Asistido por Central: mejora de velocidad, TV, packs, STB, Mesh y otros
+adicionales, actualización de datos de contacto, ayuda de acceso y soporte
+técnico. Las CTA comerciales abren el mismo widget sin enviar identidad ni datos
+Phantom. No se crean tickets Phantom automáticos. Mi USITTEL no muestra ni
+redirige a WhatsApp si Central está indisponible; informa que se intente más tarde.
+
+**UPGRADE_AUTOMATICO = NO DISPONIBLE EN V1. UPGRADE_ASISTIDO = CENTRAL.**
+El catálogo puede mostrar solo destinos ascendentes con plan de origen exacto,
+precio confirmado y oferta habilitada. La solicitud no cambia el perfil, el
+producto facturable ni el aprovisionamiento: un operador realiza la gestión.
+`upgrade.enabled` y el inspector SOAP no conceden una ruta de escritura pública.
+El estado `NOT_READY_FOR_UPGRADE_WRITE` pertenece únicamente al inspector de
+investigación histórica, no a la interfaz del cliente. Reconsiderar una escritura
+automática requiere una decisión de producto nueva, fuera de v1.
+
+Configuración privada a verificar manualmente antes del despliegue: los campos
+`service_product_fields`, aliases exactos en `service_catalog`, ofertas y precios
+en `commercial_catalog`; y `wifi.enabled`, `wifi.model_field`, `wifi.models` y
+`wifi.dual_band_models` para los modelos físicamente validados. La configuración
+de Central está en el frontend versionado; no se añade un secreto ni una clave
+privada de Central. Este cambio no modifica `config.php` privado.
+
 ## Catálogo de servicios confirmado, 26/09/2026
 
 Un único parser valida entradas `FECHA - CATEGORIA - PRODUCTO` en los campos
@@ -142,10 +172,10 @@ vacías o definir el primer mapping real.
 Decisión posterior: no abrir tickets Phantom ni continuar ese mapping. Mantener
 `tickets.enabled=false`; el inspector ejecutado no realizó escrituras. Servicios
 y adicionales no automáticos se derivarán en una etapa futura a contacto humano.
-Solo continúa como candidato de autoservicio el upgrade del perfil de Internet,
-aún bloqueado hasta validar SOAP, facturación y Act. Perfiles. También queda
-pendiente implementar el cambio real del WhatsApp de contacto; el formulario de
-demostración actual no equivale a una actualización en Phantom.
+En esa investigación el upgrade del perfil de Internet quedó como candidato de
+autoservicio, bloqueado por SOAP, facturación y Act. Perfiles. La decisión vigente
+de v1 es distinta: mejora asistida por Central, sin escritor automático. El
+cambio de contacto tampoco equivale a una actualización en Phantom.
 
 ## Entrega actual: operaciones controladas, 20/09/2026
 

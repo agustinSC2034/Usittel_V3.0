@@ -310,6 +310,7 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   const returnAttempt='a'.repeat(32);
   r=await fetch(physicalEndpoint('payment-return?result=ok&attempt='+returnAttempt+'&IdResultado=forged'),{redirect:'manual'});check('entrypoint físico payment return descarta query externa',()=>{assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/#/facturas?attempt='+returnAttempt);});
   r=await fetch(physicalEndpoint('route-does-not-exist'));check('route inexistente conserva 404',()=>assert.equal(r.status,404));
+  r=await fetch(physicalEndpoint('upgrade-change'));check('no hay ruta pública de escritura de upgrade',()=>assert.equal(r.status,404));
   r=await fetch(physicalEndpoint('bootstrap/../login'));check('route manipulada se rechaza antes de Api',()=>assert.equal(r.status,400));
   r=await direct.call('logout',{});check('entrypoint físico logout y cookie raíz',()=>{assert.equal(r.status,200);assert.match(r.headers.get('set-cookie'),/Path=\/(?:;|$)/i);});
   check('API sin sesión',()=>{});assert.equal((await a.call('overview')).status,401);

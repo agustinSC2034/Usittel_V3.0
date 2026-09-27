@@ -55,6 +55,11 @@ verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa'],$cata
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa','HBO Exacto','Set top box','Mesh Exacto'],$catalogConfig),'id')===['internet_500']);
 verifyFeature(array_column(commercialOffers('Plan 300 exacto',['TV Sensa','Producto desconocido'],$catalogConfig),'id')===['internet_500']);
 verifyFeature(commercialOffers('Plan 500 exacto',[], $catalogConfig)[0]['id']==='sensa');
+verifyFeature(!in_array('internet_500',array_column(commercialOffers('Plan 500 exacto',[],$catalogConfig),'id'),true));
+verifyFeature(!in_array('internet_500',array_column(commercialOffers('Plan desconocido',[],$catalogConfig),'id'),true));
+$nonAscending=$catalogConfig;
+$nonAscending['commercial_catalog'][4]['target_speed']=300;
+verifyFeature(!in_array('internet_500',array_column(commercialOffers('Plan 300 exacto',[],$nonAscending),'id'),true));
 $contractFixtures=[
     ['record'=>['Producto_Internet'=>'Plan 300 exacto','Productos_Television'=>'','Productos_Otros'=>''],
         'products'=>[],'ids'=>[],'offers'=>['sensa','mesh','internet_500']],

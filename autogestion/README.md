@@ -2,7 +2,7 @@
 
 Se conserva la interfaz aprobada y sus seis vistas con rutas por hash. HTML, módulos JavaScript nativos, Tailwind 3 y PHP, sin frameworks ni dependencias npm nuevas.
 
-**Estado actual (20/09/2026):** login real, multicontrato, facturas/descargas, pagos SIRO y seguimiento ya implementados; las validaciones manuales anteriores están en INTEGRATION y MVP. Mi servicio incorpora solicitudes comerciales bajo compuerta de laboratorio, seguimiento, eventos locales y Wi-Fi protegido. Upgrade automático bloqueado: SOAP solo lectura hasta demostrar coherencia entre facturación y aprovisionamiento. [Alcance y evidencia actual](SERVICE-OPERATIONS.md). Esto no constituye aprobación de producción. Las referencias a fases de lectura/demo más abajo son antecedentes históricos, no límites del código actual.
+**Estado v1 (27/09/2026):** login, multicontrato, facturas/PDF, pagos y movimientos bajo sus compuertas, servicios y Wi-Fi protegido están implementados. Upgrade de velocidad, adicionales, cambios de datos y ayuda de acceso se solicitan por Central; no hay escritura automática de upgrade ni tickets Phantom en v1. Ver [alcance vigente](MI-SERVICIO.md) y [límites de investigación](SERVICE-OPERATIONS.md). Esto no constituye aprobación de producción; falta QA integral y el despliegue posterior. Las referencias a fases de lectura/demo más abajo son antecedentes históricos.
 
 ## Ejecutar
 
@@ -65,8 +65,8 @@ En la raíz se modificaron package.json (comandos) y .gitignore (defensa contra 
 
 ## Modos y aislamiento
 
-Demo conserva todas las funciones visuales: documentos de ejemplo, ticket, formularios temporales, Central conectado, speedtest simulado y opciones comerciales. Las secundarias siguen en Mi servicio → Más opciones. El chat todavía es anónimo: no recibe datos de la sesión ni del contrato.
+Demo conserva documentos, ticket y datos de ejemplo, Central y opciones comerciales. Los cambios de datos y la ayuda de acceso se derivan al chat también en demo. El chat todavía es anónimo: no recibe datos de la sesión ni del contrato.
 
-Phantom usa sesión propia y lecturas del backend, sin sustituir fallos con datos demo. No muestra tickets inventados ni confirma modificaciones falsas. Pagos, descargas, comprobantes, recuperación y escrituras quedan deshabilitados. No se usa localStorage ni sessionStorage. La contraseña solo se envía al backend propio para verificar el login y después se vacía del formulario.
+Phantom usa sesión propia y lecturas del backend, sin sustituir fallos con datos demo. No muestra tickets inventados ni confirma modificaciones falsas. Facturas, PDF, pagos y movimientos operan solo bajo sus compuertas existentes; no hay recuperación automática, edición de perfil ni upgrade automático. Wi-Fi conserva su flujo protegido en modelos habilitados. No se usa localStorage ni sessionStorage. La contraseña solo se envía al backend propio para verificar el login y después se vacía del formulario.
 
-No se cambiaron el botón comercial, .htaccess, .cpanel.yml, DNS ni cPanel; tampoco se hizo push. La regla pública aún redirige /autogestion a Phantom y el despliegue no incorpora esta carpeta. Usar los servidores locales. Dominio/ruta y despliegue serán otra entrega.
+Esta iteración no modifica DNS, cPanel, configuración privada ni el botón comercial público. Un commit o push del repositorio no equivale a aprobar ni verificar un despliegue productivo.

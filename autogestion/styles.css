@@ -512,10 +512,26 @@
 .faq-answer p { max-width:72ch; }
 .faq-answer .button { margin-top:17px; }
 .support-demo-ticket { max-width:860px; margin-top:34px; }
+.offer-assistive { margin-top:10px; color:var(--muted); font-size:13px; }
+.account-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:20px; align-items:start; }
+.account-profile,.account-help { border:1px solid var(--line); border-radius:var(--card-radius); background:#fff; padding:28px; }
+.account-profile h2,.account-help h2 { margin-bottom:12px; }
+.account-details { margin:0; }
+.account-details > div { display:flex; justify-content:space-between; gap:22px; padding:15px 0; border-bottom:1px solid var(--line); }
+.account-details > div:last-child { border-bottom:0; }
+.account-details dt { flex:0 0 42%; }
+.account-details dd { margin:0; text-align:right; font-weight:600; }
+.account-actions { display:grid; gap:20px; }
+.account-help { background:var(--sage); }
+.account-help p { color:var(--muted); font-size:14px; }
+.account-help .button { margin-top:18px; }
+.account-help .button-secondary { background:#fff; }
+.account-help .logout { display:flex; width:max-content; margin-top:22px; }
 @media(max-width:900px) {
   .home-hero { align-items:stretch; flex-direction:column; }
   .home-hero-actions { justify-content:flex-start; flex-wrap:wrap; }
   .home-actions > div { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .account-layout { grid-template-columns:1fr; }
 }
 @media(max-width:600px) {
   .home-contract { align-items:flex-start; flex-direction:column; }
@@ -533,6 +549,10 @@
   .support-intro { align-items:stretch; flex-direction:column; padding:22px 20px; }
   .support-intro .button { width:100%; }
   .support-faq { margin-top:28px; }
+  .account-profile,.account-help { padding:20px; }
+  .account-details > div { display:block; }
+  .account-details dd { text-align:left; margin-top:4px; }
+  .account-help .button { width:100%; }
 }
 @media(max-width:380px) { .home-actions > div { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { .faq-item summary .icon { transition:none; } }

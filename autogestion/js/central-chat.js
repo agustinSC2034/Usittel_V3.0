@@ -43,7 +43,6 @@ export function openCentralChat() { return centralPromise?.then(adapter => adapt
 export function initializeCentralChat() {
   if (centralPromise) return centralPromise;
   centralPromise = (async () => {
-    const fallback = document.querySelector('[data-central-fallback]');
     try {
       if (!customElements.get('central-chat')) await new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -54,7 +53,7 @@ export function initializeCentralChat() {
         document.head.append(script);
       });
       if (!document.querySelector('#central-chat-mount') || !customElements.get('central-chat')) throw new Error('Central unavailable');
-      const adapter = new CentralChatAdapter(CHANNEL_KEY); adapter.mount(); fallback?.setAttribute('hidden', ''); return adapter;
+      const adapter = new CentralChatAdapter(CHANNEL_KEY); adapter.mount(); return adapter;
     } catch { return null; }
   })();
   return centralPromise;

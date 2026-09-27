@@ -49,7 +49,7 @@ document.addEventListener('toggle', event => {
   if (item.open) document.querySelectorAll('.faq-item[open]').forEach(other => { if (other !== item) other.open = false; });
   item.querySelector('summary')?.setAttribute('aria-expanded', String(item.open));
 }, true);
-const unavailable = ['wifi', 'contact', 'password', 'speedtest', 'ticket', 'download-receipt', 'receipt'];
+const unavailable = ['wifi', 'speedtest', 'ticket', 'download-receipt', 'receipt'];
 function render() {
   const demoStrip = document.querySelector('.demo-strip');
   demoStrip.textContent = runtime.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
@@ -168,7 +168,7 @@ document.addEventListener('click', async event => {
     if (dialog.open) dialog.close();
     const chat = await initializeCentralChat();
     if (chat) await openCentralChat();
-    else document.querySelector('[data-central-fallback]')?.click();
+    else toast('El chat no está disponible en este momento. Volvé a intentar más tarde.');
     return;
   }
   const item = getInvoice(target.dataset.id);
@@ -326,8 +326,6 @@ document.addEventListener('click', async event => {
     return openDialog('Pagar factura', `<p>No ingresás datos de tu tarjeta en Mi USITTEL.</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p><p class="muted">Vencimiento ${item.due}</p></div><p class="demo-notice">Esta es una vista de prueba: no se abrirá SIRO ni se realizará ningún cobro.</p><div class="dialog-actions">${button('Pagar', '', { iconName: 'external-link', attrs: 'disabled aria-describedby="payment-note"' })}${button('Cerrar', 'close', { secondary: true })}</div><p id="payment-note" class="field-hint">El enlace de pago todavía no está habilitado.</p>`);
   }
   if (action === 'wifi') return openDialog('Configurar Wi-Fi', `<form id="wifi-form">${input('Nombre de la red', 'network', { value: customer.network, extra: 'maxlength="32"' })}${input('Nueva contraseña de Wi-Fi', 'wifi-password', { type: 'password', autocomplete: 'new-password', extra: 'minlength="8" maxlength="63"', hint: 'Usá entre 8 y 63 caracteres.' })}<p class="demo-notice">En el servicio real, tus dispositivos podrían desconectarse al cambiar estos datos. En esta prueba no se modifica ningún equipo.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
-  if (action === 'contact') return openDialog('Editar datos de contacto', `<form id="contact-form">${input('Correo electrónico', 'email', { value: customer.email, type: 'email', extra: 'maxlength="120"' })}${input('Teléfono', 'phone', { value: customer.phone, type: 'tel', required: false, extra: 'maxlength="30"' })}<p class="field-hint">Usá datos ficticios. Los cambios duran hasta que recargues la página.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
-  if (action === 'password') return openDialog('Cambiar contraseña', `<form id="password-form">${input('Contraseña actual', 'current-password', { type: 'password', autocomplete: 'off' })}${input('Nueva contraseña', 'new-password', { type: 'password', autocomplete: 'off', extra: 'minlength="8"', hint: 'Para esta demostración, usá al menos 8 caracteres.' })}${input('Repetir nueva contraseña', 'confirm-password', { type: 'password', autocomplete: 'off' })}<p class="field-hint">Usá valores de prueba. Ninguna contraseña se guarda ni se envía.</p>${button('Probar cambio', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
     dataGeneration++;
     target.disabled = true;
@@ -361,7 +359,6 @@ document.addEventListener('click', async event => {
   }
 });
 document.addEventListener('input', event => {
-  if (event.target.id === 'confirm-password' || event.target.id === 'new-password') document.querySelector('#confirm-password')?.setCustomValidity('');
   const form=event.target.closest('form');
   if(form?.id!=='wifi-live-form' || !['ssid','ssid5','wifi-new-password','wifi-repeat'].includes(event.target.name)) return;
   wifiFieldResult(form,event.target.name);
@@ -383,16 +380,10 @@ document.addEventListener('submit', async event => {
       if (runtime.mode === 'phantom') await loadOverview(); else render();
     } catch(error) { toast(error.message); }
     finally { data.delete('password'); if (form.elements.password) form.elements.password.value = ''; submit.disabled = false; }
-  } else if (form.id === 'contact-form') {
-    customer.email = String(data.get('email')).trim(); customer.phone = String(data.get('phone')).trim();
-    dialog.close(); render(); toast('Datos de ejemplo actualizados durante esta sesión.');
   } else if (form.id === 'wifi-form') {
     const name = String(data.get('network')).trim();
     if (!name) { form.elements.network.setCustomValidity('Ingresá un nombre de red.'); form.elements.network.reportValidity(); form.elements.network.setCustomValidity(''); return; }
     customer.network = name; form.reset(); dialog.close(); render(); toast('Nombre de red de ejemplo actualizado. No se modificó tu Wi-Fi.');
-  } else if (form.id === 'password-form') {
-    if (data.get('new-password') !== data.get('confirm-password')) { form.elements['confirm-password'].setCustomValidity('Las contraseñas no coinciden.'); return form.elements['confirm-password'].reportValidity(); }
-    form.reset(); dialog.close(); toast('Prueba completada. No se cambió ni guardó ninguna contraseña.');
   } else if (form.id === 'chat-form') {
     const message = String(data.get('message')).trim();
     if (!message) return;

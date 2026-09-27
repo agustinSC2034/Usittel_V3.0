@@ -1,11 +1,17 @@
 # Integración local PHP / Phantom — 18/09/2026
 
+**Actualización v1, 27/09/2026:** la mejora de velocidad es exclusivamente una
+solicitud por Central. No se implementará escritura SOAP, comercial o de
+aprovisionamiento en v1; las notas anteriores sobre un escritor futuro son
+históricas. Ver [MI-SERVICIO.md](MI-SERVICIO.md) para el alcance vigente.
+
 ## Actualización 20/09/2026 — Mi servicio
 
 La implementación actual reutiliza sesión/multicontrato, Wi-Fi y transport REST.
 Se agregaron solicitudes comerciales con reserva persistente, propiedad verificada,
 seguimiento y outbox de notificaciones. SOAP es exclusivamente de lectura; no hay
-escritor de upgrades hasta confirmar administración, facturación y aprovisionamiento.
+escritor de upgrades en v1; administración, facturación y aprovisionamiento no
+forman una cadena demostrada para automatizar el cambio.
 Ver [SERVICE-OPERATIONS.md](SERVICE-OPERATIONS.md) para fuentes, formatos, flags,
 pruebas y pendientes reales. No se modificó configuración privada ni hubo llamadas
 reales en esta entrega. Los conteos y estados de ensayos que siguen son históricos.

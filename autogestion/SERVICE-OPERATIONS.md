@@ -1,5 +1,17 @@
 # Mi servicio: operaciones controladas
 
+## Decisión v1 — 27/09/2026
+
+La mejora de velocidad y los adicionales son gestiones asistidas por Central.
+**No existe upgrade automático en Mi USITTEL v1**, ni ruta pública de escritura
+SOAP, ni cambio automático de facturación o aprovisionamiento. Mantener la
+detección conservadora de ofertas ascendentes y el inspector SOAP read-only.
+Las hipótesis de escritura y secuencias de prueba que aparecen más abajo son
+notas históricas de investigación, no trabajo pendiente para cerrar v1 ni
+autorización para implementar `modificar_abonado`, `modificar_perfiles` o
+`Phantom_Provissioning`. `NOT_READY_FOR_UPGRADE_WRITE` es solo diagnóstico CLI.
+Los tickets Phantom automáticos tampoco forman parte de v1.
+
 Revisión del 20/09/2026. Este documento describe la entrega actual; las notas de
 laboratorio anteriores conservadas en README, INTEGRATION y MVP son históricas.
 No se consultó ni modificó ningún cliente real durante esta entrega. No se cambió
@@ -76,13 +88,10 @@ mantenerse o subir y al menos una debe subir; el destino debe ser distinto. No
 hay precios reales cargados ni perfiles inventados. El navegador no envía estos
 valores. El catálogo por sí solo no concede permiso para escribir.
 
-Pendiente antes de construir el escritor: validar autenticación/lecturas SOAP,
-identidad y estructura exactas; elegir un único laboratorio y un destino; comprobar
-productos/importes antes/después y obtener evidencia técnica del equipo. Recién
-entonces preparar UNA llamada autorizada, sin retries, y releer las tres fuentes.
-Los estados NOT_STARTED, PREPARED, APPLYING, APPLIED, APPLY_UNCONFIRMED y NEEDS_REVIEW
-son el contrato previsto, **no un circuito de upgrade ya implementado o probado**.
-Tampoco se simula como resuelto un ticket automático por provisioning fallido.
+La exploración antigua de un escritor, sus posibles estados y la captura de
+tráfico de aprovisionamiento no son un requisito ni un plan de v1. No se
+implementa ese circuito; cualquier reconsideración futura necesita una decisión
+explícita independiente y evidencia administrativa, comercial y técnica nueva.
 
 Si la prueba futura solo cambia el perfil administrativo, detenerla. Para estudiar
 el paso faltante, el operador podrá abrir Network del CRM, filtrar Fetch/XHR y

@@ -8,7 +8,7 @@ export function formatOfferPrice(offer) {
 }
 
 export function offerCta(type) {
-  return type === 'speed' ? 'Quiero mejorar mi plan' : 'Me interesa';
+  return type === 'speed' ? 'Solicitar mejora de plan' : 'Me interesa';
 }
 
 // Presentation only. The server owns exact Phantom aliases and offer eligibility.

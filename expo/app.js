@@ -54,7 +54,7 @@
   function cancelReset() { clearTimeout(resetTimer); clearInterval(resetInterval); resetTimer = null; resetInterval = null; }
   function welcome() {
     cancelReset(); stage = 'welcome'; draft = null;
-    setScreen(`<section class="panel welcome"><h1>Participá del sorteo de USITTEL.</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></section>`);
+    setScreen(`<section class="panel welcome"><div class="welcome-copy"><h1>Participá del <span>sorteo</span> de USITTEL.</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></div><div class="welcome-art" aria-hidden="true"><div class="fiber-lines"><i></i><i></i><i></i><i></i></div><img src="../assets/img/logos/usittel_logo_and_name_blanco.webp" alt=""><p>La fibra óptica<br>de tu ciudad.</p></div></section>`);
     document.getElementById('begin').addEventListener('click', begin, { once: true });
   }
   async function begin() {

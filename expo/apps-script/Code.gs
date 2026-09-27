@@ -78,6 +78,8 @@ function safeCell_(value) {
 function reply_(message, origin) {
   const data = JSON.stringify(message).replace(/</g, '\\u003c');
   const target = JSON.stringify(origin).replace(/</g, '\\u003c');
-  return HtmlService.createHtmlOutput('<!doctype html><meta charset="utf-8"><script>window.parent.postMessage(' + data + ',' + target + ');<\/script>')
+  // HtmlService places this document inside its own sandboxed iframe. The
+  // USITTEL app is the top window, not necessarily this frame's direct parent.
+  return HtmlService.createHtmlOutput('<!doctype html><meta charset="utf-8"><script>window.top.postMessage(' + data + ',' + target + ');<\/script>')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

@@ -12,6 +12,7 @@ El formulario guarda el borrador en IndexedDB y también mantiene una copia inme
 - `store.js`: inscripciones y borrador en IndexedDB; índice único de DNI.
 - `sync.js`: cola y acuse del Apps Script.
 - `sw.js`: precache de todos los recursos críticos.
+- `online.txt`: comprobación ligera de acceso al sitio; no forma parte del cache.
 - `app.js`: flujo del participante y panel local.
 - `apps-script/Code.gs`: receptor para Google Sheets.
 - `../tests/expo.test.cjs`: pruebas de lógica.

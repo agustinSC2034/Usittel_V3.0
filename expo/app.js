@@ -31,26 +31,30 @@
   }
   async function connection() {
     const check = ++connectionCheck;
-    if (!navigator.onLine) networkAvailable = false;
+    let available = false;
+    if (!navigator.onLine) available = false;
     else {
       try {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 4000);
-        try { networkAvailable = (await fetch(`./online.txt?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal })).ok; }
+        try { available = (await fetch(`./online.txt?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal })).ok; }
         finally { clearTimeout(timer); }
-      } catch { networkAvailable = false; }
+      } catch { available = false; }
     }
     if (check !== connectionCheck) return;
+    const reconnected = !networkAvailable && available;
+    networkAvailable = available;
     document.getElementById('connection-dot').classList.toggle('offline', !networkAvailable);
     document.getElementById('connection-label').textContent = networkAvailable ? 'Sitio accesible' : 'Sin acceso al sitio';
     const label = document.getElementById('connectivity-text');
     if (label) label.textContent = networkAvailable ? 'sitio accesible' : 'sin acceso al sitio';
+    if (reconnected && cfg.appsScriptUrl) sync.run(store, cfg).catch(() => {});
   }
   function setScreen(html) { screen.innerHTML = html; screen.focus({ preventScroll: true }); }
   function cancelReset() { clearTimeout(resetTimer); clearInterval(resetInterval); resetTimer = null; resetInterval = null; }
   function welcome() {
     cancelReset(); stage = 'welcome'; draft = null;
-    setScreen(`<section class="panel welcome"><div><div class="event-pill"><span></span>${escapeHtml(cfg.eventTitle)} · ${escapeHtml(cfg.eventDates)}</div><p class="eyebrow">USITTEL te invita</p><h1>Participá del sorteo de USITTEL</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button></div><div class="visual" aria-hidden="true"><img src="../assets/img/logos/usittel-logo_and_name.webp" alt=""></div></section>`);
+    setScreen(`<section class="panel welcome"><h1>Participá del sorteo de USITTEL.</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></section>`);
     document.getElementById('begin').addEventListener('click', begin, { once: true });
   }
   async function begin() {
@@ -207,16 +211,21 @@
   function wireAdmin() {
     const trigger = document.getElementById('admin-trigger');
     let hold;
-    trigger.addEventListener('contextmenu', event => event.preventDefault());
-    trigger.addEventListener('pointerdown', () => { hold = setTimeout(() => { document.getElementById('pin').value = ''; document.getElementById('pin-error').textContent = ''; pinDialog.showModal(); document.getElementById('pin').focus(); }, 3500); });
-    for (const name of ['pointerup', 'pointercancel', 'pointerleave']) trigger.addEventListener(name, () => clearTimeout(hold));
-    document.addEventListener('keydown', event => {
-      if (!(event.ctrlKey && event.altKey && event.key.toLowerCase() === 'a')) return;
-      event.preventDefault();
+    const openPin = () => {
+      if (pinDialog.open) return;
       document.getElementById('pin').value = '';
       document.getElementById('pin-error').textContent = '';
       pinDialog.showModal();
       document.getElementById('pin').focus();
+    };
+    trigger.addEventListener('contextmenu', event => event.preventDefault());
+    trigger.addEventListener('pointerdown', () => { hold = setTimeout(openPin, 3500); });
+    for (const name of ['pointerup', 'pointercancel', 'pointerleave']) trigger.addEventListener(name, () => clearTimeout(hold));
+    trigger.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPin(); } });
+    document.addEventListener('keydown', event => {
+      if (!(event.ctrlKey && event.altKey && event.key.toLowerCase() === 'a')) return;
+      event.preventDefault();
+      openPin();
     });
     document.getElementById('pin-cancel').addEventListener('click', () => pinDialog.close());
     document.getElementById('pin-form').addEventListener('submit', event => {

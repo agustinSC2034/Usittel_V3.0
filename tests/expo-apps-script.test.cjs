@@ -24,6 +24,7 @@ const entry = {
 };
 const send = value => context.doPost({ parameter: { payload: JSON.stringify({ entry: value, nonce: 'test-nonce', origin: 'http://localhost:8000' }) } }).html;
 assert.match(send(entry), /"status":"created"/);
+assert.match(send(entry), /window\.top\.postMessage/);
 assert.equal(rows.length, 2); // Header + one participant.
 assert.match(send(entry), /"status":"exists"/);
 assert.equal(rows.length, 2);

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10243a">
+  <meta name="description" content="Participá del sorteo USITTEL en ExpoTan 2026.">
+  <title>ExpoTan · USITTEL</title>
+  <link rel="icon" href="../assets/icons/usittel-logo.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./settings.js"></script>
+  <script defer src="./core.js"></script>
+  <script defer src="./store.js"></script>
+  <script defer src="./sync.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" id="admin-trigger" role="button" tabindex="0" aria-label="USITTEL; mantener presionado para administración">
+        <img src="../assets/img/logos/usittel_logo_and_name_blanco.webp" alt="USITTEL" draggable="false">
+      </div>
+      <div class="topbar-right"><span id="event-label">ExpoTan 2026</span><span class="status-dot" id="connection-dot" aria-hidden="true"></span><span id="connection-label" class="sr-only">Estado de conexión</span></div>
+    </header>
+    <main id="screen" class="screen" tabindex="-1" aria-live="polite"></main>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  </div>
+  <dialog id="pin-dialog" class="pin-dialog" aria-labelledby="pin-title">
+    <form method="dialog" id="pin-form">
+      <h2 id="pin-title">Panel del stand</h2>
+      <p>Ingresá el PIN para abrir administración.</p>
+      <label for="pin">PIN</label>
+      <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="off" required>
+      <p id="pin-error" class="error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" id="pin-cancel" class="button secondary">Cancelar</button><button type="submit" class="button primary">Ingresar</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -165,13 +165,18 @@ eventos y llamadas únicas a adapters ficticios, **no entrega de correo ni Webch
 
 ## C. Wi-Fi
 
-Se reutilizan wifi-prepare/change, reautenticación con la cuenta autenticada,
-selected_ida, CSRF, modelo exacto, nonce, HMAC y bloqueo compartido. Cambio de
+Se reutilizan wifi-prepare/change, sesión autenticada, selected_ida autorizado,
+CSRF, modelo exacto, nonce, HMAC y bloqueo compartido. Cambio de
 contrato descarta definitivamente el nonce, también al volver al servicio inicial.
 Logout revoca la sesión. La reserva UNKNOWN se guarda antes de escribir; ahora el
 archivo de resultado también se reemplaza atómicamente para que un corte no borre
 la reserva. El despliegue de este cambio exige detener procesos de la versión
 anterior: el lock pasó a un archivo separado; los estados existentes se conservan.
+
+El formulario de cambio no pide la contraseña actual de Mi USITTEL y el backend
+no vuelve a consultar el registro de credenciales. La protección previa depende
+de la sesión autenticada, contrato seleccionado autorizado, CSRF, challenge no
+expirado y confirmación expresa. El payload no admite `accountPassword`.
 
 Modelo single-band: SSID y una Password. Modelo dual-band validado: SSID y SSID_5G
 explícitos y una única Password para ambas bandas. Nunca se deriva sufijo ni se

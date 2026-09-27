@@ -62,9 +62,12 @@ Wi-Fi ya no usa `wifi.lab_ida`: cualquier `selected_ida` autorizado por la sesi�
 puede preparar el cambio solo si el modelo leído desde `wifi.model_field` coincide
 exactamente con `wifi.models`. En los tres equipos observados `ONU_Modelo` contiene
 el chipset, no el modelo; nunca sirve como fuente de elegibilidad Wi-Fi.
-`dual_band_models` debe ser un subconjunto exacto. Se mantienen CSRF, nonce,
-reautenticación, HMAC, lock persistente, expiración, Ticket=0, una sola escritura
-y estado UNKNOWN sin retry. Ningún modelo se habilita por similitud.
+`dual_band_models` debe ser un subconjunto exacto. El cambio se autoriza mediante
+la sesión autenticada y el contrato seleccionado; CSRF y un challenge temporal
+ligado al contrato y modelo completan el control previo. Se conservan HMAC, lock
+persistente, expiración, Ticket=0, una sola escritura y estado UNKNOWN sin retry.
+No se vuelve a consultar ni enviar la contraseña de Mi USITTEL al cambiar el Wi-Fi.
+Ningún modelo se habilita por similitud.
 
 Inspector read-only para hasta tres contratos:
 
@@ -230,12 +233,15 @@ requiere la lectura; no está confirmado qué clave será. Después de mapear el
 campo exacto, se espera que `model` refleje respectivamente EG8145X6-10,
 HG8145V5 y EG8041V5. La compatibilidad seguirá false hasta habilitación manual.
 
-Exige clave actual de autogestión, confirmación y nombres/claves validados.
-Un nonce vincula servicio y modelo durante 10 minutos. El bloqueo persistente
-por contrato evita doble envío entre sesiones. Se conserva solo HMAC del payload,
-nonce, fecha y estado; nunca claves ni nombres de red. Resultado incierto bloquea
-nuevos cambios hasta revisión del operador. No se reintenta una escritura al vencer
-el token. Ticket=0; solo el mensaje exacto de cambio aplicado confirma éxito.
+La sesión autenticada, el contrato seleccionado autorizado y CSRF autorizan el
+POST. Un nonce vincula servicio y modelo durante 10 minutos y la confirmación
+explícita es obligatoria. El bloqueo persistente por contrato evita doble envío
+entre sesiones. Se conserva solo HMAC del payload, nonce, fecha y estado; nunca
+claves ni nombres de red. Resultado incierto bloquea nuevos cambios hasta revisión
+del operador. No se reintenta una escritura al vencer el token. Ticket=0; solo el
+mensaje exacto de cambio aplicado confirma éxito. El formulario no pide la clave
+actual de Mi USITTEL y el backend no reconsulta credenciales para autorizar este
+cambio.
 
 La documentación describe Configurar_Wifi pero no conserva el request completo.
 El cuerpo JSON implementado y la compatibilidad de los tres modelos requieren
@@ -252,8 +258,9 @@ Requisitos del servidor: [SPEEDTEST-USITTEL.md](SPEEDTEST-USITTEL.md).
 
 ## Validación
 
-647 verificaciones con fixtures, sin Phantom/SIRO real. Incluye Wi-Fi deshabilitado,
-CSRF, reautenticación, pertenencia/modelo, datos inválidos, doble envío, cooldown
+947 verificaciones locales con fixtures más 6 del catálogo, sin Phantom/SIRO real.
+Incluyen Wi-Fi deshabilitado, CSRF, sesión y contrato seleccionado, modelo exacto,
+rechazo del campo accountPassword legado, datos inválidos, doble envío, cooldown
 entre sesiones y resultados inciertos sin reintentos. Build correcto.
 La medición externa y los equipos reales requieren validación manual; no se afirma
 compatibilidad real a partir de fixtures.

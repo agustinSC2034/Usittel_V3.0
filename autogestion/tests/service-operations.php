@@ -101,9 +101,10 @@ foreach([['speed_down'=>50],['speed_up'=>50],['speed_down'=>100,'speed_up'=>100]
     rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['TEST'=>array_replace($p,$override)]]]),'UPGRADE_NOT_UPWARD');
 rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['free profile'=>$p]]]),'UPGRADE_CONFIGURATION');
 rejectOp(fn()=>upgradeCatalog(['upgrade'=>['plans'=>['TEST'=>array_replace($p,['price_cents'=>1.1])]]]),'UPGRADE_CONFIGURATION');
-$wifi=['requestId'=>str_repeat('d',32),'ssid'=>'Fixture24','ssid5'=>'Fixture_5G','password'=>'Fixture#123','accountPassword'=>'fixture-only','confirmed'=>true];
+$wifi=['requestId'=>str_repeat('d',32),'ssid'=>'Fixture24','ssid5'=>'Fixture_5G','password'=>'Fixture#123','confirmed'=>true];
 checkOp(wifiInput($wifi)===['SSID'=>'Fixture24','SSID_5G'=>'Fixture_5G','Password'=>'Fixture#123']);
 checkOp(wifiInput(array_replace($wifi,['ssid5'=>'Fixture24']))['SSID_5G']==='Fixture24');
+rejectOp(fn()=>wifiInput($wifi+['accountPassword'=>'fixture-only']),'BAD_REQUEST');
 rejectOp(fn()=>wifiInput(array_replace($wifi,['ssid5'=>''])),'WIFI_INPUT');
 checkOp(wifiInput(array_replace($wifi,['ssid5'=>'']),false)===['SSID'=>'Fixture24','Password'=>'Fixture#123']);
 $native=(new \ReflectionClass(NativeSoapReadTransport::class))->newInstanceWithoutConstructor();

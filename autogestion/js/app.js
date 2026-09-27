@@ -85,13 +85,12 @@ const help = {
 };
 function wifiForm(requestId,dualBand) {
   return `<form id="wifi-live-form" data-request-id="${e(requestId)}" data-generation="${dataGeneration}">
-    <p class="field-hint">Ingresá los nuevos datos de tu red.${dualBand?' Elegí un nombre para cada banda; solo usarán el mismo nombre si lo escribís en ambos campos.':''}</p>
-    ${input('Nuevo nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
-    ${dualBand?input('Nuevo nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
-    ${input('Nueva contraseña de Wi-Fi','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"',hint:'De 8 a 20 caracteres. Letras, números, @, _, punto, # y $. Sin espacios.'+(dualBand?' La misma clave para ambas redes.':'')})}
-    ${input('Repetí la nueva contraseña','wifi-repeat',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20"'})}
-    ${input('Tu contraseña de Mi USITTEL','wifi-account-password',{type:'password',autocomplete:'current-password'})}
-    <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que conectarlos con los nuevos datos.</label>
+    <p class="field-hint">Ingresá los nuevos datos de tu red.</p>
+    ${input('Nombre de red 2,4 GHz','ssid',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'})}
+    ${dualBand?input('Nombre de red 5 GHz','ssid5',{extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.]{8,20}"',autocomplete:'off'}):''}
+    ${input('Nueva contraseña','wifi-new-password',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.#$]{8,20}"',hint:'8 a 20 caracteres. Sin espacios.'})}
+    ${input('Repetí la contraseña','wifi-repeat',{type:'password',autocomplete:'new-password',extra:'minlength="8" maxlength="20" pattern="[a-zA-Z0-9@_.#$]{8,20}"'})}
+    <label class="wifi-confirm"><input type="checkbox" name="confirmed" required> Entiendo que mis dispositivos se desconectarán y tendré que volver a conectarlos.</label>
     <p class="field-hint" role="status" id="wifi-result"></p>
     ${button('Guardar cambios','',{type:'submit'})}</form>`;
 }
@@ -103,7 +102,7 @@ async function submitWifi(form,data) {
   submit.disabled=true;const generation=Number(form.dataset.generation);
   result.textContent='Aplicando cambios…';
   try {
-    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:data.get('ssid'),ssid5:data.get('ssid5')||'',password:data.get('wifi-new-password'),accountPassword:data.get('wifi-account-password'),confirmed:data.get('confirmed')==='on'});
+    const response=await request('wifi-change',{requestId:form.dataset.requestId,ssid:data.get('ssid'),ssid5:data.get('ssid5')||'',password:data.get('wifi-new-password'),confirmed:data.get('confirmed')==='on'});
     if(generation!==dataGeneration||!authenticated||!form.isConnected)return;
     form.reset();
     result.textContent=response.state==='APPLIED'?'Los nuevos datos de Wi-Fi se aplicaron. Volvé a conectar tus dispositivos.':'No pudimos confirmar el cambio. Revisá tu conexión y contactanos antes de volver a intentarlo.';
@@ -114,11 +113,11 @@ async function submitWifi(form,data) {
   } catch(error) {
     if(generation!==dataGeneration||!form.isConnected)return;
     result.textContent=error.status?error.message:'Se perdió la comunicación. El cambio podría haberse aplicado. Revisá tu Wi-Fi antes de volver a intentarlo.';
-    // Only validation/reauthentication failures are known to precede a write.
-    if(['WIFI_INPUT','WIFI_AUTH'].includes(error.code))submit.disabled=false;
+    // Only validation failures are known to precede a write.
+    if(error.code==='WIFI_INPUT')submit.disabled=false;
     if(error.status===401||error.code==='SERVICE_CHANGED')await handleError(error);
   } finally {
-    for(const key of ['wifi-new-password','wifi-repeat','wifi-account-password']) {data.delete(key);if(form.elements[key])form.elements[key].value='';}
+    for(const key of ['wifi-new-password','wifi-repeat']) {data.delete(key);if(form.elements[key])form.elements[key].value='';}
   }
 }
 document.addEventListener('click', async event => {

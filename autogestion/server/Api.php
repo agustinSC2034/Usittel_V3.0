@@ -166,12 +166,6 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         $settings=wifiInput($b,$challenge['dualBand']);
         $model=wifiDeviceModel($ph->serviceRecord($ida),$c);
         if($model!==$challenge['model'] || !wifiGate($c,$model) || wifiDualBand($c,$model)!==$challenge['dualBand']) throw new Failure('WIFI_UNAVAILABLE',409);
-        $identity=$_SESSION['authenticated_ida'];$remote=$_SERVER['REMOTE_ADDR']??'unknown';
-        rateLimitBegin($dir,'wifi',$remote,$identity);
-        try { $account=$ph->customer($identity); }
-        catch(\Throwable $error) {rateLimitRelease($dir,'wifi',$remote,$identity);throw $error;}
-        if(!is_string($account['Autogestion_Pass']??null) || !hash_equals($account['Autogestion_Pass'],$b['accountPassword'])) throw new Failure('WIFI_AUTH',403);
-        rateLimitRelease($dir,'wifi',$remote,$identity);unset($account,$b['accountPassword']);
         $payloadHash=hash_hmac('sha256',json_encode($settings,JSON_THROW_ON_ERROR),$c['api_pass']);
         $result=applyWifiOnce($dir,$ida,$b['requestId'],$payloadHash,fn()=>$ph->configureWifi($ida,$model,$settings));
         if($result['state']==='UNKNOWN') {
@@ -277,7 +271,6 @@ function fail(\Throwable $e): never {
         'SERVICE_CHANGED'=>'El servicio cambió en otra pestaña. Recargá para continuar.',
         'WIFI_UNAVAILABLE'=>'El cambio de Wi-Fi todavía no está habilitado para este equipo. Podemos ayudarte por WhatsApp.',
         'WIFI_INPUT'=>'Usá de 8 a 20 caracteres: letras, números, @, _ o punto. La clave también admite # y $. Sin espacios.',
-        'WIFI_AUTH'=>'La contraseña de Mi USITTEL no es correcta.',
         'TICKETS_DISABLED','TICKETS_CONFIGURATION'=>'Esta solicitud todavía no está disponible desde tu cuenta.',
         'TICKETS_REVIEW'=>'Ya hay una solicitud que necesita revisión. Contactanos para continuar.',
         'REQUEST_EXPIRED'=>'Volvé a abrir la solicitud para continuar.',

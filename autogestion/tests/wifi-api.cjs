@@ -3,7 +3,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   const marker=path.join(dir,'wifi-change-1.json');
   const reset=()=>{for(const ida of [1,5,4242]){const file=path.join(dir,`wifi-change-${ida}.json`);if(fs.existsSync(file))fs.unlinkSync(file);}clearRate();scenario('normal');};
   const writes=()=> (fs.readFileSync(path.join(dir,'trace.txt'),'utf8').match(/Configurar_Wifi:/g)||[]).length;
-  const payload=id=>({requestId:id,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',accountPassword:' 00Lab-fixture! ',confirmed:true});
+  const payload=id=>({requestId:id,ssid:'Casa_test',ssid5:'Casa_test_5G',password:'TestWifi#123',confirmed:true});
   reset();fs.writeFileSync(config,settings());const disabled=jar();await login(disabled);
   let r=await disabled.call('wifi-prepare',{});check('Wi-Fi deshabilitado por defecto',()=>assert.equal(r.status,409));
   fs.writeFileSync(config,enabled().replace("'model_field'=>'ONU_SW'","'model_field'=>null"));
@@ -22,9 +22,16 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   for(const override of [{IDA:5},{Ticket:1},{confirmed:false},{ssid:'red con espacios'},{ssid5:'short'},{password:'bad password'},{requestId:'f'.repeat(32)}]) {
     r=await u.call('wifi-change',{...payload(id),...override});check('Wi-Fi rechaza parámetros o confirmación inválidos',()=>assert.ok([400,409].includes(r.status)));
   }
-  r=await u.call('wifi-change',{...payload(id),accountPassword:'wrong'});check('Wi-Fi exige reautenticación exacta',()=>assert.equal(r.data.error.code,'WIFI_AUTH'));
+  r=await u.call('wifi-change',{...payload(id),accountPassword:'legacy-field'});check('Wi-Fi rechaza el campo de contraseña de cuenta legado',()=>assert.equal(r.status,400));
   check('rechazos previos no escriben',()=>assert.equal(writes(),before));
+  const traceBeforeChange=fs.readFileSync(path.join(dir,'trace.txt'),'utf8');
   r=await u.call('wifi-change',payload(id));check('cambio controlado aplicado',()=>assert.deepEqual(r.data,{state:'APPLIED'}));
+  const changeTrace=fs.readFileSync(path.join(dir,'trace.txt'),'utf8').slice(traceBeforeChange.length);
+  check('wifi-change vuelve a validar modelo, sin releer credenciales de cuenta',()=>{
+    assert.equal((changeTrace.match(/Consulta_Cliente_Avanzada:1/g)||[]).length,1);
+    assert.equal((changeTrace.match(/InfoFTTH:1/g)||[]).length,1);
+    assert.doesNotMatch(changeTrace,/Autogestion_Pass|accountPassword|00Lab-fixture/);
+  });
   r=await u.call('wifi-change',payload(id));check('doble envío ejecuta una sola escritura',()=>{assert.deepEqual(r.data,{state:'APPLIED'});assert.equal(writes(),before+1);});
   r=await u.call('wifi-change',{...payload(id),ssid:'Different'});check('nonce no puede reutilizarse para otra clave o red',()=>assert.equal(r.data.error.code,'WIFI_EXPIRED'));
   check('archivo y respuesta sin contraseña ni SSID',()=>assert.doesNotMatch(fs.readFileSync(marker,'utf8'),/TestWifi|Casa_test|00Lab|SSID|Password/));

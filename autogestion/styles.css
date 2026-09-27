@@ -4,6 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.portal-chat-toggle { position:fixed; right:24px; bottom:24px; z-index:2147483647; display:grid; place-items:center; width:56px; height:56px; border:0; border-radius:50%; background:var(--green,#087449); color:#fff; box-shadow:0 8px 24px #001f1640; cursor:pointer; transition:transform .15s ease,background .15s ease; }
+.portal-chat-toggle:hover { background:var(--green-hover,#075f3d); transform:translateY(-2px); }
+.portal-chat-toggle:focus-visible { outline:3px solid #074fdb; outline-offset:3px; }
+.portal-chat-toggle .icon { width:27px; height:27px; stroke-width:2; }
+.portal-chat-toggle .chat-close-icon,.portal-chat-toggle.is-open .chat-open-icon { display:none; }
+.portal-chat-toggle.is-open .chat-close-icon { display:block; }
+.portal-chat-toggle.is-open { top:calc(16px + env(safe-area-inset-top)); bottom:auto; right:16px; width:48px; height:48px; background:#103d31; }
+@media (max-width:760px) { .portal-chat-toggle:not(.is-open) { right:16px; bottom:calc(88px + env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion:reduce) { .portal-chat-toggle { transition:none; } }
+
 .plan-upgrade { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1.5rem; }
 .service-requests { margin-block:2rem; padding-block:1.5rem; border-top:1px solid #d7e0e2; }
 .service-request-row { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-block:1.5rem; border-bottom:1px solid #d7e0e2; }

@@ -4,6 +4,23 @@ import { chatPreviewEnabled } from './attention-chat.js';
 
 const SDK = 'https://web.central.chat/widget/core.js';
 const CHANNEL_KEY = 'wiOT-40q9iiyNBb8NahcAg|SZaCDgFymGhOoc4aJwuCMQ';
+const PREFILL_BY_TOPIC = Object.freeze({
+  'upgrade-speed': 'Quiero consultar por una mejora de velocidad',
+  'update-account': 'Quiero actualizar mis datos de contacto',
+  'technical-support': 'Necesito ayuda técnica',
+  'mesh': 'Quiero consultar por Wi-Fi Mesh',
+  'additional-service': 'Quiero consultar por un servicio adicional',
+  'access-help': 'Necesito ayuda para ingresar a Mi USITTEL',
+});
+function updatePortalLauncher(open) {
+  const button = document.querySelector('[data-action="chat-launcher"]');
+  if (!button) return;
+  const label = open ? 'Cerrar chat de soporte' : 'Abrir chat de soporte';
+  button.classList.toggle('is-open', open);
+  button.setAttribute('aria-label', label);
+  button.setAttribute('aria-expanded', String(open));
+  button.title = label;
+}
 const setStatus = text => {
   const note = document.querySelector('.attention-preview-note');
   if (note) { note.textContent = text; note.setAttribute('role', 'status'); }
@@ -16,7 +33,13 @@ export class CentralChatAdapter {
     this.element.setAttribute('channel-key', this.channelKey);
     this.element.setAttribute('locale', 'es');
     const container = document.getElementById('attention-chat-container');
+    const portalMount = document.getElementById('central-chat-mount');
+    this.portal = Boolean(portalMount && !container);
     if (container) this.element.setAttribute('mode', 'fill-container');
+    if (this.portal) this.element.setAttribute('hide', '');
+    this.ready = new Promise(resolve => {
+      this.element.addEventListener('central-chat-mount', () => resolve(), { once: true });
+    });
     this.element.addEventListener('central-chat-mount', () => {
       clearTimeout(this.timer);
       setStatus('');
@@ -25,21 +48,51 @@ export class CentralChatAdapter {
     this.timer = setTimeout(() => {
       setStatus('Central todavía no pudo conectarse. Cerrá esta página y volvé a intentar más tarde.');
     }, 25000);
-    (container || document.body).append(this.element);
+    (container || portalMount || document.body).append(this.element);
+    if (this.portal) void Promise.resolve(this.element.hide()).catch(() => setStatus('Central no está disponible. Volvé a intentar más tarde.'));
   }
-  async open() {
+  async waitForMount() {
+    let timer;
     try {
-      await this.element.show(); await this.element.maximize();
-    }
-    catch { setStatus('No pudimos abrir Central. Volvé a intentar más tarde.'); }
+      await Promise.race([this.ready, new Promise((_,reject) => { timer = setTimeout(() => reject(new Error('Central mount timeout')), 12000); })]);
+    } finally { clearTimeout(timer); }
   }
-  close() { this.element.minimize().catch(() => {}); }
+  async open(topic) {
+    try {
+      await this.waitForMount();
+      await this.element.show(); await this.element.maximize();
+      const prefill = Object.hasOwn(PREFILL_BY_TOPIC, topic) ? PREFILL_BY_TOPIC[topic] : null;
+      updatePortalLauncher(true);
+      if (prefill && typeof this.element.prefill === 'function') {
+        try { await this.element.prefill(prefill); }
+        catch { setStatus('No pudimos preparar el mensaje. Podés escribirlo en el chat.'); }
+      }
+      return true;
+    }
+    catch { setStatus('No pudimos abrir Central. Volvé a intentar más tarde.'); return false; }
+  }
+  async close() {
+    try {
+      if (this.portal) await this.element.hide();
+      else await this.element.minimize();
+      updatePortalLauncher(false);
+      return true;
+    }
+    catch { setStatus('No pudimos cerrar Central. Volvé a intentar más tarde.'); return false; }
+  }
   reset() { this.close(); }
   destroy() { clearTimeout(this.timer); this.element.remove(); }
 }
 
 let centralPromise;
-export function openCentralChat() { return centralPromise?.then(adapter => adapter?.open()); }
+export async function openCentralChat(topic) {
+  const adapter = await initializeCentralChat();
+  return adapter ? adapter.open(topic) : false;
+}
+export async function closeCentralChat() {
+  const adapter = await centralPromise;
+  return adapter ? adapter.close() : false;
+}
 export function initializeCentralChat() {
   if (centralPromise) return centralPromise;
   centralPromise = (async () => {

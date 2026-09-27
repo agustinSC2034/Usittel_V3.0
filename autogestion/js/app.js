@@ -3,7 +3,7 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
-import { initializeCentralChat, openCentralChat } from './central-chat.js';
+import { initializeCentralChat, openCentralChat, closeCentralChat } from './central-chat.js';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 
 const app = document.querySelector('#app');
@@ -164,11 +164,14 @@ document.addEventListener('click', async event => {
   const target = event.target.closest('[data-action]');
   if (!target || target.disabled) return;
   const action = target.dataset.action;
+  if (action === 'chat-launcher') {
+    const success = target.getAttribute('aria-expanded') === 'true' ? await closeCentralChat() : await openCentralChat();
+    if (!success) toast('El chat no está disponible en este momento. Volvé a intentar más tarde.');
+    return;
+  }
   if (action === 'chat' || action === 'sales') {
     if (dialog.open) dialog.close();
-    const chat = await initializeCentralChat();
-    if (chat) await openCentralChat();
-    else toast('El chat no está disponible en este momento. Volvé a intentar más tarde.');
+    if (!await openCentralChat(target.dataset.chatTopic)) toast('El chat no está disponible en este momento. Volvé a intentar más tarde.');
     return;
   }
   const item = getInvoice(target.dataset.id);

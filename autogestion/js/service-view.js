@@ -2,7 +2,7 @@ import {customer,runtime,planLabel,connectivityLabel} from './data.js';
 import {formatOfferPrice,offerCta,offerVisual,serviceDisplayState} from './service-catalog.js';
 import {status,icon,button,escapeHTML as e} from './components.js';
 
-const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${type==='speed'?'upgrade-speed':'additional-service'}">${label} ${icon('arrow-right')}</button>`;
+const offerButton=(type,label)=>`<button type="button" class="button" data-action="chat" data-chat-topic="${type==='speed'?'upgrade-speed':type==='mesh'?'mesh':'additional-service'}">${label} ${icon('arrow-right')}</button>`;
 function offerMark(offer) {
   const visual=offerVisual(offer);
   if(visual.asset) return `<img class="offer-brand${offer.id==='pack_universal'?' offer-brand-monochrome':''}${offer.id==='pack_futbol'?' offer-brand-crest':''}" src="assets/${visual.asset}" width="60" height="38" alt="" aria-hidden="true">`;

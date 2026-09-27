@@ -1,5 +1,60 @@
 # Atención USITTEL y Central
 
+## Mi USITTEL — control del panel (27/09/2026)
+
+El portal usa una sola instancia del elemento oficial. Declara el atributo
+público `hide` antes de conectar el elemento y llama `hide()` después del
+montaje, cuando el SDK ya expone sus métodos; así no aparece el lanzador nativo.
+Espera `central-chat-mount` antes de abrir. El botón vectorial del portal
+abre con `show()` y `maximize()`, y cierra con `hide()`. El botón cambia de
+«Abrir chat de soporte» a «Cerrar chat de soporte» y queda por encima de la
+navegación móvil. No se inspecciona el shadow DOM ni se interpreta un supuesto
+evento de cierre de la X nativa, que no se observó en la versión 0.0.5.
+
+Las CTA del portal usan el mismo helper. Únicamente los temas exactos
+`upgrade-speed`, `update-account`, `technical-support`, `mesh`,
+`additional-service` y `access-help` generan un texto genérico mediante
+`prefill()`. La apertura general no genera texto. `prefill()` no ejecuta un
+envío: el cliente debe revisar y enviar manualmente. No se pasa identidad,
+contrato, productos Phantom, dirección, contacto ni datos financieros.
+
+Configuración externa requerida en Botmaker Central, a verificar manualmente:
+
+- Se puede cerrar: OFF.
+- Se abre solo: OFF.
+- Panel ancho: OFF para la QA móvil; con la configuración observada en Chrome
+  a 390 px, el contenido del panel ancho quedó recortado a la izquierda.
+- Barra de navegación: OFF.
+- Empieza oculto: ON.
+
+Estas opciones no se cambian desde este repositorio. Si la X nativa permanece
+habilitada, Central no emite un cierre público confirmado: el botón del portal
+puede quedar temporalmente en estado «Cerrar» hasta que se use ese control.
+En Chrome local, el botón propio abrió y cerró el panel mediante la API oficial
+sin enviar mensajes. La configuración del entorno local impidió iniciar sesión:
+esta comprobación no sustituye la QA de CTA internas autenticadas.
+
+### CSP
+
+El servidor local `autogestion/serve.cjs` envía `script-src 'self'
+https://web.central.chat` y `style-src 'self'`. Por eso el SDK externo puede
+cargar, pero un `<style>` inline que inserte `installHostStyle` queda bloqueado
+por `style-src-elem` (que hereda `style-src` si no se declara). Autorizar solo
+`https://web.central.chat` no autoriza ese estilo inline. El router PHP usa
+también `style-src 'self'`, aunque esa respuesta no es el documento HTML
+estático. Una lectura HEAD de `https://mi.usittel.com.ar/` el 27/09/2026 no
+mostró cabecera CSP; no se puede atribuirle ese bloqueo a la página productiva
+con esa evidencia. No se modificó ninguna política CSP en esta iteración.
+
+Antes de relajarla, confirmar el mensaje completo, el origen del documento y
+si el proveedor admite nonce, hash estable o una hoja externa. Solo si no hay
+alternativa, evaluar una excepción **acotada a `style-src-elem` del portal**,
+con aprobación y QA específicos; no agregar `unsafe-inline` global a
+`script-src` ni a `style-src` por comodidad.
+
+Las notas fechadas a continuación describen etapas anteriores de la web pública
+y del portal; este apartado es el alcance vigente de Mi USITTEL.
+
 Estado al 21/09/2026: el widget oficial de Central está integrado en la web
 pública, en `/atencion` y dentro de Mi USITTEL. La conexión usa la cuenta pública
 de chat USITTEL aportada por Agustín. La primera conversación desde la web ya fue

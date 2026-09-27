@@ -17,8 +17,9 @@
     <div id="central-chat-mount" aria-live="polite"></div>
     <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
     <div id="toast" role="status" aria-live="polite"></div>
-    <button type="button" data-action="chat" class="fixed bottom-24 right-4 z-40 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-3 font-semibold text-white shadow-lg transition hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-brand/20 md:bottom-6" aria-label="Abrir chat de USITTEL">
-      <span aria-hidden="true">💬</span><span>Chat</span>
+    <button type="button" data-action="chat-launcher" class="portal-chat-toggle" aria-label="Abrir chat de soporte" aria-expanded="false" aria-controls="central-chat-mount" title="Abrir chat de soporte">
+      <svg class="icon chat-open-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#message-circle"></use></svg>
+      <svg class="icon chat-close-icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#x"></use></svg>
     </button>
     <noscript>Activá JavaScript para recorrer el prototipo de Mi USITTEL. No se realizan operaciones reales.</noscript>
   </body>

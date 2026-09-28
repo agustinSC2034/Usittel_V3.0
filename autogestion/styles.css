@@ -12,6 +12,7 @@
 .portal-chat-toggle.is-open .chat-close-icon { display:block; }
 .portal-chat-toggle.is-open { top:calc(16px + env(safe-area-inset-top)); bottom:auto; right:16px; width:48px; height:48px; background:#103d31; }
 @media (max-width:760px) { .portal-chat-toggle:not(.is-open) { right:16px; bottom:calc(88px + env(safe-area-inset-bottom)); } }
+@media (min-width:761px) { .portal-chat-toggle.is-open { top:clamp(168px,18vh,196px); right:clamp(24px,1.3vw,30px); } }
 @media (prefers-reduced-motion:reduce) { .portal-chat-toggle { transition:none; } }
 
 .plan-upgrade { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1.5rem; }

@@ -64,7 +64,6 @@ function validateEntry_(entry) {
   if (!/^\d{7,9}$/.test(String(entry.dni || ''))) throw new Error('DNI inválido');
   if (String(entry.nombre || '').trim().length < 5 || String(entry.nombre).length > 100) throw new Error('Nombre inválido');
   if (String(entry.telefono || '').length > 30 || String(entry.direccion || '').length > 140) throw new Error('Datos inválidos');
-  if (!entry.instagramConfirmado || !entry.privacidadAceptada) throw new Error('Falta confirmación');
   if (!Array.isArray(entry.respuestas) || entry.respuestas.length !== 3 || new Set(entry.respuestas.map(a => a.questionId)).size !== 3) throw new Error('Respuestas inválidas');
   if (!entry.respuestas.every(a => typeof a.pregunta === 'string' && a.pregunta.length < 200 && typeof a.respuesta === 'string' && a.respuesta.length < 200 && typeof a.correcta === 'boolean')) throw new Error('Respuestas inválidas');
   if (entry.cantidadCorrectas !== entry.respuestas.filter(a => a.correcta).length) throw new Error('Puntaje inválido');

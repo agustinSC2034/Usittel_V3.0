@@ -100,7 +100,7 @@
       if (saving) return;
       draft.form = Object.fromEntries(new FormData(form));
       draft.form.dni = core.normalizeDni(draft.form.dni);
-      const error = core.validate({ ...draft.form, instagramConfirmado: true, privacidadAceptada: true });
+      const error = core.validate(draft.form);
       if (error) { document.getElementById('form-error').textContent = error; return; }
       saving = true;
       try {
@@ -112,23 +112,14 @@
   }
   function renderConfirm() {
     stage = 'confirm';
-    const f = draft.form;
-    setScreen(`<section class="panel"><p class="eyebrow">Último paso</p><h2>Confirmá tu participación</h2><p class="lead">Tu participación no depende de cuántas respuestas acertaste.</p><div class="soft-card instagram"><div><div class="eyebrow">Seguinos en Instagram</div><div class="handle">${escapeHtml(cfg.instagramHandle)}</div></div><a class="button ghost" href="${escapeHtml(cfg.instagramUrl)}" target="_blank" rel="noopener noreferrer">Seguir a USITTEL en Instagram ↗</a></div><form id="confirmation" novalidate><div class="checks"><label class="check"><input type="checkbox" name="instagram" ${f.instagramConfirmado ? 'checked' : ''}><span>Confirmo que sigo a ${escapeHtml(cfg.instagramHandle)}.</span></label><label class="check"><input type="checkbox" name="privacy" ${f.privacidadAceptada ? 'checked' : ''}><span>Acepto que mis datos sean utilizados por USITTEL para gestionar mi participación en el sorteo.</span></label></div>${cfg.basesUrl ? `<p><a href="${escapeHtml(cfg.basesUrl)}" target="_blank" rel="noopener noreferrer">Leer Bases y Condiciones</a></p>` : ''}<p class="error" id="confirm-error" role="alert"></p><div class="confirm-actions"><button type="button" class="button secondary" id="edit-details">Volver a mis datos</button><button type="submit" class="button primary" id="save-entry">Confirmar participación</button></div></form></section>`);
+    setScreen(`<section class="panel"><p class="eyebrow">Último paso</p><h2>Confirmá tu participación</h2><form id="confirmation" novalidate>${cfg.basesUrl ? `<p><a href="${escapeHtml(cfg.basesUrl)}" target="_blank" rel="noopener noreferrer">Leer Bases y Condiciones</a></p>` : ''}<p class="error" id="confirm-error" role="alert"></p><div class="confirm-actions"><button type="button" class="button secondary" id="edit-details">Volver a mis datos</button><button type="submit" class="button primary" id="save-entry">Confirmar participación</button></div></form></section>`);
     document.getElementById('edit-details').addEventListener('click', () => { renderForm(); persistDraft().catch(() => {}); });
     const form = document.getElementById('confirmation');
-    form.addEventListener('change', () => {
-      draft.form.instagramConfirmado = form.elements.instagram.checked;
-      draft.form.privacidadAceptada = form.elements.privacy.checked;
-      persistDraft().catch(() => toast('No se pudo guardar la confirmación.'));
-    });
     form.addEventListener('submit', saveEntry);
   }
   async function saveEntry(event) {
     event.preventDefault();
     if (saving) return;
-    const form = document.getElementById('confirmation');
-    draft.form.instagramConfirmado = form.elements.instagram.checked;
-    draft.form.privacidadAceptada = form.elements.privacy.checked;
     const error = core.validate(draft.form);
     if (error) { document.getElementById('confirm-error').textContent = error; return; }
     saving = true;
@@ -140,7 +131,7 @@
         id: crypto.randomUUID(), createdAt: new Date().toISOString(),
         nombre: draft.form.nombre.trim().replace(/\s+/g, ' '), dni: draft.form.dni,
         telefono: draft.form.telefono.trim(), direccion: draft.form.direccion.trim().replace(/\s+/g, ' '),
-        instagramConfirmado: true, privacidadAceptada: true,
+        instagramConfirmado: false, privacidadAceptada: false,
         preguntasRespondidas: draft.answers.map(a => a.questionId), respuestas: draft.answers,
         cantidadCorrectas: core.score(draft.answers), syncStatus: 'pending', syncedAt: null
       };

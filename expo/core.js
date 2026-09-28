@@ -26,8 +26,6 @@
     if (!/^\d{7,9}$/.test(dni)) return 'Ingresá un DNI válido, solo números (7 a 9 dígitos).';
     if (telefono.replace(/\D/g, '').length < 8 || telefono.replace(/\D/g, '').length > 15) return 'Ingresá un teléfono válido.';
     if (direccion.length < 5) return 'Ingresá una dirección completa.';
-    if (!form.instagramConfirmado) return 'Confirmá que seguís a USITTEL en Instagram.';
-    if (!form.privacidadAceptada) return 'Aceptá el uso de datos para participar.';
     return null;
   }
   function csvCell(value) {

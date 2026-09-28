@@ -18,7 +18,6 @@ vm.runInContext(fs.readFileSync('expo/apps-script/Code.gs', 'utf8'), context);
 const entry = {
   id: '0d21e38a-764e-4b35-aedf-3231fd0f1301', createdAt: '2026-10-02T10:00:00.000Z',
   nombre: 'Prueba Local', dni: '99999999', telefono: '2494000000', direccion: 'Calle Prueba 123',
-  instagramConfirmado: true, privacidadAceptada: true,
   respuestas: [1, 2, 3].map(i => ({ questionId: `q${i}`, pregunta: `Pregunta ${i}`, respuesta: `Respuesta ${i}`, correcta: i === 1 })),
   cantidadCorrectas: 1
 };
@@ -26,6 +25,8 @@ const send = value => context.doPost({ parameter: { payload: JSON.stringify({ en
 assert.match(send(entry), /"status":"created"/);
 assert.match(send(entry), /window\.top\.postMessage/);
 assert.equal(rows.length, 2); // Header + one participant.
+assert.equal(rows[0].length, 16);
+assert.equal(rows[1].length, 16);
 assert.match(send(entry), /"status":"exists"/);
 assert.equal(rows.length, 2);
 assert.match(send({ ...entry, id: '1d21e38a-764e-4b35-aedf-3231fd0f1301' }), /"status":"exists"/);

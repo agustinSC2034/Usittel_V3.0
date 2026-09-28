@@ -25,15 +25,20 @@ for (let trial = 0; trial < 100; trial++) {
   assert.equal(core.score(answers), 2);
 }
 assert.equal(core.normalizeDni(' 12.345.678 '), '12345678');
-const valid = { nombre: 'Ana Pérez', dni: '12345678', telefono: '2494123456', direccion: 'Avenida Colón 123', instagramConfirmado: true, privacidadAceptada: true };
+const valid = { nombre: 'Ana Pérez', dni: '12345678', telefono: '2494123456', direccion: 'Avenida Colón 123' };
 assert.equal(core.validate(valid), null);
-for (const patch of [{ nombre: 'Ana' }, { dni: '123' }, { telefono: '123' }, { direccion: 'x' }, { instagramConfirmado: false }, { privacidadAceptada: false }]) {
+for (const patch of [{ nombre: 'Ana' }, { dni: '123' }, { telefono: '123' }, { direccion: 'x' }]) {
   assert.ok(core.validate({ ...valid, ...patch }));
 }
 const answer = { pregunta: '¿Pregunta?', respuesta: '=HYPERLINK("bad")', correcta: false, respuestaCorrecta: 'Normal' };
 const csv = core.toCsv([{ ...valid, id: 'test', createdAt: '2026-10-02T10:00:00Z', respuestas: [answer, answer, answer], cantidadCorrectas: 0, syncStatus: 'pending', syncedAt: null }]);
 assert.ok(csv.startsWith('\uFEFF'));
 assert.ok(csv.includes("'=HYPERLINK"));
-assert.ok(csv.includes('Pregunta 3'));
+for (let index = 1; index <= 3; index++) {
+  for (const title of [`Pregunta ${index}`, `Respuesta ${index}`, `Correcta ${index}`, `Respuesta correcta ${index}`]) assert.ok(csv.includes(title));
+}
+for (const title of ['Fecha y hora', 'Nombre completo', 'DNI', 'Teléfono', 'Dirección', 'Total correctas', 'ID inscripción', 'Estado sync', 'Sincronizado el']) assert.ok(csv.includes(title));
+assert.ok(!csv.includes('Instagram confirmado'));
+assert.ok(!csv.includes('Privacidad aceptada'));
 assert.equal(csv.split('\r\n').length, 2);
 console.log('ExpoTan configuration, random quiz, scoring, validation and CSV passed.');

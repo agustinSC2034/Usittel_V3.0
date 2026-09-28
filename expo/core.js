@@ -37,8 +37,8 @@
   function toCsv(rows) {
     const columns = [
       ['createdAt', 'Fecha y hora'], ['nombre', 'Nombre completo'], ['dni', 'DNI'], ['telefono', 'Teléfono'],
-      ['direccion', 'Dirección'], ['cantidadCorrectas', 'Total correctas'], ['instagramConfirmado', 'Instagram confirmado'],
-      ['privacidadAceptada', 'Privacidad aceptada'], ['id', 'ID inscripción'], ['syncStatus', 'Estado sync'], ['syncedAt', 'Sincronizado el']
+      ['direccion', 'Dirección'], ['cantidadCorrectas', 'Total correctas'], ['id', 'ID inscripción'],
+      ['syncStatus', 'Estado sync'], ['syncedAt', 'Sincronizado el']
     ];
     for (let i = 0; i < 3; i++) columns.splice(5 + i * 4, 0,
       [`pregunta${i + 1}`, `Pregunta ${i + 1}`], [`respuesta${i + 1}`, `Respuesta ${i + 1}`],

@@ -5,8 +5,7 @@ const SHEET_NAME = 'Participantes';
 const HEADERS = [
   'Fecha y hora', 'Nombre completo', 'DNI', 'Teléfono', 'Dirección',
   'Pregunta 1', 'Respuesta 1', 'Correcta 1', 'Pregunta 2', 'Respuesta 2', 'Correcta 2',
-  'Pregunta 3', 'Respuesta 3', 'Correcta 3', 'Total correctas', 'Instagram confirmado',
-  'ID inscripción', 'Privacidad aceptada'
+  'Pregunta 3', 'Respuesta 3', 'Correcta 3', 'Total correctas', 'ID inscripción'
 ];
 
 function doPost(event) {
@@ -29,8 +28,8 @@ function doPost(event) {
       const sheet = getSheet_();
       const last = sheet.getLastRow();
       if (last > 1) {
-        const values = sheet.getRange(2, 3, last - 1, 15).getValues();
-        const duplicate = values.some(row => String(row[0]) === String(entry.dni) || String(row[14]) === id);
+        const values = sheet.getRange(2, 3, last - 1, 14).getValues();
+        const duplicate = values.some(row => String(row[0]) === String(entry.dni) || String(row[13]) === id);
         if (duplicate) status = 'exists';
       }
       if (!status) {
@@ -38,8 +37,7 @@ function doPost(event) {
         const cells = answers.flatMap(answer => [safeCell_(answer.pregunta), safeCell_(answer.respuesta), answer.correcta ? 'Sí' : 'No']);
         sheet.appendRow([
           entry.createdAt, safeCell_(entry.nombre), String(entry.dni), safeCell_(entry.telefono), safeCell_(entry.direccion),
-          ...cells, Number(entry.cantidadCorrectas), entry.instagramConfirmado ? 'Sí' : 'No', id,
-          entry.privacidadAceptada ? 'Sí' : 'No'
+          ...cells, Number(entry.cantidadCorrectas), id
         ]);
         SpreadsheetApp.flush();
         status = 'created';

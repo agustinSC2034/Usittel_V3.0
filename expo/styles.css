@@ -22,3 +22,20 @@
 .fiber-lines i:nth-child(4){right:-14px;top:14px;border-color:#62d5a7;border-width:9px}
 @media(max-width:700px){.panel.welcome{grid-template-columns:1fr;min-height:0}.welcome-copy{padding:30px}.welcome-art{min-height:155px;padding:24px 30px;flex-direction:row;align-items:flex-end;gap:20px}.welcome-art img{width:130px;align-self:flex-start}.welcome-art p{margin:0;font-size:1.45rem}.fiber-lines{opacity:.65}.fiber-lines i{top:-270px}.fiber-lines i:nth-child(2){top:-242px}.fiber-lines i:nth-child(3){top:-214px}.fiber-lines i:nth-child(4){top:-186px}}
 @media(max-height:700px) and (min-width:701px){.panel.welcome{min-height:430px}.welcome-copy{padding:32px}.welcome h1{font-size:2.8rem}}
+
+.admin-shortcut{width:46px;height:46px;flex:none;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:9px;background:#ffffff12;color:#e8f4ff;padding:0}
+.admin-shortcut:hover{background:#ffffff24}
+.admin-panel .stat-grid{gap:16px;margin:28px 0 24px}
+.admin-panel .stat{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:9px;min-width:0;min-height:112px;padding:20px}
+.admin-panel .stat strong{display:block;font-size:2.2rem;line-height:1}
+.admin-panel .stat span{display:block;font-size:.88rem;line-height:1.35}
+.admin-diagnostics{display:flex;flex-wrap:wrap;gap:8px 24px;margin-bottom:14px;color:#34506b;font-size:.9rem}
+.admin-diagnostics strong{color:#173047}
+.admin-panel .admin-status{line-height:1.55;margin:0 0 6px}
+.admin-storage-note{margin:0 0 24px;color:#62778b;font-size:.84rem;line-height:1.4}
+.admin-panel .admin-actions{gap:14px;margin:0 0 28px}
+.admin-panel .admin-actions .button{min-height:50px}
+.admin-panel .records{margin-top:16px}
+.records-empty{margin:0;padding:16px;color:#62778b}
+@media(max-width:700px){.topbar-right{gap:8px}.admin-shortcut{width:44px;height:44px}.admin-panel .stat-grid{gap:12px}.admin-panel .stat{min-height:100px;padding:16px}.admin-panel .admin-actions .button{width:100%}}
+@media(max-width:420px){.topbar{padding-inline:14px}.brand img{width:126px}#event-label{display:none}}

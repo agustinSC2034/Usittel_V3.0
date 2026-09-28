@@ -32,6 +32,7 @@
   "homepage": "https://github.com/agustinSC2034/Usittel_V3.0#readme",
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "fake-indexeddb": "^6.2.5",
     "tailwindcss": "^3.4.19"
   }
 }

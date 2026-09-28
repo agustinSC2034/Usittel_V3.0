@@ -27,7 +27,6 @@
       let result;
       try { result = callback(tx.objectStore(storeName)); } catch (error) { tx.abort(); reject(error); return; }
       tx.oncomplete = () => { db.close(); resolve(result); };
-      tx.onerror = () => { db.close(); reject(tx.error); };
       tx.onabort = () => { db.close(); reject(tx.error || Error('La operación no se completó.')); };
     });
   }

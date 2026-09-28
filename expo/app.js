@@ -17,6 +17,8 @@
   let networkAvailable = false;
   let connectionCheck = 0;
   const DRAFT_BACKUP_KEY = 'usittel-expotan-active-draft';
+  const CANONICAL_EXPO_URL = 'https://usittel.com.ar/expo/';
+  const alternateOrigin = () => location.hostname === 'www.usittel.com.ar';
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
   const entryDraft = () => ({ stage, questions: draft?.questions || [], answers: draft?.answers || [], form: draft?.form || {} });
   function backupDraft() { if (draft) try { localStorage.setItem(DRAFT_BACKUP_KEY, JSON.stringify(entryDraft())); } catch {} }
@@ -48,12 +50,17 @@
     document.getElementById('connection-label').textContent = networkAvailable ? 'Sitio accesible' : 'Sin acceso al sitio';
     const label = document.getElementById('connectivity-text');
     if (label) label.textContent = networkAvailable ? 'sitio accesible' : 'sin acceso al sitio';
-    if (reconnected && cfg.appsScriptUrl) sync.run(store, cfg).catch(() => {});
+    if (reconnected && cfg.appsScriptUrl) sync.run(store, cfg, refreshAdmin).catch(() => {});
   }
   function setScreen(html) { screen.innerHTML = html; screen.focus({ preventScroll: true }); }
+  function refreshAdmin() { if (stage === 'admin') admin().catch(() => toast('No se pudo actualizar el panel.')); }
   function cancelReset() { clearTimeout(resetTimer); clearInterval(resetInterval); resetTimer = null; resetInterval = null; }
   function welcome() {
     cancelReset(); stage = 'welcome'; draft = null;
+    if (alternateOrigin()) {
+      setScreen(`<section class="panel"><p class="eyebrow">Acceso a ExpoTan</p><h1>Usá la dirección principal</h1><p class="lead">Esta dirección guarda los registros en otro almacenamiento del navegador. Si ya inscribiste participantes aquí, abrí administración y descargá el respaldo CSV antes de cambiar.</p><a class="button primary" href="${CANONICAL_EXPO_URL}">Abrir ExpoTan</a></section>`);
+      return;
+    }
     setScreen(`<section class="panel welcome"><div class="welcome-copy"><h1>Participá del <span>sorteo</span> de USITTEL.</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></div><div class="welcome-art" aria-hidden="true"><div class="fiber-lines"><i></i><i></i><i></i><i></i></div><img src="../assets/img/logos/usittel_logo_and_name_blanco.webp" alt=""><p>La fibra óptica<br>de tu ciudad.</p></div></section>`);
     document.getElementById('begin').addEventListener('click', begin, { once: true });
   }
@@ -131,7 +138,6 @@
         id: crypto.randomUUID(), createdAt: new Date().toISOString(),
         nombre: draft.form.nombre.trim().replace(/\s+/g, ' '), dni: draft.form.dni,
         telefono: draft.form.telefono.trim(), direccion: draft.form.direccion.trim().replace(/\s+/g, ' '),
-        instagramConfirmado: false, privacidadAceptada: false,
         preguntasRespondidas: draft.answers.map(a => a.questionId), respuestas: draft.answers,
         cantidadCorrectas: core.score(draft.answers), syncStatus: 'pending', syncedAt: null
       };
@@ -139,7 +145,7 @@
       await clearDraft().catch(() => {});
       draft = null;
       success();
-      sync.run(store, cfg).catch(() => {});
+      sync.run(store, cfg, refreshAdmin).catch(() => {});
     } catch (reason) {
       document.getElementById('confirm-error').textContent = reason?.name === 'ConstraintError' ? 'Este DNI ya está registrado en esta tablet.' : 'No se pudo guardar la participación. Intentá de nuevo; tus datos siguen en pantalla.';
     } finally { saving = false; if (button.isConnected) { button.disabled = false; button.textContent = 'Confirmar participación'; } }
@@ -164,12 +170,18 @@
     const rows = await store.all();
     const counts = { synced: 0, pending: 0, error: 0 };
     rows.forEach(row => counts[row.syncStatus]++);
-    setScreen(`<section class="panel admin-panel"><div class="admin-head"><div><p class="eyebrow">Administración local</p><h1>Panel del stand</h1></div><button id="exit-admin" class="button secondary">Volver al kiosco</button></div><div class="stat-grid"><div class="stat"><strong>${rows.length}</strong><span>Participantes</span></div><div class="stat"><strong>${counts.synced}</strong><span>Sincronizados</span></div><div class="stat"><strong>${counts.pending}</strong><span>Pendientes</span></div><div class="stat"><strong>${counts.error}</strong><span>Con error</span></div></div><p class="admin-status">Conexión: <span id="connectivity-text">${networkAvailable ? 'sitio accesible' : 'sin acceso al sitio'}</span> · Endpoint: ${cfg.appsScriptUrl ? 'configurado' : 'sin configurar'} · <span id="cache-status">Comprobando cache…</span></p><div class="admin-actions"><button id="sync-now" class="button primary">Forzar sincronización</button><button id="export-csv" class="button ghost">Exportar respaldo completo CSV</button></div><label class="field">Buscar por nombre o DNI<input class="search" id="admin-search" type="search" placeholder="Buscar participantes" autocomplete="off"></label><div class="records" id="records" aria-label="Participantes registrados"></div></section>`);
+    setScreen(`<section class="panel admin-panel"><div class="admin-head"><div><p class="eyebrow">Administración local</p><h1>Panel del stand</h1></div><button id="exit-admin" class="button secondary">Volver a la app</button></div><div class="stat-grid"><div class="stat"><strong>${rows.length}</strong><span>Participantes</span></div><div class="stat"><strong>${counts.synced}</strong><span>Sincronizados</span></div><div class="stat"><strong>${counts.pending}</strong><span>Pendientes</span></div><div class="stat"><strong>${counts.error}</strong><span>Con error</span></div></div><div class="admin-diagnostics"><span>Almacenamiento local: <strong>OK</strong></span><span>Registros locales: <strong>${rows.length}</strong></span></div><p class="admin-status">Conexión: <span id="connectivity-text">${networkAvailable ? 'sitio accesible' : 'sin acceso al sitio'}</span> · Endpoint: ${cfg.appsScriptUrl ? 'configurado' : 'sin configurar'} · <span id="cache-status">Comprobando cache…</span></p><p class="admin-storage-note">En una ventana privada, los registros se eliminan al cerrarla.</p><div class="admin-actions"><button id="sync-now" class="button primary">Forzar sincronización</button><button id="export-csv" class="button ghost">Descargar respaldo CSV</button></div><label class="field">Buscar por nombre o DNI<input class="search" id="admin-search" type="search" placeholder="Buscar participantes" autocomplete="off"></label><div class="records" id="records" aria-label="Participantes registrados"></div></section>`);
     const records = document.getElementById('records');
     const renderRows = query => {
       records.replaceChildren();
       const filtered = rows.filter(row => `${row.nombre} ${row.dni}`.toLocaleLowerCase('es').includes(query.toLocaleLowerCase('es')));
-      if (!filtered.length) { records.textContent = 'No hay registros para mostrar.'; return; }
+      if (!filtered.length) {
+        const empty = document.createElement('p');
+        empty.className = 'records-empty';
+        empty.textContent = 'No hay registros para mostrar.';
+        records.append(empty);
+        return;
+      }
       filtered.forEach(row => {
         const line = document.createElement('div'); line.className = 'record';
         const name = document.createElement('span'); name.textContent = row.nombre;
@@ -209,6 +221,7 @@
       pinDialog.showModal();
       document.getElementById('pin').focus();
     };
+    document.getElementById('admin-shortcut').addEventListener('click', openPin);
     trigger.addEventListener('contextmenu', event => event.preventDefault());
     trigger.addEventListener('pointerdown', () => { hold = setTimeout(openPin, 3500); });
     for (const name of ['pointerup', 'pointercancel', 'pointerleave']) trigger.addEventListener(name, () => clearTimeout(hold));
@@ -227,10 +240,22 @@
   }
   async function init() {
     document.getElementById('event-label').textContent = cfg.eventTitle;
+    if (alternateOrigin()) {
+      connection();
+      wireAdmin();
+      try {
+        const rows = await store.all();
+        if (!rows.length && navigator.onLine) { location.replace(CANONICAL_EXPO_URL); return; }
+        welcome();
+      } catch {
+        setScreen('<section class="panel"><h1>Almacenamiento no disponible</h1><p class="lead">No se pudieron consultar los registros de esta dirección. No borres los datos del navegador; volvé a intentarlo antes de usar la dirección principal.</p></section>');
+      }
+      return;
+    }
     connection(); wireAdmin();
-    window.addEventListener('online', () => { connection(); sync.run(store, cfg, () => { if (stage === 'admin') admin().catch(() => {}); }).catch(() => {}); });
+    window.addEventListener('online', () => { connection(); sync.run(store, cfg, refreshAdmin).catch(() => {}); });
     window.addEventListener('offline', connection);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) { connection(); sync.run(store, cfg).catch(() => {}); } });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { connection(); sync.run(store, cfg, refreshAdmin).catch(() => {}); } });
     setInterval(connection, 30000);
     if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./sw.js').catch(() => toast('No se pudo preparar el modo offline.'));
     try {
@@ -241,7 +266,7 @@
       else if (draft?.questions?.length && draft.answers.length < draft.questions.length) renderQuiz();
       else if (draft?.questions?.length && draft.answers.length === draft.questions.length) draft.stage === 'confirm' ? renderConfirm() : renderForm();
       else welcome();
-      sync.run(store, cfg).catch(() => {});
+      sync.run(store, cfg, refreshAdmin).catch(() => {});
     } catch {
       setScreen('<section class="panel"><h1>Almacenamiento no disponible</h1><p class="lead">La tablet no puede guardar participaciones. Habilitá el almacenamiento del navegador y recargá la página antes de comenzar.</p></section>');
     }

@@ -9,7 +9,7 @@ window.EXPO_SETTINGS = Object.freeze({
   basesUrl: '', // Add the approved Bases y Condiciones URL when available.
   finalMessage: 'Próximamente seguimos ampliando nuestra cobertura en Tandil.',
   newZone: 'Villa Italia',
-  appsScriptUrl: '',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycby07FRawfyudsjpuENDIQFurJ849VhwzgNBmBlID-fQCmXl6Gt-3bMHEFjVayFfRhJs/exec',
   adminPin: '2026', // Change before the event. Never treat this as real authentication.
   resetSeconds: 10,
   questions: [

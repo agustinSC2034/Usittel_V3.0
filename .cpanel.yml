@@ -7,7 +7,7 @@ deployment:
     - /bin/mkdir -p "$DEPLOYPATH/expo"
     - /bin/cp expo/index.html expo/styles.css expo/settings.js expo/core.js expo/store.js expo/sync.js expo/app.js expo/sw.js expo/online.txt "$DEPLOYPATH/expo/"
     - /bin/mkdir -p "$DEPLOYPATH/autogestion/assets" "$DEPLOYPATH/autogestion/js" "$DEPLOYPATH/autogestion/vendor/librespeed" "$DEPLOYPATH/autogestion/server"
-    - /bin/cp autogestion/.htaccess autogestion/index.html autogestion/api.php "$DEPLOYPATH/autogestion/"
+- /bin/cp autogestion/index.html autogestion/api.php "$DEPLOYPATH/autogestion/"
     - /bin/cp autogestion/assets/* "$DEPLOYPATH/autogestion/assets/"
     - /bin/cp autogestion/js/* "$DEPLOYPATH/autogestion/js/"
     - /bin/cp autogestion/vendor/librespeed/speedtest_worker.js "$DEPLOYPATH/autogestion/vendor/librespeed/"

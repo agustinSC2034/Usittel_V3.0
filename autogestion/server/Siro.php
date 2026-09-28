@@ -25,8 +25,8 @@ function siroConfig(array $c): ?array {
     $s=siroCandidateConfig($c);
     return $s!==null && $s['enabled']?$s:null;
 }
-function siroLabService(?array $s,array $ids,?int $selected): bool {
-    return $s!==null && count($ids)===1 && $selected===($s['lab_ida']??1) && in_array($selected,$ids,true);
+function siroServiceEnabled(?array $s,array $ids,?int $selected): bool {
+    return $s!==null && $selected!==null && in_array($selected,$ids,true);
 }
 function paymentCents(mixed $value): int {
     if(is_int($value)) $value=(string)$value;

@@ -52,11 +52,35 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   await recovered.call('logout',{});r=await recovered.call('payments');check('logout bloquea lectura de intentos',()=>assert.equal(r.status,401));
   fs.writeFileSync(config,configured(1));clearRate();const expired=jar();await login(expired);await sleep(1100);r=await expired.call('payment-create',{idt:'123'});
   check('sesión vencida no inicia pago',()=>assert.ok([401,403].includes(r.status)));
-  fs.writeFileSync(config,configured());scenario('services-two');clearRate();const multi=jar();r=await login(multi);
-  check('SIRO configurado sigue oculto en sesión multicontrato',()=>assert.equal(r.data.payments_enabled,false));
-  for(const [route,body] of [['payments',undefined],['payment-create',{idt:'100'}],['payment-reconcile',{attempt_id:second.attempt_id}]]) {
-    r=await multi.call(route,body);check('multicontrato bloquea '+route,()=>{assert.equal(r.status,409);assert.equal(r.data.error.code,'SIRO_DISABLED');});
+  fs.writeFileSync(config,postingConfigured());scenario('services-two');clearRate();const multi=jar();r=await login(multi);
+  check('multicontrato habilita SIRO y posting aunque lab_ida no coincida al seleccionar otro contrato',()=>{
+    assert.equal(r.data.payments_enabled,true);assert.equal(r.data.phantom_posting_enabled,true);
+  });
+  await multi.call('invoices');
+  r=await multi.call('payment-create',{idt:'500'});check('factura de servicio propio pero no seleccionado rechazada',()=>assert.equal(r.status,404));
+  const staleRevision=multi.serviceRevision;
+  r=await multi.call('select-service',{serviceId:'5'});
+  check('cambio de servicio recalcula pagos e imputación',()=>{assert.equal(r.status,200);assert.equal(r.data.payments_enabled,true);assert.equal(r.data.phantom_posting_enabled,true);assert.equal(r.data.selectedServiceId,'5');});
+  r=await multi.call('payment-create',{idt:'500'},{headers:{'X-Service-Revision':staleRevision}});
+  check('revisión anterior no inicia pago del nuevo contrato',()=>assert.equal(r.status,409));
+  r=await multi.call('payment-create',{idt:'100'});check('factura del contrato anterior rechazada',()=>assert.equal(r.status,404));
+  r=await multi.call('payment-create',{idt:'999'});check('factura externa rechazada',()=>assert.equal(r.status,404));
+  for(const body of [{idt:'500',IDA:1},{idt:'500',Importe:1}]) {
+    r=await multi.call('payment-create',body);check('IDA e importe del navegador rechazados en multicontrato',()=>assert.equal(r.status,400));
   }
+  await multi.call('invoices');
+  const [multiA,multiB]=await Promise.all([multi.call('payment-create',{idt:'500'}),multi.call('payment-create',{idt:'500'})]);
+  check('contrato seleccionado crea un solo intento con importe backend',()=>{
+    assert.equal(multiA.status,200,multiA.text);assert.equal(multiB.status,200,multiB.text);
+    assert.equal(multiA.data.attempt_id,multiB.data.attempt_id);assert.equal(multiA.data.amount,10);
+    const request=JSON.parse(fs.readFileSync(path.join(dir,'siro-fixture-request.json'),'utf8'));
+    assert.equal(request.Importe,10);assert.equal(request.nro_cliente_empresa,'5555555555555555555');
+  });
+  r=await multi.call('payments');check('solo aparecen intentos del contrato seleccionado',()=>{assert.equal(r.status,200);assert.deepEqual(r.data.items.map(a=>a.idt),['500']);});
+  r=await multi.call('payment-reconcile',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede consultar',()=>assert.equal(r.status,404));
+  r=await multi.call('payment-post',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede imputar',()=>assert.equal(r.status,404));
+  r=await multi.call('select-service',{serviceId:'1'});check('volver al contrato inicial mantiene habilitación',()=>{assert.equal(r.data.payments_enabled,true);assert.equal(r.data.phantom_posting_enabled,true);});
+  r=await multi.call('payments');check('intento de B no aparece en A',()=>{assert.equal(r.status,200);assert.ok(r.data.items.every(a=>a.idt!=='500'));});
   await multi.call('logout',{});
   fs.writeFileSync(config,settings());scenario('normal');
 };

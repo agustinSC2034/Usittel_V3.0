@@ -4,6 +4,9 @@ namespace MiUsittel;
 
 // Product fields must be confirmed by an operator before being mapped. A missing
 // or unfamiliar structure means unknown, never 'not contracted'. No recursive dump.
+function isAdministrativeServiceProduct(string $label): bool {
+    return $label==='WiFi +' || $label==='RES & COM ($) - WiFi +';
+}
 function serviceProductEntries(array $record,array $config): ?array {
     $fields=$config['service_product_fields']??[];
     // USITTEL no ofrece telefonía desde Mi USITTEL; ese campo nunca se mapea a la UI.
@@ -38,7 +41,7 @@ function serviceProductEntries(array $record,array $config): ?array {
             if(!is_string($item)) return null;
             foreach(parseServiceProductText($field,$item,$quantity)??[null] as $entry) {
                 if($entry===null) return null;
-                if($entry['label']==='WiFi +') continue;
+                if(isAdministrativeServiceProduct($entry['label'])) continue;
                 $out[$entry['field']."\0".($entry['category']??'')."\0".$entry['label']."\0".($entry['quantity']??'')]=$entry;
             }
         }
@@ -113,7 +116,7 @@ function serviceProductState(?array $products,array $config,?array $entries=null
     foreach($products as $value) {
         if(!is_string($value)) throw new Failure('SERVICE_CATALOG_CONFIGURATION');
         $parts=productLabelParts($value);
-        if($parts['label']==='WiFi +') continue;
+        if(isAdministrativeServiceProduct($parts['label'])) continue;
         $id=$byAlias[$parts['label']]??null;
         if($id===null) {
             $item=['label'=>$parts['label'],'quantity'=>$parts['quantity']];
@@ -168,7 +171,7 @@ function validCatalogIds(mixed $ids): bool {
 }
 function commercialOffers(?string $plan,?array $products,array $config,?array $entries=null): array {
     $catalog=serviceCatalog($config);$state=serviceProductState($products,$config,$entries);$contracted=array_fill_keys($state['ids'],true);$offers=[];
-    $relevantProducts=$products===null?null:array_values(array_filter($products,fn($value)=>productLabelParts($value)['label']!=='WiFi +'));
+    $relevantProducts=$products===null?null:array_values(array_filter($products,fn($value)=>!isAdministrativeServiceProduct(productLabelParts($value)['label'])));
     $iptv=false;
     if($entries!==null) foreach($entries as $entry) if(in_array($entry['field']??null,['Productos_Television','Productos_Otros'],true) && ($entry['category']??null)==='IPTV') $iptv=true;
     foreach(commercialCatalog($config) as $offer) {
@@ -224,7 +227,7 @@ function inspectPublicProductLabels(array $record): array {
                 }
             }
             if(!is_string($label)) continue;
-            foreach(parseServiceProductText($field,$label,$quantity)??[] as $entry) if($entry['label']!=='WiFi +') $out[]=$entry;
+            foreach(parseServiceProductText($field,$label,$quantity)??[] as $entry) if(!isAdministrativeServiceProduct($entry['label'])) $out[]=$entry;
         }
     }
     return $out;

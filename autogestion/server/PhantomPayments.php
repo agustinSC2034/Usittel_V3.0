@@ -27,8 +27,8 @@ function phantomPostingConfig(array $config): ?array {
     $settings=phantomPostingCandidateConfig($config);
     return $settings!==null && $settings['enabled']?$settings:null;
 }
-function phantomPostingLabService(?array $settings,array $authorized,?int $selected): bool {
-    return $settings!==null && count($authorized)===1 && $selected===$settings['lab_ida'] && $authorized[0]===$settings['lab_ida'];
+function phantomPostingServiceEnabled(?array $settings,array $authorized,?int $selected): bool {
+    return $settings!==null && $selected!==null && in_array($selected,$authorized,true);
 }
 
 function phantomCrmAcknowledgement(string $response): string {

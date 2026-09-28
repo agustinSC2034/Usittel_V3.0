@@ -120,6 +120,18 @@ $withMeshAlias=$noSensaAlias;$withMeshAlias['service_catalog']['mesh']['aliases'
 verifyFeature(!in_array('mesh',array_column(commercialOffers('Otro',serviceProducts($realRecord,$realFields),$withMeshAlias,$realEntries),'id'),true));
 $wifiPlus=['Productos_Television'=>'-','Productos_Otros'=>'15/3/24 - RES & COM ($) - WiFi +'];
 verifyFeature(serviceProducts($wifiPlus,$realFields)===[] && serviceProductEntries($wifiPlus,$realFields)===[] && inspectPublicProductLabels($wifiPlus)===[]);
+$adminLabel='RES & COM ($) - WiFi +';
+$adminRecord=['Productos_Television'=>'-','Productos_Otros'=>$adminLabel];
+verifyFeature(serviceProducts($adminRecord,$realFields)===[] && serviceProductEntries($adminRecord,$realFields)===[] && inspectPublicProductLabels($adminRecord)===[]);
+verifyFeature(serviceProductState([$adminLabel],$catalogConfig)['items']===[]);
+verifyFeature(array_column(commercialOffers('Otro',[$adminLabel],$noSensaAlias),'id')===['sensa','mesh']);
+foreach(['RES & COM ($) - WiFi Plus','RES & COM ($) - WiFi + Extra','RES & COM - WiFi +'] as $nearLabel) {
+    $nearRecord=['Productos_Television'=>'-','Productos_Otros'=>$nearLabel];
+    verifyFeature(serviceProducts($nearRecord,$realFields)===[$nearLabel]);
+    verifyFeature(serviceProductState([$nearLabel],$catalogConfig)['unmapped']===true);
+    verifyFeature(commercialOffers('Otro',[$nearLabel],$noSensaAlias)===[]);
+}
+verifyFeature(serviceProductState(null,$catalogConfig)['known']===false && commercialOffers('Otro',null,$noSensaAlias)===[]);
 verifyFeature(serviceProductState([], $catalogConfig,serviceProductEntries($wifiPlus,$realFields))['ids']===[]);
 verifyFeature(serviceProductState(['WiFi +'],$catalogConfig)['items']===[]);
 verifyFeature(array_column(commercialOffers('Otro',['WiFi +'],$noSensaAlias),'id')===['sensa','mesh']);

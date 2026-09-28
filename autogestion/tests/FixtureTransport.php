@@ -81,7 +81,7 @@ final class FixtureTransport implements Transport, TicketTransport {
                     'DNI'=>$scenario==='services-document'?'12345678':'do-not-expose', 'Cuit'=>in_array($scenario,['services-document','services-document-timeout','services-document-only-timeout'],true)?'12345678':null]];
             }
             if($action==='Phantom_Mi_Estado_Cuenta') return ['Balance'=>(string)($ida*10)];
-            return [['IDA'=>(string)$ida,'IDT'=>(string)($ida*100),'Estado'=>'IMPAGA','Total'=>'10.00','Periodo'=>'2026-09','Hash_Descarga'=>'do-not-expose']];
+            return [['IDA'=>(string)$ida,'IDT'=>(string)($ida*100),'SIRO_CE'=>str_repeat((string)$ida,19),'Estado'=>'IMPAGA','Total'=>'10.00','Periodo'=>'2026-09','Hash_Descarga'=>'do-not-expose']];
         }
         if($action==='Consulta_Cliente_Avanzada') {
             if($scenario==='customer-failure') throw new Failure('PHANTOM_CUSTOMER_TEST');

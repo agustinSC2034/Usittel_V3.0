@@ -332,7 +332,7 @@ final class Phantom {
     }
     public function crmUnpaidRows(int $ida,string $idt): array {
         $settings=phantomPostingCandidateConfig($this->config);
-        if($settings===null || $this->crm===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_CONFIGURATION');
+        if($settings===null || $this->crm===null) throw new Failure('PHANTOM_POSTING_CONFIGURATION');
         if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
         return $this->crm->unpaid($idt);
     }
@@ -341,7 +341,7 @@ final class Phantom {
     }
     public function imputePayment(int $ida,string $idt,int $cents,string $reference): string {
         $settings=phantomPostingConfig($this->config);
-        if($settings===null || $this->crm===null || $ida!==$settings['lab_ida']) throw new Failure('PHANTOM_POSTING_DISABLED',409);
+        if($settings===null || $this->crm===null) throw new Failure('PHANTOM_POSTING_DISABLED',409);
         if(!in_array($ida,$this->scope??[],true)) throw new Failure('FORBIDDEN',403);
         return $this->crm->impute($idt,$cents,$settings['origin'],$reference);
     }

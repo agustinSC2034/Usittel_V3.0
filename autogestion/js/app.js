@@ -197,7 +197,7 @@ document.addEventListener('click', async event => {
   }
   if (action === 'choose-service') {
     if (serviceBusy || runtime.services.length < 2) return;
-    openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${e(addressLabel(s.address) || 'No disponible')}</strong><span>${e(planLabel(s.plan) || 'No disponible')}</span></button>`).join('')}</div>`);
+    openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${e(addressLabel(s.address) || 'No disponible')}</strong><span>Contrato N.º ${e(s.id)} · ${e(planLabel(s.plan) || 'Plan no disponible')}</span></button>`).join('')}</div>`);
     return;
   }
   if (action === 'select-service') {

@@ -27,7 +27,7 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await u.call('invoices');check('listado del servicio B',()=>assert.equal(r.data.items[0].id,'500'));
   r=await u.call('invoice-document?id=500');check('descarga de B autorizada',()=>{assert.equal(r.status,200);assert.match(r.text,/^%PDF/);});
   r=await u.call('overview?IDA=1');check('IDA de navegador no autoriza consulta',()=>assert.equal(r.status,400));
-  r=await u.call('payment-create',{idt:'500'});check('SIRO multicontrato deshabilitado',()=>assert.equal(r.status,409));
+  r=await u.call('payment-create',{idt:'500'});check('SIRO sin configuración deshabilitado también en multicontrato',()=>assert.equal(r.status,409));
   r=await u.call('payment-history');check('historial del contrato autenticado no se cruza con el asociado',()=>assert.equal(r.status,409));
   r=await u.call('bootstrap');check('recarga conserva selección B y lista',()=>{assert.equal(r.data.selectedServiceId,'5');assert.equal(r.data.services.length,2);});
   await u.call('logout',{});r=await u.call('bootstrap');check('logout borra lista y selección',()=>{assert.deepEqual(r.data.services,[]);assert.equal(r.data.selectedServiceId,null);assert.equal(r.data.authenticated,false);});

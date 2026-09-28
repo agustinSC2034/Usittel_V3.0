@@ -26,12 +26,38 @@ if(($argv[2]??null)==='worker') {
     echo $p->create(1,'123',fn()=>row())['attempt_id'];exit;
 }
 // The POC uses local wall time with a literal Z, not UTC conversion.
-ok(siroLabService(['lab_ida'=>1],[1],1));
-ok(!siroLabService(['lab_ida'=>1],[1,5],1));
-ok(!siroLabService(['lab_ida'=>1],[5],5));
-ok(siroLabService(['lab_ida'=>5],[5],5));
-ok(!siroLabService(['lab_ida'=>5],[1],5));
-ok(!siroLabService(null,[1],1));
+ok(siroServiceEnabled(['lab_ida'=>1],[1],1));
+ok(siroServiceEnabled(['lab_ida'=>1],[1,5],1));
+ok(siroServiceEnabled(['lab_ida'=>1],[1,5],5));
+ok(siroServiceEnabled(['lab_ida'=>1],[5],5));
+ok(siroServiceEnabled(['lab_ida'=>5],[5],5));
+ok(!siroServiceEnabled(['lab_ida'=>5],[1],5));
+ok(!siroServiceEnabled(['lab_ida'=>1],[1,5],7));
+ok(!siroServiceEnabled(['lab_ida'=>1],[1,5],null));
+ok(!siroServiceEnabled(null,[1],1));
+ok(phantomPostingServiceEnabled(['lab_ida'=>1],[1,5],5));
+ok(phantomPostingServiceEnabled(['lab_ida'=>1],[5],5));
+ok(!phantomPostingServiceEnabled(['lab_ida'=>1],[1,5],7));
+ok(!phantomPostingServiceEnabled(null,[1],1));
+$postingConfig=['phantom_url'=>'https://fixture.invalid/API_Rest.php','phantom_posting'=>[
+    'enabled'=>true,'lab_ida'=>1,'crm_url'=>'https://fixture.invalid/PHANTOM/Includes/CRM/API_CRM.php','origin'=>'SIRO Mi USITTEL']];
+$unusedTransport=new class implements Transport {
+    public function post(string $url,array $body): array {throw new \RuntimeException('No Phantom fixture network');}
+    public function authenticate(string $url,array $credentials): array {throw new \RuntimeException('No Phantom fixture network');}
+};
+$crm=new class implements PhantomCrmGateway {
+    public int $writes=0;
+    public function authenticate(bool $refresh=false): void {}
+    public function unpaid(string $idt): array {return [[$idt,'fixture','5','2026-09-01','2026-09','5-500','10.00']];}
+    public function impute(string $idt,int $cents,string $origin,string $reference): string {$this->writes++;return 'SUCCESS';}
+};
+$postingPhantom=new Phantom($postingConfig,$root,$unusedTransport,$crm);$postingPhantom->scope([5]);
+ok($postingPhantom->crmUnpaidRows(5,'500')[0][2]==='5');
+ok($postingPhantom->imputePayment(5,'500',1000,'SIRO fixture')==='SUCCESS' && $crm->writes===1);
+failure(fn()=>$postingPhantom->crmUnpaidRows(7,'700'),'FORBIDDEN');
+failure(fn()=>$postingPhantom->imputePayment(7,'700',1000,'SIRO fixture'),'FORBIDDEN');
+$postingConfig['phantom_posting']['enabled']=false;
+failure(fn()=>(new Phantom($postingConfig,$root,$unusedTransport,$crm))->imputePayment(5,'500',1000,'SIRO fixture'),'PHANTOM_POSTING_DISABLED');
 $validConfig=['mode'=>'phantom','siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70001]];
 $rootConfig=['mode'=>'phantom','siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'https://mi.usittel.com.ar/','receipt_start'=>70000,'receipt_end'=>70001]];
 $rootSiro=siroCandidateConfig($rootConfig);

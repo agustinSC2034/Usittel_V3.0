@@ -7,7 +7,7 @@ const path = require('node:path');
   const check = (name, fn) => { fn(); checks++; };
   const data = await import('../js/data.js');
   const { homeConnection, homeAccount } = await import('../js/home-presentation.js');
-  const { operationAlert } = await import('../js/components.js');
+  const { operationAlert, shell } = await import('../js/components.js');
   const { login, home, support, account } = await import('../js/views.js');
   const { servicePage } = await import('../js/service-view.js');
   const customer = { name:'Cliente', address:'Calle 123', plan:'Internet 300 Mbps', serviceStatus:'Activo', connectionState:'online' };
@@ -33,10 +33,31 @@ const path = require('node:path');
   const overview = (products, invoiceItems = []) => data.applyOverview({customer, invoices:{items:invoiceItems,nextOffset:null,endReached:true},account:{debt:0,credit:0},warnings:[], servicePresentation:products, commercialOffers:[]});
   data.runtime.selectedServiceId='5726';
   data.runtime.services=[{id:'5726',address:'Calle 123'},{id:'6000',address:'Otra 456'}];
+  check('selector explícito en todas las páginas autenticadas', () => {
+    for (const route of ['inicio','facturas','servicio','soporte','cuenta']) {
+      const html=shell(route,'<h1>Contenido</h1>');
+      assert.match(html,/Servicio actual/);assert.match(html,/Calle 123/);
+      assert.match(html,/Contrato N.º 5726/);assert.match(html,/Cambiar servicio/);
+      assert.match(html,/data-action="choose-service"/);
+    }
+    assert.doesNotMatch(home(),/data-action="choose-service"/);
+  });
+  check('selector cambia contrato visible y escapa domicilio', () => {
+    data.runtime.selectedServiceId='6000';
+    assert.match(shell('facturas',''),/Otra 456[\s\S]*Contrato N.º 6000/);
+    data.runtime.services[1].address='<script>alert(1)</script>';
+    assert.doesNotMatch(shell('facturas',''),/<script>/);
+    data.runtime.services[1].address='Otra 456';data.runtime.selectedServiceId='5726';
+  });
+  check('servicio único no muestra cambio', () => {
+    data.runtime.services=[{id:'5726',address:'Calle 123'}];
+    assert.doesNotMatch(shell('inicio',''),/Cambiar servicio|Servicio actual/);
+    data.runtime.services=[{id:'5726',address:'Calle 123'},{id:'6000',address:'Otra 456'}];
+  });
   overview({known:true,items:[]});
   check('Internet solo oculta Tus servicios', () => assert.doesNotMatch(servicePage(),/Tus servicios/));
   check('products vacíos conservan plan', () => assert.match(servicePage(),/Internet 300 Mbps/));
-  check('home contrato y selector', () => {const html=home();assert.match(html,/Contrato N.º 5726/);assert.match(html,/data-action="choose-service"/);});
+  check('home conserva selector global sin duplicarlo', () => {const html=shell('inicio',home());assert.match(html,/Contrato N.º 5726/);assert.match(html,/data-action="choose-service"/);assert.equal(html.match(/data-action="choose-service"/g).length,1);});
   check('home sin montos ni facturas detalladas', () => {const html=home();assert.doesNotMatch(html,/\$|invoice-table|Facturas recientes/);});
   check('home acceso Central y Wi-Fi', () => {const html=home();assert.match(html,/data-action="chat"/);assert.match(html,/data-action="wifi-settings"/);});
   const homeFixture=(changes,items=[],amount=0) => {

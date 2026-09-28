@@ -65,8 +65,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($route==='bootstrap') {
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],
-            'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
-            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected),
+            'payments_enabled'=>siroServiceEnabled(siroConfig($c),$sessionIds,$selected),
+            'phantom_posting_enabled'=>phantomPostingServiceEnabled(phantomPostingConfig($c),$sessionIds,$selected),
             'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if($method==='POST') csrf();
@@ -110,8 +110,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         }
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],
-            'payments_enabled'=>siroLabService(siroConfig($c),$sessionIds,$selected),
-            'phantom_posting_enabled'=>phantomPostingLabService(phantomPostingConfig($c),$sessionIds,$selected),
+            'payments_enabled'=>siroServiceEnabled(siroConfig($c),$sessionIds,$selected),
+            'phantom_posting_enabled'=>phantomPostingServiceEnabled(phantomPostingConfig($c),$sessionIds,$selected),
             'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
@@ -188,7 +188,9 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if(!in_array((int)$id,$ids,true)) throw new Failure('FORBIDDEN',403);
         $_SESSION['selected_ida']=(int)$id;$_SESSION['service_revision']=bin2hex(random_bytes(16));
         unset($_SESSION['invoice_history'],$_SESSION['wifi_challenge'],$_SESSION['request_challenge']);
-        jsonReply(['payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
+        jsonReply(['payments_enabled'=>siroServiceEnabled(siroConfig($c),$ids,(int)$id),
+            'phantom_posting_enabled'=>phantomPostingServiceEnabled(phantomPostingConfig($c),$ids,(int)$id),
+            'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if(in_array($route,['payment-history','payment-receipt'],true)) {
         if($paymentHistory===null) throw new Failure('PAYMENT_HISTORY_DISABLED',409);
@@ -198,9 +200,9 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     }
     if(in_array($route,['payments','payment-create','payment-reconcile','payment-post'],true)) {
         $settings=siroConfig($c);
-        if(!siroLabService($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
+        if(!siroServiceEnabled($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
         $posting=phantomPostingConfig($c);
-        if($route==='payment-post' && !phantomPostingLabService($posting,$ids,$ida)) throw new Failure('PHANTOM_POSTING_DISABLED',409);
+        if($route==='payment-post' && !phantomPostingServiceEnabled($posting,$ids,$ida)) throw new Failure('PHANTOM_POSTING_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
         $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);

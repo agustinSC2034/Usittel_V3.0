@@ -24,7 +24,11 @@ export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;
 }
 export function shell(active, content) {
-  return `<header class="app-header"><div class="header-inner"><a class="brand" href="#/inicio" aria-label="Mi USITTEL, inicio">${logo()}<span class="brand-name">Mi USITTEL</span></a>${navigation(active)}</div></header><main id="main" class="page page-${active}">${content}</main>${navigation(active, true)}`;
+  const selected = runtime.services.find(service => service.id === runtime.selectedServiceId);
+  const selector = runtime.services.length > 1 && selected
+    ? `<div class="current-service" aria-label="Servicio actual"><div class="current-service-inner"><div><span class="current-service-label">Servicio actual</span><span class="current-service-address">${escapeHTML(selected.address || 'Domicilio no disponible')}</span><span class="current-service-contract">Contrato N.º ${escapeHTML(selected.id)}</span></div><button type="button" class="current-service-change" data-action="choose-service" aria-haspopup="dialog">Cambiar servicio ${icon('chevron-down')}</button></div></div>`
+    : '';
+  return `<header class="app-header"><div class="header-inner"><a class="brand" href="#/inicio" aria-label="Mi USITTEL, inicio">${logo()}<span class="brand-name">Mi USITTEL</span></a>${navigation(active)}</div></header>${selector}<main id="main" class="page page-${active}">${content}</main>${navigation(active, true)}`;
 }
 export const button = (label, action, { secondary = false, iconName = '', attrs = '', type = 'button' } = {}) => `<button type="${type}" class="button ${secondary ? 'button-secondary' : ''}" ${action ? `data-action="${action}"` : ''} ${attrs}>${iconName ? icon(iconName) : ''}${label}</button>`;
 export const action = (label, name, id, symbol = '') => `<button class="text-action" type="button" data-action="${name}" data-id="${id}">${symbol ? icon(symbol) : ''}${label}</button>`;

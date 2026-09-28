@@ -55,6 +55,13 @@
   function setScreen(html) { screen.innerHTML = html; screen.focus({ preventScroll: true }); }
   function refreshAdmin() { if (stage === 'admin') admin().catch(() => toast('No se pudo actualizar el panel.')); }
   function cancelReset() { clearTimeout(resetTimer); clearInterval(resetInterval); resetTimer = null; resetInterval = null; }
+  function restartControl() { return `<button class="flow-restart" id="restart-flow" type="button" aria-label="Empezar de nuevo" title="Empezar de nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 0 1 15.4-6.4L21 7"/><path d="M21 3v4h-4M21 13a9 9 0 0 1-15.4 6.4L3 17"/><path d="M3 21v-4h4"/></svg></button>`; }
+  function attachRestart() {
+    document.getElementById('restart-flow')?.addEventListener('click', async () => {
+      if (saving) return;
+      if (window.confirm('¿Querés empezar de nuevo? Se borrarán las respuestas y los datos ingresados hasta ahora.')) await resetToWelcome();
+    });
+  }
   function welcome() {
     cancelReset(); stage = 'welcome'; draft = null;
     if (alternateOrigin()) {
@@ -77,7 +84,8 @@
     const index = draft.answers.length;
     const q = draft.questions[index];
     if (!q) { renderForm(); return; }
-    setScreen(`<section class="panel"><div class="steps" aria-hidden="true">${draft.questions.map((_, i) => `<span class="${i <= index ? 'active' : ''}"></span>`).join('')}</div><p class="quiz-meta">Pregunta ${index + 1} de ${draft.questions.length}</p><h2>${escapeHtml(q.text)}</h2><div class="answers">${q.options.map(option => `<button class="answer" type="button" data-option="${escapeHtml(option.id)}">${escapeHtml(option.text)}</button>`).join('')}</div></section>`);
+    setScreen(`<section class="panel"><div class="flow-topline"><div class="steps" aria-hidden="true">${draft.questions.map((_, i) => `<span class="${i <= index ? 'active' : ''}"></span>`).join('')}</div>${restartControl()}</div><p class="quiz-meta">Pregunta ${index + 1} de ${draft.questions.length}</p><h2>${escapeHtml(q.text)}</h2><div class="answers">${q.options.map(option => `<button class="answer" type="button" data-option="${escapeHtml(option.id)}">${escapeHtml(option.text)}</button>`).join('')}</div></section>`);
+    attachRestart();
     screen.querySelectorAll('.answer').forEach(button => button.addEventListener('click', async () => {
       if (saving) return;
       saving = true;
@@ -93,7 +101,8 @@
   function renderForm() {
     stage = 'form';
     const f = draft.form;
-    setScreen(`<section class="panel"><div class="steps" aria-hidden="true"><span class="active"></span><span class="active"></span><span class="active"></span></div><p class="eyebrow">Ya respondiste las 3 preguntas</p><h2>Completá tus datos</h2><p class="lead">Estos datos nos permiten registrar tu participación.</p><form id="details" novalidate><div class="form-grid"><label class="field">Nombre y apellido<input name="nombre" autocomplete="name" required maxlength="100" value="${escapeHtml(f.nombre || '')}"></label><label class="field">DNI <span class="hint">Solo números, sin puntos</span><input name="dni" inputmode="numeric" autocomplete="off" required maxlength="12" value="${escapeHtml(f.dni || '')}"></label><label class="field">Teléfono<input name="telefono" type="tel" autocomplete="tel" required maxlength="30" value="${escapeHtml(f.telefono || '')}"></label><label class="field">Dirección<input name="direccion" autocomplete="street-address" required maxlength="140" value="${escapeHtml(f.direccion || '')}"></label></div><p class="error" id="form-error" role="alert"></p><div class="form-actions"><button class="button primary" type="submit">Continuar <span aria-hidden="true">→</span></button></div></form></section>`);
+    setScreen(`<section class="panel"><div class="flow-topline"><div class="steps" aria-hidden="true"><span class="active"></span><span class="active"></span><span class="active"></span></div>${restartControl()}</div><p class="eyebrow">Ya respondiste las 3 preguntas</p><h2>Completá tus datos</h2><p class="lead">Estos datos nos permiten registrar tu participación.</p><form id="details" novalidate><div class="form-grid"><label class="field">Nombre y apellido<input name="nombre" autocomplete="name" required maxlength="100" value="${escapeHtml(f.nombre || '')}"></label><label class="field">DNI <span class="hint">Solo números, sin puntos</span><input name="dni" inputmode="numeric" autocomplete="off" required maxlength="12" value="${escapeHtml(f.dni || '')}"></label><label class="field">Teléfono<input name="telefono" type="tel" autocomplete="tel" required maxlength="30" value="${escapeHtml(f.telefono || '')}"></label><label class="field">Dirección<input name="direccion" autocomplete="street-address" required maxlength="140" value="${escapeHtml(f.direccion || '')}"></label></div><p class="error" id="form-error" role="alert"></p><div class="form-actions"><button class="button primary" type="submit">Continuar <span aria-hidden="true">→</span></button></div></form></section>`);
+    attachRestart();
     const form = document.getElementById('details');
     let inputTimer;
     form.addEventListener('input', () => {
@@ -119,7 +128,8 @@
   }
   function renderConfirm() {
     stage = 'confirm';
-    setScreen(`<section class="panel"><p class="eyebrow">Último paso</p><h2>Confirmá tu participación</h2><form id="confirmation" novalidate>${cfg.basesUrl ? `<p><a href="${escapeHtml(cfg.basesUrl)}" target="_blank" rel="noopener noreferrer">Leer Bases y Condiciones</a></p>` : ''}<p class="error" id="confirm-error" role="alert"></p><div class="confirm-actions"><button type="button" class="button secondary" id="edit-details">Volver a mis datos</button><button type="submit" class="button primary" id="save-entry">Confirmar participación</button></div></form></section>`);
+    setScreen(`<section class="panel"><div class="flow-topline flow-topline-plain">${restartControl()}</div><p class="eyebrow">Último paso</p><h2>Confirmá tu participación</h2><form id="confirmation" novalidate>${cfg.basesUrl ? `<p><a href="${escapeHtml(cfg.basesUrl)}" target="_blank" rel="noopener noreferrer">Leer Bases y Condiciones</a></p>` : ''}<p class="error" id="confirm-error" role="alert"></p><div class="confirm-actions"><button type="button" class="button secondary" id="edit-details">Volver a mis datos</button><button type="submit" class="button primary" id="save-entry">Confirmar participación</button></div></form></section>`);
+    attachRestart();
     document.getElementById('edit-details').addEventListener('click', () => { renderForm(); persistDraft().catch(() => {}); });
     const form = document.getElementById('confirmation');
     form.addEventListener('submit', saveEntry);

@@ -1,4 +1,6 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 (async () => {
   let checks = 0;
@@ -37,6 +39,17 @@ const assert = require('node:assert/strict');
   await check('launcher pasa a cierre', () => {assert.equal(attributes.get('aria-label'),'Cerrar chat de soporte');assert.equal(attributes.get('aria-expanded'),'true');assert.ok(calls.some(x=>Array.isArray(x)&&x[0]==='class'&&x[1]==='is-open'&&x[2]===true));});
   calls.length=0;
   await check('cierre por API oficial restaura launcher', async () => {assert.equal(await closeCentralChat(),true);assert.deepEqual(calls.filter(x=>typeof x==='string'),['hide']);assert.equal(attributes.get('aria-label'),'Abrir chat de soporte');assert.equal(attributes.get('aria-expanded'),'false');assert.ok(calls.some(x=>Array.isArray(x)&&x[0]==='class'&&x[1]==='is-open'&&x[2]===false));});
+  await check('cierre propio cubre la X de Central en desktop', () => {
+    const css = fs.readFileSync(path.join(__dirname,'../styles.css'),'utf8');
+    assert.match(css,/\.portal-chat-toggle\s*\{[^}]*z-index:2147483647/);
+    assert.match(css,/@media \(min-width:761px\)\s*\{\s*\.portal-chat-toggle\.is-open\s*\{[^}]*top:calc\(max\(0px,100dvh - 840px\) \+ 32px\);\s*right:29px;/);
+    for (const height of [720,900,1000]) {
+      const frameTop = Math.max(0,height-840);
+      const ownCenter = frameTop+32+24;
+      const centralCloseCenter = frameTop+38.6+17;
+      assert.ok(Math.abs(ownCenter-centralCloseCenter)<1);
+    }
+  });
   for (const [topic,text] of Object.entries({
     'upgrade-speed':'Quiero consultar por una mejora de velocidad',
     'update-account':'Quiero actualizar mis datos de contacto',

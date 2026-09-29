@@ -50,8 +50,7 @@ export function servicePage() {
 function speedtestSection() {
   return `<section id="service-speedtest" class="service-speedtest" aria-labelledby="speed-title" tabindex="-1">
     <div class="speed-intro"><span class="eyebrow">Desde este dispositivo</span><h2 id="speed-title">Probá tu conexión</h2><p class="muted">Medí la velocidad de tu conexión con el test de USITTEL.</p></div>
-    <div class="speed-external"><a class="button" id="speedtest-link" href="${SPEEDTEST_URL}" target="_blank" rel="noopener noreferrer">${icon('external-link')}Abrir test de USITTEL</a><p class="field-hint">Se abre en una nueva pestaña.</p></div>
-
+    <div class="speed-external"><a class="button" id="speedtest-link" href="${SPEEDTEST_URL}" target="_blank" rel="noopener noreferrer">${icon('external-link')}Abrir test de USITTEL</a></div>
       <details class="speed-guidance"><summary>Para una buena medición</summary><ol><li><strong>Mejor por cable.</strong> Usá Cat 5e o superior y puertos Gigabit para planes de hasta 1.000 Mbps. Un puerto de 100 Mbps limita la prueba.</li><li><strong>Por Wi-Fi, elegí 5 GHz.</strong> Acercate al router. La red de 2,4 GHz suele tener más interferencias y menor velocidad.</li><li><strong>Dale espacio a la prueba.</strong> Pausá descargas, streaming y VPN.</li></ol></details>
   </section>`;
 }

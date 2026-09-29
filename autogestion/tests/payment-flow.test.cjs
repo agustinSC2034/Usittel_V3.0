@@ -168,7 +168,7 @@ const path = require('node:path');
     runtime.mode = 'phantom'; runtime.paymentsEnabled = true; runtime.paymentHistoryEnabled = true;
     runtime.selectedServiceId = '1'; runtime.paymentFocus = { attemptId: id, serviceId: '1' };
     const cases = [
-      [attempt('UNCONFIRMED'), 'warning', 'Estamos verificando tu pago', 'No vuelvas a pagar esta factura'],
+      [attempt('UNCONFIRMED'), 'warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos tu cuenta'],
       [attempt('PENDING'), 'warning', 'Estamos verificando tu pago', 'No vuelvas a pagar esta factura'],
       [attempt('CONFIRMED'), 'success', 'Pago recibido correctamente', 'No es necesario que vuelvas a pagarlo'],
       [attempt('CONFIRMED', 'POST_UNCONFIRMED'), 'success', 'Pago recibido correctamente', 'Puede tardar unos minutos'],
@@ -187,6 +187,9 @@ const path = require('node:path');
       assert.doesNotMatch(html, new RegExp(id));
       assert.doesNotMatch(html, /NOT_POSTED|NEEDS_REVIEW|SIRO [a-f0-9]/);
     }
+    runtime.paymentItems = [attempt('UNCONFIRMED')];
+    assert.match(paymentStatusBanner(), /Por favor, aguardá unos minutos mientras actualizamos tu cuenta\. No vuelvas a pagar esta factura\./);
+    assert.doesNotMatch(paymentStatusBanner(), /pago recibido|pago registrado/i);
   });
   await check('Facturas muestra banner arriba de deuda, conserva Movimientos manual', () => {
     applyOverview({ customer: {}, invoices: { items: [{ id: '123', period: 'Septiembre', amount: 121, due: '30/09/2026', status: 'Pendiente', downloadAvailable: false }], nextOffset: null, endReached: true }, account: { debt: 121, credit: 0 }, warnings: [] });

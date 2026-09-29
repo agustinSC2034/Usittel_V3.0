@@ -64,9 +64,20 @@ test('public shell exposes one responsive Central panel and its controller', asy
   const html = await (await fetch(base + '/')).text();
   assert.equal((html.match(/id="site-chat-launcher"/g) || []).length, 1);
   assert.equal((html.match(/id="site-chat-panel"/g) || []).length, 1);
+  assert.equal((html.match(/<central-chat\b/g) || []).length, 1);
   assert.match(html, /<central-chat\b[^>]*mode="fill-container"/);
+  assert.equal((html.match(/href="https:\/\/mi\.usittel\.com\.ar\/"[^>]*>MI USITTEL<\/a>/g) || []).length, 3);
+  assert.doesNotMatch(html, /phantom\.usittel\.com\.ar\/PHANTOM\/Includes\/CRM\/CRM_APP\/login\.php|site-whatsapp-launcher/);
   assert.match(html, /src="js\/site-chat\.js"/);
   assert.equal((await fetch(base + '/js/site-chat.js')).status, 200);
+  const css = await (await fetch(base + '/assets/css/site.css')).text();
+  assert.doesNotMatch(css, /#site-chat-panel, #site-chat-launcher\s*\{\s*display:\s*none/);
+  for (const route of ['/pages/internet/', '/pages/contacto/', '/pages/index.html']) {
+    const page = await (await fetch(base + route)).text();
+    assert.equal((page.match(/id="site-chat-launcher"/g) || []).length, 1, route);
+    assert.doesNotMatch(page, /phantom\.usittel\.com\.ar\/PHANTOM\/Includes\/CRM\/CRM_APP\/login\.php|site-whatsapp-launcher/, route);
+    assert.equal((page.match(/href="https:\/\/mi\.usittel\.com\.ar\/"[^>]*>MI USITTEL<\/a>/g) || []).length, 3, route);
+  }
 });
 
 test('sales has its own standalone Central channel without changing attention or other surfaces', async t => {

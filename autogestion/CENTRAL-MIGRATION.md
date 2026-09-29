@@ -68,8 +68,8 @@ recibida y respondida en Botmaker.
   contratar; ambos recorridos pueden abrir `/atencion`.
 - Mi USITTEL carga el lanzador y sus accesos `Hablar con nosotros` y comerciales
   abren el mismo Central.
-- El acceso flotante anterior a WhatsApp se conserva donde ya existía y se ubica
-  a la izquierda en escritorio para evitar superposición.
+- La web pública muestra un único lanzador flotante de Central. El botón flotante
+  anterior de WhatsApp fue retirado; los enlaces de contacto del contenido siguen.
 
 El texto local `Central conectado · Prueba local real...` fue eliminado. La
 interfaz de Central es la única cabecera visible en la conversación.
@@ -87,8 +87,8 @@ credenciales privadas ni configuración de Phantom.
 
 Las políticas CSP local y PHP permiten únicamente el script y el frame de
 `https://web.central.chat`. El despliegue de cPanel incluye ahora `atencion/`.
-La ruta productiva de Mi USITTEL sigue dependiendo de su despliegue específico;
-no se cambió el redirect existente a Phantom.
+El botón público `MI USITTEL` apunta directamente a `https://mi.usittel.com.ar/`.
+No se modificó el redirect legacy de `/autogestion` en el `.htaccess` público.
 
 ## Privacidad e identidad
 

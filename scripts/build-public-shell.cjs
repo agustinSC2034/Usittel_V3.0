@@ -29,7 +29,9 @@ for (const page of pages) {
   // repeated builds remain idempotent and never mount more than one chat.
   let output = original
     .replace(/\s*<!-- CENTRAL_CHAT_START -->[\s\S]*?<!-- CENTRAL_CHAT_END -->/g, '')
-    .replace(/\s*<script src="https:\/\/web\.central\.chat\/widget\/core\.js"><\/script>\s*<central-chat\b[^>]*><\/central-chat>/g, '');
+    .replace(/\s*<script src="https:\/\/web\.central\.chat\/widget\/core\.js"><\/script>\s*<central-chat\b[^>]*><\/central-chat>/g, '')
+    // Remove both copies left by the earlier WhatsApp rollout before adding the shared footer.
+    .replace(/\s*<!-- WhatsApp público temporal: Central queda integrado pero oculto hasta producción\. -->\s*<a class="site-whatsapp-launcher"[\s\S]*?<\/a>/g, '');
   if (page.notFound) {
     const content = fs.readFileSync(path.join(root, 'includes/public/not-found.html'), 'utf8').trim();
     output = output.replace(/<main\b[\s\S]*?<\/main>/, () => `<main id="main-content">\n${content}\n</main>`);

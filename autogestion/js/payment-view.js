@@ -1,7 +1,21 @@
 import { runtime, money } from './data.js';
-import { escapeHTML as e, button, icon } from './components.js';
+import { escapeHTML as e, button, icon, operationAlert } from './components.js';
 
 const MOVEMENTS_PER_PAGE = 10;
+
+export function paymentStatusBanner() {
+  const focus = runtime.paymentFocus;
+  if (!focus || String(runtime.selectedServiceId) !== focus.serviceId) return '';
+  const attempt = runtime.paymentItems.find(item => item.attempt_id === focus.attemptId);
+  if (!attempt) return '';
+  if (attempt.state === 'CANCELLED') return operationAlert('info', 'Pago cancelado', 'El pago no se completó y tu cuenta no tuvo cambios.');
+  if (attempt.state === 'REJECTED') return operationAlert('error', 'Pago rechazado', 'El pago no se completó y tu cuenta no tuvo cambios.');
+  if (attempt.state !== 'CONFIRMED') return operationAlert('warning', 'Estamos verificando tu pago', 'Todavía no pudimos confirmar el resultado. No vuelvas a pagar esta factura.');
+  if (attempt.phantom_payment_posted || attempt.phantom_posting_state === 'POSTED') return operationAlert('success', 'Pago registrado correctamente', 'Tu pago ya fue registrado en tu cuenta.');
+  if (attempt.phantom_posting_state === 'ALREADY_SETTLED') return operationAlert('success', 'Pago registrado correctamente', 'Tu cuenta ya se encontraba actualizada.');
+  if (attempt.phantom_posting_state === 'NEEDS_REVIEW') return operationAlert('warning', 'Pago recibido', 'Estamos verificando la actualización de tu cuenta. No vuelvas a realizar el pago.');
+  return operationAlert('success', 'Pago recibido correctamente', 'Recibimos tu pago. Puede tardar unos minutos en verse reflejado en el estado de tu cuenta. No es necesario que vuelvas a pagarlo.');
+}
 
 export function paymentPanel() {
   if (!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) return '';

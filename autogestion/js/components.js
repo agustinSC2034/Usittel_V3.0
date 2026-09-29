@@ -19,7 +19,7 @@ export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
   if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
   if (attempt.phantom_payment_posted || attempt.phantom_posting_state === 'ALREADY_SETTLED') return { label: 'Pagada', hint: '' };
-  return { label: 'Pago confirmado', hint: 'Tu saldo puede tardar en actualizarse.' };
+  return { label: 'Pago confirmado', hint: attempt.phantom_posting_state === 'NEEDS_REVIEW' ? 'Estamos verificando la actualización de tu cuenta.' : 'Estamos actualizando tu cuenta.' };
 }
 export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;
@@ -44,7 +44,7 @@ export function invoicePayButton(item, attrs = '') {
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';
-  return `<div class="invoice-actions">${action('Ver factura', 'invoice', item.id, 'file-text')}${real && !item.downloadAvailable ? `<button class="text-action" disabled title="La descarga de esta factura no está disponible">${icon('download')}Descargar factura</button>` : action('Descargar factura', 'download-invoice', item.id, 'download')}${(real ? item.status === 'Pendiente' : item.status !== 'Pagada') ? invoicePayButton(item) : ''}</div>`;
+  return `<div class="invoice-actions">${action('Ver factura', 'invoice', item.id, 'file-text')}${real && !item.downloadAvailable ? `<button class="text-action" disabled title="La descarga de esta factura no está disponible">${icon('download')}Descargar factura</button>` : action('Descargar factura', 'download-invoice', item.id, 'download')}${(real ? invoiceVisibleStatus(item).label !== 'Pagada' && item.status === 'Pendiente' : item.status !== 'Pagada') ? invoicePayButton(item) : ''}</div>`;
 }
 export function invoiceTable(items, full = false) {
   if (!items.length) return `<p class="muted">${runtime.warnings.includes('INVOICES_UNAVAILABLE') ? 'Facturas no disponibles en este momento.' : 'No hay facturas para mostrar.'}</p>`;

@@ -1,6 +1,6 @@
 import { servicePage, SPEEDTEST_URL } from './service-view.js';
 import { homeAccount, homeConnection } from './home-presentation.js';
-import { paymentPanel } from './payment-view.js';
+import { paymentPanel, paymentStatusBanner } from './payment-view.js';
 import { customer, invoices, ticket, money, debt, credit, runtime, planLabel, addressLabel } from './data.js';
 import { logo, status, button, input, invoiceTable, icon, escapeHTML as e } from './components.js';
 function attentionButton() {
@@ -26,7 +26,7 @@ export function billing() {
   const tabs = movementsAvailable ? `<div class="billing-tabs" role="tablist" aria-label="Facturación"><button type="button" id="billing-tab-invoices" role="tab" aria-selected="${!movements}" aria-controls="billing-panel-invoices" data-action="billing-tab" data-view="invoices">Facturas</button><button type="button" id="billing-tab-movements" role="tab" aria-selected="${movements}" aria-controls="billing-panel-movements" data-action="billing-tab" data-view="movements">Movimientos</button></div>` : '';
   const invoiceContent = `<section id="billing-panel-invoices" role="tabpanel" aria-labelledby="billing-tab-invoices"><section class="debt-strip" aria-label="Resumen de deuda"><p>${credit > 0 ? 'Saldo a favor' : 'Deuda total'}</p><p class="amount">${money(credit > 0 ? credit : debt)}</p>${unpostedConfirmed ? '<p class="field-hint">Tu saldo puede tardar en reflejar pagos recientes.</p>' : ''}</section>${invoiceTable(invoices, true)}${runtime.nextOffset !== null ? button(runtime.invoicesLoading ? 'Cargando…' : 'Cargar más', 'more-invoices', { secondary: true, attrs: runtime.invoicesLoading ? 'disabled' : '' }) : ''}${runtime.mode === 'phantom' && runtime.endReached && invoices.length ? '<p class="field-hint">No hay más facturas para mostrar.</p>' : ''}${runtime.paymentsEnabled ? `<p class="billing-note">${icon('external-link')} Al presionar Pagar, serás redirigido al portal de SIRO, nuestro proveedor de pagos.</p>` : ''}</section>`;
   const movementContent = `<section id="billing-panel-movements" role="tabpanel" aria-labelledby="billing-tab-movements">${paymentPanel()}</section>`;
-  return `<div class="billing-heading"><div><h1 tabindex="-1">Facturas</h1><p class="page-subtitle">${movements ? 'Pagos y movimientos recientes' : 'Estado de cuenta y comprobantes'}</p></div>${runtime.mode === 'phantom' ? `<button type="button" class="billing-refresh" data-action="billing-refresh" aria-label="Actualizar facturas y movimientos" title="Actualizar" ${runtime.billingRefreshing ? 'disabled aria-busy="true"' : ''}>${icon('refresh-cw')}</button>` : ''}</div>${tabs}${movements ? movementContent : invoiceContent}`;
+  return `<div class="billing-heading"><div><h1 tabindex="-1">Facturas</h1><p class="page-subtitle">${movements ? 'Pagos y movimientos recientes' : 'Estado de cuenta y comprobantes'}</p></div>${runtime.mode === 'phantom' ? `<button type="button" class="billing-refresh" data-action="billing-refresh" aria-label="Actualizar facturas y movimientos" title="Actualizar" ${runtime.billingRefreshing ? 'disabled aria-busy="true"' : ''}>${icon('refresh-cw')}</button>` : ''}</div>${tabs}${movements ? movementContent : paymentStatusBanner() + invoiceContent}`;
 }
 export function service() { return servicePage(); }
 export function support() {

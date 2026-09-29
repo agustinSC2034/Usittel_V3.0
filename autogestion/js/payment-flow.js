@@ -2,6 +2,10 @@
 // CRM state and idempotency before any Phantom write.
 const postingInFlight = new Map();
 
+export function paymentReturnAttempt(hash) {
+  return /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(hash)?.[1] || null;
+}
+
 export function canRecoverPosting(attempt, postingEnabled) {
   if (!postingEnabled || attempt?.state !== 'CONFIRMED' || !/^[a-f0-9]{32}$/.test(attempt.attempt_id || '')) return false;
   if (attempt.phantom_posting_state === 'NOT_POSTED') return attempt.can_post_to_phantom === true;

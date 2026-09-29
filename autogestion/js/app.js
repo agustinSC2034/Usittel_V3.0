@@ -5,7 +5,7 @@ import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat, closeCentralChat } from './central-chat.js';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
-import { resolvePaymentFlow } from './payment-flow.js';
+import { paymentReturnAttempt, resolvePaymentFlow } from './payment-flow.js';
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -16,8 +16,8 @@ let authenticated = false;
 let paymentBusy = false;
 let serviceBusy = false;
 // Navigation hint only; authorization and all outcome checks remain on the server.
-let returnAttempt = /^#\/facturas\?attempt=([a-f0-9]{32})$/.exec(location.hash)?.[1] || null;
-if (returnAttempt) { runtime.billingView = 'movements'; history.replaceState(null, '', '#/facturas'); }
+let returnAttempt = paymentReturnAttempt(location.hash);
+if (returnAttempt) { runtime.billingView = 'invoices'; history.replaceState(null, '', '#/facturas'); }
 function applyServices(data) { if (typeof data.payments_enabled === 'boolean') runtime.paymentsEnabled = data.payments_enabled; if (typeof data.phantom_posting_enabled === 'boolean') runtime.phantomPostingEnabled = data.phantom_posting_enabled; if (typeof data.payment_history_enabled === 'boolean') runtime.paymentHistoryEnabled = data.payment_history_enabled; runtime.services = data.services || []; runtime.selectedServiceId = data.selectedServiceId || null; runtime.servicesUnavailable = data.servicesUnavailable === true; }
 let dataGeneration = 0;
 
@@ -62,6 +62,7 @@ function render() {
   else if (route === 'login' || !views[route]) route = 'inicio';
   if (location.hash !== `#/${route}`) history.replaceState(null, '', `#/${route}`);
   const changed = activeRoute !== route;
+  if (activeRoute === 'facturas' && route !== 'facturas') runtime.paymentFocus = null;
   activeRoute = route;
   const notice = runtime.warnings.length ? '<p class="demo-notice" role="status">Parte de la información no está disponible o requiere revisión. El saldo de cuenta y el estado de cada factura pueden diferir.</p>' : '';
   const content = runtime.loading ? '<h1 tabindex="-1">Cargando tu información…</h1><p role="status">Un momento, por favor.</p>' : runtime.error ? `<h1 tabindex="-1">Información no disponible</h1><p role="alert">${e(runtime.error)}</p><div class="dialog-actions">${button('Volver a intentar', 'retry')}${button('Cerrar sesión', 'logout', { secondary: true })}</div>` : notice + views[route]?.();
@@ -83,7 +84,7 @@ function render() {
 function getInvoice(id) { return invoices.find(item => item.id === id); }
 function invoiceDialog(item, receipt = false) {
   if (!item || (receipt && item.status !== 'Pagada')) return;
-  if (runtime.mode === 'phantom') { const visible=invoiceVisibleStatus(item); return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(visible.label)}${visible.hint ? `<p class="field-hint">${e(visible.hint)}</p>` : ''}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' ? invoicePayButton(item) : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div>`); }
+  if (runtime.mode === 'phantom') { const visible=invoiceVisibleStatus(item); return openDialog('Detalle de factura', `<div class="document-summary"><h3>${e(item.period)}</h3><p class="amount">${money(item.amount)}</p>${status(visible.label)}${visible.hint ? `<p class="field-hint">${e(visible.hint)}</p>` : ''}</div><dl class="dialog-details"><div><dt>Comprobante</dt><dd>${e(item.number)}</dd></div><div><dt>Tipo</dt><dd>${e(item.type)}</dd></div><div><dt>Primer vencimiento</dt><dd>${e(item.due)}</dd></div><div><dt>Segundo vencimiento</dt><dd>${e(item.secondDue)}</dd></div></dl><p class="field-hint">Importe total de la factura. El saldo de tu cuenta se muestra en Facturas.</p><div class="dialog-actions">${item.status === 'Pendiente' && visible.label !== 'Pagada' ? invoicePayButton(item) : ''}${button('Descargar factura','download-invoice',{secondary:true,attrs:`data-id="${e(item.id)}" ${item.downloadAvailable ? '' : 'disabled'}`})}</div>`); }
   openDialog(receipt ? 'Comprobante de pago' : 'Detalle de factura', `<p class="demo-caption">Documento de ejemplo · Sin validez fiscal</p><div class="document-summary"><h3>${item.period}</h3><p class="amount">${money(item.amount)}</p>${status(item.status)}</div><dl class="dialog-details"><div><dt>Servicio</dt><dd>${e(planLabel(customer.plan))}</dd></div><div><dt>Domicilio</dt><dd>${e(addressLabel(customer.address))}</dd></div><div><dt>Vencimiento</dt><dd>${item.due}</dd></div>${receipt ? `<div><dt>Fecha de pago de ejemplo</dt><dd>${item.paidAt}</dd></div>` : '<div><dt>Concepto</dt><dd>Abono mensual</dd></div>'}</dl><div class="dialog-actions">${!receipt && item.status !== 'Pagada' ? button('Pagar', 'pay', { iconName: 'external-link', attrs: `data-id="${item.id}"` }) : ''}${button(receipt ? 'Descargar comprobante' : 'Descargar factura', receipt ? 'download-receipt' : 'download-invoice', { secondary: !receipt && item.status !== 'Pagada', iconName: 'download', attrs: `data-id="${item.id}"` })}</div>`);
 }
 function wifiForm(requestId,dualBand) {
@@ -331,7 +332,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
-      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
+      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.paymentFocus = null; runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
     return;
@@ -412,16 +413,14 @@ async function refreshOverviewSnapshot(generation) {
 async function refreshPayments({ reconcile = true, recoverPosting = true, targetAttemptId = null, refreshOverviewAfterPost = true } = {}) {
   if ((!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) || !authenticated) return;
   const generation = dataGeneration;
-  if (runtime.paymentHistoryEnabled) {
-    try { const list=await request('payment-history'); if(generation!==dataGeneration||!authenticated)return;runtime.paymentHistoryItems=list.items;runtime.paymentHistoryError=''; }
-    catch { if(generation===dataGeneration) runtime.paymentHistoryError='No pudimos consultar los movimientos registrados. Volvé a intentar.'; }
-  }
   if (runtime.paymentsEnabled) {
     try {
       const list = await request('payments');
       if (generation !== dataGeneration || !authenticated) return;
       runtime.paymentItems = list.items; runtime.paymentError = '';
       const returnedId = returnAttempt;
+      const returnedAttempt = list.items.find(item => item.attempt_id === returnedId);
+      if (returnedAttempt && runtime.selectedServiceId) runtime.paymentFocus = { attemptId: returnedId, serviceId: String(runtime.selectedServiceId) };
       const selectedAttemptId = targetAttemptId || returnedId;
       const selectedServiceId = runtime.selectedServiceId;
       if (reconcile || recoverPosting) {
@@ -433,13 +432,18 @@ async function refreshPayments({ reconcile = true, recoverPosting = true, target
         });
         if (generation !== dataGeneration || !authenticated) return;
         runtime.paymentItems = flow.items;
-        if (returnAttempt === returnedId) returnAttempt = null;
+        if (returnedAttempt && returnAttempt === returnedId) returnAttempt = null;
         if (flow.postAttempted && refreshOverviewAfterPost) await refreshOverviewSnapshot(generation);
       }
     } catch (error) { if (generation === dataGeneration) {
       runtime.paymentError = 'Estamos verificando la actualización de tu cuenta. No vuelvas a pagar.';
       if (error.status === 401 || error.code === 'SERVICE_CHANGED') await handleError(error);
     } }
+  }
+  // Read history after any posting so Movimientos reflects the newest result.
+  if (runtime.paymentHistoryEnabled) {
+    try { const list=await request('payment-history'); if(generation!==dataGeneration||!authenticated)return;runtime.paymentHistoryItems=list.items;runtime.paymentHistoryError=''; }
+    catch { if(generation===dataGeneration) runtime.paymentHistoryError='No pudimos consultar los movimientos registrados. Volvé a intentar.'; }
   }
   if (generation === dataGeneration) render();
 }

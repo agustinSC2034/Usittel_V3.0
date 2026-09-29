@@ -439,10 +439,10 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     const app=fs.readFileSync(path.join(root,'js','app.js'),'utf8');
     assert.match(views,/role="tablist"[\s\S]*role="tab"[\s\S]*Facturas[\s\S]*Movimientos/);
     assert.match(views,/role="tabpanel"/);
-    assert.match(app,/returnAttempt[\s\S]*billingView = 'movements'/);
+    assert.match(app,/returnAttempt[\s\S]*billingView = 'invoices'/);
     assert.match(payments,/\['CONFIRMED', 'CANCELLED', 'REJECTED'\]/);
     const components=fs.readFileSync(path.join(root,'js','components.js'),'utf8');
-    assert.match(components,/Pago confirmado[\s\S]*saldo puede tardar en actualizarse/);
+    assert.match(components,/Pago confirmado[\s\S]*Estamos actualizando tu cuenta/);
     assert.match(views,/saldo puede tardar en reflejar pagos recientes/);
     assert.match(views,/portal de SIRO, nuestro proveedor de pagos/);
     assert.match(views,/billing-heading[\s\S]*billing-refresh/);

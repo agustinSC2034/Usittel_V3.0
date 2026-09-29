@@ -278,7 +278,17 @@
   .password-toggle { position:absolute; right:2px; top:2px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; color:var(--muted); }
   .login-main .button { width:100%; margin-top:6px; }
   .login-note { font-size:12px; line-height:1.6; color:var(--muted); margin-top:12px; text-align:center; }
-  .recovery-link { display:block; color:var(--green); text-decoration:underline; margin:30px auto 0; min-height:44px; font-size:14px; }
+  .attention-login-help { border-top:1px solid var(--line); margin-top:24px; padding-top:20px; text-align:center; }
+  .attention-login-help p { font-size:14px; line-height:1.5; }
+  .recovery-link { display:inline-flex; align-items:center; justify-content:center; color:var(--green); text-decoration:underline; margin:8px auto; padding:0 8px; min-height:44px; font-size:14px; font-weight:600; }
+  .login-contact { color:var(--muted); }
+  .login-contact-action { color:var(--green); text-decoration:underline; font-weight:600; padding:8px 3px; }
+  dialog:has(.login-invoice-guide) { max-width:740px; }
+  .login-invoice-guide > p { margin-bottom:14px; }
+  .login-invoice-example { display:block; border:1px solid var(--line); border-radius:8px; overflow:hidden; text-align:center; }
+  .login-invoice-example svg { display:block; width:100%; height:auto; }
+  .login-invoice-example span { display:block; padding:10px; color:var(--green); font-size:14px; font-weight:600; }
+  .login-invoice-guide .dialog-actions { align-items:flex-start; }
   dialog { border:1px solid var(--line); border-radius:12px; width:calc(100% - 32px); max-width:490px; max-height:85dvh; padding:28px; color:var(--ink); background:#fff; margin:auto; overflow-y:auto; box-shadow:0 12px 45px #101c3524; }
   dialog::backdrop { background:#13203950; }
   .dialog-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; }
@@ -412,7 +422,7 @@
   .login-main .field { margin-bottom:26px; }
   .login-main .field label { font-size:15px; }
   .login-main .button { margin-top:7px; }
-  .recovery-link { border-top:1px solid var(--line); width:100%; padding-top:24px; margin-top:24px; }
+  .recovery-link { width:100%; }
   dialog { padding:21px; }
   .dialog-heading h2 { font-size:20px; }
   .dialog-details > div { font-size:13px; }

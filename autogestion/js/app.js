@@ -72,11 +72,6 @@ function render() {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
       if (paymentBusy && ['pay', 'payment-check', 'payment-post', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
     });
-    if (route === 'login') {
-      const hint = document.createElement('p'); hint.className = 'field-hint';
-      hint.textContent = 'La recuperación de contraseña todavía no está habilitada.';
-      app.querySelector('main').append(hint);
-    }
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
   if (changed) { window.scrollTo(0, 0); app.querySelector('h1')?.focus({ preventScroll: true }); }
@@ -174,6 +169,10 @@ document.addEventListener('click', async event => {
   if (action === 'chat' || action === 'sales') {
     if (dialog.open) dialog.close();
     if (!await openCentralChat(target.dataset.chatTopic)) toast('El chat no está disponible en este momento. Volvé a intentar más tarde.');
+    return;
+  }
+  if (action === 'show-login-help') {
+    openDialog('Dónde encontrar tus datos de acceso', `<div class="login-invoice-guide"><p>Buscá el recuadro <strong>Información para el cliente</strong> en tu factura de USITTEL. Ahí figuran tu usuario y contraseña de autogestión.</p><a class="login-invoice-example" href="assets/factura-ejemplo-acceso.png" target="_blank" rel="noopener noreferrer" aria-label="Ver factura de ejemplo completa"><svg viewBox="558 638 287 56" role="img" aria-label="Detalle de la factura de ejemplo donde se indican Usuario y Contraseña"><image href="assets/factura-ejemplo-acceso.png" width="845" height="821"></image></svg><span>Ver factura completa</span></a><p class="field-hint">Es una factura de ejemplo: los datos de acceso no se muestran.</p><div class="dialog-actions"><p>¿No encontrás tus datos?</p>${button('Contactanos', 'chat', { secondary: true, attrs: 'data-chat-topic="access-help"' })}</div></div>`);
     return;
   }
   const item = getInvoice(target.dataset.id);

@@ -19,10 +19,11 @@ function createPreviewServer({ channelKey = '' } = {}) {
     if (pathname.includes('\\') || pathname.includes('\0')) return send(404);
     const csp = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'";
     const hub = /^\/atencion\/?$/.test(pathname);
-    const real = hub;
+    const sales = /^\/atencion\/ventas\/?$/.test(pathname);
+    const real = hub || sales;
     // Only this explicit preview page may load the SDK and its cross-origin frame.
     // Public home keeps its existing external assets; requests are blocked in QA.
-    if (hub || pathname.startsWith('/autogestion/')) res.setHeader('Content-Security-Policy', real ? csp.replace("script-src 'self'", "script-src 'self' https://web.central.chat").replace("frame-src 'none'", 'frame-src https://web.central.chat') : csp);
+    if (real || pathname.startsWith('/autogestion/')) res.setHeader('Content-Security-Policy', real ? csp.replace("script-src 'self'", "script-src 'self' https://web.central.chat").replace("frame-src 'none'", 'frame-src https://web.central.chat') : csp);
     if (pathname === '/attention-preview-config.json') {
       res.setHeader('Content-Type', 'application/json');
       if (!/^[A-Za-z0-9_-]{1,100}\|[A-Za-z0-9_-]{1,100}$/.test(channelKey)) return send(503, JSON.stringify({ available:false }));
@@ -34,6 +35,7 @@ function createPreviewServer({ channelKey = '' } = {}) {
     }
     if (pathname === '/') pathname = '/index.html';
     if (hub) pathname = '/atencion/index.html';
+    if (sales) pathname = '/atencion/ventas/index.html';
     if (pathname === '/autogestion') pathname = '/autogestion/index.html';
     if (pathname.endsWith('/')) pathname += 'index.html';
     // Closed roots: do not expose server/, tests/, vendor/, private files or .git.

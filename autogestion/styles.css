@@ -285,7 +285,7 @@
   .login-contact-action { color:var(--green); text-decoration:underline; font-weight:600; padding:8px 3px; }
   dialog:has(.login-invoice-guide) { max-width:740px; }
   .login-invoice-guide > p { margin-bottom:14px; }
-  .login-invoice-example { display:block; border:1px solid var(--line); border-radius:8px; overflow:hidden; text-align:center; }
+  .login-invoice-example { display:block; max-width:470px; margin:0 auto; border:1px solid var(--line); border-radius:8px; overflow:hidden; text-align:center; }
   .login-invoice-example svg { display:block; width:100%; height:auto; }
   .login-invoice-example span { display:block; padding:10px; color:var(--green); font-size:14px; font-weight:600; }
   .login-invoice-guide .dialog-actions { align-items:flex-start; }

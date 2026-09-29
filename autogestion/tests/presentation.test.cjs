@@ -99,6 +99,13 @@ const path = require('node:path');
   check('CTA y launcher comparten helper Central', () => {assert.match(app,/action === 'chat-launcher'[\s\S]*closeCentralChat\(\)[\s\S]*openCentralChat\(\)/);assert.match(app,/action === 'chat' \|\| action === 'sales'[\s\S]*openCentralChat\(target\.dataset\.chatTopic\)/);});
   check('Home y Soporte siguen usando acción compartida', () => {assert.match(home(),/data-action="chat"/);assert.match(faq,/data-action="chat" data-chat-topic="technical-support"/);});
   check('ayuda de acceso en Login usa el mismo chat con tema genérico', () => assert.match(login(),/data-action="chat" data-chat-topic="access-help">Contactanos/));
+  check('guía de acceso muestra el recuadro de la factura de ejemplo', () => {
+    assert.match(app,/viewBox="0 600 230 82"/);
+    assert.match(app,/width="551" height="705"/);
+    assert.match(app,/Los datos de la imagen son solo de ejemplo/);
+    assert.doesNotMatch(app,/los datos de acceso no se muestran/);
+    assert.ok(fs.statSync(path.join(__dirname,'..','assets','factura-ejemplo-acceso.png')).size > 0);
+  });
   check('oferta Mesh recibe solo tema genérico permitido', () => {data.runtime.commercialOffers=[{id:'mesh',type:'mesh',public_name:'Wi-Fi Mesh',description:'Cobertura.',price_monthly:6999,currency:'ARS'}];assert.match(servicePage(),/data-action="chat" data-chat-topic="mesh"/);data.runtime.commercialOffers=[];});
   check('Mi USITTEL no ofrece WhatsApp como fallback', () => {const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');assert.doesNotMatch(html,/wa\.me|data-central-fallback|WhatsApp/);assert.doesNotMatch(app,/data-central-fallback|wa\.me/);assert.match(app,/chat no está disponible en este momento/);});
   overview({known:true,items:[]});

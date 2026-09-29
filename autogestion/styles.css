@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+#central-chat-mount { position:fixed; right:24px; bottom:96px; z-index:2147483646; width:min(540px,calc(100vw - 32px)); height:min(840px,calc(100dvh - 128px)); overflow:hidden; border-radius:18px; background:#fff; box-shadow:0 12px 32px #001f1633; visibility:hidden; pointer-events:none; }
+#central-chat-mount.is-open { visibility:visible; pointer-events:auto; }
+#central-chat-mount central-chat { display:block; width:100%; height:100%; }
 .portal-chat-toggle { position:fixed; right:24px; bottom:24px; z-index:2147483647; display:grid; place-items:center; width:56px; height:56px; border:0; border-radius:50%; background:var(--green,#087449); color:#fff; box-shadow:0 8px 24px #001f1640; cursor:pointer; transition:transform .15s ease,background .15s ease; }
 .portal-chat-toggle:hover { background:var(--green-hover,#075f3d); transform:translateY(-2px); }
 .portal-chat-toggle:focus-visible { outline:3px solid #074fdb; outline-offset:3px; }
@@ -12,9 +15,10 @@
 .portal-chat-toggle.is-open .chat-close-icon { display:block; }
 .portal-chat-toggle.is-open { top:calc(16px + env(safe-area-inset-top)); bottom:auto; right:16px; width:48px; height:48px; background:#103d31; }
 @media (max-width:760px) { .portal-chat-toggle:not(.is-open) { right:16px; bottom:calc(88px + env(safe-area-inset-bottom)); } }
-/* Central's desktop frame is bottom-aligned and capped at 840px. Its header close
-   is 56px below the frame top; center our 48px control over that button. */
-@media (min-width:761px) { .portal-chat-toggle.is-open { top:calc(max(0px,100dvh - 840px) + 32px); right:29px; } }
+/* Our close control covers Central's header close; embedded mode removes its
+   separate floating launcher entirely. */
+@media (min-width:761px) { .portal-chat-toggle.is-open { top:calc(max(32px,100dvh - 936px) + 16px); right:38px; } }
+@media (max-width:760px) { #central-chat-mount { inset:0; width:100%; height:100dvh; border-radius:0; } .portal-chat-toggle.is-open { right:14px; } }
 @media (prefers-reduced-motion:reduce) { .portal-chat-toggle { transition:none; } }
 
 .plan-upgrade { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:1.5rem; }

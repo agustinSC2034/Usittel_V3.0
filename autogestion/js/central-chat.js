@@ -14,6 +14,8 @@ const PREFILL_BY_TOPIC = Object.freeze({
 });
 function updatePortalLauncher(open) {
   const button = document.querySelector('[data-action="chat-launcher"]');
+  const mount = document.getElementById('central-chat-mount');
+  mount?.classList.toggle('is-open', open);
   if (!button) return;
   const label = open ? 'Cerrar chat de soporte' : 'Abrir chat de soporte';
   button.classList.toggle('is-open', open);
@@ -35,7 +37,9 @@ export class CentralChatAdapter {
     const container = document.getElementById('attention-chat-container');
     const portalMount = document.getElementById('central-chat-mount');
     this.portal = Boolean(portalMount && !container);
-    if (container) this.element.setAttribute('mode', 'fill-container');
+    // The portal owns the only floating launcher. Embedded mode prevents
+    // Central from rendering its second launcher below the chat panel.
+    if (container || this.portal) this.element.setAttribute('mode', 'fill-container');
     if (this.portal) this.element.setAttribute('hide', '');
     this.ready = new Promise(resolve => {
       this.element.addEventListener('central-chat-mount', () => resolve(), { once: true });

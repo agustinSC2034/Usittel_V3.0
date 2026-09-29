@@ -10,7 +10,7 @@ export function paymentStatusBanner() {
   if (!attempt) return '';
   if (attempt.state === 'CANCELLED') return operationAlert('info', 'Pago cancelado', 'El pago no se completó y tu cuenta no tuvo cambios.');
   if (attempt.state === 'REJECTED') return operationAlert('error', 'Pago rechazado', 'El pago no se completó y tu cuenta no tuvo cambios.');
-  if (attempt.state !== 'CONFIRMED') return operationAlert('warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos tu cuenta. No vuelvas a pagar esta factura.');
+  if (attempt.state !== 'CONFIRMED') return operationAlert('warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos el estado de tu cuenta. No vuelvas a pagar esta factura por ahora.');
   if (attempt.phantom_payment_posted || attempt.phantom_posting_state === 'POSTED') return operationAlert('success', 'Pago registrado correctamente', 'Tu pago ya fue registrado en tu cuenta.');
   if (attempt.phantom_posting_state === 'ALREADY_SETTLED') return operationAlert('success', 'Pago registrado correctamente', 'Tu cuenta ya se encontraba actualizada.');
   if (attempt.phantom_posting_state === 'NEEDS_REVIEW') return operationAlert('warning', 'Pago recibido', 'Estamos verificando la actualización de tu cuenta. No vuelvas a realizar el pago.');

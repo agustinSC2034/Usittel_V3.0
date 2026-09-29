@@ -168,8 +168,8 @@ const path = require('node:path');
     runtime.mode = 'phantom'; runtime.paymentsEnabled = true; runtime.paymentHistoryEnabled = true;
     runtime.selectedServiceId = '1'; runtime.paymentFocus = { attemptId: id, serviceId: '1' };
     const cases = [
-      [attempt('UNCONFIRMED'), 'warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos tu cuenta'],
-      [attempt('PENDING'), 'warning', 'Estamos verificando tu pago', 'No vuelvas a pagar esta factura'],
+      [attempt('UNCONFIRMED'), 'warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos el estado de tu cuenta'],
+      [attempt('PENDING'), 'warning', 'Estamos verificando tu pago', 'No vuelvas a pagar esta factura por ahora'],
       [attempt('CONFIRMED'), 'success', 'Pago recibido correctamente', 'No es necesario que vuelvas a pagarlo'],
       [attempt('CONFIRMED', 'POST_UNCONFIRMED'), 'success', 'Pago recibido correctamente', 'Puede tardar unos minutos'],
       [attempt('CONFIRMED', 'POSTED'), 'success', 'Pago registrado correctamente', 'ya fue registrado'],
@@ -188,7 +188,7 @@ const path = require('node:path');
       assert.doesNotMatch(html, /NOT_POSTED|NEEDS_REVIEW|SIRO [a-f0-9]/);
     }
     runtime.paymentItems = [attempt('UNCONFIRMED')];
-    assert.match(paymentStatusBanner(), /Por favor, aguardá unos minutos mientras actualizamos tu cuenta\. No vuelvas a pagar esta factura\./);
+    assert.match(paymentStatusBanner(), /Por favor, aguardá unos minutos mientras actualizamos el estado de tu cuenta\. No vuelvas a pagar esta factura por ahora\./);
     assert.doesNotMatch(paymentStatusBanner(), /pago recibido|pago registrado/i);
   });
   await check('Facturas muestra banner arriba de deuda, conserva Movimientos manual', () => {

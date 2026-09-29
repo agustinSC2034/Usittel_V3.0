@@ -78,7 +78,7 @@ test('sales has its own standalone Central channel without changing attention or
   const home = await (await fetch(base + '/')).text();
   const portal = await (await fetch(base + '/autogestion/')).text();
   const attentionKey = 'wiOT-40q9iiyNBb8NahcAg|SZaCDgFymGhOoc4aJwuCMQ';
-  const salesKey = 'wiOT-40q9iiyNBb8NahcAg|MXuFJY8MqowisQBQSjLt-Q';
+  const salesKey = 'wiOT-40q9iiyNBb8NahcAg|MXuFJY8MqoWisQBQSjLt-Q';
   for (const route of ['/atencion/ventas/', '/atencion/ventas/?campaign=promo500', '/atencion/ventas/?intent=ventas']) {
     const response = await fetch(base + route, { redirect:'manual' });
     assert.equal(response.status, 200, route);

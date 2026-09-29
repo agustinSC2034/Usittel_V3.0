@@ -26,11 +26,25 @@ test('preview isolates demo, config, CSP and filesystem from real operations', a
   const real = await fetch(base + '/atencion?chat-provider=central');
   assert.match(real.headers.get('content-security-policy'), /frame-src https:\/\/web.central.chat/);
   const realHtml = await real.text();
-  assert.match(realHtml, /<central-chat\b/);
+  assert.equal((realHtml.match(/<central-chat\b/g) || []).length, 1);
+  assert.match(realHtml, /<central-chat\b[^>]*locale="es"[^>]*mode="fill-container"/);
+  assert.match(realHtml, /src="https:\/\/web\.central\.chat\/widget\/core\.js"/);
   assert.match(realHtml, /href="\.\.\/atencion\/attention\.css"/);
-  assert.match(realHtml, /src="\.\.\/atencion\/entry\.js"/);
+  assert.match(realHtml, /name="robots" content="noindex, nofollow"/);
+  assert.match(realHtml, /<noscript>[\s\S]*medios de contacto[\s\S]*<\/noscript>/);
+  assert.doesNotMatch(realHtml, /entry\.js|chat=open|WhatsApp|wa\.me|<header\b|<footer\b|site-chat-launcher|Abrir chat/);
   assert.equal((await fetch(base + '/atencion/attention.css')).status, 200);
-  assert.equal((await fetch(base + '/atencion/entry.js')).status, 200);
+  assert.equal((await fetch(base + '/atencion/entry.js')).status, 404);
+  for (const route of ['/atencion', '/atencion?intent=soporte']) {
+    const response = await fetch(base + route, { redirect:'manual' });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('location'), null);
+    assert.equal(new URL(response.url).search, route.includes('?') ? '?intent=soporte' : '');
+  }
+  const css = await (await fetch(base + '/atencion/attention.css')).text();
+  assert.match(css, /height: 100dvh/);
+  assert.match(css, /overflow: hidden/);
+  assert.match(css, /safe-area-inset-bottom/);
   const login = await fetch(base + '/autogestion/?chat-provider=central');
   assert.doesNotMatch(login.headers.get('content-security-policy'), /central\.chat/);
   const config = await fetch(base + '/attention-preview-config.json');

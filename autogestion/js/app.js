@@ -5,6 +5,7 @@ import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat, closeCentralChat } from './central-chat.js';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
+import { resolvePaymentFlow } from './payment-flow.js';
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
@@ -215,14 +216,9 @@ document.addEventListener('click', async event => {
     paymentBusy = true; runtime.billingRefreshing = true; render();
     const generation = dataGeneration;
     try {
-      await refreshPayments(false);
+      await refreshPayments({ refreshOverviewAfterPost: false });
       if (generation !== dataGeneration || !authenticated) return;
-      const pending = runtime.paymentItems.filter(a => runtime.phantomPostingEnabled && ['POSTING', 'POST_UNCONFIRMED'].includes(a.phantom_posting_state));
-      for (const attempt of pending) {
-        if (generation !== dataGeneration || !authenticated) return;
-        await request('payment-post', { attempt_id: attempt.attempt_id });
-      }
-      if (generation === dataGeneration && authenticated) await loadOverview();
+      await refreshOverviewSnapshot(generation);
     } catch (error) { if (generation === dataGeneration) await handleError(error); }
     finally { paymentBusy = false; runtime.billingRefreshing = false; render(); }
     return;
@@ -239,14 +235,15 @@ document.addEventListener('click', async event => {
     paymentBusy = true; target.disabled = true; const generation = dataGeneration;
     target.textContent = action === 'pay' ? 'Preparando pago...' : action === 'payment-post' ? 'Actualizando cuenta...' : 'Consultando...';
     try {
-      const route = action === 'pay' ? 'payment-create' : action === 'payment-post' ? 'payment-post' : 'payment-reconcile';
-      const result = await request(route, action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
+      const result = action === 'payment-check'
+        ? (await refreshPayments({ targetAttemptId: target.dataset.attempt }))
+        : await request(action === 'pay' ? 'payment-create' : 'payment-post', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
       if (generation !== dataGeneration || !authenticated) return;
-      await refreshPayments(false);
-      if (result.checkout_url) {
+      if (action !== 'payment-check') await refreshPayments({ reconcile: false, recoverPosting: false });
+      if (result?.checkout_url) {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
         window.location.assign(result.checkout_url);
-      } else { location.hash = '/facturas'; if (action === 'payment-post') await loadOverview(); else render(); }
+      } else { location.hash = '/facturas'; if (action === 'payment-post') await refreshOverviewSnapshot(generation); else render(); }
     } catch (error) { if (generation === dataGeneration) {
       if (['PAYMENT_NOT_UNPAID', 'PAYMENT_INVOICE_CHANGED'].includes(error.code)) await loadOverview();
       await handleError(error);
@@ -408,7 +405,11 @@ async function handleError(error) {
     render(); toast(message);
   } else toast(message);
 }
-async function refreshPayments(reconcile = true) {
+async function refreshOverviewSnapshot(generation) {
+  const overview = await request('overview');
+  if (generation === dataGeneration && authenticated) { applyOverview(overview); render(); }
+}
+async function refreshPayments({ reconcile = true, recoverPosting = true, targetAttemptId = null, refreshOverviewAfterPost = true } = {}) {
   if ((!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) || !authenticated) return;
   const generation = dataGeneration;
   if (runtime.paymentHistoryEnabled) {
@@ -420,14 +421,25 @@ async function refreshPayments(reconcile = true) {
       const list = await request('payments');
       if (generation !== dataGeneration || !authenticated) return;
       runtime.paymentItems = list.items; runtime.paymentError = '';
-      const pending = list.items.find(a => a.attempt_id === returnAttempt) || list.items.find(a => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
-      returnAttempt = null;
-      if (reconcile && pending) {
-        const result = await request('payment-reconcile', { attempt_id: pending.attempt_id });
+      const returnedId = returnAttempt;
+      const selectedAttemptId = targetAttemptId || returnedId;
+      const selectedServiceId = runtime.selectedServiceId;
+      if (reconcile || recoverPosting) {
+        const flow = await resolvePaymentFlow(list.items, {
+          reconcile, targetAttemptId: selectedAttemptId, postingEnabled: recoverPosting && runtime.phantomPostingEnabled,
+          selectedServiceId, request,
+          isCurrent: () => generation === dataGeneration && authenticated && runtime.selectedServiceId === selectedServiceId,
+          onUpdate: items => { if (generation === dataGeneration && authenticated) { runtime.paymentItems = items; render(); } },
+        });
         if (generation !== dataGeneration || !authenticated) return;
-        runtime.paymentItems = runtime.paymentItems.map(a => a.attempt_id === result.attempt_id ? result : a);
+        runtime.paymentItems = flow.items;
+        if (returnAttempt === returnedId) returnAttempt = null;
+        if (flow.postAttempted && refreshOverviewAfterPost) await refreshOverviewSnapshot(generation);
       }
-    } catch (error) { if (generation === dataGeneration) { runtime.paymentError = 'No pudimos consultar los intentos de pago. Volvé a intentar.'; await handleError(error); } }
+    } catch (error) { if (generation === dataGeneration) {
+      runtime.paymentError = 'Estamos verificando la actualización de tu cuenta. No vuelvas a pagar.';
+      if (error.status === 401 || error.code === 'SERVICE_CHANGED') await handleError(error);
+    } }
   }
   if (generation === dataGeneration) render();
 }

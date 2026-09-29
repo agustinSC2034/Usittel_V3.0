@@ -44,8 +44,9 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   r=await recovered.call('bootstrap');check('bootstrap habilita escritura Phantom sólo con compuerta explícita',()=>assert.equal(r.data.phantom_posting_enabled,true));
   await recovered.call('invoices');
   r=await recovered.call('payment-post',{attempt_id:second.attempt_id},{noCsrf:true});check('imputación exige CSRF',()=>assert.equal(r.status,403));
-  r=await recovered.call('payment-post',{attempt_id:second.attempt_id});
-  check('pago confirmado se imputa una vez y se verifica leyendo Phantom',()=>{assert.equal(r.status,200,JSON.stringify(r.data));assert.equal(r.data.phantom_payment_posted,true);assert.equal(r.data.phantom_posting_state,'POSTED');assert.equal(fs.readFileSync(path.join(dir,'phantom-post-calls'),'utf8'),'1');assert.doesNotMatch(r.text,/reference|result_id|fixture-token|SIRO [a-f0-9-]{36}/);});
+  const [postA,postB]=await Promise.all([recovered.call('payment-post',{attempt_id:second.attempt_id}),recovered.call('payment-post',{attempt_id:second.attempt_id})]);
+  r=postA;
+  check('dos refresh simultáneos imputan una sola vez y verifican leyendo Phantom',()=>{assert.equal(r.status,200,JSON.stringify(r.data));assert.equal(postB.status,200);assert.equal(r.data.phantom_payment_posted,true);assert.equal(postB.data.phantom_posting_state,'POSTED');assert.equal(fs.readFileSync(path.join(dir,'phantom-post-calls'),'utf8'),'1');assert.doesNotMatch(r.text,/reference|result_id|fixture-token|SIRO [a-f0-9-]{36}/);});
   r=await recovered.call('payment-post',{attempt_id:second.attempt_id});check('doble click no repite escritura Phantom',()=>{assert.equal(r.data.phantom_payment_posted,true);assert.equal(fs.readFileSync(path.join(dir,'phantom-post-calls'),'utf8'),'1');});
   await recovered.call('invoices');r=await recovered.call('payment-create',{idt:'123'});check('factura imputada no puede volver a cobrarse',()=>{assert.equal(r.status,409);assert.equal(r.data.error.code,'PAYMENT_NOT_UNPAID');});
   r=await recovered.call('overview');check('imputación verificada refleja factura Phantom sin alterar saldo artificialmente',()=>{assert.equal(r.data.account.debt,12500.75);assert.equal(r.data.invoices.items[0].status,'Pagada');});

@@ -14,10 +14,11 @@ export function operationAlert(tone, title, description = '') {
   return `<div class="operation-alert operation-alert-${safeTone}">${icon(symbols[safeTone])}<div><strong>${escapeHTML(title)}</strong>${description ? `<p>${escapeHTML(description)}</p>` : ''}</div></div>`;
 }
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
+const activePaymentAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && !['CANCELLED','REJECTED'].includes(a.state)) : null;
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
   if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
-  if (attempt.phantom_payment_posted) return { label: 'Pagada', hint: '' };
+  if (attempt.phantom_payment_posted || attempt.phantom_posting_state === 'ALREADY_SETTLED') return { label: 'Pagada', hint: '' };
   return { label: 'Pago confirmado', hint: 'Tu saldo puede tardar en actualizarse.' };
 }
 export function navigation(active, mobile = false) {
@@ -37,8 +38,9 @@ export function input(label, name, { value = '', type = 'text', required = true,
 }
 export function invoicePayButton(item, attrs = '') {
   const real = runtime.mode === 'phantom';
-  const confirmed = confirmedAttempt(item);
-  return button(confirmed ? (confirmed.phantom_payment_posted ? 'Pago registrado' : 'Pago confirmado') : 'Pagar', 'pay', { iconName: confirmed ? '' : 'external-link', attrs: `data-id="${escapeHTML(item.id)}" ${attrs} ${real && (!runtime.paymentsEnabled || confirmed) ? 'disabled' : ''}` });
+  const active = activePaymentAttempt(item);
+  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : active ? 'Pago en verificación' : 'Pagar';
+  return button(label, 'pay', { iconName: active ? '' : 'external-link', attrs: `data-id="${escapeHTML(item.id)}" ${attrs} ${real && (!runtime.paymentsEnabled || active) ? 'disabled' : ''}` });
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';

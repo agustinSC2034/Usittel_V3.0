@@ -175,6 +175,8 @@ ok($p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PA
 failure(fn()=>$p->postToPhantom(1,$pending['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>null),'PAYMENT_NOT_CONFIRMED');
 [$p,$store,$g,$dir,$a]=$confirmAttempt();
 failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00']),fn()=>crmRow(),fn()=>null),'PAYMENT_INVOICE_CHANGED');
+failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['IDT'=>'999']),fn()=>crmRow(),fn()=>null),'INVOICE_OWNERSHIP');
+failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['IDA'=>'5']),fn()=>crmRow(),fn()=>null),'INVOICE_OWNERSHIP');
 failure(fn()=>$p->postToPhantom(5,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>null),'PAYMENT_NOT_FOUND');
 $saved=file_get_contents($dir.'/siro-attempts.json');
 ok(!preg_match('/Password|api_pass|Autogestion|access_token|Request|fixture-password|fixture-token/',$saved));

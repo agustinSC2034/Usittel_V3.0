@@ -12,6 +12,7 @@ El formulario guarda el borrador en IndexedDB y también mantiene una copia inme
 - `store.js`: inscripciones y borrador en IndexedDB; índice único de DNI.
 - `sync.js`: cola y acuse del Apps Script.
 - `sw.js`: precache de todos los recursos críticos.
+- `manifest.webmanifest`, `icon-192.png`, `icon-512.png`: instalación de ExpoTan como app desde el navegador.
 - `online.txt`: comprobación ligera de acceso al sitio; no forma parte del cache.
 - `app.js`: flujo del participante y panel local.
 - `apps-script/Code.gs`: receptor para Google Sheets.
@@ -22,6 +23,10 @@ El formulario guarda el borrador en IndexedDB y también mantiene una copia inme
 Desde la raíz del repositorio, ejecutá `python -m http.server 8000` (o cualquier servidor HTTP estático) y abrí `http://localhost:8000/expo/`. `file://` no sirve para Service Worker. Corré `node tests/expo.test.cjs`, `node tests/expo-apps-script.test.cjs` y `node tests/expo-store.test.cjs`. Para la prueba offline, cargá una vez la página con conexión, esperá a que en administración figure **cache offline instalado**, cerrá y reabrí sin red o activá **Offline** en DevTools, y completá una inscripción. Verificá luego el registro y exportá CSV. La primera carga y la instalación del cache requieren conexión.
 
 En la tablet, usá **https://usittel.com.ar/expo/** en un navegador moderno y una **ventana normal**. La prueba en ventana privada llegó a Sheets, pero su IndexedDB se eliminó al cerrar esa ventana. Mantené suficiente espacio libre y no borres los datos del sitio. IndexedDB es local a ese navegador, perfil y origen; cambiar de tablet, perfil o dominio no mueve las inscripciones. `www.usittel.com.ar/expo/` redirige al dominio principal cuando no hay registros locales. Si ya hay registros en `www`, muestra una pantalla de recuperación para abrir administración y descargar el CSV de ese origen. El navegador o el sistema operativo pueden eliminar datos del sitio bajo presión de almacenamiento. Hacé respaldos CSV durante el evento.
+
+## Instalar en la tablet
+
+Abrí **https://usittel.com.ar/expo/** con conexión y esperá a que cargue completamente. En Chrome para Android, elegí **Instalar app** desde el menú del navegador. En Safari para iPad, usá **Compartir → Agregar a pantalla de inicio**. Abrí ExpoTan desde el ícono y comprobá en ese modo una inscripción de prueba, el panel, la sincronización y la apertura sin Internet. Conservá el mismo navegador y perfil durante el evento; no uses una ventana privada.
 
 ## Administración y respaldo
 

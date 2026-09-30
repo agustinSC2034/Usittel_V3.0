@@ -1,6 +1,7 @@
-const CACHE = 'usittel-expo-v10';
+const CACHE = 'usittel-expo-v11';
 const ASSETS = [
-  './', './index.html', './styles.css', './settings.js', './core.js', './store.js', './sync.js', './app.js',
+  './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png',
+  './styles.css', './settings.js', './core.js', './store.js', './sync.js', './app.js',
   '../assets/img/logos/usittel_logo_and_name_blanco.webp', '../assets/img/logos/usittel-logo_and_name.webp',
   '../assets/icons/usittel-logo.png'
 ];

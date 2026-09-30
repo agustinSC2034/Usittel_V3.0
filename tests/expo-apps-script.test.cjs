@@ -6,7 +6,7 @@ const rows = [];
 const sheet = {
   getLastRow: () => rows.length,
   appendRow: row => rows.push(row),
-  getRange: (start, column, count, width) => ({ getValues: () => rows.slice(start - 1, start - 1 + count).map(row => row.slice(column - 1, column - 1 + width)) })
+  getRange: (start, column, count, width) => ({ getValues: () => rows.slice(start - 1, start - 1 + count).map(row => row.slice(column - 1, column - 1 + width)), setValues: values => values.forEach((row, i) => row.forEach((value, j) => { rows[start - 1 + i][column - 1 + j] = value; })) })
 };
 const context = {
   SpreadsheetApp: { openById: () => ({ getSheetByName: () => sheet }), flush: () => {} },
@@ -25,8 +25,8 @@ const send = value => context.doPost({ parameter: { payload: JSON.stringify({ en
 assert.match(send(entry), /"status":"created"/);
 assert.match(send(entry), /window\.top\.postMessage/);
 assert.equal(rows.length, 2); // Header + one participant.
-assert.equal(rows[0].length, 16);
-assert.equal(rows[1].length, 16);
+assert.equal(rows[0].length, 23);
+assert.equal(rows[1].length, 23);
 assert.match(send(entry), /"status":"exists"/);
 assert.equal(rows.length, 2);
 assert.match(send({ ...entry, id: '1d21e38a-764e-4b35-aedf-3231fd0f1301' }), /"status":"exists"/);
@@ -37,3 +37,15 @@ assert.match(send({ ...entry, id: '1d21e38a-764e-4b35-aedf-3231fd0f1301', dni: '
 assert.equal(rows.length, 3);
 assert.equal(rows[2][1], "'=BAD FORMULA");
 console.log('ExpoTan Apps Script validation, duplicate prevention and Sheet escaping passed.');
+
+const legacyRows = rows.map(row => row.slice(0, 16));
+rows.splice(0, rows.length, ...legacyRows);
+const five = { ...entry, id: '4d21e38a-764e-4b35-aedf-3231fd0f1301', dni: '77777777', email: 'prueba@example.com', respuestas: [1,2,3,4,5].map(i => ({ questionId: 'q'+i, pregunta: 'Pregunta '+i, respuesta: 'Respuesta '+i, correcta: i === 1 })) };
+assert.match(send(five), /"status":"created"/);
+assert.equal(rows[0][16], 'Email');
+assert.equal(rows[1][15], entry.id);
+assert.equal(rows.at(-1)[16], five.email);
+assert.equal(rows.at(-1)[20], 'Pregunta 5');
+assert.match(send(five), /"status":"exists"/);
+assert.match(send({ ...five, email: 'bad' }), /"ok":false/);
+console.log('Legacy Sheet migration, five answers and email passed.');

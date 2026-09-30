@@ -36,6 +36,8 @@ Al terminar **cada jornada**: abrí administración, exportá el CSV, guardá un
 
 ## Conectar Google Sheets
 
+Para la versión de cinco preguntas y email, reemplazá el código del proyecto de Apps Script por `apps-script/Code.gs` y usá **Implementar → Administrar implementaciones → Editar → Nueva versión → Implementar** en la implementación existente, conservando la URL `/exec`. Hacé este paso antes del despliegue de cPanel. El ID de la planilla actual ya está incluido. El script mantiene las primeras 16 columnas y agrega Email y las preguntas 4 y 5 en Q:W; no borra filas. También acepta inscripciones anteriores de tres preguntas pendientes de sincronización.
+
 1. Creá una Sheet privada nueva. Copiá su ID de la URL.
 2. Abrí Apps Script desde la Sheet o en `script.google.com`, pegá `apps-script/Code.gs` y reemplazá `PEGAR_ID_DE_LA_PLANILLA`.
 3. Desplegá como **Aplicación web**, ejecutando como tu cuenta y con acceso **Cualquier usuario**. Autorizá los permisos de Sheets. Copiá la URL terminada en `/exec`, no `/dev`.

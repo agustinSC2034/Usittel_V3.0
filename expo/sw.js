@@ -1,4 +1,4 @@
-const CACHE = 'usittel-expo-v11';
+const CACHE = 'usittel-expo-v12';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png',
   './styles.css', './settings.js', './core.js', './store.js', './sync.js', './app.js',

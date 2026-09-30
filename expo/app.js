@@ -68,7 +68,7 @@
       setScreen(`<section class="panel"><p class="eyebrow">Acceso a ExpoTan</p><h1>Usá la dirección principal</h1><p class="lead">Esta dirección guarda los registros en otro almacenamiento del navegador. Si ya inscribiste participantes aquí, abrí administración y descargá el respaldo CSV antes de cambiar.</p><a class="button primary" href="${CANONICAL_EXPO_URL}">Abrir ExpoTan</a></section>`);
       return;
     }
-    setScreen(`<section class="panel welcome"><div class="welcome-copy"><h1>Participá del <span>sorteo</span> de USITTEL.</h1><p class="lead">Respondé 3 preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></div><div class="welcome-art" aria-hidden="true"><div class="fiber-lines"><i></i><i></i><i></i><i></i></div><img src="../assets/img/logos/usittel_logo_and_name_blanco.webp" alt=""><p>La fibra óptica<br>de tu ciudad.</p></div></section>`);
+    setScreen(`<section class="panel welcome"><div class="welcome-copy"><h1>Participá del <span>sorteo</span> de USITTEL.</h1><p class="lead">Respondé ${cfg.questionsPerEntry} preguntas, completá tus datos y participá.</p><button class="button primary" id="begin">Comenzar <span aria-hidden="true">→</span></button><p class="event-date">${escapeHtml(cfg.eventDates)} · Tandil</p></div><div class="welcome-art" aria-hidden="true"><div class="fiber-lines"><i></i><i></i><i></i><i></i></div><img src="../assets/img/logos/usittel_logo_and_name_blanco.webp" alt=""><p>La fibra óptica<br>de tu ciudad.</p></div></section>`);
     document.getElementById('begin').addEventListener('click', begin, { once: true });
   }
   async function begin() {
@@ -91,8 +91,9 @@
       saving = true;
       screen.querySelectorAll('.answer').forEach(item => { item.disabled = true; });
       const selected = q.options.find(option => option.id === button.dataset.option);
-      const correct = q.options.find(option => option.id === q.correctId);
-      draft.answers.push({ questionId: q.id, pregunta: q.text, selectedId: selected.id, respuesta: selected.text, correctId: q.correctId, respuestaCorrecta: correct.text, correcta: selected.id === q.correctId });
+      const correctIds = q.correctIds || [q.correctId];
+      const correct = q.options.filter(option => correctIds.includes(option.id));
+      draft.answers.push({ questionId: q.id, pregunta: q.text, selectedId: selected.id, respuesta: selected.text, correctId: q.correctId, respuestaCorrecta: correct.map(option => option.text).join(' / '), correcta: correctIds.includes(selected.id) });
       try { await persistDraft(); renderQuiz(); }
       catch { draft.answers.pop(); toast('No se pudo guardar tu respuesta. Volvé a intentar.'); renderQuiz(); }
       finally { saving = false; }
@@ -101,7 +102,7 @@
   function renderForm() {
     stage = 'form';
     const f = draft.form;
-    setScreen(`<section class="panel"><div class="flow-topline"><div class="steps" aria-hidden="true"><span class="active"></span><span class="active"></span><span class="active"></span></div>${restartControl()}</div><p class="eyebrow">Ya respondiste las 3 preguntas</p><h2>Completá tus datos</h2><p class="lead">Estos datos nos permiten registrar tu participación.</p><form id="details" novalidate><div class="form-grid"><label class="field">Nombre y apellido<input name="nombre" autocomplete="name" required maxlength="100" value="${escapeHtml(f.nombre || '')}"></label><label class="field">DNI <span class="hint">Solo números, sin puntos</span><input name="dni" inputmode="numeric" autocomplete="off" required maxlength="12" value="${escapeHtml(f.dni || '')}"></label><label class="field">Teléfono<input name="telefono" type="tel" autocomplete="tel" required maxlength="30" value="${escapeHtml(f.telefono || '')}"></label><label class="field">Dirección<input name="direccion" autocomplete="street-address" required maxlength="140" value="${escapeHtml(f.direccion || '')}"></label></div><p class="error" id="form-error" role="alert"></p><div class="form-actions"><button class="button primary" type="submit">Continuar <span aria-hidden="true">→</span></button></div></form></section>`);
+    setScreen(`<section class="panel"><div class="flow-topline"><div class="steps" aria-hidden="true">${draft.questions.map(() => '<span class="active"></span>').join('')}</div>${restartControl()}</div><p class="eyebrow">Ya respondiste las ${draft.questions.length} preguntas</p><h2>Completá tus datos</h2><p class="lead">Estos datos nos permiten registrar tu participación.</p><form id="details" novalidate><div class="form-grid"><label class="field">Nombre y apellido<input name="nombre" autocomplete="name" required maxlength="100" value="${escapeHtml(f.nombre || '')}"></label><label class="field">DNI <span class="hint">Solo números, sin puntos</span><input name="dni" inputmode="numeric" autocomplete="off" required maxlength="12" value="${escapeHtml(f.dni || '')}"></label><label class="field">Teléfono<input name="telefono" type="tel" autocomplete="tel" required maxlength="30" value="${escapeHtml(f.telefono || '')}"></label><label class="field">Dirección<input name="direccion" autocomplete="street-address" required maxlength="140" value="${escapeHtml(f.direccion || '')}"></label><label class="field wide">Email<input name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" value="${escapeHtml(f.email || '')}"></label></div><p class="error" id="form-error" role="alert"></p><div class="form-actions"><button class="button primary" type="submit">Continuar <span aria-hidden="true">→</span></button></div></form></section>`);
     attachRestart();
     const form = document.getElementById('details');
     let inputTimer;
@@ -147,7 +148,7 @@
       const entry = {
         id: crypto.randomUUID(), createdAt: new Date().toISOString(),
         nombre: draft.form.nombre.trim().replace(/\s+/g, ' '), dni: draft.form.dni,
-        telefono: draft.form.telefono.trim(), direccion: draft.form.direccion.trim().replace(/\s+/g, ' '),
+        email: draft.form.email.trim(), telefono: draft.form.telefono.trim(), direccion: draft.form.direccion.trim().replace(/\s+/g, ' '),
         preguntasRespondidas: draft.answers.map(a => a.questionId), respuestas: draft.answers,
         cantidadCorrectas: core.score(draft.answers), syncStatus: 'pending', syncedAt: null
       };

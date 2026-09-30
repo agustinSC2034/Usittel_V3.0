@@ -8,7 +8,7 @@ const context = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../expo/settings.js'), 'utf8'), context);
 const cfg = context.window.EXPO_SETTINGS;
 assert.equal(cfg.questions.length, 5);
-assert.equal(cfg.questionsPerEntry, 3);
+assert.equal(cfg.questionsPerEntry, 5);
 assert.equal(new Set(cfg.questions.map(q => q.id)).size, 5);
 for (const question of cfg.questions) {
   assert.equal(question.options.length, 4);
@@ -25,9 +25,9 @@ for (let trial = 0; trial < 100; trial++) {
   assert.equal(core.score(answers), 2);
 }
 assert.equal(core.normalizeDni(' 12.345.678 '), '12345678');
-const valid = { nombre: 'Ana Pérez', dni: '12345678', telefono: '2494123456', direccion: 'Avenida Colón 123' };
+const valid = { nombre: 'Ana Pérez', dni: '12345678', email: 'ana@example.com', telefono: '2494123456', direccion: 'Avenida Colón 123' };
 assert.equal(core.validate(valid), null);
-for (const patch of [{ nombre: 'Ana' }, { dni: '123' }, { telefono: '123' }, { direccion: 'x' }]) {
+for (const patch of [{ nombre: 'Ana' }, { dni: '123' }, { telefono: '123' }, { direccion: 'x' }, { email: 'incorrecto' }]) {
   assert.ok(core.validate({ ...valid, ...patch }));
 }
 const answer = { pregunta: '¿Pregunta?', respuesta: '=HYPERLINK("bad")', correcta: false, respuestaCorrecta: 'Normal' };
@@ -41,4 +41,10 @@ for (const title of ['Fecha y hora', 'Nombre completo', 'DNI', 'Teléfono', 'Dir
 assert.ok(!csv.includes('Instagram confirmado'));
 assert.ok(!csv.includes('Privacidad aceptada'));
 assert.equal(csv.split('\r\n').length, 2);
-console.log('ExpoTan configuration, random quiz, scoring, validation and CSV passed.');
+assert.deepEqual(core.chooseQuestions(cfg.questions, 5).map(q => q.id), Array.from(cfg.questions, q => q.id));
+for (const q of core.chooseQuestions(cfg.questions, 5)) assert.deepEqual(q.options.map(o => o.id), Array.from(cfg.questions.find(original => original.id === q.id).options, o => o.id));
+assert.deepEqual(Array.from(cfg.questions[1].correctIds), ['fibra', 'internet']);
+assert.equal(core.score([{ selectedId: 'internet', correctId: 'fibra', correcta: true }]), 1);
+assert.ok(csv.includes('Email'));
+assert.ok(csv.includes('Pregunta 5'));
+console.log('ExpoTan ordered quiz, multiple correct answers, email validation and CSV passed.');

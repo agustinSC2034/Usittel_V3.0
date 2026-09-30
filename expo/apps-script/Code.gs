@@ -1,11 +1,12 @@
 // Copy into a standalone Google Apps Script project and set SPREADSHEET_ID.
 // Deploy as a web app: execute as you; access: anyone. See ../README.md.
-const SPREADSHEET_ID = 'PEGAR_ID_DE_LA_PLANILLA';
+const SPREADSHEET_ID = '1MBVqyifNuAQqVNUug0lzrdgx7t0zNHnkKbLLlMmwjJo';
 const SHEET_NAME = 'Participantes';
 const HEADERS = [
   'Fecha y hora', 'Nombre completo', 'DNI', 'Teléfono', 'Dirección',
   'Pregunta 1', 'Respuesta 1', 'Correcta 1', 'Pregunta 2', 'Respuesta 2', 'Correcta 2',
-  'Pregunta 3', 'Respuesta 3', 'Correcta 3', 'Total correctas', 'ID inscripción'
+  'Pregunta 3', 'Respuesta 3', 'Correcta 3', 'Total correctas', 'ID inscripción',
+  'Email', 'Pregunta 4', 'Respuesta 4', 'Correcta 4', 'Pregunta 5', 'Respuesta 5', 'Correcta 5'
 ];
 
 function doPost(event) {
@@ -34,10 +35,11 @@ function doPost(event) {
       }
       if (!status) {
         const answers = entry.respuestas;
-        const cells = answers.flatMap(answer => [safeCell_(answer.pregunta), safeCell_(answer.respuesta), answer.correcta ? 'Sí' : 'No']);
+        const cells = answers.slice(0, 3).flatMap(answer => [safeCell_(answer.pregunta), safeCell_(answer.respuesta), answer.correcta ? 'Sí' : 'No']);
         sheet.appendRow([
           entry.createdAt, safeCell_(entry.nombre), String(entry.dni), safeCell_(entry.telefono), safeCell_(entry.direccion),
-          ...cells, Number(entry.cantidadCorrectas), id
+          ...cells, Number(entry.cantidadCorrectas), id, safeCell_(entry.email || ''),
+          ...[3, 4].flatMap(index => { const answer = answers[index]; return answer ? [safeCell_(answer.pregunta), safeCell_(answer.respuesta), answer.correcta ? 'Sí' : 'No'] : ['', '', '']; })
         ]);
         SpreadsheetApp.flush();
         status = 'created';
@@ -54,6 +56,11 @@ function getSheet_() {
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+  else {
+    const existing = sheet.getRange(1, 1, 1, 16).getValues()[0];
+    if (existing.length !== 16 || !existing.every((title, index) => title === HEADERS[index])) throw new Error('Las columnas de la planilla no coinciden; revisar antes de sincronizar');
+    sheet.getRange(1, 17, 1, 7).setValues([HEADERS.slice(16)]);
+  }
   return sheet;
 }
 
@@ -62,7 +69,8 @@ function validateEntry_(entry) {
   if (!/^\d{7,9}$/.test(String(entry.dni || ''))) throw new Error('DNI inválido');
   if (String(entry.nombre || '').trim().length < 5 || String(entry.nombre).length > 100) throw new Error('Nombre inválido');
   if (String(entry.telefono || '').length > 30 || String(entry.direccion || '').length > 140) throw new Error('Datos inválidos');
-  if (!Array.isArray(entry.respuestas) || entry.respuestas.length !== 3 || new Set(entry.respuestas.map(a => a.questionId)).size !== 3) throw new Error('Respuestas inválidas');
+  if (!Array.isArray(entry.respuestas) || ![3, 5].includes(entry.respuestas.length) || new Set(entry.respuestas.map(a => a.questionId)).size !== entry.respuestas.length) throw new Error('Respuestas inválidas');
+  if (entry.respuestas.length === 5 && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(entry.email || '').trim()) || String(entry.email).length > 254)) throw new Error('Email inválido');
   if (!entry.respuestas.every(a => typeof a.pregunta === 'string' && a.pregunta.length < 200 && typeof a.respuesta === 'string' && a.respuesta.length < 200 && typeof a.correcta === 'boolean')) throw new Error('Respuestas inválidas');
   if (entry.cantidadCorrectas !== entry.respuestas.filter(a => a.correcta).length) throw new Error('Puntaje inválido');
 }

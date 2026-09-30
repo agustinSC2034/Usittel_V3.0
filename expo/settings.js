@@ -3,7 +3,7 @@
 window.EXPO_SETTINGS = Object.freeze({
   eventTitle: 'ExpoTan 2026',
   eventDates: '2, 3 y 4 de octubre',
-  questionsPerEntry: 3,
+  questionsPerEntry: 5,
   instagramHandle: '@usittel.tandil',
   instagramUrl: 'https://www.instagram.com/usittel.tandil/',
   basesUrl: '', // Add the approved Bases y Condiciones URL when available.
@@ -16,7 +16,7 @@ window.EXPO_SETTINGS = Object.freeze({
     { id: 'inicio', text: '¿En qué año comenzó a brindar servicio USITTEL?', correctId: '2024', options: [
       { id: '2019', text: '2019' }, { id: '2021', text: '2021' }, { id: '2026', text: '2026' }, { id: '2024', text: '2024' }
     ] },
-    { id: 'es', text: 'USITTEL es...', correctId: 'fibra', options: [
+    { id: 'es', text: 'USITTEL es...', correctId: 'fibra', correctIds: ['fibra', 'internet'], options: [
       { id: 'fibra', text: 'La fibra óptica de tu ciudad' }, { id: 'telefonia', text: 'Un servicio de telefonía' },
       { id: 'internet', text: 'La mejor internet' }, { id: 'ninguna', text: 'Ninguna de las anteriores' }
     ] },

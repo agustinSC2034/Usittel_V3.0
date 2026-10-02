@@ -91,6 +91,10 @@
           <h4 class="font-bold uppercase tracking-wider">Legal</h4>
           <ul class="space-y-2">
             <li>
+              <a href="<?= $base ?>assets/pdf/bases-y-condiciones-expotan-2026.pdf" target="_blank" rel="noopener noreferrer"
+                class="text-gray-300 hover:text-white">Bases y condiciones Expotan 2026</a>
+            </li>
+            <li>
               <a href="<?= $base ?>pages/terminos_y_condiciones/" class="text-gray-300 hover:text-white">Términos y
                 condiciones</a>
             </li>

@@ -104,12 +104,12 @@ final class Payments {
             return paymentPublic($a,true);
         });
     }
-    public function reconcile(int $ida,string $id): array {
+    public function reconcile(int $ida,string $id,bool $force=false): array {
         if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
-        return $this->store->transaction(function(&$state,$save) use($ida,$id) {
+        return $this->store->transaction(function(&$state,$save) use($ida,$id,$force) {
             $a=$state['attempts'][$id]??null;
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
-            if($a['state']==='CONFIRMED' || time()-$a['checked_at']<5) return paymentPublic($a);
+            if($a['state']==='CONFIRMED' || (!$force && time()-$a['checked_at']<5)) return paymentPublic($a);
             $a['checked_at']=time();
             try {
                 $rows=$this->siro->consult($a);
@@ -131,6 +131,28 @@ final class Payments {
                 } else $a['state']='UNCONFIRMED'; // Absence never proves a failed creation or authorizes a retry.
             } catch(\Throwable) {$a['state']='UNCONFIRMED';}
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
+        });
+    }
+    public function resume(int $ida,string $id,callable $invoice): array {
+        if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
+        $existing=$this->store->transaction(function(&$state) use($ida,$id) {
+            $a=$state['attempts'][$id]??null;
+            if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
+            return paymentPublic($a);
+        });
+        if($existing['state']!=='PENDING') return $existing;
+        // A fresh SIRO result must still say PENDING. An uncertain result never
+        // becomes permission to start another payment or reopen checkout.
+        $this->reconcile($ida,$id,true);
+        return $this->store->transaction(function(&$state) use($ida,$id,$invoice) {
+            $a=$state['attempts'][$id]??null;
+            if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
+            if($a['state']!=='PENDING' || !is_string($a['hash']??null)) return paymentPublic($a);
+            $row=$invoice($a['idt']);
+            if(invoiceId($row['IDT']??null)!==$a['idt'] || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);
+            if(($row['Estado']??null)!=='IMPAGA') throw new Failure('PAYMENT_NOT_UNPAID',409);
+            if(paymentCents($row['Total']??null)!==$a['cents'] || ($row['SIRO_CE']??null)!==$a['cpe']) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
+            return paymentPublic($a,true);
         });
     }
     public function postingPreflight(int $ida,callable $invoice,callable $crmUnpaid): array {

@@ -39,8 +39,10 @@ export function input(label, name, { value = '', type = 'text', required = true,
 export function invoicePayButton(item, attrs = '') {
   const real = runtime.mode === 'phantom';
   const active = activePaymentAttempt(item);
-  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : active ? 'Pago en verificación' : 'Pagar';
-  return button(label, 'pay', { iconName: active ? '' : 'external-link', attrs: `data-id="${escapeHTML(item.id)}" ${attrs} ${real && (!runtime.paymentsEnabled || active) ? 'disabled' : ''}` });
+  const resumable = active?.state === 'PENDING' && active.can_resume === true;
+  const checkable = active?.state === 'UNCONFIRMED';
+  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : checkable ? 'Consultar estado' : active && !resumable ? 'Pago en verificación' : 'Pagar';
+  return button(label, resumable ? 'payment-resume' : checkable ? 'payment-check' : 'pay', { iconName: resumable || !active ? 'external-link' : '', attrs: `data-id="${escapeHTML(item.id)}" ${resumable || checkable ? `data-attempt="${escapeHTML(active.attempt_id)}"` : ''} ${attrs} ${real && (!runtime.paymentsEnabled || (active && !resumable && !checkable)) ? 'disabled' : ''}` });
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';

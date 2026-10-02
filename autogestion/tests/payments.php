@@ -87,7 +87,19 @@ foreach(['timeout','session-error','checkout-error'] as $scenario) {
     $b=$p->create(1,'123',fn()=>row());ok($a['attempt_id']===$b['attempt_id'] && $g->creates===1);ok(!isset($b['checkout_url']));
 }
 [$p,$store,$g,$dir]=setup();$a=$p->create(1,'123',fn()=>row());$b=$p->create(1,'123',fn()=>row());ok($a===$b && $g->creates===1);
-$g->scenario='cancelled';ok($p->reconcile(1,$a['attempt_id'])['state']==='CANCELLED');
+$resumed=$p->resume(1,$a['attempt_id'],fn()=>row());
+ok($resumed['attempt_id']===$a['attempt_id'] && $resumed['checkout_url']===$a['checkout_url'] && $g->creates===1);
+failure(fn()=>$p->resume(5,$a['attempt_id'],fn()=>row()),'PAYMENT_NOT_FOUND');
+failure(fn()=>$p->resume(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00'])),'PAYMENT_INVOICE_CHANGED');
+failure(fn()=>$p->resume(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA'])),'PAYMENT_NOT_UNPAID');
+$g->scenario='query-timeout';ok(!isset($p->resume(1,$a['attempt_id'],fn()=>row())['checkout_url']));ok($g->creates===1);
+$g->scenario='pending';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='PENDING');
+$g->scenario='cancelled';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='CANCELLED');
+ok(!isset($p->resume(1,$a['attempt_id'],fn()=>row())['checkout_url']));
+[$confirmedP,$confirmedStore,$confirmedGateway]=setup();$confirmedAttempt=$confirmedP->create(1,'123',fn()=>row());
+$confirmedGateway->scenario='confirmed';$confirmedResume=$confirmedP->resume(1,$confirmedAttempt['attempt_id'],fn()=>row());
+ok($confirmedResume['state']==='CONFIRMED' && !isset($confirmedResume['checkout_url']) && $confirmedGateway->creates===1);
+$confirmedGateway->scenario='pending';ok(!isset($confirmedP->resume(1,$confirmedAttempt['attempt_id'],fn()=>row())['checkout_url']));
 $b=$p->create(1,'123',fn()=>row());ok($a['attempt_id']!==$b['attempt_id']);ok($g->requests[0]['IdReferenciaOperacion']===$g->requests[1]['IdReferenciaOperacion']);
 ok(substr($g->requests[0]['nro_comprobante'],-5)!==substr($g->requests[1]['nro_comprobante'],-5));
 ok((bool)preg_match('/^[0-9]{20}$/D',$g->requests[1]['nro_comprobante']));

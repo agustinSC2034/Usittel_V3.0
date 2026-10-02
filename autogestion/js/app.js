@@ -230,16 +230,16 @@ document.addEventListener('click', async event => {
     document.querySelector(`[data-action="billing-tab"][data-view="${runtime.billingView}"]`)?.focus();
     return;
   }
-  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-check' || action === 'payment-post')) {
+  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-resume' || action === 'payment-check' || action === 'payment-post')) {
     if (!runtime.paymentsEnabled || paymentBusy) return;
     paymentBusy = true; target.disabled = true; const generation = dataGeneration;
     target.textContent = action === 'pay' ? 'Preparando pago...' : action === 'payment-post' ? 'Actualizando cuenta...' : 'Consultando...';
     try {
       const result = action === 'payment-check'
         ? (await refreshPayments({ targetAttemptId: target.dataset.attempt }))
-        : await request(action === 'pay' ? 'payment-create' : 'payment-post', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
+        : await request(action === 'pay' ? 'payment-create' : action === 'payment-resume' ? 'payment-resume' : 'payment-post', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
       if (generation !== dataGeneration || !authenticated) return;
-      if (action !== 'payment-check') await refreshPayments({ reconcile: false, recoverPosting: false });
+      if (action !== 'payment-check') await refreshPayments({ reconcile: false, recoverPosting: action === 'payment-resume' && result?.state === 'CONFIRMED' });
       if (result?.checkout_url) {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
         window.location.assign(result.checkout_url);

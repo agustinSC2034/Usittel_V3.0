@@ -54,7 +54,7 @@ function csrf(): void {
 function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSource $documents=null,?SiroGateway $siro=null,?PaymentHistorySource $paymentHistory=null): never {
     startSession($c,$dir);
     $method=$_SERVER['REQUEST_METHOD'];
-    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-post'=>'POST'];
+    $expected=['bootstrap'=>'GET','login'=>'POST','logout'=>'POST','select-service'=>'POST','overview'=>'GET','invoices'=>'GET','invoice'=>'GET','invoice-document'=>'GET','payment-history'=>'GET','payment-receipt'=>'GET','payments'=>'GET','payment-create'=>'POST','payment-reconcile'=>'POST','payment-resume'=>'POST','payment-post'=>'POST'];
     $expected+=['service-connection'=>'POST','speedtest-start'=>'POST'];
     $expected+=['wifi-prepare'=>'POST','wifi-change'=>'POST'];
     $expected+=['request-prepare'=>'POST','request-create'=>'POST','request-refresh'=>'POST','service-requests'=>'GET'];
@@ -198,7 +198,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         $id=$_GET['id']??null;if(!is_string($id))throw new Failure('BAD_REQUEST',400);
         paymentPdfReply($id,paymentReceiptForSession($paymentHistory,$id));
     }
-    if(in_array($route,['payments','payment-create','payment-reconcile','payment-post'],true)) {
+    if(in_array($route,['payments','payment-create','payment-reconcile','payment-resume','payment-post'],true)) {
         $settings=siroConfig($c);
         if(!siroServiceEnabled($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
         $posting=phantomPostingConfig($c);
@@ -213,6 +213,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             if(!preg_match('/^[1-9][0-9]{0,19}$/D',$b['idt'])) throw new Failure('BAD_REQUEST',400);
             jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
         }
+        if($route==='payment-resume') jsonReply($payments->resume($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt)));
         if($route==='payment-post') jsonReply($payments->postToPhantom($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt),
             fn(string $idt)=>$ph->crmUnpaidRows($ida,$idt),fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
         jsonReply($payments->reconcile($ida,$b['attempt_id']));

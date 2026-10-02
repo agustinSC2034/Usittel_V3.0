@@ -77,6 +77,17 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
     const request=JSON.parse(fs.readFileSync(path.join(dir,'siro-fixture-request.json'),'utf8'));
     assert.equal(request.Importe,10);assert.equal(request.nro_cliente_empresa,'5555555555555555555');
   });
+  r=await multi.call('payment-resume',{attempt_id:multiA.data.attempt_id},{noCsrf:true});check('continuar pago exige CSRF',()=>assert.equal(r.status,403));
+  r=await multi.call('payment-resume',{attempt_id:second.attempt_id});check('no permite retomar intento de otro contrato',()=>assert.equal(r.status,404));
+  const [resumeA,resumeB]=await Promise.all([multi.call('payment-resume',{attempt_id:multiA.data.attempt_id}),multi.call('payment-resume',{attempt_id:multiA.data.attempt_id})]);
+  check('cerrar checkout y retomarlo conserva intento y enlace, sin segundo create',()=>{
+    assert.equal(resumeA.status,200,resumeA.text);assert.equal(resumeB.status,200,resumeB.text);
+    assert.equal(resumeA.data.attempt_id,multiA.data.attempt_id);assert.equal(resumeB.data.attempt_id,multiA.data.attempt_id);
+    assert.equal(resumeA.data.checkout_url,multiA.data.checkout_url);assert.equal(resumeB.data.checkout_url,multiA.data.checkout_url);
+  });
+  scenario('query-timeout');r=await multi.call('payment-resume',{attempt_id:multiA.data.attempt_id});
+  check('SIRO incierto no entrega checkout ni crea otro pago',()=>{assert.equal(r.data.state,'UNCONFIRMED');assert.equal(r.data.checkout_url,undefined);});
+  scenario('normal');
   r=await multi.call('payments');check('solo aparecen intentos del contrato seleccionado',()=>{assert.equal(r.status,200);assert.deepEqual(r.data.items.map(a=>a.idt),['500']);});
   r=await multi.call('payment-reconcile',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede consultar',()=>assert.equal(r.status,404));
   r=await multi.call('payment-post',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede imputar',()=>assert.equal(r.status,404));

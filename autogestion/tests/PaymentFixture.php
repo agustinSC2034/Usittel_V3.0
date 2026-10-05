@@ -7,7 +7,12 @@ final class PaymentFixture implements SiroGateway {
     public array $requests=[];
     public int $creates=0;
     public function __construct(private ?string $dir=null) {}
-    private function scenario(): string {return $this->dir?trim(file_get_contents($this->dir.'/scenario')):$this->scenario;}
+    private function scenario(): string {
+        if(!$this->dir) return $this->scenario;
+        // Keep SIRO failures independent from the selected Phantom contract.
+        $file=is_file($this->dir.'/siro-scenario')?'/siro-scenario':'/scenario';
+        return trim(file_get_contents($this->dir.$file));
+    }
     public function create(array $request): array {
         $this->creates++;$this->requests[]=$request;
         if($this->dir) file_put_contents($this->dir.'/siro-fixture-request.json',json_encode($request));

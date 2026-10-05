@@ -36,10 +36,14 @@ function paymentRequest(array $a,array $s): array {
 }
 function paymentPublic(array $a,bool $checkout=false): array {
     $posting=$a['posting_state']??'NOT_POSTED';
+    // Reopening this exact SIRO hash is not a second creation. SIRO owns the
+    // single-use checkout protection, including delayed/in-flight results.
+    $resumable=in_array($a['state'],['PENDING','UNCONFIRMED'],true) && $posting==='NOT_POSTED'
+        && is_string($a['hash']??null) && preg_match('/^[a-f0-9]{64}$/D',$a['hash'])===1;
     $r=['attempt_id'=>$a['attempt_id'],'idt'=>$a['idt'],'amount'=>$a['cents']/100,'state'=>$a['state'],
         'intent_created'=>$a['hash']!==null,'siro_payment_confirmed'=>$a['state']==='CONFIRMED','phantom_payment_posted'=>$posting==='POSTED',
         'phantom_posting_state'=>$posting,'can_post_to_phantom'=>$a['state']==='CONFIRMED' && $posting==='NOT_POSTED',
-        'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$a['state']==='PENDING' && $a['hash']!==null,
+        'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$resumable,
         'phase'=>match($a['state']) {'CREATING'=>'SIRO_INTENT_CREATING','PENDING'=>'SIRO_PENDING','CONFIRMED'=>'SIRO_CONFIRMED','CANCELLED'=>'SIRO_CANCELLED','REJECTED'=>'SIRO_REJECTED',default=>'SIRO_UNKNOWN'}];
     if($checkout && $r['can_resume']) $r['checkout_url']=siroCheckout($a['hash']);
     return $r;
@@ -72,7 +76,7 @@ final class Payments {
     }
     public function create(int $ida,string $idt,callable $invoice): array {
         if($ida<1) throw new Failure('FORBIDDEN',403);
-        return $this->store->transaction(function(&$state,$save) use($ida,$idt,$invoice) {
+        $result=$this->store->transaction(function(&$state,$save) use($ida,$idt,$invoice) {
             // Never clear a pending/unknown/confirmed attempt merely because Phantom is still IMPAGA.
             $row=$invoice();
             if(invoiceId($row['IDT']??null)!==$idt || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);
@@ -81,7 +85,7 @@ final class Payments {
             if(!is_string($cpe) || !preg_match('/^[0-9]{19}$/D',$cpe)) throw new Failure('PAYMENT_CPE');
             foreach(array_reverse($state['attempts']) as $a) if($a['ida']===$ida && $a['idt']===$idt && !in_array($a['state'],['CANCELLED','REJECTED'],true)) {
                 if($a['cents']!==$cents || $a['cpe']!==$cpe) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
-                return paymentPublic($a,true);
+                return paymentPublic($a); // Existing checkout must pass resume's fresh checks.
             }
             if(count($state['attempts'])>=1000) throw new Failure('PAYMENT_STORAGE_LIMIT');
             $recent=array_filter($state['attempts'],fn($a)=>strtotime($a['created_at'])>time()-900);
@@ -103,6 +107,8 @@ final class Payments {
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();
             return paymentPublic($a,true);
         });
+        return $result['can_resume'] && !isset($result['checkout_url'])
+            ? $this->resume($ida,$result['attempt_id'],$invoice) : $result;
     }
     public function reconcile(int $ida,string $id,bool $force=false): array {
         if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);
@@ -140,14 +146,17 @@ final class Payments {
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
             return paymentPublic($a);
         });
-        if($existing['state']!=='PENDING') return $existing;
-        // A fresh SIRO result must still say PENDING. An uncertain result never
-        // becomes permission to start another payment or reopen checkout.
+        if(!$existing['can_resume']) return $existing;
+        // Check for a confirmed payment before reopening the SAME checkout.
+        // Empty/failed queries remain unknown, never evidence for a new intent.
         $this->reconcile($ida,$id,true);
         return $this->store->transaction(function(&$state) use($ida,$id,$invoice) {
             $a=$state['attempts'][$id]??null;
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
-            if($a['state']!=='PENDING' || !is_string($a['hash']??null)) return paymentPublic($a);
+            if(!paymentPublic($a)['can_resume']) return paymentPublic($a);
+            foreach($state['attempts'] as $other) {
+                if($other['ida']===$ida && $other['idt']===$a['idt'] && $other['state']==='CONFIRMED') return paymentPublic($other);
+            }
             $row=$invoice($a['idt']);
             if(invoiceId($row['IDT']??null)!==$a['idt'] || (isset($row['IDA']) && !in_array($row['IDA'],[$ida,(string)$ida],true))) throw new Failure('INVOICE_OWNERSHIP',403);
             if(($row['Estado']??null)!=='IMPAGA') throw new Failure('PAYMENT_NOT_UNPAID',409);

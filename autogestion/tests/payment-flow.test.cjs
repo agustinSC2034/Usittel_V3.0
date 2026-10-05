@@ -153,6 +153,12 @@ const path = require('node:path');
     assert.match(invoicePayButton({ id: '123' }), /Consultar estado/);
     assert.match(invoicePayButton({ id: '123' }), /data-action="payment-check"/);
     assert.doesNotMatch(invoicePayButton({ id: '123' }), /disabled/);
+    runtime.paymentItems = [attempt('UNCONFIRMED', 'NOT_POSTED', { can_resume: true, intent_created: true })];
+    assert.match(invoicePayButton({ id: '123' }), />Pagar<\/button>/);
+    assert.match(invoicePayButton({ id: '123' }), /data-action="payment-resume"/);
+    assert.doesNotMatch(invoicePayButton({ id: '123' }), /disabled|Consultar estado/);
+    assert.match(paymentPanel(), /Enlace de pago disponible[\s\S]*mismo enlace de SIRO/);
+    assert.doesNotMatch(paymentPanel(), /Estamos verificando tu pago|No vuelvas a pagar/);
     runtime.paymentItems = [attempt('PENDING', 'NOT_POSTED', { can_resume: true })];
     assert.match(invoicePayButton({ id: '123' }), />Pagar<\/button>/);
     assert.match(invoicePayButton({ id: '123' }), /data-action="payment-resume"/);
@@ -160,6 +166,10 @@ const path = require('node:path');
     assert.match(paymentPanel(), /Podés volver a abrirlo desde la factura/);
     runtime.paymentItems = [attempt('CONFIRMED')];
     assert.match(paymentPanel(), /Pago confirmado[\s\S]*Estamos actualizando tu cuenta/);
+    assert.match(invoicePayButton({ id: '123' }), /disabled/);
+    runtime.paymentItems = [attempt('UNCONFIRMED', 'NOT_POSTED', { can_resume: true }), attempt('CONFIRMED', 'NOT_POSTED', { attempt_id: otherId })];
+    assert.match(invoicePayButton({ id: '123' }), /Pago confirmado/);
+    assert.doesNotMatch(invoicePayButton({ id: '123' }), /payment-resume/);
     runtime.paymentItems = [attempt('CONFIRMED', 'POSTED')];
     assert.match(paymentPanel(), /Pago registrado/);
     runtime.paymentHistoryItems = [{ id: 'other', method: 'EFECTIVO', amount: 10, date: '2026-09-27', downloadAvailable: false }];
@@ -176,6 +186,8 @@ const path = require('node:path');
     const cases = [
       [attempt('UNCONFIRMED'), 'warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos el estado de tu cuenta'],
       [attempt('PENDING'), 'warning', 'Estamos verificando tu pago', 'No vuelvas a pagar esta factura por ahora'],
+      [attempt('UNCONFIRMED', 'NOT_POSTED', { can_resume: true }), 'info', 'Enlace de pago disponible', 'mismo enlace de SIRO'],
+      [attempt('PENDING', 'NOT_POSTED', { can_resume: true }), 'info', 'Enlace de pago disponible', 'Podés pagar desde la factura'],
       [attempt('CONFIRMED'), 'success', 'Pago recibido correctamente', 'No es necesario que vuelvas a pagarlo'],
       [attempt('CONFIRMED', 'POST_UNCONFIRMED'), 'success', 'Pago recibido correctamente', 'Puede tardar unos minutos'],
       [attempt('CONFIRMED', 'POSTED'), 'success', 'Pago registrado correctamente', 'ya fue registrado'],

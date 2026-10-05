@@ -92,7 +92,38 @@ ok($resumed['attempt_id']===$a['attempt_id'] && $resumed['checkout_url']===$a['c
 failure(fn()=>$p->resume(5,$a['attempt_id'],fn()=>row()),'PAYMENT_NOT_FOUND');
 failure(fn()=>$p->resume(1,$a['attempt_id'],fn()=>array_replace(row(),['Total'=>'122.00'])),'PAYMENT_INVOICE_CHANGED');
 failure(fn()=>$p->resume(1,$a['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA'])),'PAYMENT_NOT_UNPAID');
-$g->scenario='query-timeout';ok(!isset($p->resume(1,$a['attempt_id'],fn()=>row())['checkout_url']));ok($g->creates===1);
+$g->scenario='query-timeout';$timedResume=$p->resume(1,$a['attempt_id'],fn()=>row());
+ok($timedResume['state']==='UNCONFIRMED' && $timedResume['checkout_url']===$a['checkout_url']);ok($g->creates===1);
+// Closing SIRO, empty queries, transport failures and a new login never create a second checkout.
+foreach(['empty','query-timeout','malformed','ambiguous','amount-mismatch','processed-false'] as $scenario) {
+    [$recovery,$recoveryStore,$recoveryGateway,$recoveryDir]=setup();
+    $original=$recovery->create(1,'123',fn()=>row());$recoveryGateway->scenario=$scenario;
+    $unknown=$recovery->reconcile(1,$original['attempt_id'],true);
+    ok($unknown['state']==='UNCONFIRMED' && $unknown['can_resume']);
+    $recovery=new Payments(new PaymentStore($recoveryDir),$recoveryGateway,['return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70004]);
+    $list=$recovery->list(1);ok(count($list)===1 && $list[0]['can_resume'] && !isset($list[0]['checkout_url']));
+    $resumed=$recovery->resume(1,$original['attempt_id'],fn()=>row());
+    ok($resumed['state']==='UNCONFIRMED' && $resumed['attempt_id']===$original['attempt_id'] && $resumed['checkout_url']===$original['checkout_url']);
+    $duplicate=$recovery->create(1,'123',fn()=>row());
+    ok($duplicate['attempt_id']===$original['attempt_id'] && $duplicate['checkout_url']===$original['checkout_url'] && $recoveryGateway->creates===1);
+    failure(fn()=>$recovery->resume(5,$original['attempt_id'],fn()=>row()),'PAYMENT_NOT_FOUND');
+    foreach([['IDT'=>'999'],['IDA'=>'5']] as $change) failure(fn()=>$recovery->resume(1,$original['attempt_id'],fn()=>array_replace(row(),$change)),'INVOICE_OWNERSHIP');
+    foreach([['Total'=>'122.00'],['SIRO_CE'=>str_repeat('2',19)]] as $change) failure(fn()=>$recovery->resume(1,$original['attempt_id'],fn()=>array_replace(row(),$change)),'PAYMENT_INVOICE_CHANGED');
+    failure(fn()=>$recovery->resume(1,$original['attempt_id'],fn()=>array_replace(row(),['Estado'=>'PAGADA'])),'PAYMENT_NOT_UNPAID');
+    ok($recoveryGateway->creates===1 && count($recovery->list(1))===1);
+    $recoveryGateway->scenario='confirmed';
+    $blocked=$recovery->resume(1,$original['attempt_id'],fn()=>row());
+    ok($blocked['state']==='CONFIRMED' && !$blocked['can_resume'] && !isset($blocked['checkout_url']) && $recoveryGateway->creates===1);
+}
+[$noHash,$noHashStore,$noHashGateway]=setup();$noHashGateway->scenario='timeout';
+$missing=$noHash->create(1,'123',fn()=>row());
+ok(!$missing['can_resume'] && !$missing['intent_created']);
+ok(!isset($noHash->resume(1,$missing['attempt_id'],fn()=>row())['checkout_url']) && $noHashGateway->creates===1);
+// Posting evidence and malformed stored hashes may never authorize checkout.
+foreach(['POSTED','POSTING','POST_UNCONFIRMED','NEEDS_REVIEW','ALREADY_SETTLED'] as $posting) {
+    ok(!paymentPublic(['attempt_id'=>str_repeat('a',32),'idt'=>'123','cents'=>12100,'hash'=>str_repeat('a',64),'state'=>'UNCONFIRMED','posting_state'=>$posting,'created_at'=>'fixture','updated_at'=>'fixture'])['can_resume']);
+}
+ok(!paymentPublic(['attempt_id'=>str_repeat('a',32),'idt'=>'123','cents'=>12100,'hash'=>'invalid','state'=>'UNCONFIRMED','created_at'=>'fixture','updated_at'=>'fixture'])['can_resume']);
 $g->scenario='pending';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='PENDING');
 $g->scenario='cancelled';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='CANCELLED');
 ok(!isset($p->resume(1,$a['attempt_id'],fn()=>row())['checkout_url']));

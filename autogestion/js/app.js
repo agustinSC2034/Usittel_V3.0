@@ -70,7 +70,7 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
-      if (paymentBusy && ['pay', 'payment-check', 'payment-post', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
+      if (paymentBusy && ['pay', 'payment-resume', 'payment-check', 'payment-post', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
     });
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;

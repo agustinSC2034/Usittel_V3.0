@@ -53,6 +53,16 @@ El laboratorio requiere MI_USITTEL_RUNTIME explícito, externo al repositorio y 
 
 Un lock separado serializa procesos. Se reserva y guarda el intento ANTES del POST SIRO; escritura temporal, flush/fsync y reemplazo del archivo evitan truncar el estado anterior. Un fallo de almacenamiento detiene el flujo. No borrar este runtime para “reiniciar”: se perderían reservas e intentos recuperables.
 
+### Recuperación automática del botón Pagar — 05/10/2026
+
+Un enlace creado no demuestra que se haya realizado un pago. `PENDING` y `UNCONFIRMED` con hash oficial válido guardado y `posting_state=NOT_POSTED` publican `can_resume=true`: Facturas conserva el botón normal **Pagar**, que usa `payment-resume` para reabrir exclusivamente el mismo checkout. No se cancela el intento, no se recicla el comprobante ni se llama de nuevo a la creación SIRO. No requiere migración del runtime: la capacidad se calcula al leer los intentos existentes.
+
+Antes de entregar el enlace se fuerza la conciliación SIRO y se vuelve a comprobar la factura exacta, contrato seleccionado, estado IMPAGA, importe y CPE. Un pago CONFIRMED, evidencia de posting o una factura PAGADA impiden reabrir. Una consulta vacía o fallida conserva UNCONFIRMED: no se interpreta como impago, pero puede recuperarse el enlace original. Una creación incierta sin hash no se repite y permanece en consulta de estado. Las respuestas SIRO inconsistentes nunca autorizan confirmar el pago ni imputarlo en Phantom.
+
+La recuperación ante resultado inconcluso depende de la protección de SIRO contra cobrar nuevamente el mismo hash, incluida una operación en procesamiento y pestañas concurrentes. Agustín confirmó esta condición el 05/10/2026; no fue validada con un pago real durante esta tarea ni se presenta como garantía comprobada mediante fixtures. Las reglas locales evitan crear otra intención, pero la exclusión del cobro dentro del checkout corresponde a SIRO.
+
+Si SIRO rechaza un enlace por vencimiento, no se reemplaza automáticamente mientras el pago siga desconocido. Reabrir el mismo enlace no permite inventar su vigencia. Los mensajes de un intento recuperable hablan de enlace disponible, no de pago recibido ni de pago en verificación.
+
 El comprobante tiene prefijo aleatorio de quince dígitos y sufijo secuencial de cinco. La unicidad se comprueba también sobre el comprobante completo. El contador por CPE es persistente, no vuelve a cero ni se recicla; agotamiento del rango impide nuevos intentos. `receipt_start` y `receipt_end` deben ser un rango previamente reservado y sin solapamientos con Phantom, Botmaker o la POC para ese CPE. La aplicación NO puede garantizar por sí sola que otros sistemas no usen ese rango.
 
 Dos solicitudes concurrentes obtienen el mismo intento activo y un solo POST. CANCELLED/REJECTED permiten crear otro comprobante; CREATING/PENDING/UNCONFIRMED/CONFIRMED bloquean una creación adicional. Timeout o fallo de autenticación/creación deja un intento incierto: no se reenvía a ciegas. Se conserva para reconciliación. Límite local: cinco creaciones en quince minutos y mil intentos almacenados; consulta de cada intento limitada a una cada cinco segundos.
@@ -65,7 +75,7 @@ Consulta filtra por referencia lógica `IDT;importe-con-dos-decimales;` y fechas
 
 Solo true + PROCESADA confirma. false + CANCELADA/RECHAZADA producen los estados respectivos; false + GENERADA/REGISTRADA queda pendiente. Inconsistencia, ausencia, duplicados, formatos extraños o errores quedan sin confirmar. Un estado confirmado no se degrada por consultas posteriores.
 
-Al volver a entrar se recuperan los intentos desde disco y se reconcilia automáticamente el más reciente no terminal. Los demás ofrecen Consultar estado. Esto no depende del retorno y funciona después de cerrar el navegador o renovar sesión. No hay cron. GENERADA puede durar indefinidamente; no se infiere cancelación por tiempo ni se habilita otro cobro automáticamente. Resolver un intento incierto sin resultado requerirá revisión posterior.
+Al volver a entrar se recuperan los intentos desde disco y se reconcilia automáticamente el más reciente no terminal. Facturas ofrece Pagar para los enlaces recuperables y Consultar estado cuando no hay enlace seguro guardado. Esto no depende del retorno y funciona después de cerrar el navegador o renovar sesión. No hay cron. GENERADA puede durar indefinidamente; no se infiere cancelación por tiempo ni se crea otro intento automáticamente. Un intento incierto sin hash sigue requiriendo conciliación; un intento incierto con hash puede reabrir exclusivamente su enlace original según la regla anterior.
 
 ## Límites de esta etapa
 

@@ -27,6 +27,11 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   const rootRet=await fetch(physical('payment-return?result=ok&attempt='+a.data.attempt_id+'&IdResultado=forged').replace('/autogestion/api.php','/api.php'),{redirect:'manual'});
   check('retorno físico del subdominio raíz conserva solo attempt_id',()=>{assert.equal(rootRet.status,303);assert.equal(rootRet.headers.get('location'),'/#/facturas?attempt='+a.data.attempt_id);});
   r=await u.call('payments');check('lista privada mantiene pendiente tras retorno falso',()=>{assert.equal(r.data.items[0].state,'PENDING');assert.equal(r.data.items[0].checkout_url,undefined);});
+  // The duplicate create now checks SIRO too. Advance only this fixture's query
+  // cache instead of weakening the production five-second query throttle.
+  const attemptFile=path.join(dir,'siro-attempts.json');
+  const fixtureState=JSON.parse(fs.readFileSync(attemptFile,'utf8'));
+  fixtureState.attempts[a.data.attempt_id].checked_at=0;fs.writeFileSync(attemptFile,JSON.stringify(fixtureState));
   scenario('cancelled');r=await u.call('payment-reconcile',{attempt_id:a.data.attempt_id});check('cancelación real se consulta backend',()=>assert.equal(r.data.state,'CANCELLED'));
   scenario('normal');r=await u.call('payment-create',{idt:'123'});const second=r.data;
   check('cancelación permite intento nuevo',()=>assert.notEqual(second.attempt_id,a.data.attempt_id));
@@ -85,8 +90,19 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
     assert.equal(resumeA.data.attempt_id,multiA.data.attempt_id);assert.equal(resumeB.data.attempt_id,multiA.data.attempt_id);
     assert.equal(resumeA.data.checkout_url,multiA.data.checkout_url);assert.equal(resumeB.data.checkout_url,multiA.data.checkout_url);
   });
-  scenario('query-timeout');r=await multi.call('payment-resume',{attempt_id:multiA.data.attempt_id});
-  check('SIRO incierto no entrega checkout ni crea otro pago',()=>{assert.equal(r.data.state,'UNCONFIRMED');assert.equal(r.data.checkout_url,undefined);});
+  fs.writeFileSync(path.join(dir,'siro-scenario'),'query-timeout');r=await multi.call('payment-resume',{attempt_id:multiA.data.attempt_id});
+  check('consulta fallida conserva Pagar con el mismo checkout, nunca otro intento',()=>{assert.equal(r.data.state,'UNCONFIRMED');assert.equal(r.data.can_resume,true);assert.equal(r.data.checkout_url,multiA.data.checkout_url);});
+  fs.writeFileSync(path.join(dir,'siro-scenario'),'empty');
+  r=await multi.call('payment-reconcile',{attempt_id:multiA.data.attempt_id});
+  check('consulta vacía no significa pago ni cancelación: conserva recuperación',()=>{assert.equal(r.data.state,'UNCONFIRMED');assert.equal(r.data.can_resume,true);assert.equal(r.data.can_post_to_phantom,false);});
+  const reopened=jar();await login(reopened);await reopened.call('select-service',{serviceId:'5'});await reopened.call('invoices');
+  r=await reopened.call('payments');check('cerrar y volver a ingresar recupera Pagar automáticamente',()=>{assert.equal(r.data.items[0].can_resume,true);assert.equal(r.data.items[0].attempt_id,multiA.data.attempt_id);assert.equal(r.data.items[0].checkout_url,undefined);});
+  const [unknownA,unknownB]=await Promise.all([reopened.call('payment-resume',{attempt_id:multiA.data.attempt_id}),multi.call('payment-resume',{attempt_id:multiA.data.attempt_id})]);
+  check('dos sesiones retoman UNCONFIRMED con un único intento y enlace',()=>{for(const response of [unknownA,unknownB]) {assert.equal(response.status,200,response.text);assert.equal(response.data.attempt_id,multiA.data.attempt_id);assert.equal(response.data.checkout_url,multiA.data.checkout_url);}});
+  const savedAttempts=JSON.parse(fs.readFileSync(path.join(dir,'siro-attempts.json'),'utf8'));
+  check('recuperación no reserva otro comprobante ni crea otro intento SIRO',()=>assert.equal(Object.values(savedAttempts.attempts).filter(a=>a.ida===5 && a.idt==='500').length,1));
+  await reopened.call('logout',{});
+  fs.unlinkSync(path.join(dir,'siro-scenario'));
   scenario('normal');
   r=await multi.call('payments');check('solo aparecen intentos del contrato seleccionado',()=>{assert.equal(r.status,200);assert.deepEqual(r.data.items.map(a=>a.idt),['500']);});
   r=await multi.call('payment-reconcile',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede consultar',()=>assert.equal(r.status,404));

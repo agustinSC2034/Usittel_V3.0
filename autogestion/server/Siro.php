@@ -30,7 +30,15 @@ function siroServiceEnabled(?array $s,array $ids,?int $selected): bool {
 }
 function paymentCents(mixed $value): int {
     if(is_int($value)) $value=(string)$value;
-    if(is_float($value) && is_finite($value)) $value=json_encode($value,JSON_PRESERVE_ZERO_FRACTION);
+    if(is_float($value)) {
+        if(!is_finite($value)) throw new Failure('PAYMENT_AMOUNT');
+        // Avoid JSON's global serialize_precision and its artificial decimal tail.
+        // Accept only if the cent representation reproduces the SAME float:
+        // no tolerance, no silent rounding of genuine sub-cent amounts.
+        $decimal=number_format($value,2,'.','');
+        if((float)$decimal!==$value) throw new Failure('PAYMENT_AMOUNT');
+        $value=$decimal;
+    }
     if(!is_string($value) || !preg_match('/^(0|[1-9][0-9]{0,8})(?:\.([0-9]{1,2}))?$/D',$value,$m)) throw new Failure('PAYMENT_AMOUNT');
     $cents=((int)$m[1])*100+(int)str_pad($m[2]??'',2,'0');
     if($cents<=0) throw new Failure('PAYMENT_AMOUNT');

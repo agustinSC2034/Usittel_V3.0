@@ -286,7 +286,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   command=spawnSync(process.execPath,[path.join(root,'check.cjs')],{env:{...process.env,MI_USITTEL_PHP:php,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:root},encoding:'utf8'});
   check('chequeo rechaza runtime dentro del repositorio',()=>{assert.equal(command.status,1);assert.match(command.stdout,/❌ Runtime privado/);});
   const port=await freePort();base=`http://127.0.0.1:${port}/autogestion/api/`;
-  server=spawn(php,['-d','display_errors=0','-d','zend.exception_ignore_args=1','-S',`127.0.0.1:${port}`,'-t',root,path.join(__dirname,'router.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},stdio:['ignore','ignore','pipe']});
+  // Exercise the API fixtures with the hosting precision that exposed decimal tails.
+  server=spawn(php,['-d','display_errors=0','-d','zend.exception_ignore_args=1','-d','serialize_precision=53','-S',`127.0.0.1:${port}`,'-t',root,path.join(__dirname,'router.php')],{env:{...process.env,MI_USITTEL_CONFIG:config,MI_USITTEL_RUNTIME:dir,MI_USITTEL_TEST:'1'},stdio:['ignore','ignore','pipe']});
   server.on('error',e=>{console.error('PHP no disponible:',e.code);process.exitCode=1;});server.stderr.on('data',b=>stderr+=b);
   for(let i=0;i<40;i++){try{await fetch(base+'bootstrap');break;}catch{await sleep(100);}}
   const a=jar();let r=await a.call('bootstrap');

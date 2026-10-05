@@ -71,10 +71,18 @@ El cliente ve **El intento anterior fue cancelado** / **Podés volver a intentar
 
 Una pantalla HTML de SIRO con “Hash Cancelado” NO se usa como confirmación financiera ni se scrapea. Una consulta vacía, fallida o inconsistente sigue `UNCONFIRMED`: no habilita un reemplazo. El motivo técnico se guarda solo en el runtime como `check_reason` y, si queda sin confirmar, se registra un código fijo `SIRO_CHECK_...` sin IDA/IDT, hash, importe, identidad ni respuesta cruda. No se publica ese motivo en la API ni en el formulario.
 
+#### Corrección de precisión de importes — 05/10/2026
+
+Un chequeo productivo de solo lectura devolvió `UNCONFIRMED / CONSULT_PAYMENT_AMOUNT`. La misma consulta, ejecutada con `serialize_precision=-1` solo en ese proceso, devolvió `CANCELLED / VERIFIED`: la representación JSON del float estaba impidiendo reconocer la cancelación. No se modificó el intento productivo ni se creó otro pago durante el diagnóstico.
+
+`paymentCents()` ya no usa `json_encode()` para convertir floats. Construye una representación con dos decimales y exige que al convertirla nuevamente a float reproduzca exactamente el valor original, sin tolerancias. Solo entonces aplica la validación existente y obtiene centavos enteros. Un importe genuino de tres decimales, una diferencia de un centavo, valores no finitos o formatos inválidos siguen rechazados; no se redondea silenciosamente para aprobar pagos. Las reglas de strings, límites, identidad y comparación estricta en centavos se conservan.
+
+La corrección no cambia `php.ini`, `serialize_precision`, configuración privada, endpoints, estados SIRO ni reglas de posting. Los intentos existentes no necesitan migración: se reconcilian normalmente con el conversor corregido. Las pruebas cubren precisiones `53`, `-1`, `14`, `17` y `100`, entrar/cerrar/reabrir el mismo checkout, cancelación verificada con reemplazo único, confirmación e imputación idempotente mediante fixtures. La suite HTTP también se ejecuta con precisión `53`. No es una nueva prueba real de cobro ni de escritura Phantom.
+
 Para conocer el caso productivo sin modificar su intento, hay un inspector CLI read-only que fuerza la conciliación exclusivamente sobre una copia en memoria. Consulta SIRO, pero no crea intenciones, no llama a Phantom y no guarda nada en el runtime. Desde el checkout del repositorio en el hosting (no depende de publicar los inspectores en el Document Root), sustituir el IDA y attempt_id ficticios del ejemplo por los del intento autorizado:
 
 ```sh
-MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime php autogestion/server/inspect-siro-attempt.php 123 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime /opt/cpanel/ea-php82/root/usr/bin/php autogestion/server/inspect-siro-attempt.php 123 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ```
 
 La salida contiene únicamente estado, flags y el código de chequeo: `CONSULT_NO_MATCH`, `CONSULT_SIRO_TIMEOUT`, `CONSULT_PAYMENT_MISMATCH`, `RESULT_SIRO_HTTP`, etc. `VERIFIED` indica que las comprobaciones existentes pasaron. No muestra credenciales, URL/hash, cliente, factura, importe ni payload. El archivo privado se carga internamente sin imprimirlo ni modificarlo. Si la respuesta productiva sigue desconocida, hace falta verificar ese código antes de adaptar campos/formatos: no se inventa un alias o estado para hacer pasar la cancelación. Las pruebas de esta iteración usan fixtures; no diagnostican por sí solas el intento real ni validan un pago real.

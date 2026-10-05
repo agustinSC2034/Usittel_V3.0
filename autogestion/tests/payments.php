@@ -283,4 +283,68 @@ failure(fn()=>$p->postToPhantom(1,$a['attempt_id'],fn()=>array_replace(row(),['I
 failure(fn()=>$p->postToPhantom(5,$a['attempt_id'],fn()=>row(),fn()=>crmRow(),fn()=>null),'PAYMENT_NOT_FOUND');
 $saved=file_get_contents($dir.'/siro-attempts.json');
 ok(!preg_match('/Password|api_pass|Autogestion|access_token|Request|fixture-password|fixture-token/',$saved));
+// Numeric JSON amounts must be independent of the hosting's serialize_precision.
+// Keep exact cent matching: genuine sub-cent values must never be rounded into a payment.
+$originalAmountPrecision=ini_get('serialize_precision');
+try {
+    foreach([53,-1,14,17,100] as $amountPrecision) {
+        ini_set('serialize_precision',(string)$amountPrecision);
+        foreach([[23635.30,2363530],[0.01,1],[0.29,29],[121.0,12100],[999999999.99,99999999999],
+            [10,1000],['23635.30',2363530],['121.00',12100]] as [$value,$cents]) ok(paymentCents($value)===$cents);
+        $wireAmount=json_decode('{"Importe":23635.29999999999927240423858165740966796875}',true,32,JSON_THROW_ON_ERROR);
+        ok(paymentCents($wireAmount['Importe'])===2363530);
+        foreach([0,-1,0.001,0.009,1.005,121.001,23635.301,999999999.999,1000000000.0,0.1+0.2,
+            NAN,INF,-INF,true,false,null,[], '1e2','1,00','121.001','23635.3000','-0.01','01.00','1.'] as $value) {
+            failure(fn()=>paymentCents($value),'PAYMENT_AMOUNT');
+        }
+        ok(ini_get('serialize_precision')===(string)$amountPrecision); // Production converter does not change global settings.
+        [$amountRecovery,$amountStore,$amountGateway,$amountDir]=renewalSetup();
+        $amountInvoice=fn()=>array_replace(row(),['Total'=>'23635.30']);
+        $amountGateway->mode='pending';
+        $amountAttempt=$amountRecovery->create(1,'123',$amountInvoice);
+        // Enter, close, return and press Pagar repeatedly: retain the same valid checkout.
+        for($reopen=0;$reopen<3;$reopen++) {
+            $amountRecovery=new Payments(new PaymentStore($amountDir),$amountGateway,
+                ['return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70004]);
+            $opened=$amountRecovery->open(1,$amountAttempt['attempt_id'],$amountInvoice);
+            ok($opened['state']==='PENDING' && $opened['can_resume'] && $opened['checkout_url']===$amountAttempt['checkout_url']);
+            ok($opened['attempt_id']===$amountAttempt['attempt_id'] && $amountGateway->creates===1);
+        }
+        $amountGateway->mode='cancel-first';
+        $amountSnapshot=json_decode(file_get_contents($amountDir.'/siro-attempts.json'),true);
+        $amountBefore=file_get_contents($amountDir.'/siro-attempts.json');
+        $amountReport=siroInspectionReport($amountSnapshot,$amountGateway,
+            ['return_base'=>'http://127.0.0.1:4174/autogestion'],1,$amountAttempt['attempt_id']);
+        ok($amountReport['state']==='CANCELLED' && $amountReport['check']==='VERIFIED' && !$amountReport['siro_payment_confirmed']);
+        ok(file_get_contents($amountDir.'/siro-attempts.json')===$amountBefore && $amountGateway->creates===1);
+        $replacement=$amountRecovery->open(1,$amountAttempt['attempt_id'],$amountInvoice);
+        ok($replacement['state']==='PENDING' && $replacement['attempt_id']!==$amountAttempt['attempt_id']);
+        ok($replacement['checkout_url']!==$amountAttempt['checkout_url'] && $amountGateway->creates===2);
+        $sameReplacement=$amountRecovery->open(1,$amountAttempt['attempt_id'],$amountInvoice);
+        ok($sameReplacement['attempt_id']===$replacement['attempt_id'] && $amountGateway->creates===2);
+        // Valid cents from JSON may match; another cent or a real third decimal may not.
+        $amountGateway->mode='confirmed';
+        $reserved=json_decode(file_get_contents($amountDir.'/siro-attempts.json'),true)['attempts'][$replacement['attempt_id']];
+        $amountFixture=new PaymentFixture();$amountFixture->scenario='confirmed';
+        $verifiedRow=$amountFixture->row(paymentRequest($reserved,['return_base'=>'http://127.0.0.1:4174/autogestion']));
+        $verifiedRow=json_decode(json_encode($verifiedRow,JSON_THROW_ON_ERROR),true,32,JSON_THROW_ON_ERROR);
+        ok(paymentResult($verifiedRow,$reserved,['return_base'=>'http://127.0.0.1:4174/autogestion'])['state']==='CONFIRMED');
+        foreach([23635.29,23635.31] as $wrongAmount) {
+            $wrongRow=$verifiedRow;$wrongRow['Request']['Importe']=$wrongAmount;
+            failure(fn()=>paymentResult($wrongRow,$reserved,['return_base'=>'http://127.0.0.1:4174/autogestion']),'PAYMENT_MISMATCH');
+        }
+        $fractionalRow=$verifiedRow;$fractionalRow['Request']['Importe']=23635.301;
+        failure(fn()=>paymentResult($fractionalRow,$reserved,['return_base'=>'http://127.0.0.1:4174/autogestion']),'PAYMENT_AMOUNT');
+        $amountConfirmed=$amountRecovery->open(1,$replacement['attempt_id'],$amountInvoice);
+        ok($amountConfirmed['state']==='CONFIRMED' && !isset($amountConfirmed['checkout_url']) && $amountGateway->creates===2);
+        ok($amountRecovery->create(1,'123',$amountInvoice)['state']==='CONFIRMED' && $amountGateway->creates===2);
+        $amountPosts=0;$amountInvoiceState='IMPAGA';
+        $amountPosted=$amountRecovery->postToPhantom(1,$replacement['attempt_id'],
+            function() use (&$amountInvoiceState) {return array_replace(row(),['Total'=>'23635.30','Estado'=>$amountInvoiceState]);},
+            function() use (&$amountInvoiceState) {return $amountInvoiceState==='IMPAGA'?crmRow('123','1','23635.30'):[];},
+            function($idt,$cents) use (&$amountPosts,&$amountInvoiceState) {ok($idt==='123' && $cents===2363530);$amountPosts++;$amountInvoiceState='PAGADA';return 'SUCCESS';});
+        ok($amountPosted['phantom_posting_state']==='POSTED' && $amountPosts===1);
+        ok($amountRecovery->postToPhantom(1,$replacement['attempt_id'],$amountInvoice,fn()=>[],fn()=>$amountPosts++)['phantom_posting_state']==='POSTED' && $amountPosts===1);
+    }
+} finally {ini_set('serialize_precision',$originalAmountPrecision);}
 echo 'PAYMENT_CHECKS='.$count.PHP_EOL;

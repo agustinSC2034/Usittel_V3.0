@@ -213,7 +213,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             if(!preg_match('/^[1-9][0-9]{0,19}$/D',$b['idt'])) throw new Failure('BAD_REQUEST',400);
             jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
         }
-        if($route==='payment-resume') jsonReply($payments->resume($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt)));
+        if($route==='payment-resume') jsonReply($payments->open($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt)));
         if($route==='payment-post') jsonReply($payments->postToPhantom($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt),
             fn(string $idt)=>$ph->crmUnpaidRows($ida,$idt),fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
         jsonReply($payments->reconcile($ida,$b['attempt_id']));

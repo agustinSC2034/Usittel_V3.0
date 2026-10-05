@@ -83,6 +83,11 @@ final class Payments {
             if(($row['Estado']??null)!=='IMPAGA') throw new Failure('PAYMENT_NOT_UNPAID',409);
             $cents=paymentCents($row['Total']??null);$cpe=$row['SIRO_CE']??null;
             if(!is_string($cpe) || !preg_match('/^[0-9]{19}$/D',$cpe)) throw new Failure('PAYMENT_CPE');
+            // A later non-terminal record must never hide an already confirmed payment.
+            foreach($state['attempts'] as $a) if($a['ida']===$ida && $a['idt']===$idt && $a['state']==='CONFIRMED') {
+                if($a['cents']!==$cents || $a['cpe']!==$cpe) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
+                return paymentPublic($a);
+            }
             foreach(array_reverse($state['attempts']) as $a) if($a['ida']===$ida && $a['idt']===$idt && !in_array($a['state'],['CANCELLED','REJECTED'],true)) {
                 if($a['cents']!==$cents || $a['cpe']!==$cpe) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
                 return paymentPublic($a); // Existing checkout must pass resume's fresh checks.
@@ -117,6 +122,7 @@ final class Payments {
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
             if($a['state']==='CONFIRMED' || (!$force && time()-$a['checked_at']<5)) return paymentPublic($a);
             $a['checked_at']=time();
+            $stage='CONSULT';
             try {
                 $rows=$this->siro->consult($a);
                 if(!array_is_list($rows) || count($rows)>100) throw new Failure('SIRO_FORMAT');
@@ -129,15 +135,37 @@ final class Payments {
                 if(count($matches)===1) {
                     $v=paymentResult($matches[0],$a,$this->s);
                     if($a['hash']!==null) {
+                        $stage='RESULT';
                         $verified=paymentResult($this->siro->result($a['hash'],$v['result_id']),$a,$this->s);
                         if($verified['result_id']!==$v['result_id']) throw new Failure('PAYMENT_MISMATCH');
                         $v=$verified;
                     }
                     $a['state']=$v['state'];$a['result_id']=$v['result_id'];
-                } else $a['state']='UNCONFIRMED'; // Absence never proves a failed creation or authorizes a retry.
-            } catch(\Throwable) {$a['state']='UNCONFIRMED';}
+                    $a['check_reason']='VERIFIED';
+                } else {$a['state']='UNCONFIRMED';$a['check_reason']='CONSULT_NO_MATCH';} // Absence never authorizes a new intent.
+            } catch(\Throwable $error) {
+                $a['state']='UNCONFIRMED';
+                $codes=['SIRO_FORMAT','SIRO_TIMEOUT','SIRO_NETWORK','SIRO_HTTP','SIRO_SESSION','SIRO_DATE','PAYMENT_MISMATCH','PAYMENT_AMBIGUOUS','PAYMENT_AMOUNT'];
+                $code=$error instanceof Failure && in_array($error->kind,$codes,true)?$error->kind:'UNEXPECTED';
+                $a['check_reason']=$stage.'_'.$code; // Fixed codes only; no raw response or sensitive data.
+            }
+            if($a['state']==='UNCONFIRMED') error_log('mi-usittel event=SIRO_CHECK_'.$a['check_reason']);
             $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
         });
+    }
+    // Called only by the explicit Pagar action. A verified cancellation can
+    // replace a dead checkout; load/reconcile never creates a payment intent.
+    public function open(int $ida,string $id,callable $invoice): array {
+        $existing=$this->store->transaction(function(&$state) use($ida,$id) {
+            if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id) || !isset($state['attempts'][$id]) || $state['attempts'][$id]['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
+            return paymentPublic($state['attempts'][$id]);
+        });
+        $result=in_array($existing['state'],['CANCELLED','REJECTED'],true)
+            ? $this->reconcile($ida,$id,true) : $this->resume($ida,$id,$invoice);
+        if(!in_array($result['state'],['CANCELLED','REJECTED'],true) || $result['phantom_posting_state']!=='NOT_POSTED') return $result;
+        // create() serializes reservations and reuses any concurrent active
+        // attempt instead of creating twice. Revalidate the exact invoice.
+        return $this->create($ida,$result['idt'],fn()=>$invoice($result['idt']));
     }
     public function resume(int $ida,string $id,callable $invoice): array {
         if($ida<1 || !preg_match('/^[a-f0-9]{32}$/D',$id)) throw new Failure('FORBIDDEN',403);

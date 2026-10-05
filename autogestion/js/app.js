@@ -239,6 +239,9 @@ document.addEventListener('click', async event => {
         ? (await refreshPayments({ targetAttemptId: target.dataset.attempt }))
         : await request(action === 'pay' ? 'payment-create' : action === 'payment-resume' ? 'payment-resume' : 'payment-post', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
       if (generation !== dataGeneration || !authenticated) return;
+      if (action === 'payment-resume' && /^[a-f0-9]{32}$/.test(result?.attempt_id || '') && result.attempt_id !== target.dataset.attempt) {
+        runtime.paymentFocus = { attemptId: result.attempt_id, serviceId: String(runtime.selectedServiceId) };
+      }
       if (action !== 'payment-check') await refreshPayments({ reconcile: false, recoverPosting: action === 'payment-resume' && result?.state === 'CONFIRMED' });
       if (result?.checkout_url) {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');

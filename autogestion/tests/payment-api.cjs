@@ -101,10 +101,21 @@ module.exports=async({jar,scenario,check,login,assert,fs,path,dir,clearRate,conf
   check('dos sesiones retoman UNCONFIRMED con un único intento y enlace',()=>{for(const response of [unknownA,unknownB]) {assert.equal(response.status,200,response.text);assert.equal(response.data.attempt_id,multiA.data.attempt_id);assert.equal(response.data.checkout_url,multiA.data.checkout_url);}});
   const savedAttempts=JSON.parse(fs.readFileSync(path.join(dir,'siro-attempts.json'),'utf8'));
   check('recuperación no reserva otro comprobante ni crea otro intento SIRO',()=>assert.equal(Object.values(savedAttempts.attempts).filter(a=>a.ida===5 && a.idt==='500').length,1));
+  fs.writeFileSync(path.join(dir,'siro-scenario'),'cancel-next-check');
+  r=await multi.call('payment-resume',{attempt_id:multiA.data.attempt_id},{noCsrf:true});
+  check('renovar un enlace también exige CSRF',()=>assert.equal(r.status,403));
+  const [renewA,renewB]=await Promise.all([reopened.call('payment-resume',{attempt_id:multiA.data.attempt_id}),multi.call('payment-resume',{attempt_id:multiA.data.attempt_id})]);
+  check('cancelación detectada al tocar Pagar renueva una sola vez, incluso desde dos sesiones',()=>{
+    assert.equal(renewA.status,200,renewA.text);assert.equal(renewB.status,200,renewB.text);
+    assert.notEqual(renewA.data.attempt_id,multiA.data.attempt_id);assert.equal(renewA.data.attempt_id,renewB.data.attempt_id);
+    assert.notEqual(renewA.data.checkout_url,multiA.data.checkout_url);assert.equal(renewA.data.checkout_url,renewB.data.checkout_url);
+    const attempts=Object.values(JSON.parse(fs.readFileSync(path.join(dir,'siro-attempts.json'),'utf8')).attempts).filter(a=>a.ida===5 && a.idt==='500');
+    assert.equal(attempts.length,2);assert.equal(attempts.filter(a=>a.state==='CANCELLED').length,1);
+  });
   await reopened.call('logout',{});
   fs.unlinkSync(path.join(dir,'siro-scenario'));
   scenario('normal');
-  r=await multi.call('payments');check('solo aparecen intentos del contrato seleccionado',()=>{assert.equal(r.status,200);assert.deepEqual(r.data.items.map(a=>a.idt),['500']);});
+  r=await multi.call('payments');check('solo aparecen intentos del contrato seleccionado',()=>{assert.equal(r.status,200);assert.deepEqual(r.data.items.map(a=>a.idt),['500','500']);assert.doesNotMatch(r.text,/check_reason|CONSULT_|RESULT_/);});
   r=await multi.call('payment-reconcile',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede consultar',()=>assert.equal(r.status,404));
   r=await multi.call('payment-post',{attempt_id:second.attempt_id});check('intento del otro contrato no se puede imputar',()=>assert.equal(r.status,404));
   r=await multi.call('select-service',{serviceId:'1'});check('volver al contrato inicial mantiene habilitación',()=>{assert.equal(r.data.payments_enabled,true);assert.equal(r.data.phantom_posting_enabled,true);});

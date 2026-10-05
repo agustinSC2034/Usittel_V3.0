@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MiUsittel;
 if(PHP_SAPI!=='cli' || getenv('MI_USITTEL_TEST')!=='1') exit(2);
 require __DIR__.'/../server/Core.php';require __DIR__.'/../server/Phantom.php';require __DIR__.'/PaymentFixture.php';
+require __DIR__.'/../server/SiroInspection.php';
 $root=$argv[1];$count=0;
 function ok(bool $value): void {if(!$value) throw new \RuntimeException('Payment fixture assertion failed');$GLOBALS['count']++;}
 function failure(callable $fn,string $code): void {try {$fn();}catch(Failure $e){ok($e->kind===$code);return;}throw new \RuntimeException('Expected payment failure');}
@@ -15,6 +16,32 @@ function setup(): array {
 function row(): array {return ['IDT'=>'123','IDA'=>'1','Estado'=>'IMPAGA','Total'=>'121.00','SIRO_CE'=>str_repeat('1',19)];}
 function crmRow(string $idt='123',string $ida='1',string $total='121.00'): array {return [[$idt,'Fixture',$ida,'2026-09-01','2026-09','1-123',$total]];}
 function unlock(PaymentStore $store): void {$store->transaction(function(&$s,$save){foreach($s['attempts'] as &$a)$a['checked_at']=0;$save();});}
+function renewalSetup(): array {
+    [, $store,, $dir]=setup();
+    $gateway=new class implements SiroGateway {
+        public array $requests=[];public int $creates=0;public string $mode='cancel-first';
+        public function create(array $request): array {
+            $this->requests[]=$request;$hash=str_repeat(chr(97+$this->creates++),64);
+            return ['Hash'=>$hash,'Url'=>siroCheckout($hash)];
+        }
+        private function row(int $index): array {
+            $fixture=new PaymentFixture();$fixture->scenario=$this->mode==='cancel-first'?($index===0?'cancelled':'pending'):$this->mode;
+            $row=$fixture->row($this->requests[$index]);$row['Hash']=str_repeat(chr(97+$index),64);
+            $row['IdOperacion']=str_repeat((string)($index+1),8).'-1111-4111-8111-111111111111';return $row;
+        }
+        public function consult(array $a): array {
+            if($this->mode==='query-timeout') throw new Failure('SIRO_TIMEOUT');
+            if($this->mode==='empty') return [];
+            return array_map(fn($i)=>$this->row($i),array_keys($this->requests));
+        }
+        public function result(string $hash,string $id): array {
+            if($this->mode==='result-timeout') throw new Failure('SIRO_TIMEOUT');
+            foreach(array_keys($this->requests) as $i) if(str_repeat(chr(97+$i),64)===$hash && $this->row($i)['IdOperacion']===$id) return $this->row($i);
+            throw new Failure('PAYMENT_MISMATCH');
+        }
+    };
+    return [new Payments($store,$gateway,['return_base'=>'http://127.0.0.1:4174/autogestion','receipt_start'=>70000,'receipt_end'=>70004]),$store,$gateway,$dir];
+}
 if(($argv[2]??null)==='worker') {
     $gateway=new class($root) implements SiroGateway {
         public function __construct(private string $dir){}
@@ -124,6 +151,39 @@ foreach(['POSTED','POSTING','POST_UNCONFIRMED','NEEDS_REVIEW','ALREADY_SETTLED']
     ok(!paymentPublic(['attempt_id'=>str_repeat('a',32),'idt'=>'123','cents'=>12100,'hash'=>str_repeat('a',64),'state'=>'UNCONFIRMED','posting_state'=>$posting,'created_at'=>'fixture','updated_at'=>'fixture'])['can_resume']);
 }
 ok(!paymentPublic(['attempt_id'=>str_repeat('a',32),'idt'=>'123','cents'=>12100,'hash'=>'invalid','state'=>'UNCONFIRMED','created_at'=>'fixture','updated_at'=>'fixture'])['can_resume']);
+// Pagar detects verified cancellation and replaces the dead link in the same action.
+$originalResumeAttempt=$a;$originalResumeGateway=$g;
+[$renew,$renewStore,$renewGateway,$renewDir]=renewalSetup();
+$old=$renew->create(1,'123',fn()=>row());
+$new=$renew->open(1,$old['attempt_id'],fn()=>row());
+ok($new['attempt_id']!==$old['attempt_id'] && $new['checkout_url']!==$old['checkout_url'] && $renewGateway->creates===2);
+ok($renew->list(1)[1]['state']==='CANCELLED');
+$duplicate=$renew->open(1,$old['attempt_id'],fn()=>row());
+ok($duplicate['attempt_id']===$new['attempt_id'] && $renewGateway->creates===2);
+failure(fn()=>$renew->open(5,$old['attempt_id'],fn()=>row()),'PAYMENT_NOT_FOUND');
+foreach(['empty','query-timeout','malformed','amount-mismatch','result-timeout'] as $mode) {
+    [$r,$s,$g,$d]=renewalSetup();$a=$r->create(1,'123',fn()=>row());$g->mode=$mode;
+    $opened=$r->open(1,$a['attempt_id'],fn()=>row());
+    ok($opened['state']==='UNCONFIRMED' && $opened['attempt_id']===$a['attempt_id'] && $g->creates===1);
+    $snapshot=json_decode(file_get_contents($d.'/siro-attempts.json'),true);$before=file_get_contents($d.'/siro-attempts.json');
+    $report=siroInspectionReport($snapshot,$g,['return_base'=>'http://127.0.0.1:4174/autogestion'],1,$a['attempt_id']);
+    ok(file_get_contents($d.'/siro-attempts.json')===$before && $g->creates===1);
+    $expected=['empty'=>'CONSULT_NO_MATCH','query-timeout'=>'CONSULT_SIRO_TIMEOUT','malformed'=>'CONSULT_SIRO_FORMAT','amount-mismatch'=>'CONSULT_PAYMENT_MISMATCH','result-timeout'=>'RESULT_SIRO_TIMEOUT'][$mode];
+    ok($report['check']===$expected);
+    ok(!preg_match('/Hash|checkout|reference|nro_comprobante|121|fixture-password/',json_encode($report)));
+}
+foreach([['Estado'=>'PAGADA'],['IDA'=>'5'],['IDT'=>'999'],['Total'=>'0'],['SIRO_CE'=>'bad']] as $change) {
+    [$r,$s,$g]=renewalSetup();$a=$r->create(1,'123',fn()=>row());
+    $expected=isset($change['Estado'])?'PAYMENT_NOT_UNPAID':(isset($change['IDA'])||isset($change['IDT'])?'INVOICE_OWNERSHIP':(isset($change['Total'])?'PAYMENT_AMOUNT':'PAYMENT_CPE'));
+    failure(fn()=>$r->open(1,$a['attempt_id'],fn()=>array_replace(row(),$change)),$expected);ok($g->creates===1);
+}
+[$r,$s,$g]=renewalSetup();$a=$r->create(1,'123',fn()=>row());$g->mode='confirmed';
+$blocked=$r->open(1,$a['attempt_id'],fn()=>row());ok($blocked['state']==='CONFIRMED' && !isset($blocked['checkout_url']) && $g->creates===1);
+// Even a newer unknown record cannot shadow a confirmed sibling.
+$s->transaction(function(&$state,$save) use($a) {$copy=$state['attempts'][$a['attempt_id']];$copy['attempt_id']=str_repeat('f',32);$copy['state']='UNCONFIRMED';$state['attempts'][$copy['attempt_id']]=$copy;$save();});
+ok($r->create(1,'123',fn()=>row())['state']==='CONFIRMED' && $g->creates===1);
+failure(fn()=>$r->create(1,'123',fn()=>array_replace(row(),['Total'=>'122.00'])),'PAYMENT_INVOICE_CHANGED');
+$a=$originalResumeAttempt;$g=$originalResumeGateway;
 $g->scenario='pending';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='PENDING');
 $g->scenario='cancelled';ok($p->reconcile(1,$a['attempt_id'],true)['state']==='CANCELLED');
 ok(!isset($p->resume(1,$a['attempt_id'],fn()=>row())['checkout_url']));

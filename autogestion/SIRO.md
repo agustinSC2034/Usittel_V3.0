@@ -63,6 +63,22 @@ La recuperación ante resultado inconcluso depende de la protección de SIRO con
 
 Si SIRO rechaza un enlace por vencimiento, no se reemplaza automáticamente mientras el pago siga desconocido. Reabrir el mismo enlace no permite inventar su vigencia. Los mensajes de un intento recuperable hablan de enlace disponible, no de pago recibido ni de pago en verificación.
 
+### Enlace cancelado: recuperación y diagnóstico — 05/10/2026
+
+El botón normal **Pagar** usa el mismo endpoint `payment-resume`, que ahora llama a `Payments::open()`. Si la consulta autenticada y su verificación por hash/operación confirman `CANCELLED` o `REJECTED`, con `posting_state=NOT_POSTED`, la acción prepara un nuevo intento mediante `create()` y entrega su nuevo enlace en el mismo paso. No se abre el hash cancelado. Antes de reservar se revalida la factura exacta autorizada, IDA, IMPAGA, importe y CPE; se conservan lock, contador, límite de creación y reserva durable antes del POST. Dos acciones concurrentes comparten el reemplazo activo; un registro confirmado prevalece sobre cualquier otro más reciente. Cargar o actualizar Facturas nunca crea intenciones nuevas.
+
+El cliente ve **El intento anterior fue cancelado** / **Podés volver a intentar el pago desde esta factura.** No se afirma que cambió el saldo ni que exista un pago recibido. No se copia la espera de una hora de la autogestión anterior: no hay evidencia de que esa regla aplique a esta integración.
+
+Una pantalla HTML de SIRO con “Hash Cancelado” NO se usa como confirmación financiera ni se scrapea. Una consulta vacía, fallida o inconsistente sigue `UNCONFIRMED`: no habilita un reemplazo. El motivo técnico se guarda solo en el runtime como `check_reason` y, si queda sin confirmar, se registra un código fijo `SIRO_CHECK_...` sin IDA/IDT, hash, importe, identidad ni respuesta cruda. No se publica ese motivo en la API ni en el formulario.
+
+Para conocer el caso productivo sin modificar su intento, hay un inspector CLI read-only que fuerza la conciliación exclusivamente sobre una copia en memoria. Consulta SIRO, pero no crea intenciones, no llama a Phantom y no guarda nada en el runtime. Desde el checkout del repositorio en el hosting (no depende de publicar los inspectores en el Document Root), sustituir el IDA y attempt_id ficticios del ejemplo por los del intento autorizado:
+
+```sh
+MI_USITTEL_CONFIG=/home4/usittel/mi-usittel-private/config.php MI_USITTEL_RUNTIME=/home4/usittel/mi-usittel-private/runtime php autogestion/server/inspect-siro-attempt.php 123 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+```
+
+La salida contiene únicamente estado, flags y el código de chequeo: `CONSULT_NO_MATCH`, `CONSULT_SIRO_TIMEOUT`, `CONSULT_PAYMENT_MISMATCH`, `RESULT_SIRO_HTTP`, etc. `VERIFIED` indica que las comprobaciones existentes pasaron. No muestra credenciales, URL/hash, cliente, factura, importe ni payload. El archivo privado se carga internamente sin imprimirlo ni modificarlo. Si la respuesta productiva sigue desconocida, hace falta verificar ese código antes de adaptar campos/formatos: no se inventa un alias o estado para hacer pasar la cancelación. Las pruebas de esta iteración usan fixtures; no diagnostican por sí solas el intento real ni validan un pago real.
+
 El comprobante tiene prefijo aleatorio de quince dígitos y sufijo secuencial de cinco. La unicidad se comprueba también sobre el comprobante completo. El contador por CPE es persistente, no vuelve a cero ni se recicla; agotamiento del rango impide nuevos intentos. `receipt_start` y `receipt_end` deben ser un rango previamente reservado y sin solapamientos con Phantom, Botmaker o la POC para ese CPE. La aplicación NO puede garantizar por sí sola que otros sistemas no usen ese rango.
 
 Dos solicitudes concurrentes obtienen el mismo intento activo y un solo POST. CANCELLED/REJECTED permiten crear otro comprobante; CREATING/PENDING/UNCONFIRMED/CONFIRMED bloquean una creación adicional. Timeout o fallo de autenticación/creación deja un intento incierto: no se reenvía a ciegas. Se conserva para reconciliación. Límite local: cinco creaciones en quince minutos y mil intentos almacenados; consulta de cada intento limitada a una cada cinco segundos.

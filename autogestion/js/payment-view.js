@@ -6,9 +6,10 @@ const MOVEMENTS_PER_PAGE = 10;
 export function paymentStatusBanner() {
   const focus = runtime.paymentFocus;
   if (!focus || String(runtime.selectedServiceId) !== focus.serviceId) return '';
-  const attempt = runtime.paymentItems.find(item => item.attempt_id === focus.attemptId);
+  const focused = runtime.paymentItems.find(item => item.attempt_id === focus.attemptId);
+  const attempt = runtime.paymentItems.find(item => item.idt === focused?.idt && item.state === 'CONFIRMED') || focused;
   if (!attempt) return '';
-  if (attempt.state === 'CANCELLED') return operationAlert('info', 'Pago cancelado', 'El pago no se completó y tu cuenta no tuvo cambios.');
+  if (attempt.state === 'CANCELLED') return operationAlert('info', 'El intento anterior fue cancelado', 'Podés volver a intentar el pago desde esta factura.');
   if (attempt.state === 'REJECTED') return operationAlert('error', 'Pago rechazado', 'El pago no se completó y tu cuenta no tuvo cambios.');
   if (['PENDING', 'UNCONFIRMED'].includes(attempt.state) && attempt.can_resume) return operationAlert('info', 'Enlace de pago disponible', 'Podés pagar desde la factura. Se abrirá el mismo enlace de SIRO.');
   if (attempt.state !== 'CONFIRMED') return operationAlert('warning', 'Estamos verificando tu pago', 'Por favor, aguardá unos minutos mientras actualizamos el estado de tu cuenta. No vuelvas a pagar esta factura por ahora.');
@@ -20,7 +21,7 @@ export function paymentStatusBanner() {
 
 export function paymentPanel() {
   if (!runtime.paymentsEnabled && !runtime.paymentHistoryEnabled) return '';
-  const labels = { CREATING: 'Preparando pago...', PENDING: 'Pago pendiente', CONFIRMED: 'Pago confirmado', CANCELLED: 'Pago cancelado', REJECTED: 'Pago rechazado', UNCONFIRMED: 'Estamos verificando tu pago' };
+  const labels = { CREATING: 'Preparando pago...', PENDING: 'Pago pendiente', CONFIRMED: 'Pago confirmado', CANCELLED: 'El intento anterior fue cancelado', REJECTED: 'Pago rechazado', UNCONFIRMED: 'Estamos verificando tu pago' };
   const resumable = a => ['PENDING', 'UNCONFIRMED'].includes(a.state) && a.can_resume === true;
   const canCheck = state => !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(state);
   const postingCopy = a => a.phantom_payment_posted ? 'Tu pago ya fue registrado en la cuenta.' : a.phantom_posting_state === 'ALREADY_SETTLED' ? 'Tu cuenta ya estaba actualizada.' : a.phantom_posting_state === 'POST_UNCONFIRMED' || a.phantom_posting_state === 'POSTING' ? 'Pago confirmado. La actualización de tu cuenta puede demorar. No vuelvas a pagar.' : a.phantom_posting_state === 'NEEDS_REVIEW' ? 'Pago confirmado. Estamos revisando la actualización de tu cuenta. No vuelvas a pagar.' : 'Estamos actualizando tu cuenta. No vuelvas a pagar.';
@@ -33,7 +34,7 @@ export function paymentPanel() {
   };
   const registered = runtime.paymentHistoryItems.map((item,index) => { const invoiceId=invoiceFor(item); return { date:item.date, priority:0, index, html:`<div class="commercial-option"><h3>Pago registrado</h3><p>${invoiceId ? `Factura ${e(invoiceId)}` : `Comprobante ${e(item.id)}`} · ${money(item.amount)}</p><p class="field-hint">${date(e(item.date))}</p>${item.downloadAvailable ? `<button type="button" class="text-action payment-receipt-action" data-action="download-payment-receipt" data-payment-id="${e(item.id)}" aria-label="Descargar comprobante de pago">${icon('download')}Descargar</button>` : ''}</div>` }; });
   const attempts = runtime.paymentItems.filter(a => !(a.phantom_payment_posted && runtime.paymentHistoryItems.some(item => invoiceFor(item) === a.idt)));
-  const attemptRows = attempts.map((a,index) => ({ date:String(a.updated_at || a.created_at || '').slice(0,10), priority:1, index, html:`<div class="commercial-option"><h3>${a.phantom_payment_posted || a.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : resumable(a) ? 'Enlace de pago disponible' : (labels[a.state] || labels.UNCONFIRMED)}</h3><p>Factura ${e(a.idt)} · ${money(a.amount)}</p><p class="field-hint">${a.siro_payment_confirmed ? postingCopy(a) : a.state === 'CANCELLED' ? 'El pago no se completó y tu cuenta no tuvo cambios.' : a.state === 'REJECTED' ? 'El pago fue rechazado y tu cuenta no tuvo cambios.' : resumable(a) ? 'Podés volver a abrirlo desde la factura. Se usará el mismo enlace de SIRO.' : 'Todavía no pudimos confirmar el resultado. No vuelvas a pagar.'}</p>${canCheck(a.state) ? button('Consultar estado', 'payment-check', { secondary: true, attrs: `data-attempt="${e(a.attempt_id)}"` }) : ''}</div>` }));
+  const attemptRows = attempts.map((a,index) => ({ date:String(a.updated_at || a.created_at || '').slice(0,10), priority:1, index, html:`<div class="commercial-option"><h3>${a.phantom_payment_posted || a.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : resumable(a) ? 'Enlace de pago disponible' : (labels[a.state] || labels.UNCONFIRMED)}</h3><p>Factura ${e(a.idt)} · ${money(a.amount)}</p><p class="field-hint">${a.siro_payment_confirmed ? postingCopy(a) : a.state === 'CANCELLED' ? 'Podés volver a intentar el pago desde esta factura.' : a.state === 'REJECTED' ? 'El pago fue rechazado y tu cuenta no tuvo cambios.' : resumable(a) ? 'Podés volver a abrirlo desde la factura. Se usará el mismo enlace de SIRO.' : 'Todavía no pudimos confirmar el resultado. No vuelvas a pagar.'}</p>${canCheck(a.state) ? button('Consultar estado', 'payment-check', { secondary: true, attrs: `data-attempt="${e(a.attempt_id)}"` }) : ''}</div>` }));
   const movements=[...registered,...attemptRows].sort((a,b)=>b.date.localeCompare(a.date)||a.priority-b.priority||a.index-b.index);
   const pages=Math.max(1,Math.ceil(movements.length/MOVEMENTS_PER_PAGE));
   const page=Math.min(Math.max(0,runtime.movementPage),pages-1);

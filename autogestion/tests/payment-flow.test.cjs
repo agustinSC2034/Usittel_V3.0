@@ -180,6 +180,17 @@ const path = require('node:path');
     assert.match(invoicePayButton({ id: '123' }), /Pago registrado/);
     assert.match(paymentPanel(), /Tu cuenta ya estaba actualizada/);
   });
+  await check('cancelación confirmada conserva Pagar y revalida antes de renovar el enlace', () => {
+    runtime.paymentItems = [attempt('CANCELLED')];
+    assert.match(invoicePayButton({id:'123'}), /data-action="payment-resume"/);
+    assert.match(invoicePayButton({id:'123'}), />Pagar<\/button>/);
+    assert.doesNotMatch(invoicePayButton({id:'123'}), /disabled/);
+    assert.match(paymentPanel(), /El intento anterior fue cancelado[\s\S]*Podés volver a intentar el pago/);
+    runtime.paymentItems.push(attempt('CONFIRMED','NOT_POSTED',{attempt_id:otherId}));
+    runtime.paymentFocus={attemptId:id,serviceId:'1'};runtime.selectedServiceId='1';
+    assert.match(paymentStatusBanner(), /Pago recibido correctamente/);
+    assert.doesNotMatch(invoicePayButton({id:'123'}), /payment-resume/);
+  });
   await check('banner sigue estado real del intento sin mostrar identificadores', () => {
     runtime.mode = 'phantom'; runtime.paymentsEnabled = true; runtime.paymentHistoryEnabled = true;
     runtime.selectedServiceId = '1'; runtime.paymentFocus = { attemptId: id, serviceId: '1' };
@@ -193,7 +204,7 @@ const path = require('node:path');
       [attempt('CONFIRMED', 'POSTED'), 'success', 'Pago registrado correctamente', 'ya fue registrado'],
       [attempt('CONFIRMED', 'ALREADY_SETTLED'), 'success', 'Pago registrado correctamente', 'ya se encontraba actualizada'],
       [attempt('CONFIRMED', 'NEEDS_REVIEW'), 'warning', 'Pago recibido', 'No vuelvas a realizar el pago'],
-      [attempt('CANCELLED'), 'info', 'Pago cancelado', 'no se completó'],
+      [attempt('CANCELLED'), 'info', 'El intento anterior fue cancelado', 'Podés volver a intentar el pago'],
       [attempt('REJECTED'), 'error', 'Pago rechazado', 'no se completó'],
     ];
     for (const [item, tone, title, detail] of cases) {

@@ -14,7 +14,7 @@ export function operationAlert(tone, title, description = '') {
   return `<div class="operation-alert operation-alert-${safeTone}">${icon(symbols[safeTone])}<div><strong>${escapeHTML(title)}</strong>${description ? `<p>${escapeHTML(description)}</p>` : ''}</div></div>`;
 }
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
-const activePaymentAttempt = item => runtime.mode === 'phantom' ? confirmedAttempt(item) || runtime.paymentItems.find(a => a.idt === item.id && !['CANCELLED','REJECTED'].includes(a.state)) : null;
+const activePaymentAttempt = item => runtime.mode === 'phantom' ? confirmedAttempt(item) || runtime.paymentItems.find(a => a.idt === item.id && !['CANCELLED','REJECTED'].includes(a.state)) || runtime.paymentItems.find(a => a.idt === item.id) : null;
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
   if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
@@ -40,9 +40,11 @@ export function invoicePayButton(item, attrs = '') {
   const real = runtime.mode === 'phantom';
   const active = activePaymentAttempt(item);
   const resumable = ['PENDING', 'UNCONFIRMED'].includes(active?.state) && active.can_resume === true;
+  const renewable = ['CANCELLED', 'REJECTED'].includes(active?.state) && active.phantom_posting_state === 'NOT_POSTED';
+  const openable = resumable || renewable;
   const checkable = active?.state === 'UNCONFIRMED' && !resumable;
-  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : checkable ? 'Consultar estado' : active && !resumable ? 'Pago en verificación' : 'Pagar';
-  return button(label, resumable ? 'payment-resume' : checkable ? 'payment-check' : 'pay', { iconName: resumable || !active ? 'external-link' : '', attrs: `data-id="${escapeHTML(item.id)}" ${resumable || checkable ? `data-attempt="${escapeHTML(active.attempt_id)}"` : ''} ${attrs} ${real && (!runtime.paymentsEnabled || (active && !resumable && !checkable)) ? 'disabled' : ''}` });
+  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : checkable ? 'Consultar estado' : active && !openable ? 'Pago en verificación' : 'Pagar';
+  return button(label, openable ? 'payment-resume' : checkable ? 'payment-check' : 'pay', { iconName: openable || !active ? 'external-link' : '', attrs: `data-id="${escapeHTML(item.id)}" ${openable || checkable ? `data-attempt="${escapeHTML(active.attempt_id)}"` : ''} ${attrs} ${real && (!runtime.paymentsEnabled || (active && !openable && !checkable)) ? 'disabled' : ''}` });
 }
 export function invoiceActions(item) {
   const real = runtime.mode === 'phantom';

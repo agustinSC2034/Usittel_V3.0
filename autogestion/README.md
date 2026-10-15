@@ -32,6 +32,13 @@ npm run test:mi-usittel # Requiere PHP; no contacta Phantom.
 
 El CSS compilado está incluido. Para reconstruirlo se usan las dependencias existentes (`npm ci` si faltan). No abrir con file://.
 
+## Renovación de certificados y recuperación de acceso
+
+Ver [procedimiento de renovación TLS de Phantom](PHANTOM-TLS-RENEWAL.md): causa y
+solución del incidente del 15/10/2026, verificación desde Nuthost, actualización
+controlada del bundle privado, cierre funcional y reversión. Debe consultarse en
+cada renovación; un push del repositorio no actualiza el bundle de cPanel.
+
 ## Configuración privada
 
 Ver [FIRST-PHANTOM-TEST.md](FIRST-PHANTOM-TEST.md) para la primera prueba guiada y [INTEGRATION.md](INTEGRATION.md) para el contrato interno completo.

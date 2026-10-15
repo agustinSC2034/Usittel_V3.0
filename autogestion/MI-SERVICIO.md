@@ -334,3 +334,28 @@ de confirmar el mapeo con el inspector; esta entrega no modifica configuración
 privada ni autoriza campos nuevos por su nombre.
 No se presenta como historial general de actividad: tickets, conversaciones y
 cambios de cuenta todavía no tienen una fuente de eventos integrada.
+
+## Configuración Wi-Fi de producción verificada - 15/10/2026
+
+La configuración privada desplegada utiliza `wifi.enabled=true` y
+`wifi.model_field=ONU_SW`. En esta instalación, `ONU_SW` informa el modelo
+comercial y `ONU_Modelo` devuelve una cadena de versión; no intercambiar los campos.
+
+Las dos listas, `wifi.models` y `wifi.dual_band_models`, contienen:
+
+- `EG8145X6-10`
+- `HG8145V5`
+- `EG8041V5`
+- `HG8145X6-10`
+- `EG8041X6-10`
+
+El 15/10 se agregó exclusivamente `EG8041X6-10` a ambas listas con autorización
+del operador y respaldo de la configuración anterior. Se verificaron la sintaxis,
+la preservación del resto de la configuración y las funciones de elegibilidad y
+dual band. La prueba de cambio real queda a cargo del operador: habilitar la lista
+no demuestra que Phantom haya aplicado una configuración mediante OMCI/TR-069.
+No se ejecutaron cambios de SSID/contraseña ni se generaron tickets en esta validación.
+
+Este bloque documenta el estado de producción; no reemplaza los valores seguros
+por defecto de `server/config.example.php`. La configuración privada y sus
+credenciales permanecen fuera del repositorio.

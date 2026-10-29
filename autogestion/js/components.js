@@ -18,8 +18,8 @@ const activePaymentAttempt = item => runtime.mode === 'phantom' ? confirmedAttem
 export function invoiceVisibleStatus(item) {
   const attempt = confirmedAttempt(item);
   if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
-  if (attempt.phantom_payment_posted || attempt.phantom_posting_state === 'ALREADY_SETTLED') return { label: 'Pagada', hint: '' };
-  return { label: 'Pago confirmado', hint: attempt.phantom_posting_state === 'NEEDS_REVIEW' ? 'Estamos verificando la actualización de tu cuenta.' : 'Estamos actualizando tu cuenta.' };
+  if (attempt.accreditation_state === 'SETTLED') return { label: 'Pagada', hint: '' };
+  return { label: 'Pago confirmado', hint: 'Acreditación en proceso. No vuelvas a pagar esta factura.' };
 }
 export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;
@@ -43,7 +43,7 @@ export function invoicePayButton(item, attrs = '') {
   const renewable = ['CANCELLED', 'REJECTED'].includes(active?.state) && active.phantom_posting_state === 'NOT_POSTED';
   const openable = resumable || renewable;
   const checkable = active?.state === 'UNCONFIRMED' && !resumable;
-  const label = active?.state === 'CONFIRMED' ? (active.phantom_payment_posted || active.phantom_posting_state === 'ALREADY_SETTLED' ? 'Pago registrado' : 'Pago confirmado') : checkable ? 'Consultar estado' : active && !openable ? 'Pago en verificación' : 'Pagar';
+  const label = active?.state === 'CONFIRMED' ? (active.accreditation_state === 'SETTLED' ? 'Pago registrado' : 'Pago confirmado') : checkable ? 'Consultar estado' : active && !openable ? 'Pago en verificación' : 'Pagar';
   return button(label, openable ? 'payment-resume' : checkable ? 'payment-check' : 'pay', { iconName: openable || !active ? 'external-link' : '', attrs: `data-id="${escapeHTML(item.id)}" ${openable || checkable ? `data-attempt="${escapeHTML(active.attempt_id)}"` : ''} ${attrs} ${real && (!runtime.paymentsEnabled || (active && !openable && !checkable)) ? 'disabled' : ''}` });
 }
 export function invoiceActions(item) {

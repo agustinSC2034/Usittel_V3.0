@@ -201,12 +201,11 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if(in_array($route,['payments','payment-create','payment-reconcile','payment-resume','payment-post'],true)) {
         $settings=siroConfig($c);
         if(!siroServiceEnabled($settings,$ids,$ida)) throw new Failure('SIRO_DISABLED',409);
-        $posting=phantomPostingConfig($c);
-        if($route==='payment-post' && !phantomPostingServiceEnabled($posting,$ids,$ida)) throw new Failure('PHANTOM_POSTING_DISABLED',409);
+        if($route==='payment-post') throw new Failure('PHANTOM_POSTING_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
         $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);
-        if($route==='payments') jsonReply(['items'=>$payments->list($ida)]);
+        if($route==='payments') jsonReply(['items'=>$payments->list($ida,fn(string $idt)=>$ph->invoiceById($ida,$idt))]);
         $b=body();$field=$route==='payment-create'?'idt':'attempt_id';
         if(array_keys($b)!==[$field] || !is_string($b[$field])) throw new Failure('BAD_REQUEST',400);
         if($route==='payment-create') {
@@ -214,9 +213,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             jsonReply($payments->create($ida,$b['idt'],fn()=>authorizedInvoice($ph,$ida,$b['idt'])));
         }
         if($route==='payment-resume') jsonReply($payments->open($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt)));
-        if($route==='payment-post') jsonReply($payments->postToPhantom($ida,$b['attempt_id'],fn(string $idt)=>authorizedInvoice($ph,$ida,$idt),
-            fn(string $idt)=>$ph->crmUnpaidRows($ida,$idt),fn(string $idt,int $cents,string $reference)=>$ph->imputePayment($ida,$idt,$cents,$reference)));
-        jsonReply($payments->reconcile($ida,$b['attempt_id']));
+        $payments->reconcile($ida,$b['attempt_id']);
+        jsonReply($payments->accreditation($ida,$b['attempt_id'],fn(string $idt)=>$ph->invoiceById($ida,$idt)));
     }
     $documents??=new PhantomInvoiceDocuments($c);
     if(in_array($route,['invoice','invoice-document'],true)) {

@@ -42,7 +42,8 @@ function paymentPublic(array $a,bool $checkout=false): array {
         && is_string($a['hash']??null) && preg_match('/^[a-f0-9]{64}$/D',$a['hash'])===1;
     $r=['attempt_id'=>$a['attempt_id'],'idt'=>$a['idt'],'amount'=>$a['cents']/100,'state'=>$a['state'],
         'intent_created'=>$a['hash']!==null,'siro_payment_confirmed'=>$a['state']==='CONFIRMED','phantom_payment_posted'=>$posting==='POSTED',
-        'phantom_posting_state'=>$posting,'can_post_to_phantom'=>$a['state']==='CONFIRMED' && $posting==='NOT_POSTED',
+        'phantom_posting_state'=>$posting,'can_post_to_phantom'=>false,
+        'accreditation_state'=>$a['accreditation_state']??'WAITING',
         'created_at'=>$a['created_at'],'updated_at'=>$a['updated_at'],'can_resume'=>$resumable,
         'phase'=>match($a['state']) {'CREATING'=>'SIRO_INTENT_CREATING','PENDING'=>'SIRO_PENDING','CONFIRMED'=>'SIRO_CONFIRMED','CANCELLED'=>'SIRO_CANCELLED','REJECTED'=>'SIRO_REJECTED',default=>'SIRO_UNKNOWN'}];
     if($checkout && $r['can_resume']) $r['checkout_url']=siroCheckout($a['hash']);
@@ -68,11 +69,32 @@ function paymentResult(array $row,array $a,array $s): array {
 }
 final class Payments {
     public function __construct(private PaymentAttempts $store,private SiroGateway $siro,private array $s) {}
-    public function list(int $ida): array {
-        return $this->store->transaction(function(&$state) use($ida) {
+    public function list(int $ida,?callable $invoice=null): array {
+        return $this->store->transaction(function(&$state,$save) use($ida,$invoice) {
+            if($invoice!==null) {
+                foreach($state['attempts'] as &$a) if($a['ida']===$ida) $this->refreshAccreditation($a,$invoice);
+                unset($a);$save();
+            }
             $items=array_values(array_filter($state['attempts'],fn($a)=>$a['ida']===$ida));
             return array_map(__NAMESPACE__.'\\paymentPublic',array_reverse($items));
         });
+    }
+    // Read invoice settlement only; never creates a receipt or attributes a bank operation.
+    public function accreditation(int $ida,string $id,callable $invoice): array {
+        return $this->store->transaction(function(&$state,$save) use($ida,$id,$invoice) {
+            $a=$state['attempts'][$id]??null;
+            if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
+            $this->refreshAccreditation($a,$invoice);
+            $state['attempts'][$id]=$a;$save();return paymentPublic($a);
+        });
+    }
+    private function refreshAccreditation(array &$a,callable $invoice): void {
+        if($a['state']!=='CONFIRMED' || time()-($a['accreditation_checked_at']??0)<5) return;
+        $a['accreditation_checked_at']=time();
+        try {
+            $row=$invoice($a['idt']);$this->assertPostingInvoice($row,$a,$a['ida']);
+            $a['accreditation_state']=$row['Estado']==='PAGADA'?'SETTLED':'WAITING';
+        } catch(\Throwable) {$a['accreditation_state']='UNKNOWN';}
     }
     public function create(int $ida,string $idt,callable $invoice): array {
         if($ida<1) throw new Failure('FORBIDDEN',403);

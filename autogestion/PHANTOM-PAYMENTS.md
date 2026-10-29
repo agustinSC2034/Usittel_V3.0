@@ -1,5 +1,7 @@
 # Imputación de pagos confirmados
 
+**Flujo reemplazado el 29/10/2026:** el portal ya no imputa pagos directamente. SIRO confirma el cobro y la integración nativa de Phantom lo registra por rendición. Ver [flujo vigente y despliegue](SIRO-NATIVE-SETTLEMENT.md). El contenido siguiente se conserva como antecedente, no como procedimiento de habilitación.
+
 ## Estados separados
 
 1. **SIRO intent created**: existe una intención durable y el checkout puede abrirse.

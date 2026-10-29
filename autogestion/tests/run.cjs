@@ -443,12 +443,12 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
     assert.match(app,/returnAttempt[\s\S]*billingView = 'invoices'/);
     assert.match(payments,/\['CONFIRMED', 'CANCELLED', 'REJECTED'\]/);
     const components=fs.readFileSync(path.join(root,'js','components.js'),'utf8');
-    assert.match(components,/Pago confirmado[\s\S]*Estamos actualizando tu cuenta/);
+    assert.match(components,/Pago confirmado[\s\S]*Acreditación en proceso/);
     assert.match(views,/saldo puede tardar en reflejar pagos recientes/);
     assert.match(views,/portal de SIRO, nuestro proveedor de pagos/);
     assert.match(views,/billing-heading[\s\S]*billing-refresh/);
     assert.doesNotMatch(payments,/headingAction|Consultar actualización/);
-    assert.match(payments,/ALREADY_SETTLED[\s\S]*Tu cuenta ya estaba actualizada/);
+    assert.match(payments,/SETTLED[\s\S]*Tu factura ya figura pagada/);
     assert.match(payments,/MOVEMENTS_PER_PAGE = 10[\s\S]*movement-pagination[\s\S]*Página \$\{page\+1\} de \$\{pages\}/);
     assert.match(app,/action === 'movement-page'[\s\S]*runtime\.movementPage = page/);
     assert.doesNotMatch(payments,/respuesta|token|Phantom|SIRO confirmó|imputación/);

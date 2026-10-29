@@ -79,8 +79,8 @@ return [
         // Do not guess or overlap Phantom/Botmaker/previous POC sequences.
         'receipt_start' => null, 'receipt_end' => null,
     ],
-    // Separate, explicit laboratory gate for the irreversible Phantom write.
-    // Enable only after the read-only CRM check and controlled fixtures pass.
+    // Legacy CRM settings. Portal posting is permanently disabled regardless of enabled.
+    // Native SIRO settlement in Phantom is the only writer (SIRO-NATIVE-SETTLEMENT.md).
     'phantom_posting' => [
         'enabled' => false,
         'lab_ida' => 1,

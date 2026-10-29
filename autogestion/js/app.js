@@ -70,7 +70,7 @@ function render() {
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
-      if (paymentBusy && ['pay', 'payment-resume', 'payment-check', 'payment-post', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
+      if (paymentBusy && ['pay', 'payment-resume', 'payment-check', 'billing-refresh', 'download-payment-receipt'].includes(control.dataset.action)) control.disabled = true;
     });
   }
   document.title = `Mi USITTEL · ${routes.find(([id]) => id === route)?.[1] || 'Ingresar'}`;
@@ -230,14 +230,14 @@ document.addEventListener('click', async event => {
     document.querySelector(`[data-action="billing-tab"][data-view="${runtime.billingView}"]`)?.focus();
     return;
   }
-  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-resume' || action === 'payment-check' || action === 'payment-post')) {
+  if (runtime.mode === 'phantom' && (action === 'pay' || action === 'payment-resume' || action === 'payment-check')) {
     if (!runtime.paymentsEnabled || paymentBusy) return;
     paymentBusy = true; target.disabled = true; const generation = dataGeneration;
-    target.textContent = action === 'pay' ? 'Preparando pago...' : action === 'payment-post' ? 'Actualizando cuenta...' : 'Consultando...';
+    target.textContent = action === 'pay' ? 'Preparando pago...' : 'Consultando...';
     try {
       const result = action === 'payment-check'
         ? (await refreshPayments({ targetAttemptId: target.dataset.attempt }))
-        : await request(action === 'pay' ? 'payment-create' : action === 'payment-resume' ? 'payment-resume' : 'payment-post', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
+        : await request(action === 'pay' ? 'payment-create' : 'payment-resume', action === 'pay' ? { idt: target.dataset.id } : { attempt_id: target.dataset.attempt });
       if (generation !== dataGeneration || !authenticated) return;
       if (action === 'payment-resume' && /^[a-f0-9]{32}$/.test(result?.attempt_id || '') && result.attempt_id !== target.dataset.attempt) {
         runtime.paymentFocus = { attemptId: result.attempt_id, serviceId: String(runtime.selectedServiceId) };
@@ -246,7 +246,7 @@ document.addEventListener('click', async event => {
       if (result?.checkout_url) {
         if (!/^https:\/\/siropagos\.bancoroela\.com\.ar\/Home\/Pago\/[a-f0-9]{64}$/.test(result.checkout_url)) throw new Error('No pudimos validar el portal de pagos.');
         window.location.assign(result.checkout_url);
-      } else { location.hash = '/facturas'; if (action === 'payment-post') await refreshOverviewSnapshot(generation); else render(); }
+      } else { location.hash = '/facturas'; render(); }
     } catch (error) { if (generation === dataGeneration) {
       if (['PAYMENT_NOT_UNPAID', 'PAYMENT_INVOICE_CHANGED'].includes(error.code)) await loadOverview();
       await handleError(error);
@@ -442,7 +442,7 @@ async function refreshPayments({ reconcile = true, recoverPosting = true, target
       if (error.status === 401 || error.code === 'SERVICE_CHANGED') await handleError(error);
     } }
   }
-  // Read history after any posting so Movimientos reflects the newest result.
+  // Read native Phantom receipts after checking payment status.
   if (runtime.paymentHistoryEnabled) {
     try { const list=await request('payment-history'); if(generation!==dataGeneration||!authenticated)return;runtime.paymentHistoryItems=list.items;runtime.paymentHistoryError=''; }
     catch { if(generation===dataGeneration) runtime.paymentHistoryError='No pudimos consultar los movimientos registrados. Volvé a intentar.'; }

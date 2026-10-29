@@ -62,8 +62,8 @@ ok(!siroServiceEnabled(['lab_ida'=>5],[1],5));
 ok(!siroServiceEnabled(['lab_ida'=>1],[1,5],7));
 ok(!siroServiceEnabled(['lab_ida'=>1],[1,5],null));
 ok(!siroServiceEnabled(null,[1],1));
-ok(phantomPostingServiceEnabled(['lab_ida'=>1],[1,5],5));
-ok(phantomPostingServiceEnabled(['lab_ida'=>1],[5],5));
+ok(!phantomPostingServiceEnabled(['lab_ida'=>1],[1,5],5));
+ok(!phantomPostingServiceEnabled(['lab_ida'=>1],[5],5));
 ok(!phantomPostingServiceEnabled(['lab_ida'=>1],[1,5],7));
 ok(!phantomPostingServiceEnabled(null,[1],1));
 $postingConfig=['phantom_url'=>'https://fixture.invalid/API_Rest.php','phantom_posting'=>[
@@ -347,4 +347,18 @@ try {
         ok($amountRecovery->postToPhantom(1,$replacement['attempt_id'],$amountInvoice,fn()=>[],fn()=>$amountPosts++)['phantom_posting_state']==='POSTED' && $amountPosts===1);
     }
 } finally {ini_set('serialize_precision',$originalAmountPrecision);}
+// Native settlement is observed without using CRM writes or matching by amount alone.
+foreach(['IMPAGA','PAGADA','foreign','amount','timeout'] as $native) {
+    [$p,$store,$g,$dir,$a]=$confirmAttempt();$reads=0;
+    $result=$p->accreditation(1,$a['attempt_id'],function($idt)use($native,&$reads){
+        $reads++;ok($idt==='123');
+        if($native==='timeout') throw new Failure('PHANTOM_TIMEOUT');
+        return array_replace(row(),['Estado'=>$native==='IMPAGA'?'IMPAGA':'PAGADA'],
+            $native==='foreign'?['IDA'=>'5']:[], $native==='amount'?['Total'=>'1.00']:[]);
+    });
+    ok($result['accreditation_state']===match($native){'IMPAGA'=>'WAITING','PAGADA'=>'SETTLED',default=>'UNKNOWN'});
+    ok(!$result['can_post_to_phantom'] && !$result['phantom_payment_posted'] && $result['state']==='CONFIRMED');
+    $p->list(1,fn()=>throw new \RuntimeException('Must throttle repeated reads'));ok($reads===1);
+    failure(fn()=>$p->accreditation(5,$a['attempt_id'],fn()=>row()),'PAYMENT_NOT_FOUND');
+}
 echo 'PAYMENT_CHECKS='.$count.PHP_EOL;

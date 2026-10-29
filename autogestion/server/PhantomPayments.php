@@ -28,7 +28,8 @@ function phantomPostingConfig(array $config): ?array {
     return $settings!==null && $settings['enabled']?$settings:null;
 }
 function phantomPostingServiceEnabled(?array $settings,array $authorized,?int $selected): bool {
-    return $settings!==null && $selected!==null && in_array($selected,$authorized,true);
+    // SIRO native settlement is the only writer. Ignore legacy enabled settings.
+    return false;
 }
 
 function phantomCrmAcknowledgement(string $response): string {

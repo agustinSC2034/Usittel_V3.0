@@ -1,6 +1,5 @@
 Options -Indexes
 DirectoryIndex index.html
-AddType application/manifest+json .webmanifest
 
 # cPanel can retain the account-wide PHP 7.4 handler even when MultiPHP reports
 # PHP 8.2 for this subdomain. Mi USITTEL requires PHP 8; bind this document root

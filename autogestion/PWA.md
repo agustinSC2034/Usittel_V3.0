@@ -15,7 +15,7 @@ Los iconos usan el símbolo de `assets/favicon.png` (192 × 231), centrado sobre
 - `js/pwa-register.js`: registro en contextos seguros, bajo el directorio del portal.
 - `sw.js`: worker sin interceptación ni almacenamiento.
 - `assets/pwa-icon-192.png`, `assets/pwa-icon-512.png`: iconos normal y maskable.
-- `.htaccess`: tipo MIME del manifiesto; conserva las reglas previas.
+- `.htaccess`: sin modificaciones. El hosting entrega `.webmanifest` como `application/octet-stream`; verificar su lectura en Chrome antes de dar por completada la instalación.
 - `serve.cjs`: MIME para la previsualización local, sin PHP ni pagos reales.
 - `PWA.md`: esta guía.
 

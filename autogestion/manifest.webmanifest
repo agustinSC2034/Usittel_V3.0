@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Mi USITTEL",
+  "short_name": "Mi USITTEL",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f8f7",
+  "theme_color": "#f7f8f7",
+  "icons": [
+    { "src": "assets/pwa-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/pwa-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

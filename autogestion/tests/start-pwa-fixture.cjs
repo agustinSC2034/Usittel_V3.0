@@ -1,0 +1,20 @@
+// Local test harness: synthetic fixtures only. Listen on loopback for adb reverse.
+const { spawn } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const php = process.env.MI_USITTEL_PHP || 'php';
+const port = process.env.PORT || '4174';
+if (!/^\d{4,5}$/.test(port) || Number(port) > 65535) throw new Error('PORT inválido');
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mi-usittel-pwa-fixture-'));
+const config = path.join(dir, 'config.php');
+fs.writeFileSync(config, `<?php return ['mode'=>'phantom','phantom_url'=>'https://fixture.invalid/API_Rest.php','api_user'=>'fixture-api','api_pass'=>'fixture-api-secret','allowed_idas'=>[1,5],'customer_id_field'=>'ID','profile_fields'=>['name'=>['Nombre'],'address'=>['Direccion'],'plan'=>['Producto_Internet']],'siro'=>['enabled'=>true,'user'=>'fixture-user','password'=>'fixture-password','return_base'=>'http://localhost:${port}/autogestion','receipt_start'=>70000,'receipt_end'=>70020]];`);
+fs.writeFileSync(path.join(dir, 'scenario'), 'normal');
+const env = {...process.env, MI_USITTEL_TEST:'1', MI_USITTEL_CONFIG:config, MI_USITTEL_RUNTIME:dir};
+console.log(`PRUEBA FICTICIA · http://localhost:${port}/autogestion/ · solo loopback`);
+console.log('Usuario: 000001 · Contraseña: " 00Lab-fixture! " (incluye un espacio al inicio y al final).');
+console.log('Datos temporales de prueba:', dir);
+const child = spawn(php, ['-d','display_errors=0','-S',`127.0.0.1:${port}`,'-t',path.join(__dirname,'..'),path.join(__dirname,'pwa-router.php')], {stdio:'inherit',env});
+child.on('error', error => { console.error('No se pudo iniciar PHP:', error.message); process.exitCode=1; });
+child.on('exit', (code, signal) => { if (!signal && code !== 0) process.exitCode=code || 1; });
+process.on('SIGINT', () => child.kill());

@@ -49,9 +49,9 @@ if(str_starts_with($routePath,'/api/')) {
 if(!in_array($_SERVER['REQUEST_METHOD'],['GET','HEAD'],true)) {http_response_code(405);exit;}
 $relative=ltrim($routePath,'/');
 if($routePath==='/') $relative='index.html';
-if(!preg_match('~^(index\.html|js/[a-z-]+\.js|vendor/librespeed/speedtest_worker\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
+if(!preg_match('~^(index\.html|manifest\.webmanifest|sw\.js|js/[a-z-]+\.js|vendor/librespeed/speedtest_worker\.js|assets/[a-zA-Z0-9_.-]+\.(css|png|svg|woff2))$~D',$relative)) {http_response_code(404);exit;}
 $file=__DIR__.'/../'.$relative;
 if(!is_file($file)) {http_response_code(404);exit;}
-$types=['html'=>'text/html','css'=>'text/css','js'=>'text/javascript','png'=>'image/png','svg'=>'image/svg+xml','woff2'=>'font/woff2'];
+$types=['html'=>'text/html','webmanifest'=>'application/manifest+json','css'=>'text/css','js'=>'text/javascript','png'=>'image/png','svg'=>'image/svg+xml','woff2'=>'font/woff2'];
 header('Content-Type: '.$types[pathinfo($file,PATHINFO_EXTENSION)].'; charset=utf-8');
 if($_SERVER['REQUEST_METHOD']!=='HEAD') readfile($file);

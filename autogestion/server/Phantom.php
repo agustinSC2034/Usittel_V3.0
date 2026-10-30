@@ -268,6 +268,9 @@ final class Phantom {
             $out['address']=implode(' · ',array_filter([$out['address'],...$extra],fn($v)=>$v!==null))?:null;
         }
         $out['serviceStatus']=textValue($raw['Estado_Servicio']??null);
+        $out['serviceRestoring']=strcasecmp($out['serviceStatus']??'','Suspendido')===0
+            && in_array($raw['Promesa_Activa']??null,[1,'1',true],true);
+        if($out['serviceRestoring']) $out['serviceStatus']='Activo';
         $out['connectionState']=$this->publicConnectivityState($raw['Estado_Conexion']??null);
         $out['equipmentState']=$this->publicConnectivityState($raw['Estado_ONU']??null);
         $out['network']=null; $out['speed']=null;
@@ -334,12 +337,20 @@ final class Phantom {
         // Read exact session-owned contract before any service change.
         $customer=$this->customer($ida);
         if(strcasecmp(trim((string)($customer['Estado_Servicio']??'')),'Suspendido')!==0) return 'NOT_SUSPENDED';
+        if(in_array($customer['Promesa_Activa']??null,[1,'1',true],true)) return 'CREATED';
         $invoice=$this->invoiceById($ida,$idt);
         if(($invoice['Estado']??null)==='PAGADA') return 'ALREADY_SETTLED';
         // One write only. Authentication refresh is completed BEFORE the write;
         // never use the read retry loop for this non-idempotent endpoint.
         $token=$this->token(true);
-        $response=$this->raw('Generar_Promesa_Pago',['IDA'=>$ida,'horas'=>72],['token'=>$token]);
+        try {$response=$this->raw('Generar_Promesa_Pago',['IDA'=>$ida,'horas'=>72],['token'=>$token]);}
+        catch(\Throwable $error) {
+            // The native action can succeed despite an unexpected acknowledgement.
+            // Resolve the uncertainty by reading the contract, never repeating the write.
+            if(in_array($this->customer($ida)['Promesa_Activa']??null,[1,'1',true],true)) return 'CREATED';
+            throw $error;
+        }
+        if(in_array($this->customer($ida)['Promesa_Activa']??null,[1,'1',true],true)) return 'CREATED';
         if((int)($response['code']??0)!==200 || ($response['message']??null)!=='Promesa-PrepagoExito') throw new Failure('PROMISE_RESPONSE');
         return 'CREATED';
     }

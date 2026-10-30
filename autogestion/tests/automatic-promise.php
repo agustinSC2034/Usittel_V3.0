@@ -37,11 +37,11 @@ $payments->reconcile(1,$a['attempt_id'],true);demandPromise($calls===0);
 echo "Automatic promise scenarios passed (17 scenarios, repeated confirmations and failure isolation).\n";
 // Exercise the real Phantom method with a local transport, never a live contract.
 $wire=new class implements Transport {
-    public string $status='Suspendido';public string $invoice='IMPAGA';public int $writes=0;public array $reply=['code'=>200,'message'=>'Promesa-PrepagoExito'];
+    public string $status='Suspendido';public string $invoice='IMPAGA';public int $writes=0;public mixed $active=0;public array $reply=['code'=>200,'message'=>'Promesa-PrepagoExito'];
     public function authenticate(string $url,array $credentials): array {return ['token'=>'fixture'];}
     public function post(string $url,array $body): array {
         parse_str(parse_url($url,PHP_URL_QUERY),$q);
-        if($q['action']==='Consulta_Cliente_Avanzada')return [['ID'=>'1','Estado_Servicio'=>$this->status]];
+        if($q['action']==='Consulta_Cliente_Avanzada')return [['ID'=>'1','Estado_Servicio'=>$this->status,'Promesa_Activa'=>$this->active]];
         if($q['action']==='Phantom_Ultima_Factura')return [['IDT'=>'123','IDA'=>'1','Estado'=>$this->invoice]];
         demandPromise($q['action']==='Generar_Promesa_Pago' && $q['IDA']==='1' && $q['horas']==='72' && $body===['token'=>'fixture']);
         $this->writes++;return $this->reply;
@@ -56,3 +56,6 @@ $wire->reply=['code'=>400,'message'=>'Error: limite'];
 try{$ph->confirmedPaymentPromise(1,'123');throw new \RuntimeException('Expected rejection');}catch(Failure $e){demandPromise($e->kind==='PHANTOM_FUNCTIONAL' && $wire->writes===2);}
 try{$ph->confirmedPaymentPromise(2,'123');throw new \RuntimeException('Expected scope rejection');}catch(Failure $e){demandPromise($e->kind==='FORBIDDEN' && $wire->writes===2);}
 echo "Phantom promise transport: active/baja/paid excluded, 72 hours, functional rejection, exact contract isolation passed.\n";
+foreach([1,'1',true] as $active){$wire->active=$active;$profile=$ph->profile(1);demandPromise($profile['serviceStatus']==='Activo' && $profile['serviceRestoring']===true);demandPromise($ph->confirmedPaymentPromise(1,'123')==='CREATED' && $wire->writes===2);}
+foreach([0,'0',null,'false','yes'] as $active){$wire->active=$active;$profile=$ph->profile(1);demandPromise($profile['serviceStatus']==='Suspendido' && $profile['serviceRestoring']===false);}
+echo "Live promise mapping and no repeated native write passed.\n";

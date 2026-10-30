@@ -5,6 +5,7 @@ import { connectivityLabel } from './data.js';
 export function homeConnection(customer, details) {
   if (typeof customer.serviceStatus === 'string' && customer.serviceStatus.trim().toLocaleLowerCase('es-AR') === 'suspendido') return { tone: 'warning', icon: 'alert-triangle', title: 'Servicio suspendido', description: 'Tu servicio se encuentra suspendido.', suspended: true };
   const state = details?.connectionState ?? customer.connectionState;
+  if (customer.serviceRestoring === true) return { tone: 'success', icon: 'wifi', title: 'Activo', description: state === 'online' ? 'Tu conexión está en línea.' : state === 'offline' ? 'Tu servicio está habilitado. La reconexión puede tardar unos minutos. Tu conexión todavía figura sin conexión.' : 'Tu servicio está habilitado. La reconexión puede tardar unos minutos. Estamos consultando el estado de tu conexión.', suspended: false };
   const label = connectivityLabel(state);
   if (label === 'En línea') return { tone: 'success', icon: 'wifi', title: 'Tu conexión está en línea', description: 'El servicio está funcionando normalmente.', suspended: false };
   if (label === 'Sin conexión') return { tone: 'error', icon: 'wifi-off', title: 'Tu servicio está sin conexión', description: 'Podemos ayudarte a revisar qué sucede.', suspended: false };

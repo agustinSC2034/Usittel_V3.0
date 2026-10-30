@@ -12,6 +12,8 @@ const path = require('node:path');
   const { servicePage } = await import('../js/service-view.js');
   const customer = { name:'Cliente', address:'Calle 123', plan:'Internet 300 Mbps', serviceStatus:'Activo', connectionState:'online' };
   check('online', () => assert.match(homeConnection(customer,null).title,/en línea/));
+  check('habilitado esperando conexión',()=>{const r=homeConnection({...customer,serviceStatus:'Activo',serviceRestoring:true,connectionState:'offline'},null);assert.equal(r.title,'Activo');assert.match(r.description,/unos minutos/);assert.doesNotMatch(r.description,/promesa|temporal|72|en línea/i);});
+  check('habilitado con conexión real',()=>{const r=homeConnection({...customer,serviceStatus:'Activo',serviceRestoring:true},{connectionState:'online'});assert.equal(r.title,'Activo');assert.match(r.description,/en línea/);assert.doesNotMatch(r.description,/unos minutos/);});
   check('offline', () => assert.equal(homeConnection({...customer,connectionState:'offline'},null).tone,'error'));
   check('desconocido', () => assert.equal(homeConnection({...customer,connectionState:null},null).tone,'warning'));
   check('suspendido explícito', () => assert.equal(homeConnection({...customer,serviceStatus:'SUSPENDIDO'},null).title,'Servicio suspendido'));

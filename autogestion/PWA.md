@@ -2,7 +2,7 @@
 
 ## Diagnóstico y alcance
 
-`index.html` carga `js/app.js`, que presenta el ingreso y navega mediante `#/...`. La sesión y el CSRF se gestionan con `api.php`; SIRO abre un dominio externo y vuelve al portal. No había manifiesto ni worker en `autogestion/`; `expo/` es otra aplicación. El inicio y alcance relativos del manifiesto resuelven a `/autogestion/` cuando el archivo se sirve allí. La identidad relativa también conserva ese alcance. Verificar la URL canónica definitiva y cualquier redirección del servidor antes de publicar.
+`index.html` carga `js/app.js`, que presenta el ingreso y navega mediante `#/...`. La sesión y el CSRF se gestionan con `api.php`; SIRO abre un dominio externo y vuelve al portal. No había manifiesto ni worker en `autogestion/`; `expo/` es otra aplicación. En el hosting, `public_html/autogestion` es la raíz del subdominio `https://mi.usittel.com.ar/`: las rutas relativas del manifiesto resuelven a `/` en ese origen. En el laboratorio local, el mismo directorio se sirve en `/autogestion/`, por lo que allí resuelven a `/autogestion/`. La identidad relativa conserva el alcance de cada instalación. Verificar las rutas y redirecciones en el hosting antes de publicar.
 
 El worker no tiene manejador `fetch`, no usa Cache Storage y no implementa funcionamiento sin conexión. Las peticiones, cookies y redirecciones siguen a cargo del navegador y del backend; no se ha alterado la lógica de autenticación, Phantom, SIRO ni TLS. Las cabeceras `no-store` existentes siguen vigentes. El worker deja disponible el punto de extensión para una implementación futura de push; no solicita permisos ni contiene suscripción o notificaciones. La ampliación requerirá diseño, autorización, backend y nueva revisión de seguridad.
 
@@ -40,7 +40,7 @@ Fuentes: [TWA y Bubblewrap](https://developer.chrome.com/docs/android/trusted-we
 
 ## Prueba manual Android, después de desplegar con autorización
 
-1. Usar un entorno de pruebas HTTPS con backend aislado y una cuenta de prueba. Confirmar que `/autogestion/manifest.webmanifest`, `/autogestion/sw.js` y los dos PNG responden 200 con MIME correcto y sin redirecciones de autenticación; revisar que el inicio y alcance resuelvan a `/autogestion/`.
+1. Usar un entorno de pruebas HTTPS con backend aislado y una cuenta de prueba. Confirmar que el manifiesto, el worker y los dos PNG responden 200 con MIME correcto y sin redirecciones de autenticación; en el subdominio `mi.usittel.com.ar`, comprobar que el inicio y alcance resuelvan a `/`. En el laboratorio local corresponden a `/autogestion/`.
 2. En Chrome actualizado en Android, abrir la URL HTTPS del portal, esperar la carga y elegir menú ⋮ → **Instalar aplicación** o **Agregar a pantalla principal** (el texto puede variar). Confirmar la instalación y abrir el icono desde inicio: nombre, logo, pantalla y modo sin barra del navegador.
 3. Con datos de prueba, ingresar, navegar entre secciones, actualizar, cerrar y reabrir, y cerrar sesión. Comprobar que no reaparezcan datos de la sesión anterior. Revisar errores y estado del worker desde Chrome DevTools remoto, Application → Manifest y Service Workers; Storage → Cache Storage no debe contener cachés creadas por este worker.
 4. Probar, en entorno aislado, el flujo de salida y regreso de SIRO sin completar un pago real. Verificar cookies/sesión y regreso a facturas; registrar cualquier diferencia entre Chrome, PWA y futura TWA.

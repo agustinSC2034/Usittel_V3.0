@@ -204,7 +204,8 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         if($route==='payment-post') throw new Failure('PHANTOM_POSTING_DISABLED',409);
         if(!getenv('MI_USITTEL_RUNTIME')) throw new Failure('PAYMENT_STORAGE');
         set_time_limit(100);
-        $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings);
+        $payments=new Payments(new PaymentStore($dir),$siro??new SiroHttp($c,$settings),$settings,
+            fn(int $customer,string $invoice)=>$ph->confirmedPaymentPromise($customer,$invoice));
         if($route==='payments') jsonReply(['items'=>$payments->list($ida,fn(string $idt)=>$ph->invoiceById($ida,$idt))]);
         $b=body();$field=$route==='payment-create'?'idt':'attempt_id';
         if(array_keys($b)!==[$field] || !is_string($b[$field])) throw new Failure('BAD_REQUEST',400);

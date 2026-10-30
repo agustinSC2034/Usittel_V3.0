@@ -70,6 +70,8 @@ async function login(j,user='000001',password=' 00Lab-fixture! ') {await j.call(
   check('servicio SIRO con fixtures: identidad, intentos, importes y recuperación',()=>{assert.equal(paymentTests.status,0,paymentTests.stdout+paymentTests.stderr);assert.match(paymentTests.stdout,/PAYMENT_CHECKS=/);});
   count+=Number(paymentTests.stdout.match(/PAYMENT_CHECKS=(\d+)/)[1])-1;
   console.log(paymentTests.stdout.trim());
+  const promiseTests=spawnSync(php,[path.join(__dirname,'automatic-promise.php')],{env:fixtureEnv,encoding:'utf8'});
+  check('promesa automática: confirmación SIRO, aislamiento y una solicitud durable',()=>{assert.equal(promiseTests.status,0,promiseTests.stdout+promiseTests.stderr);});
   const paymentHistoryTests=spawnSync(php,[path.join(__dirname,'payment-history.php')],{env:fixtureEnv,encoding:'utf8'});
   check('historial y comprobantes de pago con fixtures seguros',()=>{assert.equal(paymentHistoryTests.status,0,paymentHistoryTests.stdout+paymentHistoryTests.stderr);assert.match(paymentHistoryTests.stdout,/PAYMENT_HISTORY_CHECKS=/);});
   count+=Number(paymentHistoryTests.stdout.match(/PAYMENT_HISTORY_CHECKS=(\d+)/)[1])-1;

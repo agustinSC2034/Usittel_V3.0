@@ -68,7 +68,34 @@ function paymentResult(array $row,array $a,array $s): array {
     return ['state'=>$state,'result_id'=>$row['IdOperacion']];
 }
 final class Payments {
-    public function __construct(private PaymentAttempts $store,private SiroGateway $siro,private array $s) {}
+    public function __construct(private PaymentAttempts $store,private SiroGateway $siro,private array $s,private ?\Closure $promise=null) {}
+    // Called with the attempt-store lock held. Persist before the external write:
+    // an uncertain response or crashed worker must never extend/repeat a promise.
+    private function confirmedPromise(array &$state,array &$a,callable $save): void {
+        if($this->promise===null || $a['state']!=='CONFIRMED' || ($a['auto_promise_eligible']??false)!==true || isset($a['auto_promise'])) return;
+        foreach($state['attempts'] as $other) {
+            $previous=$other['auto_promise']??[];
+            if($other['attempt_id']!==$a['attempt_id'] && $other['ida']===$a['ida']
+                && in_array($previous['state']??null,['CREATED','REQUESTING','REVIEW_REQUIRED'],true)
+                && strtotime($previous['requested_at']??'1970-01-01')>time()-72*3600) {
+                $a['auto_promise']=['state'=>'EXISTING_REQUEST'];$state['attempts'][$a['attempt_id']]=$a;$save();return;
+            }
+            if($other['attempt_id']!==$a['attempt_id'] && ($other['result_id']??null)===$a['result_id'] && isset($other['auto_promise'])) {
+                $a['auto_promise']=['state'=>'DUPLICATE_OPERATION'];$state['attempts'][$a['attempt_id']]=$a;$save();return;
+            }
+        }
+        $a['auto_promise']=['state'=>'REQUESTING','hours'=>72,'requested_at'=>gmdate('c')];
+        $state['attempts'][$a['attempt_id']]=$a;$save();
+        try {
+            $result=($this->promise)($a['ida'],$a['idt']);
+            if(!in_array($result,['CREATED','NOT_SUSPENDED','ALREADY_SETTLED'],true)) throw new Failure('PROMISE_RESPONSE');
+            $a['auto_promise']['state']=$result;
+        } catch(\Throwable) {
+            $a['auto_promise']['state']='REVIEW_REQUIRED';
+            error_log('mi-usittel event=AUTO_PROMISE_REVIEW_REQUIRED');
+        }
+        $state['attempts'][$a['attempt_id']]=$a;$save();
+    }
     public function list(int $ida,?callable $invoice=null): array {
         return $this->store->transaction(function(&$state,$save) use($ida,$invoice) {
             if($invoice!==null) {
@@ -123,7 +150,8 @@ final class Payments {
             do {$receipt=(string)random_int(100000000000000,999999999999999).str_pad((string)$next,5,'0',STR_PAD_LEFT);} while(in_array($receipt,array_column($state['attempts'],'receipt'),true));
             $now=gmdate('c');$a=['attempt_id'=>$id,'ida'=>$ida,'idt'=>$idt,'cents'=>$cents,'cpe'=>$cpe,'receipt'=>$receipt,
                 'reference'=>$idt.';'.paymentDecimal($cents).';','hash'=>null,'result_id'=>null,'state'=>'CREATING','posting_state'=>'NOT_POSTED',
-                'posting_reference'=>null,'posted_at'=>null,'created_at'=>$now,'updated_at'=>$now,'checked_at'=>0];
+                'posting_reference'=>null,'posted_at'=>null,'created_at'=>$now,'updated_at'=>$now,'checked_at'=>0,
+                'auto_promise_eligible'=>$this->promise!==null];
             $state['counters'][$cpe]=$next;$state['attempts'][$id]=$a;$save(); // Durable reservation BEFORE the external POST.
             try {
                 $r=$this->siro->create(paymentRequest($a,$this->s));
@@ -142,7 +170,10 @@ final class Payments {
         return $this->store->transaction(function(&$state,$save) use($ida,$id,$force) {
             $a=$state['attempts'][$id]??null;
             if(!$a || $a['ida']!==$ida) throw new Failure('PAYMENT_NOT_FOUND',404);
-            if($a['state']==='CONFIRMED' || (!$force && time()-$a['checked_at']<5)) return paymentPublic($a);
+            if($a['state']==='CONFIRMED') {
+                $this->confirmedPromise($state,$a,$save);return paymentPublic($a);
+            }
+            if(!$force && time()-$a['checked_at']<5) return paymentPublic($a);
             $a['checked_at']=time();
             $stage='CONSULT';
             try {
@@ -172,7 +203,9 @@ final class Payments {
                 $a['check_reason']=$stage.'_'.$code; // Fixed codes only; no raw response or sensitive data.
             }
             if($a['state']==='UNCONFIRMED') error_log('mi-usittel event=SIRO_CHECK_'.$a['check_reason']);
-            $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();return paymentPublic($a);
+            $a['updated_at']=gmdate('c');$state['attempts'][$id]=$a;$save();
+            $this->confirmedPromise($state,$a,$save);
+            return paymentPublic($a);
         });
     }
     // Called only by the explicit Pagar action. A verified cancellation can

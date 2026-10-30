@@ -330,6 +330,19 @@ final class Phantom {
         if($this->crm===null) throw new Failure('PHANTOM_POSTING_CONFIGURATION');
         $this->crm->authenticate($refresh);
     }
+    public function confirmedPaymentPromise(int $ida,string $idt): string {
+        // Read exact session-owned contract before any service change.
+        $customer=$this->customer($ida);
+        if(strcasecmp(trim((string)($customer['Estado_Servicio']??'')),'Suspendido')!==0) return 'NOT_SUSPENDED';
+        $invoice=$this->invoiceById($ida,$idt);
+        if(($invoice['Estado']??null)==='PAGADA') return 'ALREADY_SETTLED';
+        // One write only. Authentication refresh is completed BEFORE the write;
+        // never use the read retry loop for this non-idempotent endpoint.
+        $token=$this->token(true);
+        $response=$this->raw('Generar_Promesa_Pago',['IDA'=>$ida,'horas'=>72],['token'=>$token]);
+        if((int)($response['code']??0)!==200 || ($response['message']??null)!=='Promesa-PrepagoExito') throw new Failure('PROMISE_RESPONSE');
+        return 'CREATED';
+    }
     public function crmUnpaidRows(int $ida,string $idt): array {
         $settings=phantomPostingCandidateConfig($this->config);
         if($settings===null || $this->crm===null) throw new Failure('PHANTOM_POSTING_CONFIGURATION');

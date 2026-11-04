@@ -42,10 +42,9 @@ function renderInvitation() {
   const main = document.querySelector('main.page');
   if (!main) return;
   if (!invitation && !busy) {
-    main.insertAdjacentHTML('afterbegin', `<section id="push-invitation" class="account-help" aria-labelledby="push-invitation-title">
-      <h2 id="push-invitation-title">¿Querés recibir notificaciones?</h2>
-      <p>Recibí avisos de Mi USITTEL en este dispositivo.</p>
-      <div class="dialog-actions">
+    main.insertAdjacentHTML('afterbegin', `<section id="push-invitation" class="push-invitation" aria-labelledby="push-invitation-title">
+      <h2 id="push-invitation-title">¿Activar notificaciones?</h2>
+      <div class="push-invitation-actions">
         <button type="button" class="button" id="push-invitation-enable">Activar notificaciones</button>
         <button type="button" class="button button-secondary" id="push-invitation-later">Ahora no</button>
       </div>

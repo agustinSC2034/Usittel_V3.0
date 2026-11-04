@@ -565,6 +565,10 @@
 .account-help .button { margin-top:18px; }
 .account-help .button-secondary { background:#fff; }
 .account-help .logout { display:flex; width:max-content; margin-top:22px; }
+.push-invitation { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 16px; margin-bottom:16px; padding:10px 14px; border:1px solid var(--line); border-radius:var(--card-radius); background:var(--sage); }
+.push-invitation h2 { margin:0; font-size:16px; }
+.push-invitation-actions { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.push-invitation .button { min-height:44px; padding:6px 12px; font-size:14px; }
 @media(max-width:900px) {
   .home-hero { align-items:stretch; flex-direction:column; }
   .home-hero-actions { justify-content:flex-start; flex-wrap:wrap; }

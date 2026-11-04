@@ -218,6 +218,7 @@ document.addEventListener('click', async event => {
   message = '';
   renderPush();
   if (fromInvitation) document.querySelector('main.page h1')?.focus();
+  let stage = active ? 'push-remove' : 'push-permission';
   try {
     if (active) {
       await request('push-remove', {});
@@ -227,7 +228,10 @@ document.addEventListener('click', async event => {
       const { sdk, messaging } = await getSdk();
       await sdk.unregister(messaging).catch(() => {});
     } else if (Notification.permission === 'granted' || await Notification.requestPermission() === 'granted') {
-      await syncRegistration(await register(), false, current);
+      stage = 'push-browser-register';
+      const fid = await register();
+      stage = 'push-portal-register';
+      await syncRegistration(fid, false, current);
       if (fromInvitation && current === generation && active) notification?.('Notificaciones activadas.');
     } else {
       message = Notification.permission === 'denied'
@@ -238,8 +242,8 @@ document.addEventListener('click', async event => {
     if (current === generation) {
       const code = error.code || error.message;
       const reference = /^(?:push-[a-z-]+|fcm-timeout|(?:messaging|installations)\/[a-z-]+|[A-Z_]+)$/.test(code)
-        ? ` (${code})` : error.status ? ` (HTTP ${error.status})` : '';
-      message = `No pudimos actualizar las notificaciones${reference}. Volvé a intentar.`;
+        ? code : error.status ? `HTTP ${error.status}` : stage;
+      message = `No pudimos actualizar las notificaciones (${reference}). Volvé a intentar.`;
     }
   } finally {
     if (current === generation) {

@@ -77,8 +77,9 @@ async function getSdk() {
       .then(async ([app, sdk]) => {
         if (!await sdk.isSupported()) throw new Error('unsupported');
         const messaging = sdk.getMessaging(app.initializeApp(firebase));
-        sdk.onMessage(messaging, ({ data }) => {
-          if (enabled && active && data?.title && data.body) notification?.(`${data.title} · ${data.body}`);
+        sdk.onMessage(messaging, ({ notification: banner, data }) => {
+          const message = banner ?? data;
+          if (enabled && active && message?.title && message.body) notification?.(`${message.title} · ${message.body}`);
         });
         sdk.onRegistered(messaging, fid => {
           if (pendingRegistration) pendingRegistration(fid);

@@ -60,8 +60,15 @@ function testPush(array $config,string $dir,string $device,string $attempt): str
     });
     return pushStore($dir,static function(array &$state) use ($project,$device,$key,$target,$access) {
         if(($state['devices'][$device]??null)!==$target) return $state['attempts'][$key]='DEVICE_CHANGED';
-        $message=['fid'=>$target['fid'],'webpush'=>['headers'=>['TTL'=>'60','Urgency'=>'high']],
-            'data'=>['title'=>'Mi USITTEL','body'=>'¡Las notificaciones ya están funcionando!','route'=>'inicio','tag'=>$key]];
+        $message=[
+            'fid'=>$target['fid'],
+            'notification'=>['title'=>'Mi USITTEL','body'=>'¡Las notificaciones ya están funcionando!'],
+            'webpush'=>[
+                'headers'=>['TTL'=>'60','Urgency'=>'high'],
+                'notification'=>['tag'=>$key,'icon'=>'https://mi.usittel.com.ar/assets/pwa-icon-192.png'],
+                'fcm_options'=>['link'=>'https://mi.usittel.com.ar/?notificacion=inicio#/inicio'],
+            ],
+        ];
         [$status,$result,$error]=fcmRequest('https://fcm.googleapis.com/v1/projects/'.$project.'/messages:send',
             json_encode(['message'=>$message],JSON_THROW_ON_ERROR),['Content-Type: application/json','Authorization: Bearer '.$access]);
         if($status===200 && is_string($result['name']??null)) return $state['attempts'][$key]='ACCEPTED';

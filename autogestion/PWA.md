@@ -4,7 +4,7 @@
 
 `index.html` carga `js/app.js`, que presenta el ingreso y navega mediante `#/...`. La sesión y el CSRF se gestionan con `api.php`; SIRO abre un dominio externo y vuelve al portal. No había manifiesto ni worker en `autogestion/`; `expo/` es otra aplicación. En el hosting, `public_html/autogestion` es la raíz del subdominio `https://mi.usittel.com.ar/`: las rutas relativas del manifiesto resuelven a `/` en ese origen. En el laboratorio local, el mismo directorio se sirve en `/autogestion/`, por lo que allí resuelven a `/autogestion/`. La identidad relativa conserva el alcance de cada instalación. Verificar las rutas y redirecciones en el hosting antes de publicar.
 
-El worker no tiene manejador `fetch`, no usa Cache Storage y no implementa funcionamiento sin conexión. Las peticiones, cookies y redirecciones siguen a cargo del navegador y del backend; no se ha alterado la lógica de autenticación, Phantom, SIRO ni TLS. Las cabeceras `no-store` existentes siguen vigentes. El worker deja disponible el punto de extensión para una implementación futura de push; no solicita permisos ni contiene suscripción o notificaciones. La ampliación requerirá diseño, autorización, backend y nueva revisión de seguridad.
+El worker no tiene manejador `fetch`, no usa Cache Storage y no implementa funcionamiento sin conexión. Las peticiones, cookies y redirecciones siguen a cargo del navegador y del backend; no se ha alterado la lógica de autenticación, Phantom, SIRO ni TLS. Las cabeceras `no-store` existentes siguen vigentes. La integración de Firebase y la activación del piloto se documentan en [PUSH.md](PUSH.md).
 
 Los iconos usan el símbolo de `assets/favicon.png` (192 × 231), centrado sobre el color existente con margen para máscaras. El escalado limita la nitidez del icono grande: para una distribución definitiva conviene obtener el símbolo oficial vectorial o un original de mayor resolución y sustituir ambos PNG conservando el área segura.
 
@@ -13,7 +13,7 @@ Los iconos usan el símbolo de `assets/favicon.png` (192 × 231), centrado sobre
 - `index.html`: enlace al manifiesto y script de registro.
 - `manifest.webmanifest`: identidad, rutas, colores e iconos instalables.
 - `js/pwa-register.js`: registro en contextos seguros, bajo el directorio del portal.
-- `sw.js`: worker sin interceptación ni almacenamiento.
+- `sw.js`: worker de notificaciones sin interceptación de solicitudes ni caché.
 - `assets/pwa-icon-192.png`, `assets/pwa-icon-512.png`: iconos normal y maskable.
 - `.htaccess`: sin modificaciones. El hosting entrega `.webmanifest` como `application/octet-stream`; verificar su lectura en Chrome antes de dar por completada la instalación.
 - `serve.cjs`: MIME para la previsualización local, sin PHP ni pagos reales.

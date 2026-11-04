@@ -1,17 +1,25 @@
 import { request, invoicePdf, paymentReceiptPdf } from './api.js';
 import { customer, invoices, ticket, money, runtime, initialize, clearData, applyOverview, appendInvoices, planLabel, addressLabel } from './data.js';
-import { shell, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
+import { shell, contractLabel, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
 import { initializeCentralChat, openCentralChat, closeCentralChat } from './central-chat.js';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 import { paymentReturnAttempt, resolvePaymentFlow } from './payment-flow.js';
+import { renderPush, setPushEnabled } from './push.js';
 
 const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
 const toastElement = document.querySelector('#toast');
 const githubPagesDemo = location.hostname.endsWith('.github.io');
 const views = { inicio: home, facturas: billing, servicio: service, soporte: support, cuenta: account };
+const entryUrl = new URL(location.href);
+const pushRoute = entryUrl.searchParams.get('notificacion');
+let notificationRoute = ['inicio', 'facturas', 'servicio', 'cuenta'].includes(pushRoute) ? pushRoute : null;
+if (entryUrl.searchParams.has('notificacion')) {
+  entryUrl.searchParams.delete('notificacion');
+  history.replaceState(null, '', entryUrl);
+}
 let authenticated = false;
 let paymentBusy = false;
 let serviceBusy = false;
@@ -67,6 +75,7 @@ function render() {
   const notice = runtime.warnings.length ? '<p class="demo-notice" role="status">Parte de la información no está disponible o requiere revisión. El saldo de cuenta y el estado de cada factura pueden diferir.</p>' : '';
   const content = runtime.loading ? '<h1 tabindex="-1">Cargando tu información…</h1><p role="status">Un momento, por favor.</p>' : runtime.error ? `<h1 tabindex="-1">Información no disponible</h1><p role="alert">${e(runtime.error)}</p><div class="dialog-actions">${button('Volver a intentar', 'retry')}${button('Cerrar sesión', 'logout', { secondary: true })}</div>` : notice + views[route]?.();
   app.innerHTML = route === 'login' ? login() : shell(route, content);
+  renderPush();
   if (runtime.mode === 'phantom') {
     app.querySelectorAll('[data-action]').forEach(control => {
       if (unavailable.includes(control.dataset.action)) { control.disabled = true; control.title = 'Todavía no disponible en esta etapa'; }
@@ -198,7 +207,7 @@ document.addEventListener('click', async event => {
   }
   if (action === 'choose-service') {
     if (serviceBusy || runtime.services.length < 2) return;
-    openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${e(addressLabel(s.address) || 'No disponible')}</strong><span>Contrato N.º ${e(s.id)} · ${e(planLabel(s.plan) || 'Plan no disponible')}</span></button>`).join('')}</div>`);
+    openDialog('Elegí un servicio', `<div class="service-options">${runtime.services.map(s => `<button type="button" class="service-option" data-action="select-service" data-id="${e(s.id)}" aria-pressed="${s.id === runtime.selectedServiceId}"><strong>${s.id === runtime.selectedServiceId ? '&#10003; ' : ''}${contractLabel(s)}</strong></button>`).join('')}</div>`);
     return;
   }
   if (action === 'select-service') {
@@ -334,6 +343,7 @@ document.addEventListener('click', async event => {
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
+      setPushEnabled(false);
       authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.paymentFocus = null; runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { toast(error.message); target.disabled = false; }
@@ -377,9 +387,14 @@ document.addEventListener('submit', async event => {
   if (form.id === 'login-form') {
     const submit = form.querySelector('[type="submit"]'); submit.disabled = true;
     try {
-      if (runtime.backend) applyServices(await request('login', { username: data.get('username'), password: data.get('password') }));
+      if (runtime.backend) {
+        const session = await request('login', { username: data.get('username'), password: data.get('password') });
+        applyServices(session);
+        setPushEnabled(session.push_enabled, toast);
+      }
       else if (runtime.mode !== 'demo' || data.get('username') !== 'agustin.demo' || data.get('password') !== 'usittel-demo') throw new Error('Para esta prueba usá agustin.demo y usittel-demo.');
-      form.reset(); authenticated = true; location.hash = returnAttempt ? '/facturas' : '/inicio';
+      form.reset(); authenticated = true; location.hash = returnAttempt ? '/facturas' : '/' + (notificationRoute || 'inicio');
+      notificationRoute = null;
       if (runtime.mode === 'phantom') await loadOverview(); else render();
     } catch(error) { toast(error.message); }
     finally { data.delete('password'); if (form.elements.password) form.elements.password.value = ''; submit.disabled = false; }
@@ -402,7 +417,7 @@ async function handleError(error) {
   if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
     dataGeneration++;
-    authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
+    authenticated = false; setPushEnabled(false); applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
     catch { await boot(); return; }
     render(); toast(message);
@@ -464,6 +479,8 @@ async function boot() {
       : await request('bootstrap');
     runtime.backend = session.backend !== false;
     await initialize(session.mode); applyServices(session); authenticated = session.authenticated;
+    if (authenticated) notificationRoute = null;
+    setPushEnabled(session.push_enabled, toast);
     const demoStrip = document.querySelector('.demo-strip');
     demoStrip.textContent = session.mode === 'demo' ? 'Vista de prueba · Datos de ejemplo' : '';
     demoStrip.hidden = session.mode !== 'demo';

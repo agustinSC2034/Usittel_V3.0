@@ -1,4 +1,4 @@
-import { money, runtime } from './data.js';
+import { addressLabel, money, runtime } from './data.js';
 
 export const escapeHTML = value => String(value ?? 'No disponible').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 export const icon = (name, extra = '') => `<svg class="icon ${extra}" aria-hidden="true" focusable="false"><use href="assets/icons.svg#${name}"></use></svg>`;
@@ -24,10 +24,15 @@ export function invoiceVisibleStatus(item) {
 export function navigation(active, mobile = false) {
   return `<nav class="${mobile ? 'bottom-nav' : 'top-nav'}" aria-label="${mobile ? 'Navegación móvil' : 'Navegación principal'}">${routes.map(([id, label, symbol]) => `<a href="#/${id}" ${active === id ? 'aria-current="page"' : ''}>${mobile ? icon(symbol) : ''}<span>${label}</span></a>`).join('')}</nav>`;
 }
+export function contractLabel(service) {
+  const address = typeof service.address === 'string' ? addressLabel(service.address).trim() : '';
+  return `ID ${escapeHTML(service.id)}${address && !address.includes('@') && !/^Referencia\s*:/i.test(address) ? ` · ${escapeHTML(address)}` : ''}`;
+}
+
 export function shell(active, content) {
   const selected = runtime.services.find(service => service.id === runtime.selectedServiceId);
   const selector = runtime.services.length > 1 && selected
-    ? `<div class="current-service" aria-label="Servicio actual"><div class="current-service-inner"><div><span class="current-service-label">Servicio actual</span><span class="current-service-address">${escapeHTML(selected.address || 'Domicilio no disponible')}</span><span class="current-service-contract">Contrato N.º ${escapeHTML(selected.id)}</span></div><button type="button" class="current-service-change" data-action="choose-service" aria-haspopup="dialog">Cambiar servicio ${icon('chevron-down')}</button></div></div>`
+    ? `<div class="current-service" aria-label="Servicio actual"><div class="current-service-inner"><div><span class="current-service-address">${contractLabel(selected)}</span></div><button type="button" class="current-service-change" data-action="choose-service" aria-haspopup="dialog">Cambiar servicio ${icon('chevron-down')}</button></div></div>`
     : '';
   return `<header class="app-header"><div class="header-inner"><a class="brand" href="#/inicio" aria-label="Mi USITTEL, inicio">${logo()}<span class="brand-name">Mi USITTEL</span></a>${navigation(active)}</div></header>${selector}<main id="main" class="page page-${active}">${content}</main>${navigation(active, true)}`;
 }

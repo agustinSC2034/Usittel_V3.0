@@ -8,7 +8,9 @@ set_error_handler(static function() {throw new \MiUsittel\Failure('INTERNAL');})
 header('X-Content-Type-Options: nosniff'); header('Referrer-Policy: no-referrer');
 $measurementOrigin='';
 try { $speed=\MiUsittel\speedtestConfig(\MiUsittel\config()); if($speed!==null) $measurementOrigin=' '.$speed['origin']; } catch(\Throwable) {}
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://web.central.chat; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin."; object-src 'none'; frame-src https://web.central.chat; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
+$firebaseScript=" https://www.gstatic.com/firebasejs/";
+$firebaseConnect=" https://firebaseinstallations.googleapis.com https://fcmregistrations.googleapis.com";
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://web.central.chat".$firebaseScript."; worker-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'".$measurementOrigin.$firebaseConnect."; object-src 'none'; frame-src https://web.central.chat; frame-ancestors 'none'; base-uri 'self'; form-action 'none'");
 header('Cache-Control: no-store');
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 if(!is_string($path)) {http_response_code(400);exit;}

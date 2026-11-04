@@ -7,6 +7,12 @@ return [
     'phantom_url' => 'https://phantom.usittel.com.ar/PHANTOM/Includes/API_Rest.php',
     'api_user' => '',
     'api_pass' => '',
+    'push' => [
+        'enabled' => false,
+        'pilot_owners' => [], // IDs de cuentas autenticadas aprobadas para el piloto
+        'project_id' => 'mi-usittel',
+        'service_account_file' => '', // Ruta absoluta privada, solo para la CLI
+    ],
     // Portal authorization: every positive numeric contract can be a login candidate.
     // Phantom credentials must match exactly; only server-discovered contracts enter the session.
     // Optional aliases are for confirmed non-numeric usernames only. Never store passwords here.

@@ -7,6 +7,7 @@ require_once __DIR__.'/Services.php';
 require_once __DIR__.'/PaymentHistory.php';
 require_once __DIR__.'/Wifi.php';
 require_once __DIR__.'/ServiceRequests.php';
+require_once __DIR__.'/Push.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -58,6 +59,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $expected+=['service-connection'=>'POST','speedtest-start'=>'POST'];
     $expected+=['wifi-prepare'=>'POST','wifi-change'=>'POST'];
     $expected+=['request-prepare'=>'POST','request-create'=>'POST','request-refresh'=>'POST','service-requests'=>'GET'];
+    $expected+=['push-status'=>'GET','push-register'=>'POST','push-remove'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
@@ -65,6 +67,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($route==='bootstrap') {
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['mode'=>$c['mode'],'authenticated'=>isset($_SESSION['ida']),'csrf'=>$_SESSION['csrf'],
+            'push_enabled'=>pushAllowed($c,(int)($_SESSION['authenticated_ida']??0)),
             'payments_enabled'=>siroServiceEnabled(siroConfig($c),$sessionIds,$selected),
             'phantom_posting_enabled'=>phantomPostingServiceEnabled(phantomPostingConfig($c),$sessionIds,$selected),
             'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
@@ -72,6 +75,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     if($method==='POST') csrf();
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        pushDetach($dir);
         $_SESSION=[]; session_destroy();
         $p=session_get_cookie_params(); setcookie(session_name(),'', ['expires'=>time()-3600,'path'=>$p['path'],'secure'=>$p['secure'],'httponly'=>true,'samesite'=>'Strict']);
         jsonReply(['ok'=>true]);
@@ -100,6 +104,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         }
         unset($b);
         $discovery=$c['mode']==='phantom'?discoverServices($ph,$candidate):['services'=>[],'servicesUnavailable'=>false];
+        pushDetach($dir,$candidate);
         $fingerprint=$_SESSION['config']; $_SESSION=[]; session_regenerate_id(true);
         $_SESSION=['ida'=>$c['mode']==='demo'?0:$candidate,'started'=>time(),'last'=>time(),'config'=>$fingerprint,'csrf'=>bin2hex(random_bytes(32))];
         if($c['mode']==='phantom') {
@@ -110,12 +115,14 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
         }
         $sessionIds=array_map('intval',array_column($_SESSION['authorized_services']??[],'id'));$selected=$_SESSION['selected_ida']??null;
         jsonReply(['authenticated'=>true,'csrf'=>$_SESSION['csrf'],
+            'push_enabled'=>pushAllowed($c,(int)$candidate),
             'payments_enabled'=>siroServiceEnabled(siroConfig($c),$sessionIds,$selected),
             'phantom_posting_enabled'=>phantomPostingServiceEnabled(phantomPostingConfig($c),$sessionIds,$selected),
             'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if(!isset($_SESSION['ida'])) throw new Failure('UNAUTHENTICATED',401);
     if($c['mode']!=='phantom') throw new Failure('DEMO_ONLY',409);
+    if(str_starts_with($route,'push-')) pushEndpoint($c,$dir,$route);
     $context=serviceSession();
     $ids=array_map('intval',array_column($context['services'],'id'));
     $ph->scope($ids);$ida=$_SESSION['selected_ida'];

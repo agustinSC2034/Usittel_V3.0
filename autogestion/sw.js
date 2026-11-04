@@ -22,6 +22,11 @@ self.addEventListener('notificationclick', event => {
   })());
 });
 
+let pushReadiness = 'firebase-unavailable';
+self.addEventListener('message', event => {
+  if (event.data === 'mi-usittel-push-ready') event.ports[0]?.postMessage(pushReadiness);
+});
+
 try {
   importScripts('./js/push-config.js');
   const { version, firebase: config, vapidKey } = self.miUsittelPush;
@@ -38,9 +43,7 @@ try {
         data: { source: 'mi-usittel', route: data.route }
       });
     });
-    self.addEventListener('message', event => {
-      if (event.data === 'mi-usittel-push-ready') event.ports[0]?.postMessage(version);
-    });
+    pushReadiness = version;
   }
 } catch {
   // A failed CDN load must not prevent installing the portal's network-only worker.

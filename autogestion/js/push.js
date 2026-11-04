@@ -93,28 +93,39 @@ async function getSdk() {
   return sdkPromise;
 }
 
-async function register() {
-  const { sdk, messaging } = await getSdk();
-  const registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
-  if (!registration.active) {
-    await Promise.race([navigator.serviceWorker.ready, new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('worker-timeout')), 15000);
-    })]);
-  }
-  await new Promise((resolve, reject) => {
+function checkWorker(worker) {
+  return new Promise(resolve => {
     const channel = new MessageChannel();
-    const timeout = setTimeout(() => {
-      channel.port1.close();
-      reject(new Error('push-worker-unavailable'));
-    }, 4000);
-    channel.port1.onmessage = event => {
+    const finish = value => {
       clearTimeout(timeout);
       channel.port1.close();
-      if (event.data === version) resolve();
-      else reject(new Error('push-worker-version'));
+      resolve(value);
     };
-    registration.active.postMessage('mi-usittel-push-ready', [channel.port2]);
+    const timeout = setTimeout(() => finish(null), 1000);
+    channel.port1.onmessage = event => finish(event.data);
+    try { worker.postMessage('mi-usittel-push-ready', [channel.port2]); }
+    catch { finish(null); }
   });
+}
+
+async function register() {
+  const { sdk, messaging } = await getSdk().catch(error => {
+    throw new Error(error.message === 'unsupported' ? 'push-browser' : 'push-sdk');
+  });
+  const registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' })
+    .catch(() => { throw new Error('push-worker'); });
+  const deadline = Date.now() + 12000;
+  let ready;
+  do {
+    const worker = registration.active;
+    if (worker?.state === 'activated') {
+      const result = await checkWorker(worker);
+      if (result === 'firebase-unavailable') throw new Error('push-sdk-worker');
+      ready = result === version && worker === registration.active;
+    }
+    if (!ready) await new Promise(resolve => setTimeout(resolve, 250));
+  } while (!ready && Date.now() < deadline);
+  if (!ready) throw new Error('push-worker');
   let timeout;
   const result = new Promise((resolve, reject) => {
     pendingRegistration = resolve;
@@ -223,8 +234,13 @@ document.addEventListener('click', async event => {
         ? 'Chrome bloqueó el permiso. Podés habilitarlo en los ajustes del sitio.'
         : 'El permiso sigue pendiente. Podés volver a solicitarlo.';
     }
-  } catch {
-    if (current === generation) message = 'No pudimos actualizar las notificaciones. Volvé a intentar.';
+  } catch (error) {
+    if (current === generation) {
+      const code = error.code || error.message;
+      const reference = /^(?:push-[a-z-]+|fcm-timeout|(?:messaging|installations)\/[a-z-]+|[A-Z_]+)$/.test(code)
+        ? ` (${code})` : error.status ? ` (HTTP ${error.status})` : '';
+      message = `No pudimos actualizar las notificaciones${reference}. Volvé a intentar.`;
+    }
   } finally {
     if (current === generation) {
       busy = false;

@@ -9,6 +9,7 @@ return [
     'api_pass' => '',
     'push' => [
         'enabled' => false,
+        'registration_open' => false, // Permite que cualquier cliente autenticado active su dispositivo.
         'pilot_owners' => [], // IDs de cuentas autenticadas aprobadas para el piloto
         'project_id' => 'mi-usittel',
         'service_account_file' => '', // Ruta absoluta privada, solo para la CLI

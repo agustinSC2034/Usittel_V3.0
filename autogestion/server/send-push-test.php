@@ -49,7 +49,7 @@ function testPush(array $config,string $dir,string $device,string $attempt): str
     $target=pushStore($dir,static function(array &$state) use ($config,$device,$key) {
         if(isset($state['attempts'][$key])) throw new Failure('FCM_DUPLICATE_'.$state['attempts'][$key]);
         $record=$state['devices'][$device]??null;
-        if(!$record || !pushAllowed($config,$record['owner']) || $record['updated_at']<time()-2592000) throw new Failure('FCM_DEVICE_UNAVAILABLE');
+        if(!$record || !pushAllowed($config,$record['owner'],forTestSend:true) || $record['updated_at']<time()-2592000) throw new Failure('FCM_DEVICE_UNAVAILABLE');
         return $record;
     });
     $access=fcmAccessToken($project,$settings['service_account_file']);

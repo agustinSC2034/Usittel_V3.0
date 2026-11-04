@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace MiUsittel;
 
-function pushAllowed(array $config, int $owner): bool {
+function pushAllowed(array $config, int $owner, bool $forTestSend=false): bool {
     $pilot=$config['push']['pilot_owners']??null;
     return $owner>0 && $config['mode']==='phantom' && getenv('MI_USITTEL_RUNTIME')
-        && ($config['push']['enabled']??false)===true && is_array($pilot) && in_array($owner,$pilot,true);
+        && ($config['push']['enabled']??false)===true
+        && ((!$forTestSend && ($config['push']['registration_open']??false)===true)
+            || (is_array($pilot) && in_array($owner,$pilot,true)));
 }
 
 function pushDeviceKey(): ?string {

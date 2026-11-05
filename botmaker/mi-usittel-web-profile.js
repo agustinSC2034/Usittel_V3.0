@@ -1,5 +1,5 @@
 // New code action for Mi USITTEL Web ONLY. Run once at flow entry, never RUN_ALWAYS.
-// Activate only after verifying Central App Entry sub -> userIdOnBusiness in a real test.
+// Accept only the dedicated Central App Entry namespace; anonymous IDs do not match.
 // Store the three MI_WEB_PHANTOM_* values as private action constants, never here.
 //@constant('URL HTTPS de Phantom para Mi USITTEL Web')
 const MI_WEB_PHANTOM_URL = '';

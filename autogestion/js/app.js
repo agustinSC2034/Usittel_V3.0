@@ -3,7 +3,7 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, contractLabel, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
-import { configureCentralChatIdentity, resetCentralChatIdentity, openCentralChat, closeCentralChat } from './central-chat.js';
+import { configureCentralChatIdentity, resetCentralChatIdentity, openCentralChat, closeCentralChat } from './central-chat.js?v=20261105-mi-chat-profile';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 import { paymentReturnAttempt, resolvePaymentFlow } from './payment-flow.js';
 import { renderPush, setPushEnabled } from './push.js';

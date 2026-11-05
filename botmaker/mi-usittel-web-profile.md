@@ -19,7 +19,7 @@ The certificate must be the dedicated Mi USITTEL channel's bundle, stored at
 permissions. Do not put it in the repository, HTML, browser storage, public_html,
 existing private configuration, or `.htaccess`. The dedicated certificate was
 created on 2026-11-05 and staged privately outside the checkout. Its signature
-algorithm is ES256 and its encryption algorithm is ECDH-ES on P-256. It has not
+algorithm is ES256 and its encryption algorithm is ECDH-ES on P-256. It has
 been uploaded outside public_html with mode 0600. The user explicitly approved
 reusing the existing Phantom technical credentials in this new action only.
 

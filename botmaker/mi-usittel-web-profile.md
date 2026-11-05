@@ -1,6 +1,7 @@
 # Mi USITTEL Web: authenticated contact capture
 
-Status: prepared locally; not enabled, published or deployed.
+Status: prepared locally; certificate generated with explicit user approval;
+not enabled, published or deployed.
 
 Scope: only the dedicated Mi USITTEL Central account and bot
 `6WJIV274SXSROZLQJF65`. Do not change the WhatsApp originals, Sales Web,
@@ -16,7 +17,10 @@ Central App Entry token, valid for five minutes. Its subject is
 The certificate must be the dedicated Mi USITTEL channel's bundle, stored at
 `/home4/usittel/mi-usittel-private/central-mi-usittel.json` with private file
 permissions. Do not put it in the repository, HTML, browser storage, public_html,
-existing private configuration, or `.htaccess`. No certificate has been created.
+existing private configuration, or `.htaccess`. The dedicated certificate was
+created on 2026-11-05 and staged privately outside the checkout. Its signature
+algorithm is ES256 and its encryption algorithm is ECDH-ES on P-256. It has not
+yet been uploaded to hosting or used by production.
 
 The portal mounts the official SDK with its `appJwt` property. It destroys the
 current element when the portal account changes or logs out, cancels late
@@ -27,8 +31,8 @@ stored in those markers.
 
 ## Activation still required
 
-1. Obtain explicit confirmation immediately before creating the channel's
-   security-sensitive App Entry certificate, then generate and store it privately.
+1. User confirmation and certificate generation are complete. Upload the existing
+   certificate privately; do not regenerate or revoke it without a new confirmation.
 2. Use a synthetic App Entry identity to verify the actual mapping of `sub` to
    Botmaker's `userIdOnBusiness`. Do not activate the action based on the mapping
    assumption alone. Verify the platform/channel guard and actual certificate
@@ -53,7 +57,7 @@ stored in those markers.
 
 `npm run test:mi-usittel:chat` passes with synthetic profiles and generated test
 keys: lifecycle isolation, stale response cancellation, method/CSRF checks,
-owner isolation, ES256/RS256 signatures, RSA-OAEP-256/A256GCM encryption round-trip,
+owner isolation, ES256/RS256 signatures, RSA-OAEP-256 and ECDH-ES with A256GCM round-trip,
 provider fallback, partial profile fields and an explicit WhatsApp no-op guard.
 `node tests/attention-preview.test.cjs` passes all four tests. Catalog, Wi-Fi
 input, presentation and payment-flow unit checks also pass. The repository's

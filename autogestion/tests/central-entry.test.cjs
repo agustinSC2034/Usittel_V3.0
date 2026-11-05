@@ -14,22 +14,30 @@ fs.writeFileSync(config, "<?php return ['mode'=>'phantom','phantom_url'=>'https:
 fs.writeFileSync(path.join(dir,'scenario'), 'normal');
 const recipient = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
 const signing = crypto.generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
-function bundle(pair=signing, alg='ES256') {
+function bundle(pair=signing, alg='ES256', encryptionPair=recipient, encryptionAlg='RSA-OAEP-256') {
   return { iss:'wiOT-40q9iiyNBb8NahcAg', kid:'-6VqjB9Gh2bDQwOp5CME1w', alg,
     privateJwk:pair.privateKey.export({format:'jwk'}), centralEncryptionKey: {
-      kid:'fixture-central', alg:'RSA-OAEP-256', publicJwk:recipient.publicKey.export({format:'jwk'}),
+      kid:'fixture-central', alg:encryptionAlg, publicJwk:encryptionPair.publicKey.export({format:'jwk'}),
     } };
 }
 function run(input, success=true) {
   const r=spawnSync(php,[path.join(__dirname,'central-entry-probe.php')],{env,input:JSON.stringify(input),encoding:'utf8',windowsHide:true});
-  assert.equal(r.status===0,success,r.stderr);
+  assert.equal(r.status===0,success,r.stderr+r.stdout);
   return r.stdout;
 }
 const decode = part => Buffer.from(part,'base64url');
-function open(token, publicKey=signing.publicKey, alg='ES256') {
+function open(token, publicKey=signing.publicKey, alg='ES256', encryptionPair=recipient, encryptionAlg='RSA-OAEP-256') {
   const [header,key,iv,body,tag]=token.split('.');
-  assert.deepEqual(JSON.parse(decode(header)),{alg:'RSA-OAEP-256',enc:'A256GCM',cty:'JWT',kid:'fixture-central',bid:'wiOT-40q9iiyNBb8NahcAg',cid:'-6VqjB9Gh2bDQwOp5CME1w'});
-  const cek=crypto.privateDecrypt({key:recipient.privateKey,oaepHash:'sha256',padding:crypto.constants.RSA_PKCS1_OAEP_PADDING},decode(key));
+  const {epk,...protectedHeader}=JSON.parse(decode(header));
+  assert.deepEqual(protectedHeader,{alg:encryptionAlg,enc:'A256GCM',cty:'JWT',kid:'fixture-central',bid:'wiOT-40q9iiyNBb8NahcAg',cid:'-6VqjB9Gh2bDQwOp5CME1w'});
+  let cek;
+  if(encryptionAlg==='ECDH-ES') {
+    assert.equal(key,'');assert.equal(epk.crv,'P-256');assert.equal(epk.d,undefined);
+    const z=crypto.diffieHellman({privateKey:encryptionPair.privateKey,publicKey:crypto.createPublicKey({format:'jwk',key:epk})});
+    const u32=n=>{const b=Buffer.alloc(4);b.writeUInt32BE(n);return b;};
+    // RFC 7518 Concat KDF, checked independently of the PHP issuer.
+    cek=crypto.createHash('sha256').update(Buffer.concat([u32(1),z,u32(7),Buffer.from('A256GCM'),u32(0),u32(0),u32(256)])).digest();
+  } else cek=crypto.privateDecrypt({key:encryptionPair.privateKey,oaepHash:'sha256',padding:crypto.constants.RSA_PKCS1_OAEP_PADDING},decode(key));
   const decipher=crypto.createDecipheriv('aes-256-gcm',cek,decode(iv));
   decipher.setAAD(Buffer.from(header));decipher.setAuthTag(decode(tag));
   const signed=Buffer.concat([decipher.update(decode(body)),decipher.final()]).toString();
@@ -47,6 +55,8 @@ let server;
   assert.deepEqual(claims,{chat_account:'-6VqjB9Gh2bDQwOp5CME1w',iss:'wiOT-40q9iiyNBb8NahcAg',sub:'mi-usittel:1',aud:'central:app-entry',iat:now,exp:now+300,name:'Prueba Única'});
   const rsa=crypto.generateKeyPairSync('rsa',{modulusLength:2048});
   assert.equal(open(run({action:'mint',bundle:bundle(rsa,'RS256'),owner:5,name:null,now}),rsa.publicKey,'RS256').sub,'mi-usittel:5');
+  const ecRecipient=crypto.generateKeyPairSync('ec',{namedCurve:'prime256v1'});
+  assert.equal(open(run({action:'mint',bundle:bundle(signing,'ES256',ecRecipient,'ECDH-ES'),owner:5,name:'Fixture EC',now}),signing.publicKey,'ES256',ecRecipient,'ECDH-ES').name,'Fixture EC');
   run({action:'mint',bundle:{...bundle(),kid:'sales'},owner:1,name:'Fixture',now},false);
   run({action:'mint',bundle:bundle(),owner:0,name:'Fixture',now},false);
   assert.deepEqual(JSON.parse(run({action:'entry',session:{ida:1,authenticated_ida:1,csrf:'fixture-csrf'}})),{authenticated:false,identity:'anonymous'});
@@ -81,5 +91,5 @@ let server;
   await call('logout',{});
   await call('bootstrap');
   assert.deepEqual((await call('chat-entry',{})).data,{authenticated:false,identity:'anonymous'});
-  console.log('central entry: owner isolation, ES256/RS256 JWS + RSA-OAEP-256/A256GCM round-trip, method/CSRF, login/logout and failure fallback passed');
+  console.log('central entry: owner isolation, ES256/RS256 JWS + RSA-OAEP-256/ECDH-ES with A256GCM round-trip, method/CSRF, login/logout and failure fallback passed');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>{server?.kill();fs.rmSync(dir,{recursive:true,force:true});});

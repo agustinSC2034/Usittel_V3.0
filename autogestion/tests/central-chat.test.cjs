@@ -13,8 +13,9 @@ const path = require('node:path');
     title: '',
   };
   const mountListeners = [];
+  const chatAttributes = new Map();
   const chat = {
-    setAttribute(name,value) { if (name==='hide') calls.push('hide-attribute'); if (name==='mode') calls.push(['mode',value]); },
+    setAttribute(name,value) { chatAttributes.set(name,value); if (name==='hide') calls.push('hide-attribute'); if (name==='mode') calls.push(['mode',value]); },
     addEventListener(name,callback) { if (name==='central-chat-mount') mountListeners.push(callback); },
     remove() { calls.push('remove'); },
     hide() { calls.push('hide'); return Promise.resolve(); },
@@ -35,6 +36,7 @@ const path = require('node:path');
   globalThis.customElements = { get(name) { return name==='central-chat' ? class {} : undefined; } };
   const { initializeCentralChat, openCentralChat, closeCentralChat } = await import('../js/central-chat.js');
   const adapter = await initializeCentralChat();
+  await check('Mi USITTEL usa el canal web de soporte separado de ventas', () => assert.equal(chatAttributes.get('channel-key'),'wiOT-40q9iiyNBb8NahcAg|-6VqjB9Gh2bDQwOp5CME1w'));
   await check('instancia embebida inicia oculta y llama hide tras montar', () => assert.deepEqual(calls.slice(0,4),[['mode','fill-container'],'hide-attribute','append','hide']));
   await check('launcher propio inicia accesible', () => assert.equal(attributes.get('aria-expanded'),'false'));
   calls.length=0;

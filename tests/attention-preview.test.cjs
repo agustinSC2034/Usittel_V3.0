@@ -62,6 +62,8 @@ test('public shell exposes one responsive Central panel and its controller', asy
   t.after(() => new Promise(resolve => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
   const html = await (await fetch(base + '/')).text();
+  const webSalesKey = 'wiOT-40q9iiyNBb8NahcAg|ARJ8mfWz1uK0DB5HqIBDTQ';
+  assert.ok(html.includes(`channel-key="${webSalesKey}"`));
   assert.equal((html.match(/id="site-chat-launcher"/g) || []).length, 1);
   assert.equal((html.match(/id="site-chat-panel"/g) || []).length, 1);
   assert.equal((html.match(/<central-chat\b/g) || []).length, 1);
@@ -74,6 +76,7 @@ test('public shell exposes one responsive Central panel and its controller', asy
   assert.doesNotMatch(css, /#site-chat-panel, #site-chat-launcher\s*\{\s*display:\s*none/);
   for (const route of ['/pages/internet/', '/pages/contacto/', '/pages/index.html']) {
     const page = await (await fetch(base + route)).text();
+    assert.ok(page.includes(`channel-key="${webSalesKey}"`), route);
     assert.equal((page.match(/id="site-chat-launcher"/g) || []).length, 1, route);
     assert.doesNotMatch(page, /phantom\.usittel\.com\.ar\/PHANTOM\/Includes\/CRM\/CRM_APP\/login\.php|site-whatsapp-launcher/, route);
     assert.equal((page.match(/href="https:\/\/mi\.usittel\.com\.ar\/"[^>]*>MI USITTEL<\/a>/g) || []).length, 3, route);

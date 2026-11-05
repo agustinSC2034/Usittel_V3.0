@@ -102,6 +102,25 @@ deben colocar datos del cliente en parámetros públicos de URL ni en el fronten
 
 ## Botmaker
 
+### Canales web separados (2026-11-05)
+
+La web pública usa el canal `@usittel_ventas_web`, con clave pública
+`wiOT-40q9iiyNBb8NahcAg|ARJ8mfWz1uK0DB5HqIBDTQ`. Mi USITTEL usa
+`@mi_usittel_web`, con clave pública
+`wiOT-40q9iiyNBb8NahcAg|-6VqjB9Gh2bDQwOp5CME1w`.
+Master Bot asigna estos canales a `USITTEL Ventas Web` y `Mi USITTEL Web`.
+Las copias piden nombre y teléfono, los guardan en `nombre_form` y
+`telefono_form`, establecen el nombre del contacto y agregan un resumen al
+historial y una nota. Son datos que escribe el visitante; el portal sigue sin
+transmitir datos de su sesión. Las sugerencias predeterminadas del widget se
+quitaron en ambos canales.
+
+Las rutas `/atencion` y `/atencion/ventas` conservan sus canales existentes
+para mantener separada la operatoria de derivación desde WhatsApp.
+Los bots originales `Usittel-PH` y `Bot de ventas` no se modificaron.
+
+El texto que sigue documenta la integración anterior y sus pruebas pendientes.
+
 Agustín configuró en Master Bot una asignación para `ID del canal = open_central
 (Usittel)`. La prueba inicial había caído en `Instagram_chat`; el nuevo enrutamiento
 queda pendiente de una prueba completa, sin tocar la operatoria actual de WhatsApp.

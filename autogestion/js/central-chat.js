@@ -3,7 +3,7 @@
 import { chatPreviewEnabled } from './attention-chat.js';
 
 const SDK = 'https://web.central.chat/widget/core.js';
-const CHANNEL_KEY = 'wiOT-40q9iiyNBb8NahcAg|SZaCDgFymGhOoc4aJwuCMQ';
+const CHANNEL_KEY = 'wiOT-40q9iiyNBb8NahcAg|-6VqjB9Gh2bDQwOp5CME1w';
 const PREFILL_BY_TOPIC = Object.freeze({
   'upgrade-speed': 'Quiero consultar por una mejora de velocidad',
   'update-account': 'Quiero actualizar mis datos de contacto',

@@ -1,15 +1,22 @@
 // New code action for Mi USITTEL Web ONLY. Run once at flow entry, never RUN_ALWAYS.
 // Activate only after verifying Central App Entry sub -> userIdOnBusiness in a real test.
 // Store the three MI_WEB_PHANTOM_* values as private action constants, never here.
+//@constant('URL HTTPS de Phantom para Mi USITTEL Web')
+const MI_WEB_PHANTOM_URL = '';
+//@constant('Usuario técnico de Phantom para Mi USITTEL Web')
+const MI_WEB_PHANTOM_USER = '';
+//@constant('Clave técnica de Phantom para Mi USITTEL Web')
+const MI_WEB_PHANTOM_PASS = '';
 (async () => {
   try {
     if (context.userData.CHAT_PLATFORM_ID === 'whatsapp') return;
     user.set('nombre_form', '');
     user.set('telefono_form', '');
-    const subject = user.get('userIdOnBusiness');
+    const subject = [context.userData.PLATFORM_CONTACT_ID, user.get('userIdOnBusiness')]
+      .find(value => typeof value === 'string' && /^mi-usittel:[1-9][0-9]{0,9}$/.test(value));
     const match = typeof subject === 'string' && /^mi-usittel:([1-9][0-9]{0,9})$/.exec(subject);
     if (!match) return; // Anonymous visitors keep the normal questions.
-    const constants = JSON.parse(context.userData.constants || '{}');
+    const constants = { MI_WEB_PHANTOM_URL, MI_WEB_PHANTOM_USER, MI_WEB_PHANTOM_PASS };
     const endpoint = new URL(constants.MI_WEB_PHANTOM_URL);
     if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash
         || endpoint.pathname !== '/PHANTOM/Includes/API_Rest.php'

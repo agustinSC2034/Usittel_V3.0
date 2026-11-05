@@ -1,7 +1,7 @@
 # Mi USITTEL Web: authenticated contact capture
 
-Status: prepared locally; certificate generated with explicit user approval;
-not enabled, published or deployed.
+Status: dedicated code action and five Mi Web entry blocks published;
+portal deployment and authenticated production verification in progress.
 
 Scope: only the dedicated Mi USITTEL Central account and bot
 `6WJIV274SXSROZLQJF65`. Do not change the WhatsApp originals, Sales Web,
@@ -20,7 +20,8 @@ permissions. Do not put it in the repository, HTML, browser storage, public_html
 existing private configuration, or `.htaccess`. The dedicated certificate was
 created on 2026-11-05 and staged privately outside the checkout. Its signature
 algorithm is ES256 and its encryption algorithm is ECDH-ES on P-256. It has not
-yet been uploaded to hosting or used by production.
+been uploaded outside public_html with mode 0600. The user explicitly approved
+reusing the existing Phantom technical credentials in this new action only.
 
 The portal mounts the official SDK with its `appJwt` property. It destroys the
 current element when the portal account changes or logs out, cancels late
@@ -31,8 +32,8 @@ stored in those markers.
 
 ## Activation still required
 
-1. User confirmation and certificate generation are complete. Upload the existing
-   certificate privately; do not regenerate or revoke it without a new confirmation.
+1. User confirmation, certificate generation and private upload are complete.
+   Do not regenerate or revoke the certificate without a new confirmation.
 2. Use a synthetic App Entry identity to verify the actual mapping of `sub` to
    Botmaker's `userIdOnBusiness`. Do not activate the action based on the mapping
    assumption alone. Verify the platform/channel guard and actual certificate

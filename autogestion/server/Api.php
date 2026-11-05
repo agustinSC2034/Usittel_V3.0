@@ -8,6 +8,7 @@ require_once __DIR__.'/PaymentHistory.php';
 require_once __DIR__.'/Wifi.php';
 require_once __DIR__.'/ServiceRequests.php';
 require_once __DIR__.'/Push.php';
+require_once __DIR__.'/CentralChat.php';
 
 function startSession(array $c,string $dir): void {
     ini_set('session.use_strict_mode','1'); ini_set('session.use_only_cookies','1'); ini_set('session.use_trans_sid','0');
@@ -60,6 +61,7 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
     $expected+=['wifi-prepare'=>'POST','wifi-change'=>'POST'];
     $expected+=['request-prepare'=>'POST','request-create'=>'POST','request-refresh'=>'POST','service-requests'=>'GET'];
     $expected+=['push-status'=>'GET','push-register'=>'POST','push-remove'=>'POST'];
+    $expected+=['chat-entry'=>'POST'];
     if(!isset($expected[$route])) throw new Failure('NOT_FOUND',404);
     if($method!==$expected[$route]) throw new Failure('METHOD',405);
     $allowedQuery=match($route) {'invoices'=>['offset'],'invoice','invoice-document','payment-receipt'=>['id'],default=>[]};
@@ -73,6 +75,11 @@ function api(array $c,string $dir,Phantom $ph,string $route,?InvoiceDocumentSour
             'payment_history_enabled'=>paymentHistoryEnabledForSession()]+serviceSession());
     }
     if($method==='POST') csrf();
+    if($route==='chat-entry') {
+        if(body()!==[]) throw new Failure('BAD_REQUEST',400);
+        session_write_close(); // A chat profile lookup must not hold up the rest of the portal.
+        jsonReply(centralChatEntry($c,$ph));
+    }
     if($route==='logout') {
         if(body()!==[]) throw new Failure('BAD_REQUEST',400);
         pushDetach($dir);

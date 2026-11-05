@@ -7,3 +7,5 @@ node_modules/
 **/.env.*
 autogestion/**/config.php
 autogestion/runtime/
+**/central-mi-usittel.json
+**/central-app-entry-*.json

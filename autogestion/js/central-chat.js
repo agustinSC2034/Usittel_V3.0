@@ -29,10 +29,19 @@ const setStatus = text => {
 };
 
 export class CentralChatAdapter {
-  constructor(channelKey) { this.channelKey = channelKey; }
+  constructor(channelKey, entry = {}, clearAnonymous = false) {
+    this.channelKey = channelKey;
+    this.appJwt = entry.appJwt;
+    this.clearAnonymous = clearAnonymous;
+    this.disposed = false;
+    this.operation = 0;
+  }
   mount() {
     this.element = document.createElement('central-chat');
     this.element.setAttribute('channel-key', this.channelKey);
+    // The short-lived token stays in memory; never put it in DOM attributes or storage.
+    if (this.appJwt) this.element.appJwt = this.appJwt;
+    this.appJwt = undefined;
     this.element.setAttribute('locale', 'es');
     const container = document.getElementById('attention-chat-container');
     const portalMount = document.getElementById('central-chat-mount');
@@ -62,9 +71,23 @@ export class CentralChatAdapter {
     } finally { clearTimeout(timer); }
   }
   async open(topic) {
+    const request = ++this.operation;
+    const current = () => !this.disposed && request === this.operation;
     try {
       await this.waitForMount();
-      await this.element.show(); await this.element.maximize();
+      if (!current()) return false;
+      if (this.clearAnonymous) {
+        // Central only permits clearChat on anonymous embeds. Clear BEFORE showing
+        // a widget after a portal account change, including after a page reload.
+        await this.element.clearChat();
+        if (!current()) return false;
+        this.clearAnonymous = false;
+        markAuthenticated(false);
+      }
+      await this.element.show();
+      if (!current()) return false;
+      await this.element.maximize();
+      if (!current()) return false;
       const prefill = Object.hasOwn(PREFILL_BY_TOPIC, topic) ? PREFILL_BY_TOPIC[topic] : null;
       updatePortalLauncher(true);
       if (prefill && typeof this.element.prefill === 'function') {
@@ -76,6 +99,7 @@ export class CentralChatAdapter {
     catch { setStatus('No pudimos abrir Central. Volvé a intentar más tarde.'); return false; }
   }
   async close() {
+    ++this.operation;
     try {
       if (this.portal) await this.element.hide();
       else await this.element.minimize();
@@ -85,34 +109,97 @@ export class CentralChatAdapter {
     catch { setStatus('No pudimos cerrar Central. Volvé a intentar más tarde.'); return false; }
   }
   reset() { this.close(); }
-  destroy() { clearTimeout(this.timer); this.element.remove(); }
+  destroy() { this.disposed = true; ++this.operation; clearTimeout(this.timer); this.element.remove(); }
 }
 
-let centralPromise;
+const AUTH_MARKER = 'mi-usittel-central-authenticated';
+const SESSION_EVENT = 'mi-usittel-central-session';
+const anonymous = () => ({ authenticated: false, identity: 'anonymous' });
+let entryLoader = async () => anonymous();
+let identityConfigured = false;
+let centralPromise, sdkPromise, activeAdapter, activeIdentity;
+let generation = 0, operation = 0;
+let suspended = false;
+let needsAnonymousClear = false;
+function wasAuthenticated() {
+  try { return localStorage.getItem(AUTH_MARKER) === '1'; } catch { return identityConfigured; }
+}
+function markAuthenticated(value) {
+  try { if (value) localStorage.setItem(AUTH_MARKER, '1'); else localStorage.removeItem(AUTH_MARKER); } catch { /* storage is optional */ }
+}
+export function configureCentralChatIdentity(loader) { entryLoader = loader; identityConfigured = true; }
+export function resetCentralChatIdentity({ broadcast = false, suspend = false } = {}) {
+  ++generation; ++operation;
+  suspended = suspend;
+  needsAnonymousClear ||= Boolean(activeAdapter?.element.appJwt) || wasAuthenticated();
+  activeAdapter?.destroy();
+  activeAdapter = null; activeIdentity = null; centralPromise = null;
+  updatePortalLauncher(false);
+  if (broadcast) {
+    try { localStorage.setItem(SESSION_EVENT, `${Date.now()}:${Math.random()}`); } catch { /* no profile data in storage */ }
+  }
+}
+if (typeof window !== 'undefined') window.addEventListener('storage', event => {
+  if (event.key === SESSION_EVENT) resetCentralChatIdentity();
+});
+async function loadEntry() {
+  let timer;
+  try {
+    const entry = await Promise.race([entryLoader(), new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Identity timeout')), 12000); })]);
+    if (entry?.authenticated === true && typeof entry.identity === 'string' && /^[a-f0-9]{64}$/.test(entry.identity)
+        && typeof entry.appJwt === 'string' && entry.appJwt.length < 20000
+        && /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]*){4}$/.test(entry.appJwt)
+        && entry.expiresAt * 1000 > Date.now() + 10000) return entry;
+  } catch { /* Manual capture remains available when identity is unavailable. */ }
+  finally { clearTimeout(timer); }
+  return anonymous();
+}
 export async function openCentralChat(topic) {
-  const adapter = await initializeCentralChat();
+  if (suspended) return false;
+  const version = generation, request = ++operation;
+  const entry = await loadEntry();
+  if (version !== generation || request !== operation) return false;
+  const adapter = await initializeCentralChat(entry);
+  if (version !== generation || request !== operation) return false;
   return adapter ? adapter.open(topic) : false;
 }
 export async function closeCentralChat() {
+  ++operation;
   const adapter = await centralPromise;
   return adapter ? adapter.close() : false;
 }
-export function initializeCentralChat() {
-  if (centralPromise) return centralPromise;
-  centralPromise = (async () => {
+function loadSdk() {
+  if (!sdkPromise) sdkPromise = (async () => {
+    if (!customElements.get('central-chat')) await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      const timer = setTimeout(() => reject(new Error('SDK timeout')), 15000);
+      script.src = SDK; script.referrerPolicy = 'no-referrer';
+      script.onload = () => { clearTimeout(timer); resolve(); };
+      script.onerror = () => { clearTimeout(timer); reject(new Error('SDK unavailable')); };
+      document.head.append(script);
+    });
+    if (!customElements.get('central-chat')) throw new Error('Central unavailable');
+  })().catch(error => { sdkPromise = null; throw error; });
+  return sdkPromise;
+}
+export function initializeCentralChat(entry = anonymous()) {
+  if (centralPromise && activeIdentity === entry.identity) return centralPromise;
+  needsAnonymousClear ||= wasAuthenticated();
+  if (activeAdapter) { activeAdapter.destroy(); updatePortalLauncher(false); }
+  activeAdapter = null; activeIdentity = entry.identity;
+  const version = generation;
+  const promise = (async () => {
     try {
-      if (!customElements.get('central-chat')) await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        const timer = setTimeout(() => reject(new Error('SDK timeout')), 15000);
-        script.src = SDK; script.referrerPolicy = 'no-referrer';
-        script.onload = () => { clearTimeout(timer); resolve(); };
-        script.onerror = () => { clearTimeout(timer); reject(new Error('SDK unavailable')); };
-        document.head.append(script);
-      });
-      if (!document.querySelector('#central-chat-mount') || !customElements.get('central-chat')) throw new Error('Central unavailable');
-      const adapter = new CentralChatAdapter(CHANNEL_KEY); adapter.mount(); return adapter;
-    } catch { return null; }
+      await loadSdk();
+      if (version !== generation || centralPromise !== promise || !document.querySelector('#central-chat-mount')) return null;
+      const adapter = new CentralChatAdapter(CHANNEL_KEY, entry, !entry.authenticated && needsAnonymousClear);
+      if (entry.authenticated) markAuthenticated(true);
+      adapter.mount(); activeAdapter = adapter;
+      needsAnonymousClear = false;
+      return adapter;
+    } catch { if (centralPromise === promise) { centralPromise = null; activeIdentity = null; } return null; }
   })();
+  centralPromise = promise;
   return centralPromise;
 }
 

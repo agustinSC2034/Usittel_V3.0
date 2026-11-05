@@ -3,7 +3,7 @@ import { customer, invoices, ticket, money, runtime, initialize, clearData, appl
 import { shell, contractLabel, routes, status, icon, button, input, invoicePayButton, invoiceVisibleStatus, operationAlert, escapeHTML as e } from './components.js';
 import { login, home, billing, service, support, account } from './views.js';
 import { downloadDocument } from './documents.js';
-import { initializeCentralChat, openCentralChat, closeCentralChat } from './central-chat.js';
+import { configureCentralChatIdentity, resetCentralChatIdentity, openCentralChat, closeCentralChat } from './central-chat.js';
 import { WIFI_SSID_PREFIX, validateWifiSsid, validateWifiPassword } from './wifi-input.js';
 import { paymentReturnAttempt, resolvePaymentFlow } from './payment-flow.js';
 import { renderPush, setPushEnabled } from './push.js';
@@ -339,14 +339,16 @@ document.addEventListener('click', async event => {
   }
   if (action === 'wifi') return openDialog('Configurar Wi-Fi', `<form id="wifi-form">${input('Nombre de la red', 'network', { value: customer.network, extra: 'maxlength="32"' })}${input('Nueva contraseña de Wi-Fi', 'wifi-password', { type: 'password', autocomplete: 'new-password', extra: 'minlength="8" maxlength="63"', hint: 'Usá entre 8 y 63 caracteres.' })}<p class="demo-notice">En el servicio real, tus dispositivos podrían desconectarse al cambiar estos datos. En esta prueba no se modifica ningún equipo.</p>${button('Guardar cambios de prueba', '', { type: 'submit' })}</form>`);
   if (action === 'logout') {
+    resetCentralChatIdentity({ broadcast: true, suspend: true });
     dataGeneration++;
     target.disabled = true;
     try {
       if (runtime.backend) await request('logout', {});
+      resetCentralChatIdentity({ broadcast: true, suspend: true });
       setPushEnabled(false);
       authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.paymentFocus = null; runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
-    } catch(error) { toast(error.message); target.disabled = false; }
+    } catch(error) { resetCentralChatIdentity(); toast(error.message); target.disabled = false; }
     return;
   }
   if (action === 'ticket') return openDialog('Seguimiento del ticket', `<p class="eyebrow">${ticket.id} · Caso de ejemplo</p><h3>${ticket.title}</h3>${status(ticket.status)}<ol class="ticket-timeline"><li><time>15/09/2026 · 10:30</time><strong>Consulta recibida</strong><p>La conexión Wi-Fi se interrumpe por momentos.</p></li><li><time>16/09/2026 · 09:15</time><strong>En revisión</strong><p>El equipo de soporte está revisando tu consulta.</p></li></ol>${button('Consultar por este ticket', 'chat', { iconName: 'message-circle' })}`);
@@ -393,6 +395,7 @@ document.addEventListener('submit', async event => {
         setPushEnabled(session.push_enabled, toast);
       }
       else if (runtime.mode !== 'demo' || data.get('username') !== 'agustin.demo' || data.get('password') !== 'usittel-demo') throw new Error('Para esta prueba usá agustin.demo y usittel-demo.');
+      resetCentralChatIdentity({ broadcast: true });
       form.reset(); authenticated = true; location.hash = returnAttempt ? '/facturas' : '/' + (notificationRoute || 'inicio');
       notificationRoute = null;
       if (runtime.mode === 'phantom') await loadOverview(); else render();
@@ -416,6 +419,7 @@ async function handleError(error) {
     : error.message;
   if (error.code === 'SERVICE_CHANGED') { ++dataGeneration; clearData(); await boot(); toast(error.message); return; }
   if (error.status === 401) {
+    resetCentralChatIdentity({ broadcast: true });
     dataGeneration++;
     authenticated = false; setPushEnabled(false); applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.error = ''; location.hash = '/login';
     try { const session = await request('bootstrap'); runtime.backend = session.backend !== false; }
@@ -472,6 +476,7 @@ async function loadOverview() {
   finally { if (generation === dataGeneration) { runtime.loading = false; render(); } }
 }
 async function boot() {
+  resetCentralChatIdentity({ suspend: true });
   app.innerHTML = '<main id="main" class="page"><p role="status">Cargando Mi USITTEL…</p></main>';
   try {
     const session = githubPagesDemo
@@ -488,9 +493,10 @@ async function boot() {
   } catch(error) {
     authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData();
     app.innerHTML = `<main id="main" class="page"><h1>Mi USITTEL</h1><p role="alert">${e(error.message)}</p><div class="dialog-actions">${button('Volver a intentar','boot-retry')}</div></main>`;
-  }
+  } finally { resetCentralChatIdentity(); }
 }
 window.addEventListener('hashchange', () => { if (runtime.mode) render(); });
 window.addEventListener('pageshow', event => { if (event.persisted) boot(); });
-initializeCentralChat();
+configureCentralChatIdentity(() => runtime.backend && runtime.mode === 'phantom'
+  ? request('chat-entry', {}) : { authenticated: false, identity: 'anonymous' });
 boot();

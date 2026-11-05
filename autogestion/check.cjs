@@ -31,7 +31,9 @@ function walk(dir) {
       || (lowerName === 'config.php' && relative.startsWith('autogestion/'))) findings.push(`${relative} (archivo privado)`);
     if (!codeExtensions.has(path.extname(entry.name).toLowerCase())) continue;
     const content = fs.readFileSync(file, 'utf8');
-    if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/.test(content)) findings.push(`${relative} (clave privada)`);
+    // PEM serializers contain just the header text. Flag actual key material,
+    // including keys written with literal \n escapes inside a source string.
+    if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----(?:\r?\n|\\n|\\r\\n)[A-Za-z0-9+/=]{32,}/.test(content)) findings.push(`${relative} (clave privada)`);
     const assignment = /['"](?:api_user|api_pass|Autogestion_Pass)['"]\s*(?:=>|:)\s*['"]([^'"\r\n]+)['"]/gi;
     for (const match of content.matchAll(assignment)) {
       const value = match[1];

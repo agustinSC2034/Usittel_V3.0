@@ -1,0 +1,7 @@
+{
+  "name": "usittel/central-chat-auth",
+  "description": "Server-only JOSE support for the Mi USITTEL chat identity",
+  "require": {"web-token/jwt-library": "^4.1"},
+  "config": {"platform": {"php": "8.2.0"}, "allow-plugins": false},
+  "autoload": {}
+}

@@ -30,7 +30,13 @@ const PHANTOM_HTTPS_CA = "-----BEGIN CERTIFICATE-----\nMIIE2zCCAsOgAwIBAgIRAKICU
     const auth = await rp({ ...options, method: 'GET', qs: { action: 'autentificar', JSON: 1,
       api_user: constants.MI_WEB_PHANTOM_USER, api_pass: constants.MI_WEB_PHANTOM_PASS } });
     if (!auth || typeof auth.token !== 'string' || !auth.token || auth.token.length > 8192) return;
-    const rows = await rp({ ...options, method: 'POST', qs: { action: 'Consulta_Cliente_Avanzada', JSON: 1, IDA: match[1] }, body: { token: auth.token } });
+    let rows = await rp({ ...options, method: 'POST', qs: { action: 'Consulta_Cliente_Avanzada', JSON: 1, IDA: match[1] }, body: { token: auth.token } });
+    // Some Phantom customer responses arrive as text, with an optional UTF-8 BOM.
+    // Decode one JSON layer only; HTML, oversized and nested-string responses fail closed.
+    if (typeof rows === 'string') {
+      if (rows.length > 2097152) return;
+      rows = JSON.parse(rows.charCodeAt(0) === 0xfeff ? rows.slice(1) : rows);
+    }
     if (!Array.isArray(rows) || rows.length !== 1 || !rows[0] || Array.isArray(rows[0])) return;
     const row = rows[0];
     // Exact identity check; never use another row, IDAx, document or phone to guess.

@@ -19,6 +19,9 @@ async function run({subject='mi-usittel:5',contactId,platform='central',rows=[{I
   let r=await run();assert.equal(r.values.nombre_form,'Ana');assert.equal(r.values.telefono_form,'2494000001');assert.equal(r.calls[1].qs.IDA,'5');
   r=await run({platform:'open_central',contactId:'WIR2CI8zxRtZol7N9Ou7YQ'});assert.equal(r.values.nombre_form,'Ana');assert.equal(r.calls[1].qs.IDA,'5');
   r=await run({subject:'internal-contact-id',contactId:'mi-usittel:5'});assert.equal(r.calls.length,0);assert.equal(r.values.nombre_form,'');
+  const profileJson=JSON.stringify([{ID:'5',Nombre:'Ana',Telefono:'2494000001'}]);
+  for(const rows of [profileJson,'\ufeff'+profileJson,' \n'+profileJson]) {r=await run({rows});assert.equal(r.values.nombre_form,'Ana');assert.equal(r.values.telefono_form,'2494000001');}
+  for(const rows of ['<html>not JSON</html>','\ufeff\ufeff'+profileJson,JSON.stringify(profileJson),JSON.stringify([{ID:'6',Nombre:'Otro'}]),' '.repeat(2097153)]) {r=await run({rows});assert.equal(r.values.nombre_form,'');assert.equal(r.values.telefono_form,'');}
   for(const subject of ['',null,'visitor-5','mi-usittel:0','mi-usittel:5&IDA=9','mi-usittel:99999999999']) {r=await run({subject});assert.equal(r.calls.length,0);assert.equal(r.values.nombre_form,'');assert.equal(r.values.telefono_form,'');}
   for(const rows of [[],[{ID:'6',Nombre:'Otro',Telefono:'9999999'}],[{ID:5}],[{ID:'5'},{ID:'6'}],{ID:'5'},[{IDAx:'5'}]]) {r=await run({rows});assert.equal(r.values.nombre_form,'');assert.equal(r.values.telefono_form,'');}
   r=await run({rows:[{ID:'0005',Razon_Social:'Perfil Phantom',Nombre:'Otro',Movil:'+54 (249) 400-0001'}]});assert.equal(r.values.nombre_form,'Perfil Phantom');assert.equal(r.values.telefono_form,'542494000001');

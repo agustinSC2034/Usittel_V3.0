@@ -1,7 +1,8 @@
 # Mi USITTEL Web: authenticated contact capture
 
 Status: dedicated code action and five Mi Web entry blocks published;
-portal deployed at `82698fb`; authenticated production verification in progress.
+portal deployed at `82698fb`; authenticated and anonymous production capture
+verified on 2026-11-05.
 
 Scope: only the dedicated Mi USITTEL Central account and bot
 `6WJIV274SXSROZLQJF65`. Do not change the WhatsApp originals, Sales Web,
@@ -39,7 +40,20 @@ portal tabs. A persistent boolean marker makes the next anonymous widget clear
 the previous visitor before opening. Tokens and customer identifiers are never
 stored in those markers.
 
-## Activation still required
+The real authenticated Laboratory contact skipped both questions, populated
+`nombre_form` and `telefono_form` from Phantom, recorded the contact note in the
+conversation and its notes panel, sent the short thanks and continued to support.
+Phantom's customer response arrived as JSON text even with `json: true`; the
+action now decodes one bounded JSON layer, tolerating one leading UTF-8 BOM,
+before checking the exact owner. HTML, invalid JSON, nested strings and other
+customer records are rejected. Temporary diagnostics were removed before the
+successful final run.
+An independent anonymous production session accepted the single name `Ana`,
+asked the short phone question, accepted fictitious test data and continued
+automatically after the short thanks. No profile data from the authenticated
+session appeared in that visitor's chat.
+
+## Published configuration and verification
 
 1. User confirmation, certificate generation and private upload are complete.
    Do not regenerate or revoke the certificate without a new confirmation.
@@ -47,21 +61,24 @@ stored in those markers.
    `context.userData.USER_ID_ON_BUSINESS` on `open_central`. Its platform contact ID
    is a separate opaque identifier. Read only the system business identity field;
    neither a user variable nor the platform contact ID is the authenticated owner.
-3. Create a NEW code action from `mi-usittel-web-profile.js`. Its private constants
+3. The NEW action `Mi_Web_Cargar_Contacto` (`M3Y23Z1ZRS8K24LN7U9B`) is published
+   from `mi-usittel-web-profile.js`. Its private constants
    are `MI_WEB_PHANTOM_URL`, `MI_WEB_PHANTOM_USER`, and `MI_WEB_PHANTOM_PASS`, using
    the authorized existing HTTPS Phantom endpoint and technical integration.
    Never copy credentials into source control or alter the shared actions.
-4. Insert that new action only at Mi USITTEL Web's flow entry, including its
-   existing ANYTHING entry route, before the name question. Enable automatic
-   continuation when a value exists only on this copy's name/phone questions.
-   Keep the current name validation, contact-name setter, internal note, thanks
-   and copied support flow. Do not use per-message actions or another Master call.
-5. Test anonymous, fully authenticated, partial/missing profile, failure fallback,
-   logout, second account and cross-tab cases. Verify name and phone in the
-   actual Botmaker contact, agent variables and internal note.
-6. Publish only the new code action and the specific modified Mi Web nodes.
-   Do not bulk publish historical drafts. Push/deploy the verified feature and
-   compare production `.htaccess` integrity and existing public web behavior.
+4. That action runs only at Mi USITTEL Web's flow entry, including ANYTHING,
+   before the name question. Only this copy's name/phone questions skip existing
+   values. Name validation, contact-name setter, internal note, short thanks and
+   support continuation remain enabled. No per-message action or extra Master call.
+5. Real production tests verified authenticated and anonymous capture. Automated
+   tests cover partial/missing profiles, provider failures, logout, second-account
+   and cross-tab isolation. The actual Laboratory contact displays its name,
+   agent variables and persisted note with the phone number.
+6. Only the new action and the five specific Mi Web nodes were published;
+   historical drafts and the WhatsApp originals were not changed. Portal runtime
+   remains at deployed `82698fb`; later commits update only the Botmaker action,
+   public certificate data, tests and this guide. Production `.htaccess` was read
+   without editing and its before/after SHA-256 was identical.
 
 ## Local validation
 

@@ -1,7 +1,7 @@
 # Mi USITTEL Web: authenticated contact capture
 
 Status: dedicated code action and five Mi Web entry blocks published;
-portal deployment and authenticated production verification in progress.
+portal deployed at `82698fb`; authenticated production verification in progress.
 
 Scope: only the dedicated Mi USITTEL Central account and bot
 `6WJIV274SXSROZLQJF65`. Do not change the WhatsApp originals, Sales Web,
@@ -23,6 +23,15 @@ algorithm is ES256 and its encryption algorithm is ECDH-ES on P-256. It has
 been uploaded outside public_html with mode 0600. The user explicitly approved
 reusing the existing Phantom technical credentials in this new action only.
 
+The Phantom endpoint currently sends only its leaf certificate. The new action
+supplies the public Let's Encrypt YR1 → Root YR (cross-signed) → ISRG Root X1
+chain from `phantom-public-chain.pem`. TLS certificate and hostname verification
+remain enabled, and the chain terminates at a root already trusted by Node.
+The issuer certificates were downloaded from Let's Encrypt's official
+[certificate list](https://letsencrypt.org/certificates/) on 2026-11-05 and the
+live endpoint passed strict TLS verification with that chain. If Phantom changes
+its issuer, update the chain or preferably have Phantom serve its full chain.
+
 The portal mounts the official SDK with its `appJwt` property. It destroys the
 current element when the portal account changes or logs out, cancels late
 identity responses and broadcasts a data-free account-change signal to other
@@ -34,10 +43,10 @@ stored in those markers.
 
 1. User confirmation, certificate generation and private upload are complete.
    Do not regenerate or revoke the certificate without a new confirmation.
-2. Use a synthetic App Entry identity to verify the actual mapping of `sub` to
-   Botmaker's `userIdOnBusiness`. Do not activate the action based on the mapping
-   assumption alone. Verify the platform/channel guard and actual certificate
-   algorithms as well.
+2. The real authenticated production test confirmed that Central puts `sub` in
+   `context.userData.USER_ID_ON_BUSINESS` on `open_central`. Its platform contact ID
+   is a separate opaque identifier. Read only the system business identity field;
+   neither a user variable nor the platform contact ID is the authenticated owner.
 3. Create a NEW code action from `mi-usittel-web-profile.js`. Its private constants
    are `MI_WEB_PHANTOM_URL`, `MI_WEB_PHANTOM_USER`, and `MI_WEB_PHANTOM_PASS`, using
    the authorized existing HTTPS Phantom endpoint and technical integration.

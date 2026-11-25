@@ -15,7 +15,13 @@ export function operationAlert(tone, title, description = '') {
 }
 const confirmedAttempt = item => runtime.mode === 'phantom' ? runtime.paymentItems.find(a => a.idt === item.id && a.state === 'CONFIRMED') : null;
 const activePaymentAttempt = item => runtime.mode === 'phantom' ? confirmedAttempt(item) || runtime.paymentItems.find(a => a.idt === item.id && !['CANCELLED','REJECTED'].includes(a.state)) || runtime.paymentItems.find(a => a.idt === item.id) : null;
+function returnedPayment(item) {
+  const focus = runtime.paymentFocus;
+  if (!focus?.fromReturn || focus.serviceId !== String(runtime.selectedServiceId) || item.status === 'Pagada' || confirmedAttempt(item)) return null;
+  return runtime.paymentItems.find(a => a.attempt_id === focus.attemptId && a.idt === item.id && !['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(a.state));
+}
 export function invoiceVisibleStatus(item) {
+  if (returnedPayment(item)) return { label: 'En verificación', hint: 'No vuelvas a pagar esta factura.' };
   const attempt = confirmedAttempt(item);
   if (item.status === 'Pagada' || !attempt) return { label: item.status, hint: '' };
   if (attempt.accreditation_state === 'SETTLED') return { label: 'Pagada', hint: '' };
@@ -42,6 +48,11 @@ export function input(label, name, { value = '', type = 'text', required = true,
   return `<div class="field"><label for="${name}">${label}</label><div class="input-wrap"><input id="${name}" name="${name}" type="${type}" value="${escapeHTML(value)}" ${required ? 'required' : ''} autocomplete="${autocomplete}" ${hint ? `aria-describedby="${name}-hint"` : ''} ${extra}>${type === 'password' ? `<button type="button" class="password-toggle" data-action="toggle-password" data-input="${name}" aria-label="Mostrar ${label.toLowerCase()}" aria-pressed="false">${icon('eye')}</button>` : ''}</div>${hint ? `<p id="${name}-hint" class="field-hint">${hint}</p>` : ''}</div>`;
 }
 export function invoicePayButton(item, attrs = '') {
+  const returned = returnedPayment(item);
+  if (returned) {
+    if (runtime.paymentFocus.checking) return '<button type="button" class="button" disabled aria-busy="true">Verificando pago…</button>';
+    return button('Consultar estado', 'payment-check', { attrs: `data-attempt="${escapeHTML(returned.attempt_id)}" ${attrs}` });
+  }
   const real = runtime.mode === 'phantom';
   const active = activePaymentAttempt(item);
   const resumable = ['PENDING', 'UNCONFIRMED'].includes(active?.state) && active.can_resume === true;

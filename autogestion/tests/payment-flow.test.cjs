@@ -25,6 +25,24 @@ const assert=require('node:assert/strict');
  // Legacy direct posting is not evidence that the current invoice is still settled.
  runtime.paymentItems=[attempt('CONFIRMED',{phantom_payment_posted:true,phantom_posting_state:'POSTED'})];
  assert.equal(invoiceVisibleStatus({id:'123',status:'Pendiente'}).label,'Pago confirmado');assert.match(paymentStatusBanner(),/Acreditación en proceso/);count++;
+ const invoice={id:'123',status:'Pendiente'};
+ runtime.paymentItems=[attempt('PENDING',{can_resume:true})];
+ runtime.paymentFocus={attemptId:id,serviceId:'1',fromReturn:true,checking:true};
+ assert.match(paymentStatusBanner(),/Verificando tu pago/);
+ assert.match(invoicePayButton(invoice),/disabled/);
+ assert.equal(invoiceVisibleStatus(invoice).label,'En verificación');
+ assert.match(invoicePayButton({id:'456',status:'Pendiente'}),/>Pagar</);
+ runtime.paymentFocus.checking=false;
+ assert.match(invoicePayButton(invoice),/Consultar estado/);
+ assert.match(paymentStatusBanner(),/Todavía no pudimos confirmar/);
+ for(const state of ['REJECTED','CANCELLED']) {
+   runtime.paymentItems=[attempt(state)];
+   assert.match(invoicePayButton(invoice),/>Pagar</);
+ }
+ runtime.paymentItems=[attempt('CONFIRMED')];
+ assert.equal(invoiceVisibleStatus(invoice).label,'Pago confirmado');
+ assert.match(paymentStatusBanner(),/Acreditación en proceso/);
+ count++;
  runtime.selectedServiceId='2';assert.equal(paymentStatusBanner(),'');count++;
  applyOverview({customer:{},invoices:{items:[],nextOffset:null,endReached:true},account:{debt:121,credit:2.35},warnings:[]});
  const data=await import('../js/data.js');assert.equal(data.debt,121);assert.equal(data.credit,2.35);count++;

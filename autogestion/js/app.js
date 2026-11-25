@@ -73,7 +73,11 @@ function render() {
   if (activeRoute === 'facturas' && route !== 'facturas') runtime.paymentFocus = null;
   activeRoute = route;
   const notice = runtime.warnings.length ? '<p class="demo-notice" role="status">Parte de la información no está disponible o requiere revisión. El saldo de cuenta y el estado de cada factura pueden diferir.</p>' : '';
-  const content = runtime.loading ? '<h1 tabindex="-1">Cargando tu información…</h1><p role="status">Un momento, por favor.</p>' : runtime.error ? `<h1 tabindex="-1">Información no disponible</h1><p role="alert">${e(runtime.error)}</p><div class="dialog-actions">${button('Volver a intentar', 'retry')}${button('Cerrar sesión', 'logout', { secondary: true })}</div>` : notice + views[route]?.();
+  const locatingPayment = returnAttempt && route === 'facturas' && !runtime.paymentFocus && runtime.paymentsEnabled;
+  const waitingMessage = '<p role="status">Verificando tu pago… No vuelvas a pagar esta factura.</p>';
+  const content = locatingPayment && !runtime.error
+    ? (runtime.paymentError ? operationAlert('info', 'Todavía no pudimos verificar tu pago', 'No vuelvas a pagar esta factura.') + button('Consultar estado', 'billing-refresh') : waitingMessage)
+    : runtime.loading ? '<h1 tabindex="-1">Cargando tu información…</h1><p role="status">Un momento, por favor.</p>' : runtime.error ? `<h1 tabindex="-1">Información no disponible</h1><p role="alert">${e(runtime.error)}</p><div class="dialog-actions">${button('Volver a intentar', 'retry')}${button('Cerrar sesión', 'logout', { secondary: true })}</div>` : notice + views[route]?.();
   app.innerHTML = route === 'login' ? login() : shell(route, content);
   renderPush();
   if (runtime.mode === 'phantom') {
@@ -212,6 +216,7 @@ document.addEventListener('click', async event => {
   }
   if (action === 'select-service') {
     if (serviceBusy) return;
+    returnAttempt = null; runtime.paymentFocus = null;
     serviceBusy = true; ++dataGeneration; clearData(); runtime.loading = true; runtime.error = ''; render();
     try { applyServices(await request('select-service', { serviceId: target.dataset.id })); await loadOverview(); }
     catch (error) { runtime.loading = false; runtime.error = error.message; await handleError(error); render(); }
@@ -346,7 +351,7 @@ document.addEventListener('click', async event => {
       if (runtime.backend) await request('logout', {});
       resetCentralChatIdentity({ broadcast: true, suspend: true });
       setPushEnabled(false);
-      authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.paymentFocus = null; runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
+      returnAttempt = null; authenticated = false; applyServices({ payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }); clearData(); runtime.paymentFocus = null; runtime.billingView = 'invoices'; runtime.error = ''; location.hash = '/login';
       await boot();
     } catch(error) { resetCentralChatIdentity(); toast(error.message); target.disabled = false; }
     return;
@@ -441,15 +446,23 @@ async function refreshPayments({ reconcile = true, recoverPosting = true, target
       runtime.paymentItems = list.items; runtime.paymentError = '';
       const returnedId = returnAttempt;
       const returnedAttempt = list.items.find(item => item.attempt_id === returnedId);
-      if (returnedAttempt && runtime.selectedServiceId) runtime.paymentFocus = { attemptId: returnedId, serviceId: String(runtime.selectedServiceId) };
-      const selectedAttemptId = targetAttemptId || returnedId;
+      if (returnedAttempt && runtime.selectedServiceId) {
+        runtime.paymentFocus = { attemptId: returnedId, serviceId: String(runtime.selectedServiceId), fromReturn: true };
+      } else if (returnedId) {
+        returnAttempt = null;
+      }
+      const selectedAttemptId = targetAttemptId || returnedId || (runtime.paymentFocus?.fromReturn ? runtime.paymentFocus.attemptId : null);
       const selectedServiceId = runtime.selectedServiceId;
+      if (reconcile && runtime.paymentFocus?.fromReturn && (!selectedAttemptId || selectedAttemptId === runtime.paymentFocus.attemptId)) {
+        runtime.paymentFocus.checking = true;
+        render();
+      }
       if (reconcile || recoverPosting) {
         const flow = await resolvePaymentFlow(list.items, {
           reconcile, targetAttemptId: selectedAttemptId, postingEnabled: recoverPosting && runtime.phantomPostingEnabled,
           selectedServiceId, request,
           isCurrent: () => generation === dataGeneration && authenticated && runtime.selectedServiceId === selectedServiceId,
-          onUpdate: items => { if (generation === dataGeneration && authenticated) { runtime.paymentItems = items; render(); } },
+          onUpdate: items => { if (generation === dataGeneration && authenticated) { runtime.paymentItems = items; if (runtime.paymentFocus?.attemptId === selectedAttemptId) runtime.paymentFocus.checking = false; render(); } },
         });
         if (generation !== dataGeneration || !authenticated) return;
         runtime.paymentItems = flow.items;
@@ -457,7 +470,9 @@ async function refreshPayments({ reconcile = true, recoverPosting = true, target
         if (flow.postAttempted && refreshOverviewAfterPost) await refreshOverviewSnapshot(generation);
       }
     } catch (error) { if (generation === dataGeneration) {
+      if (runtime.paymentFocus?.fromReturn) runtime.paymentFocus.checking = false;
       runtime.paymentError = 'Estamos verificando la actualización de tu cuenta. No vuelvas a pagar.';
+      if (returnAttempt || runtime.paymentFocus?.fromReturn) render();
       if (error.status === 401 || error.code === 'SERVICE_CHANGED') await handleError(error);
     } }
   }
@@ -477,7 +492,7 @@ async function loadOverview() {
 }
 async function boot() {
   resetCentralChatIdentity({ suspend: true });
-  app.innerHTML = '<main id="main" class="page"><p role="status">Cargando Mi USITTEL…</p></main>';
+  app.innerHTML = `<main id="main" class="page"><p role="status">${returnAttempt ? 'Verificando tu pago… No vuelvas a pagar esta factura.' : 'Cargando Mi USITTEL.'}</p></main>`;
   try {
     const session = githubPagesDemo
       ? { mode: 'demo', backend: false, authenticated: false, payments_enabled: false, phantom_posting_enabled: false, payment_history_enabled: false }

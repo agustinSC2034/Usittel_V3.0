@@ -141,8 +141,8 @@ final class Payments {
                 if($a['cents']!==$cents || $a['cpe']!==$cpe) throw new Failure('PAYMENT_INVOICE_CHANGED',409);
                 return paymentPublic($a); // Existing checkout must pass resume's fresh checks.
             }
-            if(count($state['attempts'])>=1000) throw new Failure('PAYMENT_STORAGE_LIMIT');
-            $recent=array_filter($state['attempts'],fn($a)=>strtotime($a['created_at'])>time()-900);
+            if(count($state['attempts'])>=10000) throw new Failure('PAYMENT_STORAGE_LIMIT');
+            $recent=array_filter($state['attempts'],fn($a)=>$a['ida']===$ida && strtotime($a['created_at'])>time()-900);
             if(count($recent)>=5) throw new Failure('PAYMENT_RATE_LIMIT',429);
             $next=max($this->s['receipt_start'],($state['counters'][$cpe]??($this->s['receipt_start']-1))+1);
             if($next>$this->s['receipt_end']) throw new Failure('PAYMENT_SEQUENCE_EXHAUSTED');
